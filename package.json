@@ -115,18 +115,20 @@
     "start": "webpack-dev-server --progress --colors --mode development --config scripts/webpack/webpack.hot.js",
     "watch": "webpack --progress --colors --watch --mode development --config scripts/webpack/webpack.dev.js",
     "build": "grunt build",
+
+    "fms-build": "grunt fms-build",
+    "fms-dev": "grunt fms-dev",
+    "fms-start":
+      "webpack-dev-server --progress --colors --mode development --config scripts/webpack/fms/webpack.hot.js",
+    "fms-watch": "webpack --progress --colors --watch --mode development --config scripts/webpack/fms/webpack.dev.js",
+
     "test": "grunt test",
     "tslint": "tslint -c tslint.json --project tsconfig.json",
     "typecheck": "tsc --noEmit",
     "jest": "jest --notify --watch",
     "api-tests": "jest --notify --watch --config=tests/api/jest.js",
     "storybook": "cd packages/grafana-ui && yarn storybook",
-    "prettier:check": "prettier -- --list-different \"**/*.{ts,tsx,scss}\"",
-    "fms-build": "grunt fms-build",
-    "fms-dev": "grunt fms-dev",
-    "fms-start":
-      "webpack-dev-server --progress --colors --mode development --config scripts/webpack/fms/webpack.hot.js",
-    "fms-watch": "webpack --progress --colors --watch --mode development --config scripts/webpack/fms/webpack.dev.js"
+    "prettier:check": "prettier --list-different \"**/*.{ts,tsx,scss}\""
   },
   "husky": {
     "hooks": {
