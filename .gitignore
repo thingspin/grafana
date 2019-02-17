@@ -7,8 +7,8 @@ awsconfig
 /.awcache
 /dist
 /public/build
-/public/views/index.html
-/public/views/error.html
+/public/views/*index.html
+/public/views/*error.html
 /emails/dist
 /public_gen
 /public/vendor/npm

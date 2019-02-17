@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	ViewIndex            = "index"
+	ViewIndex            = "fms-index"
 	LoginErrorCookieName = "login_error"
 )
 

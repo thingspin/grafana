@@ -29,8 +29,15 @@
     "typeRoots": ["node_modules/@types", "types"],
     "paths": {
       "app": ["app"],
+      "app-thingspin-fms": ["app-thingspin-fms"],
       "sass": ["sass"]
     }
   },
-  "include": ["public/app/**/*.ts", "public/app/**/*.tsx", "public/test/**/*.ts"]
+  "include": [
+    "public/app/**/*.ts",
+    "public/app/**/*.tsx",
+    "public/app-thingspin-fms/**/*.ts",
+    "public/app-thingspin-fms/**/*.tsx",
+    "public/test/**/*.ts"
+  ]
 }
