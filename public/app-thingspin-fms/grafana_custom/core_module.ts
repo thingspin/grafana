@@ -1,15 +1,7 @@
-import angular from 'angular';
 import { angularModules as gfNgModules, coreModule } from 'app/core/core_module';
+import tsModules from '../angular-modules/thingspin.module';
 
-const baseModuleName = `thingspin`;
-const angularModules = gfNgModules.concat([
-  angular.module(`${baseModuleName}.controllers`, []),
-  angular.module(`${baseModuleName}.directives`, []),
-  angular.module(`${baseModuleName}.factories`, []),
-  angular.module(`${baseModuleName}.services`, []),
-  angular.module(`${baseModuleName}.filters`, []),
-  angular.module(`${baseModuleName}.routes`, []),
-]);
+const angularModules = gfNgModules.concat(tsModules);
 
 export { angularModules, coreModule };
 
