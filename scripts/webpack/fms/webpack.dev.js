@@ -87,17 +87,12 @@ let fmsDev = merge(common, {
 });
 
 //Copy already used Grafana webpack.dev.js
-const { devtool, mode, entry, optimization} = gfDev;
+const { devtool, mode, optimization} = gfDev;
 fmsDev = Object.assign(fmsDev, {
   devtool,
   mode,
-  entry,
-  module: gfDev.module,
   optimization,
-
-  stats: {
-    colors: true,
-  }
+  module: gfDev.module,
 });
 
 module.exports = fmsDev;

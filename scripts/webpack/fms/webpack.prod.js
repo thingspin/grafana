@@ -12,6 +12,12 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 //Override (module, plugins) Written by JGW
 let fmsProd = merge(common, {
+  entry: {
+    app: './public/app-thingspin-fms/index.ts',
+    dark: './public/sass/grafana.dark.scss',
+    light: './public/sass/grafana.light.scss',
+  },
+
   module: {
     rules: [
       {
@@ -70,11 +76,10 @@ let fmsProd = merge(common, {
 });
 
 //Copy already used Grafana webpack.prod.js
-const { mode, devtool, entry, optimization } = gfProd;
+const { mode, devtool, optimization } = gfProd;
 fmsProd = Object.assign(fmsProd, {
   mode,
   devtool,
-  entry,
   optimization,
 });
 
