@@ -1,7 +1,7 @@
-import { angularModules as gfNgModules, coreModule } from 'app/core/core_module';
+import { angularModules as gfNg1Modules, coreModule } from 'app/core/core_module';
 import tsModules from '../angular-modules/thingspin.module';
 
-const angularModules = gfNgModules.concat(tsModules);
+const angularModules = gfNg1Modules.concat(tsModules);
 
 export { angularModules, coreModule };
 

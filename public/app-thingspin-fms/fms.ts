@@ -6,8 +6,8 @@ import moment from 'moment';
 
 import { GrafanaApp } from 'app/app';
 import { coreModule, angularModules } from './grafana_custom/core_module';
-import { registerAngularDirectives } from './grafana_custom/core';
 import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
+import { registerAngularDirectives } from './grafana_custom/core';
 
 import { setupAngularRoutes } from './routes/routes';
 
@@ -76,9 +76,9 @@ class ThingspinFmsApp extends GrafanaApp {
 
     // register react angular wrappers
     coreModule.config(setupAngularRoutes);
-    registerAngularDirectives();
     // ThingSPIN용 React Component 등록
     tsRegisterAngularDirectives();
+    registerAngularDirectives();
 
     // disable tool tip animation
     $.fn.tooltip.defaults.animation = false;
