@@ -37,6 +37,7 @@ class ThingspinFmsApp extends GrafanaApp {
       this.registerFunctions.service = $provide.service;
       this.registerFunctions.filter = $filterProvider.register;
 
+      // redefine $http.get function
       $provide.decorator('$http', [
         '$delegate',
         '$templateCache',

@@ -1,7 +1,8 @@
 import { tsRegisterAngularDirectives } from './react/tsAngular_wrapper';
 import './core/services/tsBackendSrv';
-import { TsSearchCtrl } from './thingspin/directives/CustomDirective';
+import { CustomCtrl } from './thingspin/directives/boilerplate/Custom';
+import { TsSearchCtrl } from './thingspin/directives/boilerplate/AlreadyExistDirectiveOverride';
 
 import '../ng2Modules/app.module';
 
-export { TsSearchCtrl, tsRegisterAngularDirectives };
+export { CustomCtrl, TsSearchCtrl, tsRegisterAngularDirectives };

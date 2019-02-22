@@ -1,7 +1,7 @@
 import angular from 'angular';
 import { SearchCtrl } from 'app/core/components/search/search';
 import { coreModule } from 'app/core/core';
-import { multipleDirectiveSelector } from '../tsReact2Angular';
+import { multipleDirectiveSelector } from '../../tsReact2Angular';
 
 export class TsSearchCtrl extends SearchCtrl {
   /** @ngInject */
@@ -20,7 +20,6 @@ export function tsSearchDirective() {
   };
 }
 
-// angular.module("thingspin.directives").directive("DashboardSearch", tsSearchDirective);
 angular.module('thingspin.directives').directive('dashboardSearch', tsSearchDirective);
 // directive가 여러개가 정의 된 경우 사용자 선택 directive 사용
 coreModule.decorator('dashboardSearchDirective', multipleDirectiveSelector);

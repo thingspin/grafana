@@ -10,7 +10,8 @@ export class TsSideMenu extends SideMenu {
       <div className="sidemenu__logo_small_breakpoint" onClick={this.toggleSideMenuSmallBreakpoint} key="hamburger">
         <i className="fa fa-bars" />
         <span className="sidemenu__close">
-          <i className="fa fa-times" />&nbsp;Close
+          <i className="fa fa-times" />
+          &nbsp;Close
         </span>
       </div>,
     ];
