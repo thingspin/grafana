@@ -128,13 +128,12 @@
     "start:ignoreTheme": "ts-node --project ./scripts/cli/tsconfig.json ./scripts/cli/index.ts --hot",
     "watch": "ts-node --project ./scripts/cli/tsconfig.json ./scripts/cli/index.ts --theme -d watch,start",
     "build": "grunt build",
-
-    "fms-build": "grunt fms-build",
-    "fms-dev": "grunt fms-dev",
-    "fms-start":
-      "webpack-dev-server --progress --colors --mode development --config scripts/webpack/fms/webpack.hot.js",
-    "fms-watch": "webpack --progress --colors --watch --mode development --config scripts/webpack/fms/webpack.dev.js",
-
+    "dev:fms": "webpack --progress --colors --mode development --config scripts/webpack/fms/webpack.dev.js",
+    "start:fms": "ts-node --project ./scripts/cli/tsconfig.json ./scripts/cli/fmsIndex.ts --theme",
+    "start:fmsHot": "ts-node --project ./scripts/cli/tsconfig.json ./scripts/cli/fmsIndex.ts --hot --theme",
+    "start:fmsIgnoreTheme": "ts-node --project ./scripts/cli/tsconfig.json ./scripts/cli/fmsIndex.ts --hot",
+    "watch:fms": "ts-node --project ./scripts/cli/tsconfig.json ./scripts/cli/fmsIndex.ts --theme -d watch,start",
+    "build:fms": "grunt fms-build",
     "test": "grunt test",
     "tslint": "tslint -c tslint.json --project tsconfig.json",
     "typecheck": "tsc --noEmit",
