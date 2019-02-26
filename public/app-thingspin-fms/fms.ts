@@ -1,4 +1,20 @@
 // ref: ../app.ts
+import '@babel/polyfill';
+import 'file-saver';
+import 'lodash';
+import 'jquery';
+import 'angular';
+import 'angular-route';
+import 'angular-sanitize';
+import 'angular-native-dragdrop';
+import 'angular-bindonce';
+import 'react';
+import 'react-dom';
+
+import 'vendor/bootstrap/bootstrap';
+import 'vendor/angular-ui/ui-bootstrap-tpls';
+import 'vendor/angular-other/angular-strap';
+
 import angular from 'angular';
 import config from 'app/core/config';
 import _ from 'lodash';
