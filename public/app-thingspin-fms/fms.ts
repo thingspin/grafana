@@ -10,7 +10,7 @@ import { coreModule, angularModules } from './grafana_custom/core_module';
 import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
 import { registerAngularDirectives } from './grafana_custom/core';
 
-import { setupAngularRoutes } from './routes/routes';
+import { fmsSetupAngularRoutes } from './routes/routes';
 
 class ThingspinFmsApp extends GrafanaApp {
   constructor() {
@@ -77,7 +77,7 @@ class ThingspinFmsApp extends GrafanaApp {
     });
 
     // register react angular wrappers
-    coreModule.config(setupAngularRoutes);
+    coreModule.config(fmsSetupAngularRoutes);
     // ThingSPIN용 React Component 등록
     tsRegisterAngularDirectives();
     registerAngularDirectives();
