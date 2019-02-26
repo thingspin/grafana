@@ -14,8 +14,8 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 let fmsProd = merge(common, {
   entry: {
     app: './public/app-thingspin-fms/index.ts',
-    dark: './public/sass/grafana.dark.scss',
-    light: './public/sass/grafana.light.scss',
+    dark: './public/sass/fms.dark.scss',
+    light: './public/sass/fms.light.scss',
   },
 
   module: {
