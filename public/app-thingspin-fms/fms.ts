@@ -1,10 +1,11 @@
 // ref: ../app.ts
+import { GrafanaApp } from 'app/app';
+
 import angular from 'angular';
 import config from 'app/core/config';
 import _ from 'lodash';
 import moment from 'moment';
 
-import { GrafanaApp } from 'app/app';
 import { coreModule, angularModules } from './grafana_custom/core_module';
 import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
 import { registerAngularDirectives } from './grafana_custom/core';
