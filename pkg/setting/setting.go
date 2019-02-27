@@ -35,8 +35,8 @@ const (
 	DEV                 = "development"
 	PROD                = "production"
 	TEST                = "test"
-	APP_NAME            = "Grafana"
-	APP_NAME_ENTERPRISE = "Grafana Enterprise"
+	APP_NAME            = "ThingSPIN"
+	APP_NAME_ENTERPRISE = "ThingSPIN Enterprise"
 )
 
 var (
