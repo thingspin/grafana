@@ -37,28 +37,6 @@
 .view-mode--kiosk {
   @extend .view-mode--tv;
 
-  // sooskim +++[
-  .dashboard-container {
-    padding: 0px;
-    border: none;
-  }
-
-  .panel-title {
-    padding: 0px;
-  }
-
-  .panel-title-container {
-    height: 0px;
-    min-height: 0px;
-    visibility: hidden;
-  }
-
-  .panel-content {
-    padding: 0px;
-    height: calc(100% - 2px);
-  }
-  // sooskim +++]
-
   .sidemenu,
   .navbar {
     display: none;
