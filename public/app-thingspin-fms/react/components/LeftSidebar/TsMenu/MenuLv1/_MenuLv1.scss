@@ -1,0 +1,22 @@
+@import 'MenuLv2/MenuLv2';
+
+.fms-menu-header {
+  // layer size
+  height: 40px;
+  font-size: 14px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  // justify-content: center;
+
+  &:hover {
+    border-left: 4px solid #00b2e3;
+    background-color: rgba(0, 178, 227, 0.1);
+  }
+}
+
+.fms-menu-body {
+  overflow: auto;
+}
