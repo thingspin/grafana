@@ -1,0 +1,12 @@
+.fms-menu-lv2 {
+  // layer size
+  height: 28px;
+  font-size: 13px;
+
+  // events
+  &:hover {
+    border-left: 4px solid #00b2e3;
+    background-color: rgba(0, 178, 227, 0.1);
+  }
+  margin-left: 4px;
+}
