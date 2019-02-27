@@ -5,7 +5,7 @@ export class TsSideMenu extends SideMenu {
   render() {
     return [
       <div className="sidemenu__logo" onClick={this.toggleSideMenu} key="logo">
-        <img src="public/img/thingspin_icon.svg" alt="ThingSPIN" />
+        <img src="public/img/thingspin/thingspin_icon.png" alt="ThingSPIN" />
       </div>,
       <div className="sidemenu__logo_small_breakpoint" onClick={this.toggleSideMenuSmallBreakpoint} key="hamburger">
         <i className="fa fa-bars" />
