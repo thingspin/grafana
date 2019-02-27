@@ -1,0 +1,27 @@
+.login {
+  background-image: url(../img/thingspin/login-background.png) !important;
+
+  & .btn-primary {
+    @include buttonBackground(#0066ff, #063ebc);
+  }
+}
+
+.app-thingspin {
+  .logo-wordmark {
+    background: url('../img/thingspin/typelogo.svg') top center no-repeat;
+    width: 100%;
+    height: 70px;
+  }
+}
+
+.app-enterprise {
+  .logo-wordmark {
+    background: url('../img/thingspin/typelogo-enterprise.svg') top center no-repeat;
+    width: 100%;
+    height: 70px;
+  }
+}
+
+.signup-page-background {
+  background-image: url(../img/thingspin/login-background.png) !important;
+}

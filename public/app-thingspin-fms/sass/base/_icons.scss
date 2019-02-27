@@ -1,0 +1,13 @@
+.gicon-branding {
+  background-image: url('../img/thingspin/thingspin_icon.png');
+}
+
+.gicon-dashboard {
+  background-image: url('../img/thingspin/icons_#{$theme-name}_theme/icon_dashboard.svg');
+}
+
+.sidemenu {
+  .gicon-dashboard {
+    background-image: url('../img/thingspin/icons_dark_theme/icon_dashboard.svg');
+  }
+}
