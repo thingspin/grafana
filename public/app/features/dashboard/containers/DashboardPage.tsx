@@ -104,7 +104,7 @@ export class DashboardPage extends PureComponent<Props, State> {
 
     // if we just got dashboard update title
     if (!prevProps.dashboard) {
-      document.title = dashboard.title + ' - Grafana';
+      document.title = dashboard.title + ' - ThingSPIN';
     }
 
     // handle animation states when opening dashboard settings
