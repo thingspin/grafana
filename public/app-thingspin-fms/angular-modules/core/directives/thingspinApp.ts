@@ -5,6 +5,7 @@ import DatasourceSrv from 'app/features/plugins/datasource_srv';
 import { KeybindingSrv, coreModule } from 'app/core/core';
 import { AngularLoader } from 'app/core/services/AngularLoader';
 
+const isFms: any = false;
 export class ThingspinCtrl extends GrafanaCtrl {
   /** @ngInject */
   constructor(
@@ -36,12 +37,18 @@ export class ThingspinCtrl extends GrafanaCtrl {
   }
 }
 
-/** @ngInject */
-
 export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location) {
-  return Object.assign(grafanaAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location), {
-    controller: ThingspinCtrl,
-  });
+  return Object.assign(
+    grafanaAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location),
+    isFms
+      ? {
+          controller: ThingspinCtrl,
+          templateUrl: 'public/app-thingspin-fms/angular-modules/core/directives/thingspinApp.html',
+        }
+      : {
+          controller: ThingspinCtrl,
+        }
+  );
 }
 
 coreModule.directive('thingspinApp', thingspinAppDirective);

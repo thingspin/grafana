@@ -163,6 +163,7 @@
     }
   </style>
 
+  <!-- thingspin이 오류가 있는 경우 출력 메세지 -->
   <div class="preloader">
     <div class="preloader__enter">
       <div class="preloader__bounce">
@@ -187,51 +188,51 @@
   </div>
 
   <thingspin-app class="thingspin-app" ng-cloak>
-    <sidemenu class="sidemenu"></sidemenu>
-    <app-notifications-list class="page-alert-list"></app-notifications-list>
-    <dashboard-search></dashboard-search>
-
-    <div class="main-view">
-      <div class="scroll-canvas">
-        <div ng-view></div>
-
-        <footer class="footer">
-          <div class="text-center">
-            <ul>
-              <li>
-                <a href="http://thingspin.io/doc" target="_blank">
-                  <i class="fa fa-file-code-o"></i>
-                  Docs
-                </a>
-              </li>
-              <li>
-                <a href="http://thingspin.io/services/support" target="_blank">
-                  <i class="fa fa-support"></i>
-                  Support Plans
-                </a>
-              </li>
-              <li>
-                <a href="http://thingspin.io/community" target="_blank">
-                  <i class="fa fa-comments-o"></i>
-                  Community
-                </a>
-              </li>
-              <li>
-                <a href="http://thingspin.io/version" target="_blank">[[.AppName]]</a>
-                <span>v[[.BuildVersion]] (commit: [[.BuildCommit]])</span>
-              </li>
-              [[if .NewGrafanaVersionExists]]
-              <li>
-                <a href="http://thingspin.io/download" target="_blank" bs-tooltip="'[[.NewGrafanaVersion]]'">
-                  New version available!
-                </a>
-              </li>
-              [[end]]
-            </ul>
-          </div>
-        </footer>
+      <sidemenu class="sidemenu"></sidemenu>
+      <app-notifications-list class="page-alert-list"></app-notifications-list>
+      <dashboard-search></dashboard-search>
+  
+      <div class="main-view">
+        <div class="scroll-canvas">
+          <div ng-view></div>
+  
+          <footer class="footer">
+            <div class="text-center">
+              <ul>
+                <li>
+                    <a href="http://thingspin.io/doc" target="_blank">
+                      <i class="fa fa-file-code-o"></i>
+                    Docs
+                  </a>
+                </li>
+                <li>
+                    <a href="http://thingspin.io/services/support" target="_blank">
+                      <i class="fa fa-support"></i>
+                    Support Plans
+                  </a>
+                </li>
+                <li>
+                    <a href="http://thingspin.io/community" target="_blank">
+                    <i class="fa fa-comments-o"></i>
+                    Community
+                  </a>
+                </li>
+                <li>
+                    <a href="http://thingspin.io/version" target="_blank">[[.AppName]]</a>
+                    <span>v[[.BuildVersion]] (commit: [[.BuildCommit]])</span>
+                </li>
+                [[if .NewGrafanaVersionExists]]
+                <li>
+                    <a href="http://thingspin.io/download" target="_blank" bs-tooltip="'[[.NewGrafanaVersion]]'">
+                      New version available!
+                  </a>
+                </li>
+                [[end]]
+              </ul>
+            </div>
+          </footer>
+        </div>
       </div>
-    </div>
   </thingspin-app>
 
   <script>

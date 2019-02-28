@@ -1,3 +1,10 @@
 // DEPENDENCIES
 @import '../app-thingspin-fms/sass/fms';
-@import '../app-thingspin-fms/react/components/LeftSidebar/Leftsidebar';
+
+// Main Layer
+@import '../app-thingspin-fms/base/base';
+@import '../app-thingspin-fms/react/components/Navbar/Navbar';
+@import '../app-thingspin-fms/react/components/LeftSidebar/LeftSidebar';
+@import '../app-thingspin-fms/react/components/RightSidebar/RightSidebar';
+@import '../app-thingspin-fms/react/components/Bottombar/Bottombar';
+@import '../app-thingspin-fms/react/components/MainView/MainView';

@@ -1,0 +1,25 @@
+@import './BottomLv1/BottomLv1';
+@import './BottomLv2/BottomLv2';
+
+$bottom-width: 250px;
+$bottom-height: 50px;
+
+ts-bottombar {
+  position: absolute;
+
+  width: $bottom-width;
+  height: $bottom-height;
+
+  margin-right: auto;
+  margin-left: calc(50% - (#{$bottom-width} / 2));
+  margin-top: calc(100vh - #{$bottom-height});
+
+  overflow: auto;
+
+  // test only
+  color: white;
+  background-color: rgba(0, 0, 0, 0.2);
+  font-size: 1em;
+  text-align: center;
+  line-height: 3em;
+}

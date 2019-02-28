@@ -1,0 +1,12 @@
+@import './IconLogo/IconLogo';
+@import './NavTitle/NavTitle';
+
+.ts-left-navbar {
+  float: left;
+  display: flex;
+
+  height: 100%;
+
+  // test only
+  background-color: darkorange;
+}

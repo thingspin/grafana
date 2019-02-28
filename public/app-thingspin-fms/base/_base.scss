@@ -1,0 +1,26 @@
+@import '../../sass/layout/page';
+@import './variables';
+
+.ts-container {
+  @extend .main-view;
+}
+
+.main-container {
+  height: calc(100% - 36px);
+
+  position: relative;
+  display: flex;
+}
+
+.ts-main-view {
+  width: 100%;
+}
+
+.login-page {
+  ts-left-sidebar,
+  ts-navbar,
+  ts-right-sidebar,
+  ts-bottombar {
+    display: none;
+  }
+}

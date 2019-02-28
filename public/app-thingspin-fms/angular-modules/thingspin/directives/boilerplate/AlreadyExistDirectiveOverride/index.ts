@@ -22,4 +22,4 @@ export function tsSearchDirective() {
 
 // angular.module('thingspin.directives').directive('dashboardSearch', tsSearchDirective);
 // // directive가 여러개가 정의 된 경우 사용자 선택 directive 사용
-// coreModule.decorator('dashboardSearchDirective', multipleDirectiveSelector);
+// coreModule.decorator('dashboardSearchDirective', multipleDirectiveSelector); // build 스크립트 동작 후 runtime에서 오류 있음(eProvider어짜구...)
