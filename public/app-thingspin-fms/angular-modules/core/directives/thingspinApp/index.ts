@@ -5,7 +5,7 @@ import DatasourceSrv from 'app/features/plugins/datasource_srv';
 import { KeybindingSrv, coreModule } from 'app/core/core';
 import { AngularLoader } from 'app/core/services/AngularLoader';
 
-const isFms: any = true;
+const isFms: any = false;
 
 export class ThingspinCtrl extends GrafanaCtrl {
   /** @ngInject */
