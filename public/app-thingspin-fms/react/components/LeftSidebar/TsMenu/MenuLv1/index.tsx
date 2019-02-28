@@ -91,7 +91,7 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
         <div className="fms-menu-header" key="menulv1">
           <div className="" />
           <div className="">
-            <a href={menu.url}>
+            <a href={menu.url} target={menu.target}>
               <i className={menu.icon} />
               {menu.text}
             </a>

@@ -1,8 +1,6 @@
+@import '../../../base/variables';
 @import './BottomLv1/BottomLv1';
 @import './BottomLv2/BottomLv2';
-
-$bottom-width: 250px;
-$bottom-height: 50px;
 
 ts-bottombar {
   position: absolute;
@@ -18,7 +16,7 @@ ts-bottombar {
 
   // test only
   color: white;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
   font-size: 1em;
   text-align: center;
   line-height: 3em;
