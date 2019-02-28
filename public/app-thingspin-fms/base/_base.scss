@@ -6,7 +6,8 @@
 }
 
 .main-container {
-  height: calc(100% - 36px);
+  height: calc(100vh - #{$navbar-height});
+  overflow: auto;
 
   position: relative;
   display: flex;
@@ -14,6 +15,9 @@
 
 .ts-main-view {
   width: 100%;
+  height: 100%;
+
+  overflow: auto;
 }
 
 .login-page {
@@ -22,5 +26,9 @@
   ts-right-sidebar,
   ts-bottombar {
     display: none;
+  }
+
+  .main-container {
+    height: 100%;
   }
 }

@@ -15,6 +15,19 @@ import { fmsSetupAngularRoutes } from './routes/routes';
 class ThingspinFmsApp extends GrafanaApp {
   constructor() {
     super();
+
+    this.ngModuleDependencies = [
+      'grafana.core',
+      'ngRoute',
+      'ngSanitize',
+      '$strap.directives',
+      'ang-drag-drop',
+      'thingspin',
+      'pasvaz.bindonce',
+      'ui.bootstrap',
+      'ui.bootstrap.tpls',
+      'react',
+    ];
   }
 
   init() {
@@ -57,19 +70,6 @@ class ThingspinFmsApp extends GrafanaApp {
         },
       ]);
     });
-
-    this.ngModuleDependencies = [
-      'grafana.core',
-      'ngRoute',
-      'ngSanitize',
-      '$strap.directives',
-      'ang-drag-drop',
-      'thingspin',
-      'pasvaz.bindonce',
-      'ui.bootstrap',
-      'ui.bootstrap.tpls',
-      'react',
-    ];
 
     // makes it possible to add dynamic stuff
     _.each(angularModules, m => {

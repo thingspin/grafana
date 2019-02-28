@@ -1,6 +1,8 @@
+@import '../../../../base/variables';
+
 .ts-right-side-tabbar-component {
   width: 100%;
-  height: 139px;
+  height: $right-side-tabbar-height;
 
   // test
   background-color: darkgoldenrod;

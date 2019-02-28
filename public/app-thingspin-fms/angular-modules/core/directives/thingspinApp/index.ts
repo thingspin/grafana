@@ -5,7 +5,8 @@ import DatasourceSrv from 'app/features/plugins/datasource_srv';
 import { KeybindingSrv, coreModule } from 'app/core/core';
 import { AngularLoader } from 'app/core/services/AngularLoader';
 
-const isFms: any = false;
+const isFms: any = true;
+
 export class ThingspinCtrl extends GrafanaCtrl {
   /** @ngInject */
   constructor(
@@ -43,7 +44,7 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
     isFms
       ? {
           controller: ThingspinCtrl,
-          templateUrl: 'public/app-thingspin-fms/angular-modules/core/directives/thingspinApp.html',
+          templateUrl: 'public/app-thingspin-fms/angular-modules/core/directives/thingspinApp/thingspinApp.html',
         }
       : {
           controller: ThingspinCtrl,
