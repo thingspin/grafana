@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { TsLeftNavbar } from './LeftNavbar/index';
-import { TsRightNavbar } from './RightNavbar/index';
+import { TsLeftNavbar } from './LeftNavbar';
+import { TsRightNavbar } from './RightNavbar';
 
 export class TsNavbar extends PureComponent {
   constructor(props) {

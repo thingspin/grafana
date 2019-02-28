@@ -1,2 +1,14 @@
+@import '../../../../base/variables';
+
 .ts-bottom-lv1-component {
+  position: absolute;
+
+  width: $bottom-lv1-width;
+  height: $bottom-lv1-height;
+
+  // bottom center
+  left: calc(50% - (#{$bottom-lv1-width} / 2));
+  bottom: 0;
+
+  background-color: cadetblue;
 }

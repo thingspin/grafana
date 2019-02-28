@@ -1,9 +1,9 @@
 import { tsReact2AngularDirective } from 'app-thingspin-fms/angular-modules/thingspin/directives/tsReact2Angular';
-import { TsNavbar } from './components/Navbar/index';
-import { TsLeftSidebar } from './components/LeftSidebar/index';
-import { TsRightSidebar } from './components/RightSidebar/index';
-import { TsMainView } from './components/MainView/index';
-import { TsBottombar } from './components/Bottombar/index';
+import { TsNavbar } from './components/Navbar';
+import { TsLeftSidebar } from './components/LeftSidebar';
+import { TsRightSidebar } from './components/RightSidebar';
+import { TsMainView } from './components/MainView';
+import { TsBottombar } from './components/Bottombar';
 
 export function tsRegisterAngularDirectives() {
   tsReact2AngularDirective('tsNavbar', TsNavbar, []);

@@ -10,7 +10,7 @@ import { EPermission } from 'app-thingspin-fms/models/common';
 import { TsIMenuLv1 } from 'app-thingspin-fms/models/LeftSidebar';
 
 // ThingSPIN Components
-import TsMenuLv1 from './MenuLv1/index';
+import TsMenuLv1 from './MenuLv1';
 
 class TsMenu extends PureComponent {
   menuList: TsIMenuLv1[];

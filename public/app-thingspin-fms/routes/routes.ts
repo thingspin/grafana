@@ -1,6 +1,5 @@
 import 'app/routes/dashboard_loaders';
 import 'app/routes/ReactContainer';
-import { applyRouteRegistrationHandlers } from 'app/routes/registry';
 
 // Types
 import { setupAngularRoutes } from 'app/routes/routes';
@@ -9,13 +8,10 @@ import { setupAngularRoutes } from 'app/routes/routes';
 export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
   setupAngularRoutes($routeProvider, $locationProvider);
 
-  $locationProvider.html5Mode(true);
-  $routeProvider
-    .when('/login', {
-      templateUrl: 'public/app-thingspin-fms/partials/login.html',
-      controller: 'LoginCtrl',
-      pageClass: 'login-page sidemenu-hidden',
-    });
-
-  applyRouteRegistrationHandlers($routeProvider);
+  // 여기서 프론트엔드 라우터를 추가하거나 덮어쓰기를 하세요.
+  $routeProvider.when('/login', {
+    templateUrl: 'public/app-thingspin-fms/partials/login.html',
+    controller: 'LoginCtrl',
+    pageClass: 'login-page sidemenu-hidden',
+  });
 }

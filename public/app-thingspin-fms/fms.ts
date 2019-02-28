@@ -13,8 +13,14 @@ import { registerAngularDirectives } from './grafana_custom/core';
 import { fmsSetupAngularRoutes } from './routes/routes';
 
 class ThingspinFmsApp extends GrafanaApp {
+  ng1App: any;
+
   constructor() {
     super();
+
+    this.ng1App = angular.module('thingspin', []);
+
+    moment.locale(config.bootData.user.locale);
 
     this.ngModuleDependencies = [
       'grafana.core',
@@ -31,45 +37,43 @@ class ThingspinFmsApp extends GrafanaApp {
   }
 
   init() {
-    const app = angular.module('thingspin', []);
+    this.ng1App.config(
+      ($locationProvider, $controllerProvider, $compileProvider, $filterProvider, $httpProvider, $provide) => {
+        // pre assing bindings before constructor calls
+        $compileProvider.preAssignBindingsEnabled(true);
 
-    moment.locale(config.bootData.user.locale);
+        if (config.buildInfo.env !== 'development') {
+          $compileProvider.debugInfoEnabled(false);
+        }
 
-    app.config(($locationProvider, $controllerProvider, $compileProvider, $filterProvider, $httpProvider, $provide) => {
-      // pre assing bindings before constructor calls
-      $compileProvider.preAssignBindingsEnabled(true);
+        $httpProvider.useApplyAsync(true);
 
-      if (config.buildInfo.env !== 'development') {
-        $compileProvider.debugInfoEnabled(false);
-      }
+        this.registerFunctions.controller = $controllerProvider.register;
+        this.registerFunctions.directive = $compileProvider.directive;
+        this.registerFunctions.factory = $provide.factory;
+        this.registerFunctions.service = $provide.service;
+        this.registerFunctions.filter = $filterProvider.register;
 
-      $httpProvider.useApplyAsync(true);
-
-      this.registerFunctions.controller = $controllerProvider.register;
-      this.registerFunctions.directive = $compileProvider.directive;
-      this.registerFunctions.factory = $provide.factory;
-      this.registerFunctions.service = $provide.service;
-      this.registerFunctions.filter = $filterProvider.register;
-
-      // redefine $http.get function
-      $provide.decorator('$http', [
-        '$delegate',
-        '$templateCache',
-        ($delegate, $templateCache) => {
-          const get = $delegate.get;
-          $delegate.get = (url, config) => {
-            if (url.match(/\.html$/)) {
-              // some template's already exist in the cache
-              if (!$templateCache.get(url)) {
-                url += '?v=' + new Date().getTime();
+        // redefine $http.get function
+        $provide.decorator('$http', [
+          '$delegate',
+          '$templateCache',
+          ($delegate, $templateCache) => {
+            const get = $delegate.get;
+            $delegate.get = (url, config) => {
+              if (url.match(/\.html$/)) {
+                // some template's already exist in the cache
+                if (!$templateCache.get(url)) {
+                  url += '?v=' + new Date().getTime();
+                }
               }
-            }
-            return get(url, config);
-          };
-          return $delegate;
-        },
-      ]);
-    });
+              return get(url, config);
+            };
+            return $delegate;
+          },
+        ]);
+      }
+    );
 
     // makes it possible to add dynamic stuff
     _.each(angularModules, m => {

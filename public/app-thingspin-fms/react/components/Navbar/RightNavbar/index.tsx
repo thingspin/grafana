@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { TsSearchButtonComponent } from './SearchButton/index';
-import { TsViewModeButtonCompoent } from './ViewModeButton/index';
-import { TsUserSettingButtonComponent } from './UserSettingButton/index';
-import { TsAlarmButtonComponent } from './AlarmButton/index';
+import { TsSearchButtonComponent } from './SearchButton';
+import { TsViewModeButtonCompoent } from './ViewModeButton';
+import { TsUserSettingButtonComponent } from './UserSettingButton';
+import { TsAlarmButtonComponent } from './AlarmButton';
 
 export class TsRightNavbar extends PureComponent {
   constructor(props) {
