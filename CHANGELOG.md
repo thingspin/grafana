@@ -1,3 +1,15 @@
+
+# 6.1.0 (unreleased)
+
+### Bug Fixes
+* **Api**: Invalid org invite code [#10506](https://github.com/grafana/grafana/issues/10506)
+* **Datasource**: Handles nil jsondata field gracefully [#14239](https://github.com/grafana/grafana/issues/14239)
+
+# 6.0.1 (unreleased)
+
+### Bug Fixes
+* **Metrics**: Fixes broken usagestats metrics for /metrics [#15651](https://github.com/grafana/grafana/issues/15651)
+
 # 6.0.0 stable (2019-02-25)
 
 ### Bug Fixes
