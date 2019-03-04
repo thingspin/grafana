@@ -38,6 +38,7 @@ export class ThingspinCtrl extends GrafanaCtrl {
   }
 }
 
+/** @ngInject */
 export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location) {
   return Object.assign(
     grafanaAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location),

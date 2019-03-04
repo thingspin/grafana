@@ -1,4 +1,4 @@
-import './core/directives/thingspinApp/';
+import './core/directives/thingspinApp';
 
 import { tsRegisterAngularDirectives } from '../react/tsAngular_wrapper';
 
