@@ -6,6 +6,6 @@ export class TsBottomLv2Component extends PureComponent {
   }
 
   render() {
-    return <div className="ts-bottom-lv2-component">bottomLv2</div>;
+    return <div className="ts-bottom-lv2-component" />;
   }
 }

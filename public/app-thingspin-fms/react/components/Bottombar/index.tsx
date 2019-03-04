@@ -9,9 +9,11 @@ export class TsBottombar extends PureComponent {
 
   render() {
     return (
-      <div className="ts-bottom-container">
-        <TsBottomLv1Component key="tsbottomlv1comp" />
-        <TsBottomLv2Component key="tsbottomlv2comp" />
+      <div className="ts-bottom-layer">
+        <div className="ts-bottom-container">
+          <TsBottomLv1Component key="tsbottomlv1comp" />
+          <TsBottomLv2Component key="tsbottomlv2comp" />
+        </div>
       </div>
     );
   }
