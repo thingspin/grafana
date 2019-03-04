@@ -7,9 +7,9 @@ export class TsBottomLv1Component extends PureComponent {
 
   render() {
     return [
-      <div className="ts-bottom-lv1-component" />,
-      <div className="ts-bottom-center-layer" />,
-      <div className="ts-bottom-center-button" />,
+      <div className="ts-bottom-lv1-component" key="tsbottomlv1component" />,
+      <div className="ts-bottom-center-layer" key="tsbottomcenterlayer" />,
+      <div className="ts-bottom-center-button" key="tsbottomcenterbutton" />,
     ];
   }
 }
