@@ -1,7 +1,7 @@
-// import angular from 'angular';
+import angular from 'angular';
 import { SearchCtrl } from 'app/core/components/search/search';
-// import { coreModule } from 'app/core/core';
-// import { multipleDirectiveSelector } from '../../tsReact2Angular';
+import { coreModule } from 'app/core/core';
+import { multipleDirectiveSelector } from '../../tsReact2Angular';
 
 export class TsSearchCtrl extends SearchCtrl {
   /** @ngInject */
@@ -9,6 +9,8 @@ export class TsSearchCtrl extends SearchCtrl {
     super($scope, $location, $timeout, searchSrv);
   }
 }
+
+/** @ngInject */
 export function tsSearchDirective() {
   return {
     restrict: 'E',
@@ -20,6 +22,6 @@ export function tsSearchDirective() {
   };
 }
 
-// angular.module('thingspin.directives').directive('dashboardSearch', tsSearchDirective);
-// // directive가 여러개가 정의 된 경우 사용자 선택 directive 사용
-// coreModule.decorator('dashboardSearchDirective', multipleDirectiveSelector); // build 스크립트 동작 후 runtime에서 오류 있음(eProvider어짜구...)
+angular.module('thingspin.directives').directive('dashboardSearch', tsSearchDirective);
+// directive가 여러개가 정의 된 경우 사용자 선택 directive 사용
+coreModule.decorator('dashboardSearchDirective', multipleDirectiveSelector);
