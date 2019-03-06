@@ -3,12 +3,9 @@ import { provideTheme } from 'app/core/utils/ConfigProvider';
 import { coreModule } from 'app/core/core';
 
 export function tsReact2AngularDirective(name: string, component: any, options: any) {
-  coreModule.directive(name, [
-    'reactDirective',
-    reactDirective => {
-      return reactDirective(provideTheme(component), options);
-    },
-  ]);
+  coreModule.directive(name, (reactDirective, $injector) => {
+    return reactDirective(provideTheme(component), options, null, { $injector });
+  });
 }
 
 // ref : https://gist.github.com/bennadel/647bf5b82b9d4332e8f0
