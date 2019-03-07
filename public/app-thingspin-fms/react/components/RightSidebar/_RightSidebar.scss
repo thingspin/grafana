@@ -3,11 +3,19 @@
 @import './RightSideHistory/RightSideHistory';
 
 ts-right-sidebar {
-  width: 384px;
+  width: 360px;
   height: 100%;
 
   overflow: hidden;
 
   // test
   background-color: olive;
+}
+
+.view-mode--tv, // mode 1
+.view-mode--kiosk {
+  // mode 2
+  ts-right-sidebar {
+    display: none;
+  }
 }
