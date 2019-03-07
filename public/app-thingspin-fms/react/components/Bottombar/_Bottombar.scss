@@ -8,9 +8,10 @@ ts-bottombar {
   width: $bottom-width;
   height: $bottom-height;
 
+  bottom: 0px;
+
   margin-right: auto;
   margin-left: calc(50% - (#{$bottom-width} / 2));
-  margin-top: calc(100vh - #{$bottom-height});
 
   overflow: hidden;
 
