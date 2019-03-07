@@ -1,15 +1,12 @@
 @import '../../sass/layout/page';
 @import './variables';
 
-body {
-  position: fixed;
-}
 .ts-container {
   @extend .main-view;
 }
 
 .main-container {
-  height: 100%;
+  height: calc(100% - #{$navbar-height});
   overflow: auto;
 
   position: relative;
@@ -32,6 +29,13 @@ body {
     display: none;
   }
 
+  .main-container {
+    height: 100%;
+  }
+}
+
+.view-mode--tv,
+.view-mode--kiosk {
   .main-container {
     height: 100%;
   }
