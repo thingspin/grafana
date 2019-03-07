@@ -3,10 +3,17 @@
 @import 'TsMenu/TsMenu';
 
 ts-left-sidebar {
-  // layer size
-  width: 200px;
-  height: 100%;
+  display: none;
+}
 
-  // 삭제 필요...
-  background-color: blue;
+.sidemenu-open {
+  ts-left-sidebar {
+    display: block;
+    // layer size
+    width: 200px;
+    height: 100%;
+
+    // 삭제 필요...
+    background-color: blue;
+  }
 }

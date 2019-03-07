@@ -1,5 +1,24 @@
+@import '../../../../../base/variables';
+
+.sidemenu-open {
+  .ts-icon-logo {
+    display: none;
+  }
+}
 .ts-icon-logo {
-  // test only
-  background-color: brown;
-  margin: 2px;
+  display: block;
+
+  width: $navbar-logo-width;
+  height: $navbar-logo-height;
+
+  padding: $navbar-logo-padding;
+
+  button {
+    padding: 0;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
