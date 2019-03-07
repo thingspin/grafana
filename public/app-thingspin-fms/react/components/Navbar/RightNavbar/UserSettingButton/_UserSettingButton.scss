@@ -1,5 +1,16 @@
 .ts-user-setting-button-component {
-  // test only
-  background-color: brown;
-  margin: 2px;
+}
+
+.ts-user-setting-menu {
+  display: flex;
+}
+
+.ts-user-setting-child-menu {
+  button {
+    padding: 5px;
+
+    font-size: 15px;
+
+    background-color: transparent;
+  }
 }

@@ -3,10 +3,25 @@
 @import './RightNavbar/RightNavbar';
 
 ts-navbar {
+  // mode 0
   display: block;
   width: 100%;
   height: $navbar-height;
 
-  padding: 1px;
-  background-color: gray;
+  padding: 0 10px 0 10px;
+
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.16);
+  background-color: #fafafa;
+
+  & > div {
+    height: 100%;
+  }
+}
+
+.view-mode--tv, // mode 1
+.view-mode--kiosk // mode 2
+ {
+  ts-navbar {
+    display: none;
+  }
 }

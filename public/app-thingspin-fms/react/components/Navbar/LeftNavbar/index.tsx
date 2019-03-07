@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { TsIconLogo } from './IconLogo';
 import { TsNavTitle } from './NavTitle';
 
-export class TsLeftNavbar extends PureComponent {
+export class TsLeftNavbarComponent extends PureComponent {
   constructor(props) {
     super(props);
   }

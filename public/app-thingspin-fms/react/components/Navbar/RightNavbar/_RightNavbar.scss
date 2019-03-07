@@ -9,6 +9,24 @@
 
   height: 100%;
 
-  // test only
-  background-color: darkorange;
+  button {
+    padding: 0px 10px 0px 10px;
+
+    color: #1e1e1e;
+    background-color: transparent;
+
+    &.ts-alert-emer {
+      color: #e91e63;
+    }
+  }
+
+  i {
+    padding: 2px;
+    font-size: 16px;
+  }
+}
+
+.ts-nav-divider {
+  border: solid 0.5px #ecebeb;
+  margin: 0 10px 0 10px;
 }

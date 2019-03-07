@@ -9,3 +9,7 @@ export enum EPermission {
   EDITOR = 'editor',
   USER = 'user',
 }
+
+export interface TsBaseProps {
+  $injector: any;
+}
