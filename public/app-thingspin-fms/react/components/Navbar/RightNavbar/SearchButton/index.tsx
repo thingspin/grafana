@@ -29,7 +29,7 @@ export class TsSearchButtonComponent extends PureComponent<Props, States> {
     return (
       <div className="ts-search-button-component navbar-buttons--tv">
         <Tooltip content={tooltip} placement="bottom">
-          <button className={`btn navbar-button--tv`} onClick={onToggleMode}>
+          <button className={`btn`} onClick={onToggleMode}>
             <i className={'fa fa-search'} />
           </button>
         </Tooltip>

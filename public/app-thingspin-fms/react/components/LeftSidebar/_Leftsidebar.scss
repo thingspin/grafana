@@ -17,3 +17,9 @@ ts-left-sidebar {
     background-color: blue;
   }
 }
+
+.sidemenu-hidden {
+  ts-left-sidebar {
+    display: none;
+  }
+}
