@@ -3,9 +3,15 @@ import { provideTheme } from 'app/core/utils/ConfigProvider';
 import { coreModule } from 'app/core/core';
 
 export function tsReact2AngularDirective(name: string, component: any, options: any) {
-  coreModule.directive(name, (reactDirective, $injector, $route, $rootScope) => {
-    return reactDirective(provideTheme(component), options, null, { $injector, $route, $rootScope });
-  });
+  coreModule.directive(name, [
+    'reactDirective',
+    '$injector',
+    '$route',
+    '$rootScope',
+    (reactDirective, $injector, $route, $rootScope) => {
+      return reactDirective(provideTheme(component), options, null, { $injector, $route, $rootScope });
+    },
+  ]);
 }
 
 // ref : https://gist.github.com/bennadel/647bf5b82b9d4332e8f0
