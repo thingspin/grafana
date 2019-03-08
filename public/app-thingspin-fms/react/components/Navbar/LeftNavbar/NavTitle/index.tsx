@@ -30,46 +30,58 @@ export class TsNavTitle extends PureComponent<Props, States> {
       menupath: 'test',
     };
 
-    $rootScope.$on('$routeChangeStart', (evt, data) => {
+    $rootScope.$on('$routeChangeSuccess', (evt, data) => {
       const result = this.findPathNavItem(data.$$route);
-
-      if (result) {
-        const lastNavItem = result[result.length - 1],
-          icon = lastNavItem.icon;
-
-        const texts = [];
-        for (const nav of result) {
-          texts.push(nav.text);
-        }
-        this.setState({
-          icon: icon ? icon : this.defaultIcon,
-          menupath: texts.join(' > '),
-        });
-      }
+      this.onChangeTitle(result);
     });
   }
 
   // common event Methods
+  onChangeTitle(result: NavModelItem[]) {
+    if (result) {
+      const lastNavItem = result[result.length - 1],
+        icon = lastNavItem.icon;
+
+      const texts = [];
+      for (const nav of result) {
+        texts.push(nav.text);
+      }
+      this.setState({
+        icon: icon ? icon : this.defaultIcon,
+        menupath: texts.join(' > '),
+      });
+    } else {
+      this.setState({
+        icon: 'fa fa-fw fa-warning',
+        menupath: 'Page not found',
+      });
+    }
+  }
 
   // get render splitted virtual DOM Methods
+  get renderTitle() {
+    return (
+      <>
+        <div className={'ts-nav-title-icon'}>
+          <i className={this.state.icon} />
+        </div>
+        <div>{this.state.menupath}</div>
+      </>
+    );
+  }
 
   // Component lifeCycle Methods
-
   // render 함수 호출 전 실행 함수
   // componentWillMount() {}
   // Virtual DOM을 HTML에 Rendering
   render() {
-    return (
-      <div className="ts-nav-title">
-        <div className="ts-nav-title-icon">
-          <i className={this.state.icon} />
-        </div>
-        <div>{this.state.menupath}</div>
-      </div>
-    );
+    return <div className="ts-nav-title">{this.renderTitle}</div>;
   }
   // render 함수 호출 후 실행 함수
-  // componentDidMount() {}
+  componentDidMount() {
+    const result = this.findPathNavItem(this.currentRoute);
+    this.onChangeTitle(result);
+  }
   // prop을 새로 받았을 때 실행 함수
   // componentWillReceiveProps() {}
   // prop or state 변경시 재렌더링 여부 결정 함수
@@ -83,27 +95,33 @@ export class TsNavTitle extends PureComponent<Props, States> {
 
   // util Methods
 
+  get currentRoute() {
+    return this.props.$route.current;
+  }
+
   get navItems(): NavModelItem[] {
     return this.navModelSrv.navItems;
   }
 
   findPathNavItem(route) {
+    if (!route) {
+      return null;
+    }
+
     const items = this.navItems;
     const { originalPath } = route;
 
-    if (originalPath) {
-      // parent iterator
-      for (const item of items) {
-        if (item.url === originalPath) {
-          return [item];
-        }
+    // parent iterator
+    for (const item of items) {
+      if (item.url === originalPath) {
+        return [item];
+      }
 
-        // children iterator
-        if (item.children && item.children.length) {
-          for (const childItem of item.children) {
-            if (childItem.url === originalPath) {
-              return [item, childItem];
-            }
+      // children iterator
+      if (item.children && item.children.length) {
+        for (const childItem of item.children) {
+          if (childItem.url === originalPath) {
+            return [item, childItem];
           }
         }
       }
