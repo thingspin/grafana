@@ -1,11 +1,113 @@
 import React, { PureComponent } from 'react';
+import { TsBaseProps } from 'app-thingspin-fms/models/common';
+import { NavModelSrv } from 'app/core/core';
+import { NavModelItem } from 'app/types';
 
-export class TsNavTitle extends PureComponent {
+export interface Props extends TsBaseProps {}
+
+export interface States {
+  icon: string;
+  menupath: string;
+}
+
+export class TsNavTitle extends PureComponent<Props, States> {
+  // private class member variables
+  navModelSrv: NavModelSrv;
+  defaultIcon: string;
+  // public class member variables
+
+  // protected class member variables
+
   constructor(props) {
     super(props);
+    const { $injector, $rootScope } = this.props;
+
+    this.navModelSrv = $injector.get('navModelSrv');
+
+    this.defaultIcon = 'fa fa-stop';
+    this.state = {
+      icon: this.defaultIcon,
+      menupath: 'test',
+    };
+
+    $rootScope.$on('$routeChangeStart', (evt, data) => {
+      const result = this.findPathNavItem(data.$$route);
+
+      if (result) {
+        const lastNavItem = result[result.length - 1],
+          icon = lastNavItem.icon;
+
+        const texts = [];
+        for (const nav of result) {
+          texts.push(nav.text);
+        }
+        this.setState({
+          icon: icon ? icon : this.defaultIcon,
+          menupath: texts.join(' > '),
+        });
+      }
+    });
   }
 
+  // common event Methods
+
+  // get render splitted virtual DOM Methods
+
+  // Component lifeCycle Methods
+
+  // render 함수 호출 전 실행 함수
+  // componentWillMount() {}
+  // Virtual DOM을 HTML에 Rendering
   render() {
-    return <div className="ts-nav-title">navigation title Layer</div>;
+    return (
+      <div className="ts-nav-title">
+        <div className="ts-nav-title-icon">
+          <i className={this.state.icon} />
+        </div>
+        <div>{this.state.menupath}</div>
+      </div>
+    );
+  }
+  // render 함수 호출 후 실행 함수
+  // componentDidMount() {}
+  // prop을 새로 받았을 때 실행 함수
+  // componentWillReceiveProps() {}
+  // prop or state 변경시 재렌더링 여부 결정 함수
+  // shouldComponentUpdate() {}
+  // 컴포넌트 업데이트(재렌더링) 전 실행 함수
+  // componentWillUpdate() {}
+  // 컴포넌트 재렌더링 후 실행 함수
+  // componentDidUpdate() {}
+  // DOM에 재거 후 실행 함수
+  // componentWillUnmount() { }
+
+  // util Methods
+
+  get navItems(): NavModelItem[] {
+    return this.navModelSrv.navItems;
+  }
+
+  findPathNavItem(route) {
+    const items = this.navItems;
+    const { originalPath } = route;
+
+    if (originalPath) {
+      // parent iterator
+      for (const item of items) {
+        if (item.url === originalPath) {
+          return [item];
+        }
+
+        // children iterator
+        if (item.children && item.children.length) {
+          for (const childItem of item.children) {
+            if (childItem.url === originalPath) {
+              return [item, childItem];
+            }
+          }
+        }
+      }
+    }
+    return null;
   }
 }

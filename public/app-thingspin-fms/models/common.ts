@@ -12,4 +12,6 @@ export enum EPermission {
 
 export interface TsBaseProps {
   $injector: any;
+  $route: any;
+  $rootScope: any;
 }

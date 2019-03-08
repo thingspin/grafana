@@ -1,2 +1,21 @@
+@import '../../../../../base/variables';
+
 .ts-nav-title {
+  display: flex;
+
+  min-height: $navbar-height;
+  line-height: $navbar-height;
+
+  font-size: 14px;
+}
+
+.ts-nav-title-icon {
+  padding: 0 15.8px 0 20px;
+
+  font-size: 13px;
+  i {
+    &.gicon {
+      background-color: #1e1e1e;
+    }
+  }
 }
