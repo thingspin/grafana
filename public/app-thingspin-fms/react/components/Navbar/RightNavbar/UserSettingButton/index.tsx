@@ -34,6 +34,18 @@ export class TsUserSettingButtonComponent extends PureComponent<Props> {
     );
   }
 
+  get userLogout(): JSX.Element {
+    return (
+      <div className="ts-user-setting-child-menu">
+        <Tooltip content={'사용자 로그 아웃'} placement="bottom">
+          <a className={`btn`} target={'_self'} href="/logout">
+            <i className={'fa fa-sign-out'} />
+          </a>
+        </Tooltip>
+      </div>
+    );
+  }
+
   get tooltip(): JSX.Element {
     // Virtual DOM Private Variables
     // Virtual DOM events Methods
@@ -42,7 +54,7 @@ export class TsUserSettingButtonComponent extends PureComponent<Props> {
     return (
       <div className="ts-user-setting-menu">
         {this.userSettingPage}
-        {this.userSettingPage}
+        {this.userLogout}
       </div>
     );
   }
