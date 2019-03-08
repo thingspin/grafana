@@ -53,6 +53,7 @@ export const getCategories = (): ValueFormatCategory[] => [
     formats: [
       { name: 'Degrees (°)', id: 'degree', fn: toFixedUnit('°') },
       { name: 'Radians', id: 'radian', fn: toFixedUnit('rad') },
+      { name: 'Milli Radians', id: 'mradian', fn: toFixedUnit('mrad') },
       { name: 'Gradian', id: 'grad', fn: toFixedUnit('grad') },
     ],
   },
