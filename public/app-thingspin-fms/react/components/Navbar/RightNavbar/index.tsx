@@ -60,7 +60,7 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
     // Virtual DOM Private Variables
     const { isEmergency } = this.state;
     const tooltip = '긴급 알람 이력 보기';
-    const buttonClass = `btn navbar-button--tv ${isEmergency ? 'ts-alert-emer' : ''}`;
+    const buttonClass = `btn ${isEmergency ? 'ts-alert-emer' : ''}`;
     // Virtual DOM events Methods
     const onToggleRightMenu = () => {
       this.props.updateLocation({ path: '/alarm' });
@@ -90,7 +90,7 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
     return (
       <div className="navbar-buttons--tv">
         <Tooltip content={tooltip} placement="bottom">
-          <button className={`btn navbar-button--tv`} onClick={onToggleViewMode}>
+          <button className={`btn`} onClick={onToggleViewMode}>
             <i className={'fa fa-desktop'} />
           </button>
         </Tooltip>
