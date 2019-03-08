@@ -40,12 +40,12 @@ export class TsNavTitle extends PureComponent<Props, States> {
   onChangeTitle(result: NavModelItem[]) {
     if (result) {
       const lastNavItem = result[result.length - 1],
-        icon = lastNavItem.icon;
-
-      const texts = [];
+        icon = lastNavItem.icon,
+        texts = [];
       for (const nav of result) {
         texts.push(nav.text);
       }
+
       this.setState({
         icon: icon ? icon : this.defaultIcon,
         menupath: texts.join(' > '),
@@ -113,14 +113,14 @@ export class TsNavTitle extends PureComponent<Props, States> {
 
     // parent iterator
     for (const item of items) {
-      if (item.url === originalPath) {
+      if (item.url === originalPath && item.id !== 'divider') {
         return [item];
       }
 
       // children iterator
       if (item.children && item.children.length) {
         for (const childItem of item.children) {
-          if (childItem.url === originalPath) {
+          if (childItem.url === originalPath && childItem.id !== 'divider') {
             return [item, childItem];
           }
         }
