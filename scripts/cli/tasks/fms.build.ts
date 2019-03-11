@@ -58,6 +58,8 @@ const buildTaskRunner: TaskRunner<void> = async () => {
   restoreCwd();
 };
 
-export const buildTask = new Task<void>();
-buildTask.setName('thingspin/ui build');
+const buildTask = new Task<void>();
+buildTask.setName('@thingspin/ui build');
 buildTask.setRunner(buildTaskRunner);
+
+export { buildTask, savePackage };
