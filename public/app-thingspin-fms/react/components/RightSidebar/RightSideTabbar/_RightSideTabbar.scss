@@ -5,6 +5,47 @@
   height: $right-side-tabbar-height;
 
   // test
-  background-color: darkgoldenrod;
-  margin: 2px;
+  background-color: #ffffff;
+  display: block;
+}
+
+.ts-right-side-tab-timezone-title-font {
+  font-size: 10px;
+  color: rgba(34, 44, 49, 0.6);
+}
+
+.ts-right-side-tab-timezone-title-calendar {
+  @extend .ts-right-side-tab-timezone-title-font;
+  padding-left: 16px;
+  padding-top: 16px;
+}
+
+.ts-right-side-tab-timezone-title-event {
+  @extend .ts-right-side-tab-timezone-title-font;
+  padding-left: 16px;
+  padding-top: 89px;
+}
+
+.ts-right-side-tab-timezone-content-font {
+  font-size: 14px;
+  color: rgba(30, 30, 30, 0.8);
+}
+
+.ts-right-side-tab-filter-font {
+  font-size: 16px;
+}
+
+.ts-right-side-tab-filter-font-serious {
+  @extend .ts-right-side-tab-filter-font;
+  color: rgba(233, 30, 99, 1);
+}
+
+.ts-right-side-tab-filter-font-warning {
+  @extend .ts-right-side-tab-filter-font;
+  color: rgba(255, 141, 2, 1);
+}
+
+.ts-right-side-tab-filter-font-check {
+  @extend .ts-right-side-tab-filter-font;
+  color: rgba(0, 121, 107, 1);
 }

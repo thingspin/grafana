@@ -1,4 +1,4 @@
-@import './RightSideTab/RightSideTab';
+@import './RightSideLog/RightSideLog';
 @import './RightSideTabbar/RightSideTabbar';
 @import './RightSideHistory/RightSideHistory';
 
@@ -18,4 +18,50 @@ ts-right-sidebar {
   ts-right-sidebar {
     display: none;
   }
+}
+
+.fms-right-tapitem {
+  // layer size
+  height: 35px;
+  font-size: 14px;
+  display: inline-flex;
+
+  width: 100%;
+  height: $right-side-tab-height;
+
+  // test
+  background-color: #ffffff;
+  // events
+  // &:hover {
+  //   border-left: 4px solid #00b2e3;
+  // }
+}
+
+.fms-right-tap-alarm {
+  width: 88px;
+}
+
+.fms-right-tap-systemlog {
+  width: 128px;
+}
+
+.fms-right-tap-selected {
+  color: rgba(30, 30, 30, 0.8);
+}
+
+.fms-right-tap-normal {
+  color: rgba(34, 44, 49, 0.8);
+}
+
+.fms-right-tap-alarm-icon {
+  margin-left: 16px;
+  margin-top: 8px;
+  width: 20px;
+  height: 20px;
+  font-size: 1.3em;
+}
+
+.fms-right-tap-alarm-title {
+  margin-left: 8px;
+  margin-top: 9px;
 }
