@@ -47,7 +47,6 @@ function setViewModeBodyClass(body: JQuery, mode: KioskUrlValue, sidemenuOpen: b
   body.removeClass('view-mode--kiosk');
   body.removeClass('view-mode--inactive');
 
-  console.log(mode);
   switch (mode) {
     case 'tv': {
       // thingspin add code ----
