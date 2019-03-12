@@ -1,0 +1,19 @@
+@import '../../../../base/variables';
+
+.ts-toolbar-component {
+  position: absolute;
+  width: 100%;
+  height: $ts-toolbar-height;
+
+  background-image: linear-gradient(to bottom, rgba(#ecebeb, 1), rgba(#ffffff, 1));
+
+  // fontss
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.14;
+  letter-spacing: normal;
+  color: #1e88e5;
+}
