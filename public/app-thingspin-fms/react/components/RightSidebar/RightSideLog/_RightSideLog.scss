@@ -1,0 +1,11 @@
+@import '../../../../base/variables';
+
+.ts-right-side-log-component {
+  width: 100%;
+
+  overflow: auto;
+  height: calc(100vh - (#{$navbar-height} + #{$right-side-tab-height} + #{$right-side-tabbar-height}));
+
+  // test
+  background-color: rgba(236, 239, 241, 1);
+}
