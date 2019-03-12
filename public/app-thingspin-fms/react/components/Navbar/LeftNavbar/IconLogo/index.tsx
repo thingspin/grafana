@@ -2,10 +2,11 @@ import React, { PureComponent } from 'react';
 
 // Grafana Module
 import { store } from 'app/store/store';
-import { appEvents, contextSrv } from 'app/core/core';
+import { appEvents } from 'app/core/core';
 
 // Thingspin libraires
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
+import { contextSrv } from 'app-thingspin-fms/angular-modules/core/services/tsContextSrv';
 
 interface Props extends TsBaseProps {
   imgagePath: string;

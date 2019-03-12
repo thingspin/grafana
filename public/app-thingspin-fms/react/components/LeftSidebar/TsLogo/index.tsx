@@ -4,7 +4,8 @@ import React, { PureComponent } from 'react';
 import { store } from 'app/store/store';
 // import { contextSrv, appEvents } from 'app/core/core';
 import { EViewModeState } from 'app-thingspin-fms/models/common';
-import { appEvents, contextSrv } from 'app/core/core';
+import { appEvents } from 'app/core/core';
+import { contextSrv } from 'app-thingspin-fms/angular-modules/core/services/tsContextSrv';
 
 interface Props {
   viewMode: EViewModeState;

@@ -16,7 +16,6 @@ import {
   colors,
   formDropdownDirective,
   assignModelProperties,
-  contextSrv,
   KeybindingSrv,
   helpModal,
   JsonExplorer,
@@ -29,6 +28,7 @@ import {
   updateLegendValues,
   searchResultsDirective,
 } from 'app/core/core';
+import { contextSrv } from 'app-thingspin-fms/angular-modules/core/services/tsContextSrv';
 
 import coreModule from './core_module';
 
