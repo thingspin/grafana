@@ -7,14 +7,24 @@ import { updateLocation } from 'app/core/actions';
 import { Tooltip } from '@grafana/ui';
 
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
+import { contextSrv } from 'app/core/core';
 
 export interface Props extends TsBaseProps {
   updateLocation: typeof updateLocation;
 }
 
-export class TsUserSettingButtonComponent extends PureComponent<Props> {
+export interface States {
+  isGrafanaAdmin: boolean;
+}
+
+export class TsUserSettingButtonComponent extends PureComponent<Props, States> {
   constructor(props) {
     super(props);
+
+    const { isGrafanaAdmin } = contextSrv.user;
+    this.state = {
+      isGrafanaAdmin,
+    };
   }
 
   get userSettingPage(): JSX.Element {
@@ -23,11 +33,29 @@ export class TsUserSettingButtonComponent extends PureComponent<Props> {
       this.props.updateLocation({ path: '/profile' });
     };
 
+    // return virtual DOM
     return (
       <div className="ts-user-setting-child-menu">
         <Tooltip content={'사용자 설정 페이지'} placement="bottom">
           <button className={`btn`} onClick={onGotoUserSettingPage}>
-            <i className={'fa fa-gear'} />
+            <i className={'fa fa-user'} />
+          </button>
+        </Tooltip>
+      </div>
+    );
+  }
+  get systemSettingPage(): JSX.Element {
+    // Virtual DOM events Methods
+    const onGotoSystemSettingPage = () => {
+      this.props.updateLocation({ path: '/admin/settings' });
+    };
+
+    // return virtual DOM
+    return (
+      <div className="ts-user-setting-child-menu">
+        <Tooltip content={'시스템 설정 페이지'} placement="bottom">
+          <button className={`btn`} onClick={onGotoSystemSettingPage}>
+            <i className={'fa fa-gears'} />
           </button>
         </Tooltip>
       </div>
@@ -53,7 +81,8 @@ export class TsUserSettingButtonComponent extends PureComponent<Props> {
     // return virtual DOM
     return (
       <div className="ts-user-setting-menu">
-        {this.userSettingPage}
+        {this.systemSettingPage}
+        {this.state.isGrafanaAdmin ? this.userSettingPage : null}
         {this.userLogout}
       </div>
     );
