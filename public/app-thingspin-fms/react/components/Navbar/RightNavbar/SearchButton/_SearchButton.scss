@@ -1,2 +1,32 @@
-.ts-search-button-component {
+@import '../../../../../base/variables';
+
+.ts-nav-search-component {
+  position: relative;
+  line-height: $navbar-height;
+
+  margin-right: 8px;
+
+  font-size: 14px;
+
+  input {
+    width: $ts-nav-search-width;
+    height: $ts-nav-search-height;
+
+    border-radius: 4px;
+    text-indent: 8px;
+
+    color: #1e1e1e;
+    background-color: rgba(#1e1e1e, 0.07);
+  }
+
+  .fa-search {
+    position: absolute;
+
+    line-height: $navbar-height;
+
+    top: 0;
+    right: 6.9px;
+
+    font-size: 14.6px;
+  }
 }

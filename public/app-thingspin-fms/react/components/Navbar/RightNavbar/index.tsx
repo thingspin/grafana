@@ -9,7 +9,7 @@ import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
 // ThingSPIN libraries
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
-import { TsSearchButtonComponent } from './SearchButton';
+import TsNavSearchComponent from './SearchButton';
 import TsUserSettingButtonComponent from './UserSettingButton/index';
 
 export interface Props extends TsBaseProps {
@@ -49,7 +49,7 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
   // get render splitted virtual DOM Methods
 
   get renderSearchButton(): JSX.Element {
-    return <TsSearchButtonComponent {...this.props} />;
+    return <TsNavSearchComponent {...this.props} />;
   }
 
   get renderDivider(): JSX.Element {
