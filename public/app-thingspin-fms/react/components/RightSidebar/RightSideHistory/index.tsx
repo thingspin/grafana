@@ -6,6 +6,6 @@ export class TsRightSideHistoryComponent extends PureComponent {
   }
 
   render() {
-    return <div className="ts-right-side-history-component">right side history component layer</div>;
+    return <div className="ts-right-side-history-component">ALARM History View</div>;
   }
 }
