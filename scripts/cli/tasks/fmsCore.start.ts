@@ -15,7 +15,7 @@ const startTaskRunner: TaskRunner<StartTaskOptions> = async ({ watchThemes, hot 
     hot
       ? {
           command:
-            'webpack-dev-server --progress --colors --mode development --config scripts/webpack/fms/webpack.hot.js',
+            'webpack-dev-server --progress --colors --mode development --host 0.0.0.0 --config scripts/webpack/fms/webpack.hot.js',
           name: 'Dev server',
         }
       : {
