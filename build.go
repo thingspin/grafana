@@ -127,6 +127,15 @@ func main() {
 				createLinuxPackages()
 			}
 
+		// ThingSPIN Add Code -------------------
+		case "ts-package":
+			grunt(gruntBuildArg("fms-build")...)
+			grunt(gruntBuildArg("package")...)
+			if goos == linux {
+				createLinuxPackages()
+			}
+		// ThingSPIN Add Code -------------------
+
 		case "package-only":
 			grunt(gruntBuildArg("package")...)
 			if goos == linux {
