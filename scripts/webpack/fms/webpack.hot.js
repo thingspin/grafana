@@ -14,7 +14,7 @@ const IgnoreNotFoundExportPlugin = require("../IgnoreNotFoundExportPlugin.js");
 //Override (entry, output, plugins) Written by JGW
 let fmsHot = merge(common, {
   entry: {
-    app: ['webpack-dev-server/client?http://localhost:3333', './public/app-thingspin-fms/dev.ts'],
+    app: ['webpack-dev-server/client?http://localhost:3334', './public/app-thingspin-fms/dev.ts'],
   },
   
   output: {

@@ -8,7 +8,7 @@ import { KeybindingSrv, coreModule, appEvents } from 'app/core/core';
 import { AngularLoader } from 'app/core/services/AngularLoader';
 import { KioskUrlValue } from 'app/types';
 
-const isFms: any = false;
+const isFms: any = true;
 
 export class ThingspinCtrl extends GrafanaCtrl {
   /** @ngInject */

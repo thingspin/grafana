@@ -20,7 +20,7 @@ class TsLogo extends PureComponent<Props> {
   constructor(props) {
     super(props);
     this.title = `ThingSPIN`;
-    this.fullLogoPath = `public/img/thingspin/thingspin_icon.svg`;
+    this.fullLogoPath = `public/img/thingspin/thingspin_logo.svg`;
     this.viewMode = props.viewMode;
   }
 

@@ -100,7 +100,6 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
           {this.arrowDOM}
           {this.pinDOM}
         </div>
-
         {this.childrenDOM}
       </div>
     );
