@@ -8,25 +8,37 @@
 
   font-size: 14px;
 
-  input {
+  .ts-nav-search-input-form {
+    display: inline-flex;
+
     width: $ts-nav-search-width;
     height: $ts-nav-search-height;
 
-    border-radius: 4px;
-    text-indent: 8px;
-
-    color: #1e1e1e;
-    background-color: rgba(#1e1e1e, 0.07);
-  }
-
-  .fa-search {
-    position: absolute;
-
     line-height: $navbar-height;
 
-    top: 0;
-    right: 6.9px;
+    background-color: rgba(#1e1e1e, 0.07);
+    border-radius: 4px;
 
-    font-size: 14.6px;
+    input {
+      width: calc(
+        #{$ts-nav-search-width} - (#{$ts-nav-search-icon-button-width} + #{$ts-nav-search-icon-button-padding-right})
+      );
+      height: 100%;
+
+      text-indent: 8px;
+
+      color: #1e1e1e;
+      background-color: rgba(#1e1e1e, 0.07);
+    }
+
+    button {
+      width: calc(#{$ts-nav-search-icon-button-width} + (#{$ts-nav-search-icon-button-padding-right} * 2));
+      padding: 0 $ts-nav-search-icon-button-padding-right;
+      border: 0;
+
+      background-color: rgba(#1e1e1e, 0.07);
+
+      font-size: 14.6px;
+    }
   }
 }

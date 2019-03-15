@@ -11,7 +11,6 @@ export interface Props extends TsBaseProps {
 }
 
 export interface States {
-  mode: boolean;
   search: string;
 }
 
@@ -20,7 +19,6 @@ export class TsNavSearchComponent extends PureComponent<Props, States> {
     super(props);
 
     this.state = {
-      mode: false,
       search: '',
     };
   }
@@ -30,19 +28,31 @@ export class TsNavSearchComponent extends PureComponent<Props, States> {
   onKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
     switch (e.key) {
       case 'Enter':
-        const { updateLocation } = this.props;
-        updateLocation({
-          path: '/fms/search',
-          query: {
-            search: this.state.search,
-          },
-        });
+        this.startSearch(this.state.search);
         break;
     }
   }
+
   onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { value } = e.target;
     this.setState({ search: value });
+  }
+
+  onClickIcon() {
+    this.startSearch(this.state.search);
+  }
+
+  startSearch(search) {
+    const { updateLocation } = this.props;
+
+    if (search) {
+      updateLocation({
+        path: '/fms/search',
+        query: {
+          search,
+        },
+      });
+    }
   }
 
   render() {
@@ -52,13 +62,17 @@ export class TsNavSearchComponent extends PureComponent<Props, States> {
     // return virtual DOM
     return (
       <div className="ts-nav-search-component">
-        <span className="fa fa-search" />
-        <input
-          type="text"
-          placeholder={'검색'}
-          onKeyPress={this.onKeyPress.bind(this)}
-          onChange={this.onChange.bind(this)}
-        />
+        <div className="ts-nav-search-input-form">
+          <input
+            type="text"
+            placeholder={'검색'}
+            onKeyPress={this.onKeyPress.bind(this)}
+            onChange={this.onChange.bind(this)}
+          />
+          <button onClick={this.onClickIcon.bind(this)}>
+            <i className="fa fa-search" />
+          </button>
+        </div>
       </div>
     );
   }
