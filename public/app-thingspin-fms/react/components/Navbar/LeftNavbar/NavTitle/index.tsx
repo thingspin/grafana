@@ -114,7 +114,7 @@ export const mapStateToProps = (state: StoreState, { $route }) => {
 
   const list = findPathNavItem(originalPath, state);
 
-  return Object.assign(state, getTitle(list));
+  return getTitle(list);
 };
 
 export default hot(module)(connect(mapStateToProps)(TsNavTitle));

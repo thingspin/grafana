@@ -2,12 +2,22 @@ import React, { PureComponent } from 'react';
 import { TsBottomLv1Component } from './BottomLv1';
 import { TsBottomLv2Component } from './BottomLv2';
 
-export class TsBottombar extends PureComponent {
+interface Props {}
+
+export interface States {
+  enable: boolean;
+}
+
+export class TsBottombar extends PureComponent<Props, States> {
   constructor(props) {
     super(props);
+
+    this.state = {
+      enable: false,
+    };
   }
 
-  render() {
+  get rednerMain(): JSX.Element {
     return (
       <div className="ts-bottom-layer">
         <div className="ts-bottom-container">
@@ -16,5 +26,9 @@ export class TsBottombar extends PureComponent {
         </div>
       </div>
     );
+  }
+
+  render() {
+    return <>{this.state.enable ? this.rednerMain : null}</>;
   }
 }
