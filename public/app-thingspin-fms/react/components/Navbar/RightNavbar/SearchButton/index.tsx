@@ -25,7 +25,7 @@ export class TsNavSearchComponent extends PureComponent<Props, States> {
 
   // common event Methods
 
-  onKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+  onInputKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
     switch (e.key) {
       case 'Enter':
         this.startSearch(this.state.search);
@@ -33,7 +33,7 @@ export class TsNavSearchComponent extends PureComponent<Props, States> {
     }
   }
 
-  onChange(e: React.ChangeEvent<HTMLInputElement>) {
+  onInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { value } = e.target;
     this.setState({ search: value });
   }
@@ -66,8 +66,8 @@ export class TsNavSearchComponent extends PureComponent<Props, States> {
           <input
             type="text"
             placeholder={'검색'}
-            onKeyPress={this.onKeyPress.bind(this)}
-            onChange={this.onChange.bind(this)}
+            onKeyPress={this.onInputKeyPress.bind(this)}
+            onChange={this.onInputChange.bind(this)}
           />
           <button onClick={this.onClickIcon.bind(this)}>
             <i className="fa fa-search" />

@@ -9,10 +9,14 @@ import { NavModelItem, StoreState } from 'app/types';
 export interface Props extends TsBaseProps {
   // redux data
   icon: string;
-  menupath: string;
+  menupath: string[];
 }
 
-export class TsNavTitle extends PureComponent<Props> {
+export interface States {
+  onlyChildTitle: boolean;
+}
+
+export class TsNavTitle extends PureComponent<Props, States> {
   // private class member variables
   navModelSrv: NavModelSrv;
   defaultIcon: string;
@@ -22,18 +26,23 @@ export class TsNavTitle extends PureComponent<Props> {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      onlyChildTitle: false,
+    };
   }
 
   // common event Methods
 
   // get render splitted virtual DOM Methods
   get renderTitle() {
+    const { menupath } = this.props;
     return (
       <>
         <div className={'ts-nav-title-icon'}>
           <i className={this.props.icon} />
         </div>
-        <div>{this.props.menupath}</div>
+        <div>{this.state.onlyChildTitle ? menupath[menupath.length - 1] : menupath.join(' > ')}</div>
       </>
     );
   }
@@ -98,12 +107,12 @@ export const getTitle = list => {
 
     retValue = {
       icon: icon ? icon : 'fa fa-stop',
-      menupath: texts.join(' > '),
+      menupath: texts,
     };
   } else {
     retValue = {
       icon: 'fa fa-fw fa-warning',
-      menupath: 'Page not found',
+      menupath: ['Page not found'],
     };
   }
   return retValue;
