@@ -1,16 +1,18 @@
 import React, { PureComponent } from 'react';
+import { hot } from 'react-hot-loader';
+import { connect } from 'react-redux';
+
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import { NavModelSrv } from 'app/core/core';
-import { NavModelItem } from 'app/types';
+import { NavModelItem, StoreState } from 'app/types';
 
-export interface Props extends TsBaseProps {}
-
-export interface States {
+export interface Props extends TsBaseProps {
+  // redux data
   icon: string;
   menupath: string;
 }
 
-export class TsNavTitle extends PureComponent<Props, States> {
+export class TsNavTitle extends PureComponent<Props> {
   // private class member variables
   navModelSrv: NavModelSrv;
   defaultIcon: string;
@@ -20,52 +22,18 @@ export class TsNavTitle extends PureComponent<Props, States> {
 
   constructor(props) {
     super(props);
-    const { $injector, $rootScope } = this.props;
-
-    this.navModelSrv = $injector.get('navModelSrv');
-
-    this.defaultIcon = 'fa fa-stop';
-    this.state = {
-      icon: this.defaultIcon,
-      menupath: 'test',
-    };
-
-    $rootScope.$on('$routeChangeSuccess', (evt, data) => {
-      const result = this.findPathNavItem(data.$$route);
-      this.onChangeTitle(result);
-    });
   }
 
   // common event Methods
-  onChangeTitle(result: NavModelItem[]) {
-    if (result) {
-      const lastNavItem = result[result.length - 1],
-        icon = lastNavItem.icon,
-        texts = [];
-      for (const nav of result) {
-        texts.push(nav.text);
-      }
-
-      this.setState({
-        icon: icon ? icon : this.defaultIcon,
-        menupath: texts.join(' > '),
-      });
-    } else {
-      this.setState({
-        icon: 'fa fa-fw fa-warning',
-        menupath: 'Page not found',
-      });
-    }
-  }
 
   // get render splitted virtual DOM Methods
   get renderTitle() {
     return (
       <>
         <div className={'ts-nav-title-icon'}>
-          <i className={this.state.icon} />
+          <i className={this.props.icon} />
         </div>
-        <div>{this.state.menupath}</div>
+        <div>{this.props.menupath}</div>
       </>
     );
   }
@@ -78,10 +46,7 @@ export class TsNavTitle extends PureComponent<Props, States> {
     return <div className="ts-nav-title">{this.renderTitle}</div>;
   }
   // render 함수 호출 후 실행 함수
-  componentDidMount() {
-    const result = this.findPathNavItem(this.currentRoute);
-    this.onChangeTitle(result);
-  }
+  componentDidMount() {}
   // prop을 새로 받았을 때 실행 함수
   // componentWillReceiveProps() {}
   // prop or state 변경시 재렌더링 여부 결정 함수
@@ -94,38 +59,62 @@ export class TsNavTitle extends PureComponent<Props, States> {
   // componentWillUnmount() { }
 
   // util Methods
+}
 
-  get currentRoute() {
-    return this.props.$route.current;
-  }
+// util methods
+export const findPathNavItem = (path: string, s: StoreState) => {
+  const { navIndex } = s;
 
-  get navItems(): NavModelItem[] {
-    return this.navModelSrv.navItems;
-  }
-
-  findPathNavItem(route) {
-    if (!route) {
-      return null;
+  // parent iterator
+  for (const id in navIndex) {
+    const item = navIndex[id];
+    if (item.url === path && id !== 'divider') {
+      return [item];
     }
 
-    const items = this.navItems;
-    const { originalPath } = route;
-
-    // parent iterator
-    for (const item of items) {
-      if (item.url === originalPath && item.id !== 'divider') {
-        return [item];
-      }
-
-      // children iterator
-      if (item.children && item.children.length) {
-        for (const childItem of item.children) {
-          if (childItem.url === originalPath && childItem.id !== 'divider') {
-            return [item, childItem];
-          }
+    // children iterator
+    if (item.children && item.children.length) {
+      for (const childItem of item.children) {
+        if (childItem.url === path && childItem.id !== 'divider') {
+          return [item, childItem];
         }
       }
     }
-    return null;
   }
-}
+  return null;
+};
+
+export const getTitle = list => {
+  let retValue: any = {};
+
+  if (list) {
+    const lastNavItem: NavModelItem = list[list.length - 1],
+      icon = lastNavItem.icon,
+      texts = [];
+
+    for (const nav of list) {
+      texts.push(nav.text);
+    }
+
+    retValue = {
+      icon: icon ? icon : 'fa fa-stop',
+      menupath: texts.join(' > '),
+    };
+  } else {
+    retValue = {
+      icon: 'fa fa-fw fa-warning',
+      menupath: 'Page not found',
+    };
+  }
+  return retValue;
+};
+
+export const mapStateToProps = (state: StoreState, { $route }) => {
+  const { originalPath } = $route.current.$$route;
+
+  const list = findPathNavItem(originalPath, state);
+
+  return Object.assign(state, getTitle(list));
+};
+
+export default hot(module)(connect(mapStateToProps)(TsNavTitle));

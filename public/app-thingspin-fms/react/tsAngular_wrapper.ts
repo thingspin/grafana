@@ -1,5 +1,5 @@
 import { tsReact2AngularDirective } from 'app-thingspin-fms/angular-modules/thingspin/directives/tsReact2Angular';
-import { TsNavbarComponent } from './components/Navbar';
+import TsNavbarComponent from './components/Navbar';
 import { TsLeftSidebar } from './components/LeftSidebar';
 import { TsRightSidebar } from './components/RightSidebar';
 import { TsBottombar } from './components/Bottombar';
