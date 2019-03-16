@@ -1,6 +1,6 @@
 .fms-menu-lv2 {
   // layer size
-  height: 28px;
+  //height: 28px;
   font-size: 13px;
 
   // events
@@ -9,5 +9,8 @@
     background-color: rgba(0, 0, 0, 0.3);
   }
   background-color: rgba(0, 0, 0, 0.1);
-  margin-left: 4px;
+  //margin-left: 4px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 20px;
 }
