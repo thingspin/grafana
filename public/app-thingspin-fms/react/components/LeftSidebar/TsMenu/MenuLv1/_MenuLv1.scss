@@ -1,20 +1,57 @@
 @import 'MenuLv2/MenuLv2';
 
 .fms-menu-header {
-  // layer size
   height: 40px;
-  //width: 100%;
+  width: 100%;
   font-size: 14px;
 
   display: flex;
   flex-direction: row;
   align-items: center;
-
-  // justify-content: center;
+  justify-content: left;
 
   &:hover {
     border-left: 4px solid #00b2e3;
     background-color: rgba(0, 178, 227, 0.1);
+  }
+
+  &-icon {
+    min-width: 12px;
+    max-width: 16px;
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    margin-right: 4px;
+  }
+
+  &-name {
+    flex: 1;
+    min-width: 128px;
+    max-width: 164px;
+  }
+
+  &-controls {
+    font-size: 10px;
+    flex: 1;
+    float: right;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    &-pin {
+      display: block;
+      //flex: 1;
+      width: 12px;
+      padding: 2px;
+    }
+
+    &-arrow {
+      display: block;
+      //flex: 1;
+      width: 12px;
+      padding: 2px;
+    }
   }
 }
 

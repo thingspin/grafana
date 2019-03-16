@@ -17,9 +17,9 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
 
     // init state
     this.state = {
-      opendedSubmenu: false,
-      maxDisplayChildren: 3,
-      pin: false,
+      opendedSubmenu: true,
+      maxDisplayChildren: 8,
+      pin: true,
     };
   }
 
@@ -43,19 +43,19 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
     const arrowIcon = opendedSubmenu ? 'fa fa-caret-down' : 'fa fa-caret-up';
 
     return (
-      <div onClick={this.arrowClickEvt}>
-        <i className={menu.children ? arrowIcon : null} />
+      <div className='fms-menu-header-controls-arrow' onClick={this.arrowClickEvt}>
+        <span><i className={menu.children ? arrowIcon : null} /></span>
       </div>
     );
   }
 
   get pinDOM() {
     const { opendedSubmenu, pin } = this.state;
-    const pinIcon = pin ? 'fa fa-check-circle' : 'fa fa-check-circle-o';
+    const pinIcon = pin ? 'fa fa-map-pin' : 'fa fa-ellipsis-h';
 
     return opendedSubmenu ? (
-      <div onClick={this.pinClickEvt}>
-        <i className={pinIcon} />
+      <div className='fms-menu-header-controls-pin' onClick={this.pinClickEvt}>
+        <span><i className={pinIcon} /></span>
       </div>
     ) : null;
   }
@@ -89,16 +89,16 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
     return (
       <div className="fms-menu-lv1">
         <div className="fms-menu-header" key="menulv1">
-          <div className="" />
-          <div className="">
-            <a href={menu.url} target={menu.target}>
-              <i className={menu.icon} />
-              {menu.text}
-            </a>
+          <div className="fms-menu-header-icon">
+            <i className={menu.icon} />
           </div>
-
-          {this.arrowDOM}
-          {this.pinDOM}
+          <div className="fms-menu-header-name">
+            <a href={menu.url} target={menu.target}>{menu.text}</a>
+          </div>
+          <div className="fms-menu-header-controls">
+            {this.pinDOM}
+            {this.arrowDOM}
+          </div>
         </div>
         {this.childrenDOM}
       </div>
