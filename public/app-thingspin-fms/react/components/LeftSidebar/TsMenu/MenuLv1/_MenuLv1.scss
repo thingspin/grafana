@@ -34,23 +34,19 @@
 
   &-controls {
     font-size: 10px;
+    color: rgba(255,255,255,0.3);
     flex: 1;
-    //float: right;
     margin-left: auto;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
 
     &-pin {
-      //display: block;
-      //flex: 1;
       width: 12px;
       padding: 2px;
     }
 
     &-arrow {
-      //display: block;
-      //flex: 1;
       width: 12px;
       padding: 2px;
     }

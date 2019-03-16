@@ -44,7 +44,9 @@ class TsMenu extends PureComponent {
   }
 
   get menuLv1DOM() {
-    return this.navTree.map((item, idx) => <TsMenuLv1 key={idx} menu={item} />);
+    return this.navTree
+      .filter( (item) => item.icon)
+      .map((item, idx) => <TsMenuLv1 key={idx} menu={item} />);
   }
 
   render() {
