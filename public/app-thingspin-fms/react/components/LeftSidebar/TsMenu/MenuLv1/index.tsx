@@ -74,9 +74,12 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
     const DOM = menu.children ? (
       <div key="menulv2" className="fms-menu-body" style={bodyStyle}>
         {' '}
-        {menu.children.map((item, idx) => (
-          <TsMenuLv2 key={idx} menu={item} />
-        ))}{' '}
+        {menu.children
+          .filter((item) => !item.divider)
+          .map((item, idx) => (
+            <TsMenuLv2 key={idx} menu={item} />
+          ))
+        }{' '}
       </div>
     ) : null;
 
@@ -85,6 +88,8 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
 
   render() {
     const { menu } = this.props;
+
+    console.log(menu);
 
     return (
       <div className="fms-menu-lv1">
