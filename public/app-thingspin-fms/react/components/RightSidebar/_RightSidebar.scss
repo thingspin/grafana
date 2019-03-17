@@ -12,6 +12,12 @@ ts-right-sidebar {
   background-color: olive;
 }
 
+.rightmenu-open {
+  ts-right-sidebar {
+    display: block;
+  }
+}
+
 .view-mode--tv, // mode 1
 .view-mode--kiosk {
   // mode 2

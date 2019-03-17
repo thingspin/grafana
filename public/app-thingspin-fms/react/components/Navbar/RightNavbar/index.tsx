@@ -6,6 +6,7 @@ import { Tooltip } from '@grafana/ui';
 import { DashNav } from 'app/features/dashboard/components/DashNav/DashNav';
 import { updateLocation } from 'app/core/actions';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
+import { appEvents } from 'app/core/app_events';
 
 // ThingSPIN libraries
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
@@ -20,6 +21,7 @@ export interface States {
   isEmergency: boolean;
   enableAlertButton: boolean;
   enableViewModeButton: boolean;
+  enableVSplitButton: boolean;
   enableUserSettingButton: boolean;
   enableSearchButton: boolean;
 }
@@ -39,6 +41,7 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
       isEmergency: false,
       enableSearchButton: true,
       enableAlertButton: true,
+      enableVSplitButton: true,
       enableViewModeButton: true,
       enableUserSettingButton: true,
     };
@@ -78,6 +81,26 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
     );
   }
 
+  get renderVSplitButton(): JSX.Element {
+    // Virtual DOM Private Variables
+    const tooltip = '오른쪽 디스플레이 창 토글';
+    // Virtual DOM events Methods
+    const onToggleVSplitMode = () => {
+      appEvents.emit('toggle-vsplit-mode');
+    };
+
+    // return virtual DOM
+    return (
+      <div className="navbar-buttons--tv">
+        <Tooltip content={tooltip} placement="bottom">
+          <button className={`btn`} onClick={onToggleVSplitMode}>
+            <i className={'fa fa-columns'} />
+          </button>
+        </Tooltip>
+      </div>
+    );
+  }
+
   get renderViewModeButton(): JSX.Element {
     // Virtual DOM Private Variables
     const tooltip = '뷰 모드 전환';
@@ -108,13 +131,14 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
   // componentWillMount() {}
   // Virtual DOM을 HTML에 Rendering
   render() {
-    const { enableAlertButton, enableSearchButton, enableUserSettingButton, enableViewModeButton } = this.state;
+    const { enableAlertButton, enableSearchButton, enableUserSettingButton, enableViewModeButton, enableVSplitButton } = this.state;
 
     return (
       <div className="ts-right-navbar">
         {enableSearchButton ? this.renderSearchButton : null}
         {this.renderDivider}
         {enableAlertButton ? this.renderAlertButton : null}
+        {enableVSplitButton ? this.renderVSplitButton : null}
         {enableViewModeButton ? this.renderViewModeButton : null}
         {enableUserSettingButton ? this.renderUserSettingButton : null}
       </div>

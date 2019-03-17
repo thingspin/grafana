@@ -94,6 +94,10 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
       sidemenuOpen = scope.contextSrv.sidemenu;
       body.toggleClass('sidemenu-open');
     });
+
+    appEvents.on('toggle-vsplit-mode', () => {
+      body.toggleClass('rightmenu-open');
+    });
     // thingspin add code ----
 
     appEvents.on('toggle-sidemenu-mobile', () => {
