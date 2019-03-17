@@ -43,8 +43,10 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
     const arrowIcon = opendedSubmenu ? 'fa fa-caret-down' : 'fa fa-caret-up';
 
     return (
-      <div className='fms-menu-header-controls-arrow' onClick={this.arrowClickEvt}>
-        <span><i className={menu.children ? arrowIcon : null} /></span>
+      <div className="fms-menu-header-controls-arrow" onClick={this.arrowClickEvt}>
+        <span>
+          <i className={menu.children ? arrowIcon : null} />
+        </span>
       </div>
     );
   }
@@ -54,8 +56,10 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
     const pinIcon = pin ? 'fa fa-map-pin' : 'fa fa-ellipsis-h';
 
     return opendedSubmenu ? (
-      <div className='fms-menu-header-controls-pin' onClick={this.pinClickEvt}>
-        <span><i className={pinIcon} /></span>
+      <div className="fms-menu-header-controls-pin" onClick={this.pinClickEvt}>
+        <span>
+          <i className={pinIcon} />
+        </span>
       </div>
     ) : null;
   }
@@ -75,11 +79,10 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
       <div key="menulv2" className="fms-menu-body" style={bodyStyle}>
         {' '}
         {menu.children
-          .filter((item) => !item.divider)
+          .filter(item => !item.divider)
           .map((item, idx) => (
             <TsMenuLv2 key={idx} menu={item} />
-          ))
-        }{' '}
+          ))}{' '}
       </div>
     ) : null;
 
@@ -89,8 +92,6 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
   render() {
     const { menu } = this.props;
 
-    console.log(menu);
-
     return (
       <div className="fms-menu-lv1">
         <div className="fms-menu-header" key="menulv1">
@@ -98,7 +99,9 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
             <i className={menu.icon} />
           </div>
           <div className="fms-menu-header-name">
-            <a href={menu.url} target={menu.target}>{menu.text}</a>
+            <a href={menu.url} target={menu.target}>
+              {menu.text}
+            </a>
           </div>
           <div className="fms-menu-header-controls">
             {this.pinDOM}
