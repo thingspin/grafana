@@ -11,6 +11,9 @@ import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
 import { registerAngularDirectives } from './grafana_custom/core';
 
 import { fmsSetupAngularRoutes } from './routes/routes';
+import addThingspinReducers from './react/redux/addReducers';
+
+addThingspinReducers();
 
 class ThingspinFmsApp extends GrafanaApp {
   ng1App: any;

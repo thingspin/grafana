@@ -3,7 +3,6 @@ import React, { PureComponent } from 'react';
 
 // Grafana Libraries
 import { Tooltip } from '@grafana/ui';
-import { DashNav } from 'app/features/dashboard/components/DashNav/DashNav';
 import { updateLocation } from 'app/core/actions';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 import { appEvents } from 'app/core/app_events';
@@ -12,6 +11,7 @@ import { appEvents } from 'app/core/app_events';
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import TsNavSearchComponent from './SearchButton';
 import TsUserSettingButtonComponent from './UserSettingButton/index';
+import TsViewModeButtonComponent from './ViewModeButton/index';
 
 export interface Props extends TsBaseProps {
   updateLocation: typeof updateLocation;
@@ -28,14 +28,13 @@ export interface States {
 
 export class TsRightNavbarComponent extends PureComponent<Props, States> {
   // private class member variables
-  gfNav: DashNav; // has-a inheritance relation
+
   // public class member variables
 
   // protected class member variables
 
   constructor(props) {
     super(props);
-    this.gfNav = new DashNav(props);
 
     this.state = {
       isEmergency: false,
@@ -102,23 +101,7 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
   }
 
   get renderViewModeButton(): JSX.Element {
-    // Virtual DOM Private Variables
-    const tooltip = '뷰 모드 전환';
-    // Virtual DOM events Methods
-    const onToggleViewMode = () => {
-      this.gfNav.onToggleTVMode();
-    };
-
-    // return virtual DOM
-    return (
-      <div className="navbar-buttons--tv">
-        <Tooltip content={tooltip} placement="bottom">
-          <button className={`btn`} onClick={onToggleViewMode}>
-            <i className={'fa fa-desktop'} />
-          </button>
-        </Tooltip>
-      </div>
-    );
+    return <TsViewModeButtonComponent {...this.props} />;
   }
 
   get renderUserSettingButton(): JSX.Element {
@@ -131,16 +114,22 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
   // componentWillMount() {}
   // Virtual DOM을 HTML에 Rendering
   render() {
-    const { enableAlertButton, enableSearchButton, enableUserSettingButton, enableViewModeButton, enableVSplitButton } = this.state;
+    const {
+      enableAlertButton,
+      enableSearchButton,
+      enableUserSettingButton,
+      enableViewModeButton,
+      enableVSplitButton,
+    } = this.state;
 
     return (
       <div className="ts-right-navbar">
         {enableSearchButton ? this.renderSearchButton : null}
         {this.renderDivider}
         {enableAlertButton ? this.renderAlertButton : null}
-        {enableVSplitButton ? this.renderVSplitButton : null}
         {enableViewModeButton ? this.renderViewModeButton : null}
         {enableUserSettingButton ? this.renderUserSettingButton : null}
+        {enableVSplitButton ? this.renderVSplitButton : null}
       </div>
     );
   }
@@ -155,12 +144,12 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
   // 컴포넌트 재렌더링 후 실행 함수
   // componentDidUpdate() {}
   // DOM에 재거 후 실행 함수
-  componentWillUnmount() {
-    this.gfNav.componentWillUnmount();
-  }
+  // componentWillUnmount() {}
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  viewMode: state.thingspinViewMode,
+});
 
 const mapDispatchToProps = {
   updateLocation,

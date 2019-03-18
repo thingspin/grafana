@@ -7,6 +7,8 @@ import DatasourceSrv from 'app/features/plugins/datasource_srv';
 import { KeybindingSrv, coreModule, appEvents } from 'app/core/core';
 import { AngularLoader } from 'app/core/services/AngularLoader';
 import { KioskUrlValue } from 'app/types';
+import { store } from 'app/store/store';
+import { ViewModeActionTypes } from 'app-thingspin-fms/react/redux/reducers/viewMode';
 
 const isFms: any = true;
 
@@ -175,6 +177,12 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
           search.kiosk = 'tv';
         }
       }
+      // thingspin add code ----
+      store.dispatch({
+        type: ViewModeActionTypes.TS_UPDATE_VIEWMODE,
+        payload: search.kiosk,
+      });
+      // thingspin add code ----
 
       $timeout(() => $location.search(search));
       setViewModeBodyClass(body, search.kiosk, sidemenuOpen);
