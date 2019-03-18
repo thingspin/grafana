@@ -9,8 +9,8 @@ interface Props extends TsBaseProps {}
 export const TsNavbarComponent: FC<Props> = props => {
   return (
     <>
-      <TsLeftNavbarComponent key="leftnavbar" {...props} />
-      <TsRightNavbarComponent key="rightnavbar" {...props} />
+      <TsLeftNavbarComponent {...props} />
+      <TsRightNavbarComponent {...props} />
     </>
   );
 };
