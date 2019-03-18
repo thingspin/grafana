@@ -5,25 +5,21 @@ import { Tooltip } from '@grafana/ui';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
-import { TsNavbarPayload } from 'app-thingspin-fms/react/redux/reducers/navbar';
 import { KioskUrlValue } from 'app/types';
 
 export interface Props extends TsBaseProps {
-  navbar: TsNavbarPayload;
+  kiosk: any;
 }
 
 export class TsViewModeButtonCompoent extends PureComponent<Props> {
   // private class member variables
-  $location: any;
-  $timeout: any;
+  private $location: any;
   // public class member variables
-
   // protected class member variables
 
   constructor(props) {
     super(props);
     this.$location = this.props.$injector.get('$location');
-    this.$timeout = this.props.$injector.get('$timeout');
   }
 
   getViewmodeIcon(num: number) {
@@ -104,7 +100,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
     };
 
     let faIcon: string;
-    switch (this.props.navbar.kiosk) {
+    switch (this.props.kiosk) {
       case '1':
       case true: //view mode 2
         break;
@@ -144,7 +140,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
 }
 
 const mapStateToProps = state => ({
-  navbar: state.thingspinNavbar,
+  kiosk: state.thingspinNavbar.kiosk,
 });
 
 const mapDispatchToProps = {};

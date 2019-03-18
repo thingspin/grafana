@@ -7,9 +7,10 @@ import { appEvents } from 'app/core/core';
 // Thingspin libraires
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import { contextSrv } from 'app-thingspin-fms/angular-modules/core/services/tsContextSrv';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
 interface Props extends TsBaseProps {
-  imgagePath: string;
+  faviconPath: string;
 }
 
 export class TsIconLogo extends PureComponent<Props> {
@@ -32,9 +33,17 @@ export class TsIconLogo extends PureComponent<Props> {
     return (
       <div className="ts-icon-logo">
         <button className="btn" onClick={this.toggleMenu}>
-          <img src={this.props.imgagePath} alt="" />
+          <img src={this.props.faviconPath} alt="" />
         </button>
       </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  faviconPath: state.thingspinNavbar.faviconPath,
+});
+
+const mapDispatchToProps = {};
+
+export default connectWithStore(TsIconLogo, mapStateToProps, mapDispatchToProps);
