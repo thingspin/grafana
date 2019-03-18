@@ -69,7 +69,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
     const tooltip = '오른쪽 디스플레이 창 토글';
     // Virtual DOM events Methods
     const onToggleVSplitMode = () => {
-      appEvents.emit('toggle-vsplit-mode');
+      appEvents.emit('toggle-right-sidebar', true);
     };
 
     // return virtual DOM

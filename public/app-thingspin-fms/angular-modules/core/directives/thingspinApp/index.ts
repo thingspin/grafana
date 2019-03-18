@@ -97,14 +97,12 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
       body.toggleClass('sidemenu-open');
     });
 
-    appEvents.on('toggle-vsplit-mode', () => {
-      const { enableRightSidebarButton } = store.getState().thingspinNavbar;
-
-      body.toggleClass('rightmenu-open', enableRightSidebarButton);
+    appEvents.on('toggle-right-sidebar', (enable: boolean) => {
+      body.toggleClass('rightmenu-open', enable);
       store.dispatch({
         type: TS_NAV_ACTION_TYPES.UPDATE_NAV,
         payload: {
-          enableRightSidebarButton: !enableRightSidebarButton,
+          enableRightSidebarButton: !enable,
         },
       });
     });
