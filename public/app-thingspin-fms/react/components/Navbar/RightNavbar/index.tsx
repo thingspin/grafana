@@ -64,7 +64,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
     );
   }
 
-  get renderVSplitButton(): JSX.Element {
+  get renderRightSidebarButton(): JSX.Element {
     // Virtual DOM Private Variables
     const tooltip = '오른쪽 디스플레이 창 토글';
     // Virtual DOM events Methods
@@ -104,6 +104,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
       enableUserSettingButton,
       enableViewModeButton,
       enableRightSidebarButton,
+      kiosk,
     } = this.props.navbar;
 
     return (
@@ -113,7 +114,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
         {enableAlertButton ? this.renderAlertButton : null}
         {enableViewModeButton ? this.renderViewModeButton : null}
         {enableUserSettingButton ? this.renderUserSettingButton : null}
-        {enableRightSidebarButton ? this.renderVSplitButton : null}
+        {enableRightSidebarButton && !kiosk ? this.renderRightSidebarButton : null}
       </div>
     );
   }
