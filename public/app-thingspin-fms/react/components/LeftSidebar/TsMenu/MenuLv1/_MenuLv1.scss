@@ -13,8 +13,8 @@
   justify-content: left;
 
   &:hover {
-    border-left: 4px solid #00b2e3;
-    background-color: rgba(0, 178, 227, 0.1);
+    //border-left: 4px solid #00b2e3;
+    background-color: rgba(0, 0, 0, 0.3);
   }
 
   &-icon {
@@ -34,7 +34,7 @@
 
   &-controls {
     font-size: 10px;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255, 255, 255, 0.3);
     flex: 1;
     margin-left: auto;
     display: flex;
@@ -56,4 +56,17 @@
 .fms-menu-body {
   overflow: auto;
   margin-right: 4px;
+}
+
+.fms-menu-dividers {
+  &-divider {
+    border-top: 1px solid rgba(176, 190, 197, 0.3);
+    width: 196px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+  }
+}
+
+.fms-menu-lv1 {
+  height: 100%;
 }

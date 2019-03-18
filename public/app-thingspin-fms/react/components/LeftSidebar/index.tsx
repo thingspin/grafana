@@ -14,7 +14,9 @@ export class TsLeftSidebar extends PureComponent {
   render() {
     return [
       <TsLogo key="tslogo" viewMode={this.viewMode} />,
-      <hr className="ts-leftsidebar-divider" key="ts-divider"/>,
+      <div className="fms-menu-dividers" key="ts-dividers">
+        <hr className="fms-menu-dividers-divider" key="ts-divider" />
+      </div>,
       <TsMenu key="tsmenu" />,
     ];
   }
