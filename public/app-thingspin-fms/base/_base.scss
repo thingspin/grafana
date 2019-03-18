@@ -12,6 +12,12 @@
   position: relative;
   display: flex;
 }
+.ts-ng-view {
+  position: relative;
+  overflow: auto;
+
+  height: calc(100% - #{$ts-toolbar-height});
+}
 
 .ts-main-view {
   position: relative;

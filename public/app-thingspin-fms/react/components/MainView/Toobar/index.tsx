@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
+import { updateLocation } from 'app/core/actions';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
-export interface Props {}
-
-export interface States {
+export interface Props {
   enable: boolean;
 }
 
-export class TsToolbarComponent extends PureComponent<Props, States> {
+export class TsToolbarComponent extends PureComponent<Props> {
   // private class member variables
 
   // public class member variables
@@ -15,9 +15,6 @@ export class TsToolbarComponent extends PureComponent<Props, States> {
 
   constructor(props) {
     super(props);
-    this.state = {
-      enable: false,
-    };
   }
 
   // common event Methods
@@ -32,11 +29,14 @@ export class TsToolbarComponent extends PureComponent<Props, States> {
   // componentWillMount() {}
   // Virtual DOM을 HTML에 Rendering
   render() {
-    const { enable } = this.state;
+    const { enable } = this.props;
+    const ngViewDiv = $('#ts-ng-view');
+
+    ngViewDiv.toggleClass('ts-ng-view', enable);
     return <>{enable ? this.renderToolbar : null}</>;
   }
   // render 함수 호출 후 실행 함수
-  // componentDidMount() { }
+  // componentDidMount() {}
   // prop을 새로 받았을 때 실행 함수
   // componentWillReceiveProps() {}
   // prop or state 변경시 재렌더링 여부 결정 함수
@@ -50,3 +50,13 @@ export class TsToolbarComponent extends PureComponent<Props, States> {
 
   // util Methods
 }
+
+const mapStateToProps = state => ({
+  enable: state.thingspinToolbar.enable,
+});
+
+const mapDispatchToProps = {
+  updateLocation,
+};
+
+export default connectWithStore(TsToolbarComponent, mapStateToProps, mapDispatchToProps);

@@ -20,7 +20,7 @@ export interface TsNavbarPayload {
 }
 
 // action format
-export interface UpdateViewModeAction {
+export interface UpdateNavbarAction {
   type: TS_NAV_ACTION_TYPES;
   payload: any;
 }
@@ -39,7 +39,7 @@ export const initialState: TsNavbarPayload = {
 };
 
 // reducer
-export const tsNavbarReducer = (state = initialState, action: UpdateViewModeAction): TsNavbarPayload => {
+export const tsNavbarReducer = (state = initialState, action: UpdateNavbarAction): TsNavbarPayload => {
   switch (action.type) {
     case TS_NAV_ACTION_TYPES.UPDATE_VIEWMODE: {
       return { ...state, kiosk: action.payload };

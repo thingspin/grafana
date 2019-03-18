@@ -3,7 +3,7 @@ import TsNavbarComponent from './components/Navbar';
 import { TsLeftSidebar } from './components/LeftSidebar';
 import { TsRightSidebar } from './components/RightSidebar';
 import { TsBottombar } from './components/Bottombar';
-import { TsToolbarComponent } from './components/MainView/Toobar/index';
+import TsToolbarComponent from './components/MainView/Toobar/index';
 
 export function tsRegisterAngularDirectives() {
   tsReact2AngularDirective('tsNavbar', TsNavbarComponent, []);

@@ -1,11 +1,11 @@
 @import '../../../../base/variables';
 
 .ts-toolbar-component {
-  position: absolute;
+  position: relative;
   width: 100%;
   height: $ts-toolbar-height;
 
-  background-image: linear-gradient(to bottom, rgba(#ecebeb, 1), rgba(#ffffff, 1));
+  // background-image: linear-gradient(to bottom, rgba(#ecebeb, 1), rgba(#ffffff, 1));
 
   // fontss
   font-family: Roboto;
