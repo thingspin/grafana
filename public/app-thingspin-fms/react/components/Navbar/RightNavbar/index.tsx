@@ -103,7 +103,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
       enableSearchButton,
       enableUserSettingButton,
       enableViewModeButton,
-      enableVSplitButton,
+      enableRightSidebarButton,
     } = this.props.navbar;
 
     return (
@@ -113,7 +113,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
         {enableAlertButton ? this.renderAlertButton : null}
         {enableViewModeButton ? this.renderViewModeButton : null}
         {enableUserSettingButton ? this.renderUserSettingButton : null}
-        {enableVSplitButton ? this.renderVSplitButton : null}
+        {enableRightSidebarButton ? this.renderVSplitButton : null}
       </div>
     );
   }
