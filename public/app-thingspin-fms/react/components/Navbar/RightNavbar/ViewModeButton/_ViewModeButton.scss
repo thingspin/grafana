@@ -3,3 +3,10 @@
   background-color: brown;
   margin: 2px;
 }
+.ts-user-setting-menu {
+  .btn {
+    &.enable {
+      color: skyblue;
+    }
+  }
+}

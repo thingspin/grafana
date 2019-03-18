@@ -14,6 +14,7 @@ export interface Props extends TsBaseProps {
 export class TsViewModeButtonCompoent extends PureComponent<Props> {
   // private class member variables
   private $location: any;
+  private currentNubmer: number;
   // public class member variables
   // protected class member variables
 
@@ -69,7 +70,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
     return (
       <div className="ts-user-setting-child-menu">
         <Tooltip content={`뷰 모드 ${num}`} placement="bottom">
-          <a className={`btn`} href="#" onClick={updateViewMode}>
+          <a className={`btn ${this.currentNubmer === num ? 'enable' : null}`} href="#" onClick={updateViewMode}>
             <i className={`fa ${icon}`} />
           </a>
         </Tooltip>
@@ -103,12 +104,15 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
     switch (this.props.kiosk) {
       case '1':
       case true: //view mode 2
+        this.currentNubmer = 2;
         break;
       case 'tv': //view mode 1
         faIcon = 'fa-television';
+        this.currentNubmer = 1;
         break;
       default:
         // view mode 0
+        this.currentNubmer = 0;
         faIcon = 'fa-desktop';
         break;
     }
