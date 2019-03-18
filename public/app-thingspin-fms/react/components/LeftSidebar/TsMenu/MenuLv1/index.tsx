@@ -53,7 +53,7 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
 
   get pinDOM() {
     const { opendedSubmenu, pin } = this.state;
-    const pinIcon = pin ? 'fa fa-map-pin' : 'fa fa-ellipsis-h';
+    const pinIcon = pin ? 'ts-leftsidebar-icons ts-left-icon-pin-on' : 'ts-leftsidebar-icons ts-left-icon-pin-off';
 
     return opendedSubmenu ? (
       <div className="fms-menu-header-controls-pin" onClick={this.pinClickEvt}>

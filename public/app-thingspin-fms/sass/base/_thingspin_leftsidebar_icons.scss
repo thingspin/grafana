@@ -1,0 +1,64 @@
+@font-face {
+  font-family: 'ts-leftsidebar-icons';
+  src: url('/public/app-thingspin-fms/fonts/thingspin/ts-leftsidebar-icons.ttf?mkv1r6') format('truetype'),
+    url('/public/app-thingspin-fms/fonts/thingspin/ts-leftsidebar-icons.woff?mkv1r6') format('woff'),
+    url('/public/app-thingspin-fms/fonts/thingspin/ts-leftsidebar-icons.svg?mkv1r6#ts-leftsidebar-icons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^='ts-leftsidebar-icons'],
+[class*=' ts-leftsidebar-icons'] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'ts-leftsidebar-icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ts-left-icon-summary:before {
+  content: '\e909';
+}
+.ts-left-icon-pin-on:before {
+  content: '\e900';
+}
+.ts-left-icon-pin-off:before {
+  content: '\e901';
+}
+.ts-left-icon-data-management:before {
+  content: '\e902';
+}
+.ts-left-icon-analysis:before {
+  content: '\e903';
+}
+.ts-left-icon-digitaltwin:before {
+  content: '\e904';
+}
+.ts-left-icon-report:before {
+  content: '\e905';
+}
+.ts-left-icon-equiment:before {
+  content: '\e906';
+}
+.ts-left-icon-system:before {
+  content: '\e907';
+}
+.ts-left-icon-alrm:before {
+  content: '\e908';
+}
+.ts-left-icon-summery:before {
+  content: '\e90c';
+}
+.ts-left-icon-arrow-drop-down:before {
+  content: '\e90a';
+}
+.ts-left-icon-scada:before {
+  content: '\e90b';
+}
