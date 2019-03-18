@@ -10,6 +10,7 @@ export enum TS_NAV_ACTION_TYPES {
 export interface TsNavbarPayload {
   faviconPath?: string;
   kiosk?: any;
+  isFullpathTitle?: boolean;
   isEmergency?: boolean;
   enableAlertButton?: boolean;
   enableViewModeButton?: boolean;
@@ -28,6 +29,7 @@ export interface UpdateViewModeAction {
 export const initialState: TsNavbarPayload = {
   faviconPath: 'public/img/thingspin/thingspin_icon.svg',
   kiosk: '',
+  isFullpathTitle: true,
   isEmergency: false,
   enableAlertButton: true,
   enableViewModeButton: true,

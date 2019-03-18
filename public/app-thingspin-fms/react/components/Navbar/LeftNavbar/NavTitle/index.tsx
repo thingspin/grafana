@@ -10,10 +10,11 @@ export interface Props extends TsBaseProps {
   // redux data
   icon: string;
   menupath: string[];
+  isFullpathTitle: boolean;
 }
 
 export interface States {
-  onlyChildTitle: boolean;
+  isFullpathTitle: boolean;
 }
 
 export class TsNavTitle extends PureComponent<Props, States> {
@@ -26,10 +27,6 @@ export class TsNavTitle extends PureComponent<Props, States> {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      onlyChildTitle: false,
-    };
   }
 
   // common event Methods
@@ -42,7 +39,7 @@ export class TsNavTitle extends PureComponent<Props, States> {
         <div className={'ts-nav-title-icon'}>
           <i className={this.props.icon} />
         </div>
-        <div>{this.state.onlyChildTitle ? menupath[menupath.length - 1] : menupath.join(' > ')}</div>
+        <div>{this.props.isFullpathTitle ? menupath.join(' > ') : menupath[menupath.length - 1]}</div>
       </>
     );
   }
@@ -118,15 +115,20 @@ export const getTitle = list => {
   return retValue;
 };
 
-export const mapStateToProps = (state: StoreState, { $route }) => {
+export const mapStateToProps = (state, { $route }) => {
   const { $$route } = $route.current;
+  let titleObj: any;
   if ($$route) {
     const list = findPathNavItem($$route.originalPath, state);
 
-    return getTitle(list);
+    titleObj = getTitle(list);
   } else {
-    return getTitle(undefined);
+    titleObj = getTitle(undefined);
   }
+  return {
+    ...titleObj,
+    isFullpathTitle: state.thingspinNavbar.isFullpathTitle,
+  };
 };
 
 export default hot(module)(connect(mapStateToProps)(TsNavTitle));
