@@ -5,11 +5,11 @@ import { Tooltip } from '@grafana/ui';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
-import { ViewModePayload } from 'app-thingspin-fms/react/redux/reducers/viewMode';
+import { TsNavbarPayload } from 'app-thingspin-fms/react/redux/reducers/navbar';
 import { KioskUrlValue } from 'app/types';
 
 export interface Props extends TsBaseProps {
-  viewMode: ViewModePayload;
+  navbar: TsNavbarPayload;
 }
 
 export class TsViewModeButtonCompoent extends PureComponent<Props> {
@@ -104,7 +104,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
     };
 
     let faIcon: string;
-    switch (this.props.viewMode.kiosk) {
+    switch (this.props.navbar.kiosk) {
       case '1':
       case true: //view mode 2
         break;
@@ -144,7 +144,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
 }
 
 const mapStateToProps = state => ({
-  viewMode: state.thingspinViewMode,
+  navbar: state.thingspinNavbar,
 });
 
 const mapDispatchToProps = {};

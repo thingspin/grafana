@@ -12,21 +12,14 @@ import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import TsNavSearchComponent from './SearchButton';
 import TsUserSettingButtonComponent from './UserSettingButton/index';
 import TsViewModeButtonComponent from './ViewModeButton/index';
+import { TsNavbarPayload } from 'app-thingspin-fms/react/redux/reducers/navbar';
 
 export interface Props extends TsBaseProps {
   updateLocation: typeof updateLocation;
+  navbar: TsNavbarPayload;
 }
 
-export interface States {
-  isEmergency: boolean;
-  enableAlertButton: boolean;
-  enableViewModeButton: boolean;
-  enableVSplitButton: boolean;
-  enableUserSettingButton: boolean;
-  enableSearchButton: boolean;
-}
-
-export class TsRightNavbarComponent extends PureComponent<Props, States> {
+export class TsRightNavbarComponent extends PureComponent<Props> {
   // private class member variables
 
   // public class member variables
@@ -35,15 +28,6 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      isEmergency: false,
-      enableSearchButton: true,
-      enableAlertButton: true,
-      enableVSplitButton: true,
-      enableViewModeButton: true,
-      enableUserSettingButton: true,
-    };
   }
 
   // common event Methods
@@ -60,7 +44,7 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
 
   get renderAlertButton(): JSX.Element {
     // Virtual DOM Private Variables
-    const { isEmergency } = this.state;
+    const { isEmergency } = this.props.navbar;
     const tooltip = '긴급 알람 이력 보기';
     const buttonClass = `btn ${isEmergency ? 'ts-alert-emer' : ''}`;
     // Virtual DOM events Methods
@@ -120,7 +104,7 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
       enableUserSettingButton,
       enableViewModeButton,
       enableVSplitButton,
-    } = this.state;
+    } = this.props.navbar;
 
     return (
       <div className="ts-right-navbar">
@@ -148,7 +132,7 @@ export class TsRightNavbarComponent extends PureComponent<Props, States> {
 }
 
 const mapStateToProps = state => ({
-  viewMode: state.thingspinViewMode,
+  navbar: state.thingspinNavbar,
 });
 
 const mapDispatchToProps = {

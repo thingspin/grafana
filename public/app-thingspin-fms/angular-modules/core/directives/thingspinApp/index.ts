@@ -8,7 +8,7 @@ import { KeybindingSrv, coreModule, appEvents } from 'app/core/core';
 import { AngularLoader } from 'app/core/services/AngularLoader';
 import { KioskUrlValue } from 'app/types';
 import { store } from 'app/store/store';
-import { ViewModeActionTypes } from 'app-thingspin-fms/react/redux/reducers/viewMode';
+import { TS_NAV_ACTION_TYPES } from 'app-thingspin-fms/react/redux/reducers/navbar';
 
 const isFms: any = true;
 
@@ -179,7 +179,7 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
       }
       // thingspin add code ----
       store.dispatch({
-        type: ViewModeActionTypes.TS_UPDATE_VIEWMODE,
+        type: TS_NAV_ACTION_TYPES.UPDATE_VIEWMODE,
         payload: search.kiosk,
       });
       // thingspin add code ----
