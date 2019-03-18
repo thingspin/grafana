@@ -109,6 +109,9 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
           </div>
         </div>
         {this.childrenDOM}
+        <div className="fms-menu-dividers">
+          <hr className="fms-menu-dividers-divider" key="ts-divider" />
+        </div>
       </div>
     );
   }
