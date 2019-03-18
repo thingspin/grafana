@@ -91,9 +91,8 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
 
   render() {
     const { menu } = this.props;
-
-    return (
-      <div className="fms-menu-lv1">
+    return [
+      <div className="fms-menu-lv1" key="ts-menu-lv1">
         <div className="fms-menu-header" key="menulv1">
           <div className="fms-menu-header-icon">
             <i className={menu.icon} />
@@ -109,10 +108,10 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
           </div>
         </div>
         {this.childrenDOM}
-        <div className="fms-menu-dividers">
-          <hr className="fms-menu-dividers-divider" key="ts-divider" />
-        </div>
-      </div>
-    );
+      </div>,
+      <div className="fms-menu-dividers" key="ts-dividers">
+        <hr className="fms-menu-dividers-divider" key="ts-divider" />
+      </div>,
+    ];
   }
 }
