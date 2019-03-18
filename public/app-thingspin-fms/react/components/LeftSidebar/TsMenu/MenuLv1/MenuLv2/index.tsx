@@ -12,13 +12,13 @@ export default class TsMenuLv2 extends PureComponent<Props> {
 
   render() {
     const { text, url, target } = this.props.menu;
-
-    return (
+    return [
       <div className="fms-menu-lv2">
         <a href={url} target={target}>
           {text}
         </a>
-      </div>
-    );
+        <hr className="fms-menu-lv2-divider" key="ts-l2-divider" />
+      </div>,
+    ];
   }
 }
