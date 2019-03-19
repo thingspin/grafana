@@ -26,7 +26,13 @@ export interface UpdateNavbarAction {
 // init
 export const initialState: TsToolbarPayload = {
   enable: true,
-  list: [],
+  list: [
+    {
+      icon: 'fa fa-tablet',
+      link: '/',
+      title: '홈으로 가기',
+    },
+  ],
 };
 
 // reducer
