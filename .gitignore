@@ -84,3 +84,6 @@ debug.test
 /packages/**/dist
 /packages/**/compiled
 /packages/**/.rpt2_cache
+
+# ThingSPIN ADD ignore code
+*DS_Store
