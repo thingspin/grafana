@@ -84,6 +84,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
       case '1':
       case true: //view mode 2
         this.currentNubmer = 2;
+        faIcon = 'fa-laptop';
         break;
       case 'tv': //view mode 1
         faIcon = 'fa-television';
