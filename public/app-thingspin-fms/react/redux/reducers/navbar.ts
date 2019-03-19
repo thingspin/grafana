@@ -29,7 +29,7 @@ export interface UpdateNavbarAction {
 // init
 export const initialState: TsNavbarPayload = {
   enable: true,
-  faviconPath: 'public/img/thingspin/thingspin_icon.svg',
+  faviconPath: 'public/app-thingspin-fms/img/favicon.svg',
   kiosk: '',
   isFullpathTitle: true,
   isEmergency: false,
