@@ -46,3 +46,9 @@
     height: 100%;
   }
 }
+
+@include media-breakpoint-up(sm) {
+  .search-container {
+    left: 0;
+  }
+}

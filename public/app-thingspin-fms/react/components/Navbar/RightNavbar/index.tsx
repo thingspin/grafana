@@ -69,7 +69,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
     const tooltip = '오른쪽 디스플레이 창 토글';
     // Virtual DOM events Methods
     const onToggleVSplitMode = () => {
-      appEvents.emit('toggle-right-sidebar', true);
+      appEvents.emit('toggle-right-sidebar');
     };
 
     // return virtual DOM
@@ -104,7 +104,6 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
       enableUserSettingButton,
       enableViewModeButton,
       enableRightSidebarButton,
-      kiosk,
     } = this.props.navbar;
 
     return (
@@ -114,7 +113,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
         {enableAlertButton ? this.renderAlertButton : null}
         {enableViewModeButton ? this.renderViewModeButton : null}
         {enableUserSettingButton ? this.renderUserSettingButton : null}
-        {enableRightSidebarButton && !kiosk ? this.renderRightSidebarButton : null}
+        {enableRightSidebarButton ? this.renderRightSidebarButton : null}
       </div>
     );
   }
