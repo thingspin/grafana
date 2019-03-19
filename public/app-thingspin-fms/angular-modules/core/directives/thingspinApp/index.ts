@@ -14,6 +14,7 @@ import { ILocationService } from 'angular';
 const isFms: any = true;
 
 export class ThingspinCtrl extends GrafanaCtrl {
+  navbarEnable: boolean;
   /** @ngInject */
   constructor(
     $scope,
@@ -41,6 +42,7 @@ export class ThingspinCtrl extends GrafanaCtrl {
       keybindingSrv,
       angularLoader
     );
+    this.navbarEnable = store.getState().thingspinNavbar.enable;
   }
 }
 
@@ -327,6 +329,7 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
       ? {
           controller: ThingspinCtrl,
           templateUrl: 'public/app-thingspin-fms/angular-modules/core/directives/thingspinApp/thingspinApp.html',
+          controllerAs: 'ctrl',
           link,
         }
       : {

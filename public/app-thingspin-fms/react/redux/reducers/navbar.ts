@@ -8,6 +8,7 @@ export enum TS_NAV_ACTION_TYPES {
 
 // payload format
 export interface TsNavbarPayload {
+  enable: boolean;
   faviconPath?: string;
   kiosk?: any;
   isFullpathTitle?: boolean;
@@ -27,6 +28,7 @@ export interface UpdateNavbarAction {
 
 // init
 export const initialState: TsNavbarPayload = {
+  enable: true,
   faviconPath: 'public/img/thingspin/thingspin_icon.svg',
   kiosk: '',
   isFullpathTitle: true,
