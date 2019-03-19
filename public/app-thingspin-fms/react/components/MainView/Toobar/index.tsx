@@ -70,9 +70,10 @@ export class TsToolbarComponent extends PureComponent<Props> {
       thingspinToolbar: { enable },
     }: Props = this.props;
     const ngViewDiv: JQuery = $('#ts-ng-view');
+    const viewEnable: boolean = (kiosk === '1' || kiosk === true) && enable;
 
-    ngViewDiv.toggleClass('ts-ng-view', enable);
-    return <>{(kiosk === '1' || kiosk === true) && enable ? this.renderToolbar : null}</>;
+    ngViewDiv.toggleClass('ts-ng-view', viewEnable);
+    return <>{viewEnable ? this.renderToolbar : null}</>;
   }
   // render 함수 호출 후 실행 함수
   // componentDidMount() {}
