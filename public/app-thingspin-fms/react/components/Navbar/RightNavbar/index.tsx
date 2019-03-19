@@ -44,7 +44,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
 
   get renderAlertButton(): JSX.Element {
     // Virtual DOM Private Variables
-    const { isEmergency } = this.props.navbar;
+    const { isEmergency }: TsNavbarPayload = this.props.navbar;
     const tooltip = '긴급 알람 이력 보기';
     const buttonClass = `btn ${isEmergency ? 'ts-alert-emer' : ''}`;
     // Virtual DOM events Methods

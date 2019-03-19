@@ -20,7 +20,7 @@ export class TsIconLogo extends PureComponent<Props> {
 
   toggleMenu() {
     // ignore if we just made a location change, stops hiding sidemenu on double clicks of back button
-    const timeSinceLocationChanged = new Date().getTime() - store.getState().location.lastUpdated;
+    const timeSinceLocationChanged: number = new Date().getTime() - store.getState().location.lastUpdated;
     if (timeSinceLocationChanged < 1000) {
       return;
     }
@@ -40,7 +40,7 @@ export class TsIconLogo extends PureComponent<Props> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   faviconPath: state.thingspinNavbar.faviconPath,
 });
 

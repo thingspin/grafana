@@ -34,7 +34,7 @@ export class TsNavSearchComponent extends PureComponent<Props, States> {
   }
 
   onInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { value } = e.target;
+    const { value }: HTMLInputElement = e.target;
     this.setState({ search: value });
   }
 

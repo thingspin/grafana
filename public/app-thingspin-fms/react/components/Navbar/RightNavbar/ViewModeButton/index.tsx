@@ -1,11 +1,12 @@
+import { ILocationService } from 'angular';
 import React, { PureComponent } from 'react';
 
 import { appEvents } from 'app/core/core';
 import { Tooltip } from '@grafana/ui';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
+import { KioskUrlValue } from 'app/types';
 
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
-import { KioskUrlValue } from 'app/types';
 
 export interface Props extends TsBaseProps {
   kiosk: any;
@@ -13,7 +14,7 @@ export interface Props extends TsBaseProps {
 
 export class TsViewModeButtonCompoent extends PureComponent<Props> {
   // private class member variables
-  private $location: any;
+  private $location: ILocationService;
   private currentNubmer: number;
   // public class member variables
   // protected class member variables
@@ -61,7 +62,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
       return search;
     };
     const updateViewMode = () => {
-      const search = getBeforeViewMode(num);
+      const search: any = getBeforeViewMode(num);
       this.$location.search(search);
       appEvents.emit('toggle-kiosk-mode');
     };
@@ -143,7 +144,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
   // componentWillUnmount() {}
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   kiosk: state.thingspinNavbar.kiosk,
 });
 

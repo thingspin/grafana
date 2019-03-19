@@ -68,9 +68,7 @@ export class TsNavTitle extends PureComponent<Props, States> {
 }
 
 // util methods
-export const findPathNavItem = (path: string, s: StoreState) => {
-  const { navIndex } = s;
-
+export const findPathNavItem = (path: string, { navIndex }: StoreState) => {
   // parent iterator
   for (const id in navIndex) {
     const item = navIndex[id];
@@ -90,13 +88,13 @@ export const findPathNavItem = (path: string, s: StoreState) => {
   return null;
 };
 
-export const getTitle = list => {
-  let retValue: any = {};
+export const getTitle = (list: NavModelItem[] | undefined) => {
+  let retValue: { icon?: string; menupath?: string[] } = {};
 
   if (list) {
     const lastNavItem: NavModelItem = list[list.length - 1],
-      icon = lastNavItem.icon,
-      texts = [];
+      icon: string = lastNavItem.icon,
+      texts: string[] = [];
 
     for (const nav of list) {
       texts.push(nav.text);
@@ -120,7 +118,6 @@ export const mapStateToProps = (state, { $route }) => {
   let titleObj: any;
   if ($$route) {
     const list = findPathNavItem($$route.originalPath, state);
-
     titleObj = getTitle(list);
   } else {
     titleObj = getTitle(undefined);
