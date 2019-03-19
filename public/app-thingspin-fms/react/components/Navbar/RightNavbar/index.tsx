@@ -66,18 +66,20 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
 
   get renderRightSidebarButton(): JSX.Element {
     // Virtual DOM Private Variables
-    const tooltip = '오른쪽 디스플레이 창 토글';
     // Virtual DOM events Methods
     const onToggleVSplitMode = () => {
       appEvents.emit('toggle-right-sidebar');
     };
+    const { enableRightSidebarButton } = this.props.navbar;
+    const icon = enableRightSidebarButton ? 'fa-caret-square-o-left' : 'fa-caret-square-o-right';
+    const tooltip = `오른쪽 디스플레이 창 ${enableRightSidebarButton ? '열기' : '닫기'}`;
 
     // return virtual DOM
     return (
       <div className="navbar-buttons--tv">
         <Tooltip content={tooltip} placement="bottom">
           <button className={`btn`} onClick={onToggleVSplitMode}>
-            <i className={'fa fa-columns'} />
+            <i className={`fa ${icon}`} />
           </button>
         </Tooltip>
       </div>
@@ -98,13 +100,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
   // componentWillMount() {}
   // Virtual DOM을 HTML에 Rendering
   render() {
-    const {
-      enableAlertButton,
-      enableSearchButton,
-      enableUserSettingButton,
-      enableViewModeButton,
-      enableRightSidebarButton,
-    } = this.props.navbar;
+    const { enableAlertButton, enableSearchButton, enableUserSettingButton, enableViewModeButton } = this.props.navbar;
 
     return (
       <div className="ts-right-navbar">
@@ -113,7 +109,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
         {enableAlertButton ? this.renderAlertButton : null}
         {enableViewModeButton ? this.renderViewModeButton : null}
         {enableUserSettingButton ? this.renderUserSettingButton : null}
-        {enableRightSidebarButton ? this.renderRightSidebarButton : null}
+        {this.renderRightSidebarButton}
       </div>
     );
   }

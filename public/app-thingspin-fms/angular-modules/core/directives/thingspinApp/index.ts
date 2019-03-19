@@ -100,7 +100,10 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
       body.toggleClass('sidemenu-open');
     });
 
-    appEvents.on('toggle-right-sidebar', (enable: boolean) => {
+    appEvents.on('toggle-right-sidebar', (enable: boolean | undefined) => {
+      if (enable === undefined) {
+        enable = store.getState().thingspinNavbar.enableRightSidebarButton;
+      }
       body.toggleClass('rightmenu-open', enable);
       store.dispatch({
         type: TS_NAV_ACTION_TYPES.UPDATE_NAV,
