@@ -9,6 +9,7 @@ import { AngularLoader } from 'app/core/services/AngularLoader';
 import { KioskUrlValue } from 'app/types';
 import { store } from 'app/store/store';
 import { TS_NAV_ACTION_TYPES } from 'app-thingspin-fms/react/redux/reducers/navbar';
+import { ILocationService } from 'angular';
 
 const isFms: any = true;
 
@@ -74,7 +75,7 @@ function setViewModeBodyClass(body: JQuery, mode: KioskUrlValue, sidemenuOpen: b
 }
 
 /** @ngInject */
-export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location) {
+export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location: ILocationService) {
   // link function override
   const link = (scope, elem) => {
     // thingspin add code ----
@@ -105,6 +106,28 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
           enableRightSidebarButton: !enable,
         },
       });
+    });
+    appEvents.on('ts-change-viewmode', num => {
+      // Virtual DOM events Methods
+      const getBeforeViewMode = (num: number) => {
+        const search: { kiosk?: KioskUrlValue } = {};
+        switch (num) {
+          case 0: {
+            search.kiosk = true; //or '1';
+            break;
+          }
+          case 1: {
+            break;
+          }
+          case 2: {
+            search.kiosk = 'tv';
+          }
+        }
+        return search;
+      };
+      const search: any = getBeforeViewMode(num);
+      $location.search(search);
+      appEvents.emit('toggle-kiosk-mode');
     });
     // thingspin add code ----
 

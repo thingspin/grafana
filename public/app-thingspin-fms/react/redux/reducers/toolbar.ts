@@ -25,7 +25,7 @@ export interface UpdateNavbarAction {
 
 // init
 export const initialState: TsToolbarPayload = {
-  enable: false,
+  enable: true,
   list: [],
 };
 

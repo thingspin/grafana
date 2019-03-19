@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { updateLocation } from 'app/core/actions';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 import { TsToolbarPayload, ToolbarItem } from 'app-thingspin-fms/react/redux/reducers/toolbar';
+import { appEvents } from 'app/core/core';
 
 export interface Props {
   kiosk: any;
@@ -25,18 +26,17 @@ export class TsToolbarComponent extends PureComponent<Props> {
   // get render splitted virtual DOM Methods
 
   get renderCompressButton(): JSX.Element {
-    const onReductionEvt = () => {};
+    const onCompressEvt = () => {
+      appEvents.emit('ts-change-viewmode', 0);
+    };
     return (
-      <button className={`btn reduct-btn`} onClick={onReductionEvt}>
+      <button className={`btn reduct-btn`} onClick={onCompressEvt}>
         <i className={`fa fa-compress`} />
       </button>
     );
   }
   get renderToolbar(): JSX.Element {
-    const {
-      kiosk,
-      thingspinToolbar: { list },
-    }: Props = this.props;
+    const { list }: TsToolbarPayload = this.props.thingspinToolbar;
 
     return (
       <div className={`ts-toolbar-component`}>
@@ -54,7 +54,7 @@ export class TsToolbarComponent extends PureComponent<Props> {
               );
             })}
           </div>
-          {kiosk === '1' || kiosk === true ? this.renderCompressButton : null}
+          {this.renderCompressButton}
         </div>
       </div>
     );
@@ -65,11 +65,14 @@ export class TsToolbarComponent extends PureComponent<Props> {
   // componentWillMount() {}
   // Virtual DOM을 HTML에 Rendering
   render() {
-    const { enable }: TsToolbarPayload = this.props.thingspinToolbar;
+    const {
+      kiosk,
+      thingspinToolbar: { enable },
+    }: Props = this.props;
     const ngViewDiv: JQuery = $('#ts-ng-view');
 
     ngViewDiv.toggleClass('ts-ng-view', enable);
-    return <>{enable ? this.renderToolbar : null}</>;
+    return <>{(kiosk === '1' || kiosk === true) && enable ? this.renderToolbar : null}</>;
   }
   // render 함수 호출 후 실행 함수
   // componentDidMount() {}

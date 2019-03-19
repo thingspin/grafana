@@ -1,10 +1,8 @@
-import { ILocationService } from 'angular';
 import React, { PureComponent } from 'react';
 
 import { appEvents } from 'app/core/core';
 import { Tooltip } from '@grafana/ui';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
-import { KioskUrlValue } from 'app/types';
 
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 
@@ -14,14 +12,12 @@ export interface Props extends TsBaseProps {
 
 export class TsViewModeButtonCompoent extends PureComponent<Props> {
   // private class member variables
-  private $location: ILocationService;
   private currentNubmer: number;
   // public class member variables
   // protected class member variables
 
   constructor(props) {
     super(props);
-    this.$location = this.props.$injector.get('$location');
   }
 
   getViewmodeIcon(num: number) {
@@ -45,26 +41,8 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
     // Virtual DOM Private Variables
     const icon = this.getViewmodeIcon(num);
     // Virtual DOM events Methods
-    const getBeforeViewMode = (num: number) => {
-      const search: { kiosk?: KioskUrlValue } = {};
-      switch (num) {
-        case 0: {
-          search.kiosk = true; //or '1';
-          break;
-        }
-        case 1: {
-          break;
-        }
-        case 2: {
-          search.kiosk = 'tv';
-        }
-      }
-      return search;
-    };
     const updateViewMode = () => {
-      const search: any = getBeforeViewMode(num);
-      this.$location.search(search);
-      appEvents.emit('toggle-kiosk-mode');
+      appEvents.emit('ts-change-viewmode', num);
     };
 
     // return virtual DOM
