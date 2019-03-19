@@ -1,23 +1,24 @@
-import * as React from 'react';
+import React, { createContext, PureComponent, SFC, MouseEvent, ReactNode } from 'react';
 
 interface TabsComponent {
   activeName?: string;
-  handleTabClick?: (name: string, content: React.ReactNode) => void;
+  handleTabClick?: (name: string, content: ReactNode) => void;
 }
-const TabsContext = React.createContext<TabsComponent>({});
+const TabsContext = createContext<TabsComponent>({});
+const { Provider, Consumer } = TabsContext;
 
 interface State {
   activeName: string;
-  activeContent: React.ReactNode;
+  activeContent: ReactNode;
 }
 interface TabProps {
   name: string;
   initialActive?: boolean;
   heading: () => string | JSX.Element;
 }
-class Tabs extends React.Component<{}, State> {
-  static Tab: React.SFC<TabProps> = props => (
-    <TabsContext.Consumer>
+class Tabs extends PureComponent<{}, State> {
+  static Tab: SFC<TabProps> = props => (
+    <Consumer>
       {(context: TabsComponent) => {
         if (!context.activeName && props.initialActive) {
           if (context.handleTabClick) {
@@ -26,22 +27,23 @@ class Tabs extends React.Component<{}, State> {
           }
         }
         const activeName = context.activeName ? context.activeName : props.initialActive ? props.name : '';
-        const handleTabClick = (e: React.MouseEvent<HTMLLIElement>) => {
+        const handleTabClick = (e: MouseEvent<HTMLLIElement>) => {
           if (context.handleTabClick) {
             context.handleTabClick(props.name, props.children);
           }
         };
         return (
           <li onClick={handleTabClick} className={props.name === activeName ? 'fms-right-tap-selected' : ''}>
-            {props.heading()}
+            <ul>{props.heading()}</ul>
           </li>
         );
       }}
-    </TabsContext.Consumer>
+    </Consumer>
   );
+
   render() {
     return (
-      <TabsContext.Provider
+      <Provider
         value={{
           activeName: this.state ? this.state.activeName : '',
           handleTabClick: this.handleTabClick,
@@ -49,11 +51,11 @@ class Tabs extends React.Component<{}, State> {
       >
         <ul className="tabs fms-right-tapitem">{this.props.children}</ul>
         <div>{this.state && this.state.activeContent}</div>
-      </TabsContext.Provider>
+      </Provider>
     );
   }
 
-  private handleTabClick = (name: string, content: React.ReactNode) => {
+  private handleTabClick = (name: string, content: ReactNode) => {
     this.setState({ activeName: name, activeContent: content });
   };
 }
