@@ -1,9 +1,12 @@
 import React, { PureComponent } from 'react';
 import { updateLocation } from 'app/core/actions';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
+import { TsToolbarPayload, ToolbarItem } from 'app-thingspin-fms/react/redux/reducers/toolbar';
 
 export interface Props {
-  enable: boolean;
+  kiosk: any;
+  thingspinToolbar: TsToolbarPayload;
+  updateLocation: typeof updateLocation;
 }
 
 export class TsToolbarComponent extends PureComponent<Props> {
@@ -20,8 +23,41 @@ export class TsToolbarComponent extends PureComponent<Props> {
   // common event Methods
 
   // get render splitted virtual DOM Methods
+
+  get renderCompressButton(): JSX.Element {
+    const onReductionEvt = () => {};
+    return (
+      <button className={`btn reduct-btn`} onClick={onReductionEvt}>
+        <i className={`fa fa-compress`} />
+      </button>
+    );
+  }
   get renderToolbar(): JSX.Element {
-    return <div className={`ts-toolbar-component`}>hello world</div>;
+    const {
+      kiosk,
+      thingspinToolbar: { list },
+    }: Props = this.props;
+
+    return (
+      <div className={`ts-toolbar-component`}>
+        <div className={`ts-toolbar-wrap`}>
+          <div className={`ts-toolbar-items`}>
+            {list.map(({ link, icon, title }: ToolbarItem, index: number) => {
+              const onClickEvt = () => {
+                this.props.updateLocation({ path: link });
+              };
+
+              return (
+                <button className={`ts-toobar-link`} key={`ts-toolbar-item-${index}`} onClick={onClickEvt}>
+                  <i className={icon} /> {title}
+                </button>
+              );
+            })}
+          </div>
+          {kiosk === '1' || kiosk === true ? this.renderCompressButton : null}
+        </div>
+      </div>
+    );
   }
 
   // Component lifeCycle Methods
@@ -29,8 +65,8 @@ export class TsToolbarComponent extends PureComponent<Props> {
   // componentWillMount() {}
   // Virtual DOM을 HTML에 Rendering
   render() {
-    const { enable } = this.props;
-    const ngViewDiv = $('#ts-ng-view');
+    const { enable }: TsToolbarPayload = this.props.thingspinToolbar;
+    const ngViewDiv: JQuery = $('#ts-ng-view');
 
     ngViewDiv.toggleClass('ts-ng-view', enable);
     return <>{enable ? this.renderToolbar : null}</>;
@@ -51,8 +87,9 @@ export class TsToolbarComponent extends PureComponent<Props> {
   // util Methods
 }
 
-const mapStateToProps = state => ({
-  enable: state.thingspinToolbar.enable,
+const mapStateToProps = (state: any) => ({
+  thingspinToolbar: state.thingspinToolbar,
+  kiosk: state.thingspinNavbar.kiosk,
 });
 
 const mapDispatchToProps = {

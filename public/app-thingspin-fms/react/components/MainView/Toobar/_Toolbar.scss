@@ -5,7 +5,7 @@
   width: 100%;
   height: $ts-toolbar-height;
 
-  // background-image: linear-gradient(to bottom, rgba(#ecebeb, 1), rgba(#ffffff, 1));
+  background-image: linear-gradient(to bottom, rgba(#ecebeb, 1), rgba(#ffffff, 1));
 
   // fontss
   font-family: Roboto;
@@ -16,4 +16,37 @@
   line-height: 1.14;
   letter-spacing: normal;
   color: #1e88e5;
+
+  .ts-toolbar-wrap {
+    position: absolute;
+    width: 100%;
+    height: $ts-toolbar-height;
+
+    white-space: nowrap;
+    overflow: auto;
+  }
+
+  .reduct-btn {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+
+    border-radius: 50%;
+  }
+
+  .ts-toolbar-items {
+    line-height: $ts-toolbar-height;
+  }
+
+  .ts-toobar-link {
+    display: inline-block;
+    height: $ts-toolbar-item-height;
+
+    border: 0;
+    margin: 0 2px;
+
+    i {
+      margin-right: 4px;
+    }
+  }
 }
