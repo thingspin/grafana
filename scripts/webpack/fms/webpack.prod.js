@@ -43,7 +43,7 @@ let fmsProd = merge(common, {
         },
       },
       require('../sass.rule.js')({
-        sourceMap: false, minimize: false, preserveUrl: false
+        sourceMap: false, preserveUrl: false
       })
     ]
   },

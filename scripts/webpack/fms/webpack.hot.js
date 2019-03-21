@@ -25,7 +25,7 @@ let fmsHot = merge(common, {
   },
 
   plugins: [
-    new CleanWebpackPlugin('../../public/build', { allowExternal: true }),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       filename: path.resolve(__dirname, '../../../public/views/fms-index.html'),
       template: path.resolve(__dirname, '../../../public/views/fms-index-template.html'),
@@ -36,7 +36,7 @@ let fmsHot = merge(common, {
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
-      THINGSPIN_THEME: JSON.stringify(process.env.THINGSPIN_THEME || 'dark'),
+      THINGSPIN_THEME: JSON.stringify(process.env.THINGSPIN_THEME || 'light'),
       'process.env': {
         NODE_ENV: JSON.stringify('development'),
       },

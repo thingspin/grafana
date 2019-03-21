@@ -41,7 +41,14 @@ class ThingspinFmsApp extends GrafanaApp {
 
   init() {
     this.ng1App.config(
-      ($locationProvider, $controllerProvider, $compileProvider, $filterProvider, $httpProvider, $provide) => {
+      (
+        $locationProvider: angular.ILocationProvider,
+        $controllerProvider: angular.IControllerProvider,
+        $compileProvider: angular.ICompileProvider,
+        $filterProvider: angular.IFilterProvider,
+        $httpProvider: angular.IHttpProvider,
+        $provide: angular.auto.IProvideService
+      ) => {
         // pre assing bindings before constructor calls
         $compileProvider.preAssignBindingsEnabled(true);
 
@@ -61,9 +68,9 @@ class ThingspinFmsApp extends GrafanaApp {
         $provide.decorator('$http', [
           '$delegate',
           '$templateCache',
-          ($delegate, $templateCache) => {
+          ($delegate: any, $templateCache: any) => {
             const get = $delegate.get;
-            $delegate.get = (url, config) => {
+            $delegate.get = (url: string, config: any) => {
               if (url.match(/\.html$/)) {
                 // some template's already exist in the cache
                 if (!$templateCache.get(url)) {
@@ -79,7 +86,7 @@ class ThingspinFmsApp extends GrafanaApp {
     );
 
     // makes it possible to add dynamic stuff
-    _.each(angularModules, m => {
+    _.each(angularModules, (m: angular.IModule) => {
       this.useModule(m);
     });
 
@@ -94,7 +101,7 @@ class ThingspinFmsApp extends GrafanaApp {
 
     // bootstrap the app
     angular.bootstrap(document, this.ngModuleDependencies).invoke(() => {
-      _.each(this.preBootModules, module => {
+      _.each(this.preBootModules, (module: angular.IModule) => {
         _.extend(module, this.registerFunctions);
       });
 

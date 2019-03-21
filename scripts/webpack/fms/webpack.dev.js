@@ -18,13 +18,6 @@ let fmsDev = merge(common, {
     light: './public/sass/fms.light.scss',
   },
 
-  output: {
-    path: path.resolve(__dirname, '../../../public/build'),
-    filename: 'fms-[name].[hash].js',
-    // Keep publicPath relative for host.com/grafana/ deployments
-    publicPath: gfDev.output.publicPath,
-  },
-
   module: {
     rules: [
       {
@@ -49,7 +42,7 @@ let fmsDev = merge(common, {
           },
         },
       },
-      require('./sass.rule.js')({ sourceMap: false, minimize: false, preserveUrl: false }),
+      require('./sass.rule.js')({ sourceMap: false, preserveUrl: false }),
       {
         test: /\.(png|jpg|gif|ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
         loader: 'file-loader'
@@ -58,7 +51,7 @@ let fmsDev = merge(common, {
   },
 
   plugins: [
-    new CleanWebpackPlugin('../../../public/build', { allowExternal: true }),
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: "fms.[name].[hash].css"
     }),
