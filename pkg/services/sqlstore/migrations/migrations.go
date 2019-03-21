@@ -1,6 +1,9 @@
 package migrations
 
-import . "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
+import (
+	. "github.com/grafana/grafana/pkg/services/sqlstore/migrations/thingspin"
+	. "github.com/grafana/grafana/pkg/services/sqlstore/migrator"
+)
 
 // --- Migration Guide line ---
 // 1. Never change a migration that is committed and pushed to master
@@ -34,6 +37,9 @@ func AddMigrations(mg *Migrator) {
 	addServerlockMigrations(mg)
 	addUserAuthTokenMigrations(mg)
 	addCacheMigration(mg)
+
+	// ThingSPIN add code ----
+	AddThingspinMigrations(mg)
 }
 
 func addMigrationLogMigrations(mg *Migrator) {
