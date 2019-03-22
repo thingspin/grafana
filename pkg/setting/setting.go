@@ -246,6 +246,9 @@ type Cfg struct {
 	RemoteCacheOptions *RemoteCacheOptions
 
 	EditorsCanAdmin bool
+
+	// ThingSPIN add code ------
+	Thingspin ThingspinSettings
 }
 
 type CommandLineArgs struct {
@@ -770,6 +773,9 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 	cfg.readSessionConfig()
 	cfg.readSmtpSettings()
 	cfg.readQuotaSettings()
+
+	// ThingSPIN add code ------
+	cfg.readThingspinSettings()
 
 	if VerifyEmailEnabled && !cfg.Smtp.Enabled {
 		log.Warn("require_email_validation is enabled but smtp is disabled")
