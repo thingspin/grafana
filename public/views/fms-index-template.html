@@ -1,3 +1,23 @@
+[[define "thingspinFms"]]
+<ts-left-sidebar></ts-left-sidebar>
+<app-notifications-list class="page-alert-list"></app-notifications-list>
+<dashboard-search></dashboard-search>
+
+<div class="ts-container">
+  <ts-navbar ng-if="ctrl.navbarEnable"></ts-navbar>
+  <div class="main-container">
+    <div class="ts-main-view">
+        <ts-toolbar></ts-toolbar>
+        <div id="ts-ng-view" >
+          <div ng-view></div>
+        </div>
+        <!-- <iframe src="http://thingspin.io" width="100%" height="100%" frameborder="0"></iframe> -->
+    </div>
+    <ts-right-sidebar></ts-right-sidebar>
+  </div>
+</div>
+[[end]]
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -187,6 +207,9 @@
   </div>
 
   <thingspin-app class="thingspin-app" ng-cloak>
+      [[if .IsThingspinFms]]
+        [[template "thingspinFms"]]
+      [[else]]
       <sidemenu class="sidemenu"></sidemenu>
       <app-notifications-list class="page-alert-list"></app-notifications-list>
       <dashboard-search></dashboard-search>
@@ -232,6 +255,7 @@
           </footer>
         </div>
       </div>
+      [[end]]
   </thingspin-app>
 
   <script>
@@ -240,6 +264,8 @@
       settings: [[.Settings]],
       navTree: [[.NavTree]]
     };
+
+    window.thingspinBootData = window.grafanaBootData;
 
 		// In case the js files fails to load the code below will show an info message.
     window.onload = function() {

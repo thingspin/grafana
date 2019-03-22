@@ -15,6 +15,9 @@ type IndexViewData struct {
 	NewGrafanaVersion       string
 	AppName                 string
 	AppNameBodyClass        string
+
+	// ThingSPIN add codd --------
+	IsThingspinFms bool
 }
 
 type PluginCss struct {

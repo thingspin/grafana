@@ -114,14 +114,19 @@ export const getTitle = (list: NavModelItem[] | undefined) => {
 };
 
 export const mapStateToProps = (state, { $route }) => {
-  const { $$route } = $route.current;
   let titleObj: any;
-  if ($$route) {
-    const list = findPathNavItem($$route.originalPath, state);
-    titleObj = getTitle(list);
-  } else {
+  if (!$route.current) {
     titleObj = getTitle(undefined);
+  } else {
+    const { $$route } = $route.current;
+    if ($$route) {
+      const list = findPathNavItem($$route.originalPath, state);
+      titleObj = getTitle(list);
+    } else {
+      titleObj = getTitle(undefined);
+    }
   }
+
   return {
     ...titleObj,
     isFullpathTitle: state.thingspinNavbar.isFullpathTitle,

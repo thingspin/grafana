@@ -11,8 +11,6 @@ import { store } from 'app/store/store';
 import { TS_NAV_ACTION_TYPES } from 'app-thingspin-fms/react/redux/reducers/navbar';
 import { ILocationService } from 'angular';
 
-const isFms: any = true;
-
 export class ThingspinCtrl extends GrafanaCtrl {
   navbarEnable: boolean;
   /** @ngInject */
@@ -326,20 +324,11 @@ export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootSc
     });
   };
 
-  return Object.assign(
-    grafanaAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location),
-    isFms
-      ? {
-          controller: ThingspinCtrl,
-          templateUrl: 'public/app-thingspin-fms/angular-modules/core/directives/thingspinApp/thingspinApp.html',
-          controllerAs: 'ctrl',
-          link,
-        }
-      : {
-          controller: ThingspinCtrl,
-          link,
-        }
-  );
+  return Object.assign(grafanaAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location), {
+    controller: ThingspinCtrl,
+    controllerAs: 'ctrl',
+    link,
+  });
 }
 
 coreModule.directive('thingspinApp', thingspinAppDirective);
