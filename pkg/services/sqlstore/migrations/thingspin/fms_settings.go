@@ -17,5 +17,5 @@ func addFmsSettingsMigrations(mg *Migrator) {
 	}
 
 	// create table
-	mg.AddMigration("[thingspin] create fms system setting table", NewAddTableMigration(fmsSettings))
+	mg.AddMigration("[thingspin] FMS System 테이블 생성", NewAddTableMigration(fmsSettings))
 }
