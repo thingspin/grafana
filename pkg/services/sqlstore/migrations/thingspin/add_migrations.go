@@ -9,4 +9,5 @@ func AddThingspinMigrations(mg *Migrator) {
 	addFmsGroupMigrations(mg)
 	addFmsGroupMemberMigrations(mg)
 	addFmsUserMigrations(mg)
+	addFmsMenuMigrations(mg)
 }
