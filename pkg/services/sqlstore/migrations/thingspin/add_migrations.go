@@ -8,4 +8,5 @@ func AddThingspinMigrations(mg *Migrator) {
 	addFmsSettingsMigrations(mg)
 	addFmsGroupMigrations(mg)
 	addFmsGroupMemberMigrations(mg)
+	addFmsUserMigrations(mg)
 }
