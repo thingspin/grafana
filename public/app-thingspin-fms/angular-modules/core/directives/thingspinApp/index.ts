@@ -1,26 +1,31 @@
+import { ILocationService, IController, IScope, ITimeoutService, IRootScopeService } from 'angular';
 import Drop from 'tether-drop';
 
 import { GrafanaCtrl, grafanaAppDirective } from 'app/routes/GrafanaCtrl';
-import { BackendSrv } from 'app/core/services/backend_srv';
-import { TimeSrv } from 'app/features/dashboard/services/TimeSrv';
-import DatasourceSrv from 'app/features/plugins/datasource_srv';
-import { KeybindingSrv, coreModule, appEvents } from 'app/core/core';
-import { AngularLoader } from 'app/core/services/AngularLoader';
 import { KioskUrlValue } from 'app/types';
 import { store } from 'app/store/store';
+import { BackendSrv } from 'app/core/services/backend_srv';
+import { TimeSrv } from 'app/features/dashboard/services/TimeSrv';
+import { KeybindingSrv, coreModule, appEvents } from 'app/core/core';
+import { AngularLoader } from 'app/core/services/AngularLoader';
+import { BridgeSrv } from 'app/core/services/bridge_srv';
+import { ContextSrv } from 'app/core/services/context_srv';
+import { UtilSrv } from 'app/core/services/util_srv';
+import DatasourceSrv from 'app/features/plugins/datasource_srv';
+
 import { TS_NAV_ACTION_TYPES } from 'app-thingspin-fms/react/redux/reducers/navbar';
-import { ILocationService } from 'angular';
+import { PlaylistSrv } from 'app/features/playlist/playlist_srv';
 
 export class ThingspinCtrl extends GrafanaCtrl {
   navbarEnable: boolean;
   /** @ngInject */
   constructor(
-    $scope,
-    utilSrv,
-    $rootScope,
-    $controller,
-    contextSrv,
-    bridgeSrv,
+    $scope: IScope,
+    utilSrv: UtilSrv,
+    $rootScope: IRootScopeService,
+    $controller: IController,
+    contextSrv: ContextSrv,
+    bridgeSrv: BridgeSrv,
     backendSrv: BackendSrv,
     timeSrv: TimeSrv,
     datasourceSrv: DatasourceSrv,
@@ -75,7 +80,13 @@ function setViewModeBodyClass(body: JQuery, mode: KioskUrlValue, sidemenuOpen: b
 }
 
 /** @ngInject */
-export function thingspinAppDirective(playlistSrv, contextSrv, $timeout, $rootScope, $location: ILocationService) {
+export function thingspinAppDirective(
+  playlistSrv: PlaylistSrv,
+  contextSrv: ContextSrv,
+  $timeout: ITimeoutService,
+  $rootScope: IRootScopeService,
+  $location: ILocationService
+) {
   // link function override
   const link = (scope, elem) => {
     // thingspin add code ----

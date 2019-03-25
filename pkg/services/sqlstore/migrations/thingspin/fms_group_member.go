@@ -6,11 +6,11 @@ import (
 
 func addFmsGroupMemberMigrations(mg *Migrator) {
 	query := `
-		CREATE TABLE IF NOT EXISTS TS_FMS_GROUP_MEMBER (
-			"UID" integer references user(id),
-			"GID" integer references TS_FMS_GROUP(ID),
+		CREATE TABLE IF NOT EXISTS 'extention_org_user_TS_FMS' (
+			"ORG_USER_ID" integer references org_user(id),
 			"CREATED_DATE" datetime default (datetime('now', 'localtime')),
-			PRIMARY KEY("GID", "UID")
+			"UPDATED_DATE" datetime default (datetime('now', 'localtime')),
+			PRIMARY KEY("ORG_USER_ID")
 		)
 	`
 
