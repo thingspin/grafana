@@ -32,7 +32,8 @@
       "app": ["app"],
       "app-thingspin-fms": ["app-thingspin-fms"],
       "sass": ["sass"]
-    }
+    },
+    "skipLibCheck": true
   },
   "include": [
     "public/app/**/*.ts",
