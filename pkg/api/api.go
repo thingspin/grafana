@@ -402,9 +402,6 @@ func (hs *HTTPServer) registerRoutes() {
 	// Websocket
 	r.Any("/ws", hs.streamManager.Serve)
 
-	// ThingSPIN add codes ----
-	hs.registerThingspinRoutes()
-
 	// streams
 	//r.Post("/api/streams/push", reqSignedIn, bind(dtos.StreamMessage{}), liveConn.PushToStream)
 }

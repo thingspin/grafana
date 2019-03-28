@@ -65,6 +65,7 @@ func (hs *HTTPServer) Init() error {
 	hs.streamManager = live.NewStreamManager()
 	hs.macaron = hs.newMacaron()
 	hs.registerRoutes()
+	hs.registerThingspinRoutes()
 
 	session.Init(&setting.SessionOptions, setting.SessionConnMaxLifetime)
 

@@ -1,16 +1,30 @@
 package api
 
 import (
+	"github.com/go-macaron/binding"
 	"github.com/grafana/grafana/pkg/api/routing"
 	"github.com/grafana/grafana/pkg/middleware"
+	tsm "github.com/grafana/grafana/pkg/models-thingspin"
 )
 
 // thingspin용 REST API 정의 함수
 func (hs *HTTPServer) registerThingspinRoutes() {
 	reqSignedIn := middleware.ReqSignedIn
 	r := hs.RouteRegister
+	bind := binding.Bind
 
-	r.Group("/mds", func(mdsRoute routing.RouteRegister) {
+	// register thingspin rest api
+	r.Group("/thingspin", func(mdsRoute routing.RouteRegister) {
 		mdsRoute.Get("/", hs.Index)
+
+		// left sidebar menu rest api's
+		mdsRoute.Group("/menu", func(tsMenuRoute routing.RouteRegister) {
+			tsMenuRoute.Get("/default", Wrap(GetTsDefaultMenu))
+			tsMenuRoute.Get("/:orgId", Wrap(GetTsMenuByOrgId))
+			tsMenuRoute.Post("/:orgId", bind(tsm.AddFmsMenuCommand{}), Wrap(AddTsNewMenuByOrgId))
+			tsMenuRoute.Put("/:orgId", bind(tsm.UpdateFmsMenuCommand{}), Wrap(EditTsMenu8yOrgId))
+			tsMenuRoute.Delete("/:orgId", Wrap(DeleteTsMenuByOrgId))
+		}, reqSignedIn)
+
 	}, reqSignedIn)
 }

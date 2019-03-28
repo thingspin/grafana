@@ -1,8 +1,19 @@
 package tsmodels
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 var TsFmsMenuTableName = "TS_FMS_GROUP_MENU"
+
+type FmsMenu struct {
+	OrgId       int64                    `json:"orgId"`
+	Name        string                   `json:"name"`
+	Menu        []map[string]interface{} `json:"menu"`
+	CreatedDate time.Time                `json:"createdDate"`
+	UpdatedDate time.Time                `json:"updatedDate"`
+}
 
 type GetFmsMenuByOrgIdQuery struct {
 	OrgId  int64
@@ -10,13 +21,21 @@ type GetFmsMenuByOrgIdQuery struct {
 }
 
 type GetFmsDefaultMenuQuery struct {
-	Result FmsMenu
+	Result *FmsMenu
 }
 
-type FmsMenu struct {
-	OrgId       int64                    `json:"orgId"`
-	Name        string                   `json:"Name"`
-	Menu        []map[string]interface{} `json:"menu"`
-	CreatedDate time.Time                `json:"CreatedDate"`
-	UpdatedDate time.Time                `json:"UpdatedDate"`
+type DeleteFmsMenuByOrgIdQuery struct {
+	OrgId  int64
+	Result sql.Result
+}
+
+type AddFmsMenuCommand struct {
+	OrgId  int64                    `json:"orgId"`
+	Name   string                   `json:"name"`
+	Menu   []map[string]interface{} `json:"menu"`
+	Result sql.Result
+}
+
+type UpdateFmsMenuCommand struct {
+	AddFmsMenuCommand
 }
