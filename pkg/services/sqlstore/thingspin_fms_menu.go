@@ -1,8 +1,6 @@
 package sqlstore
 
 import (
-	"fmt"
-
 	"github.com/grafana/grafana/pkg/bus"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 )
@@ -10,6 +8,9 @@ import (
 func init() {
 	bus.AddHandler("sql", GetFmsMenuByOrgId)
 	bus.AddHandler("sql", GetFmsDefaultMenu)
+	bus.AddHandler("sql", DeleteFmsMenuByOrgId)
+	bus.AddHandler("sql", AddFmsMenu)
+	bus.AddHandler("sql", UpdateFmsMenu)
 }
 
 func GetFmsMenuByOrgId(cmd *m.GetFmsMenuByOrgIdQuery) error {
@@ -23,13 +24,37 @@ func GetFmsMenuByOrgId(cmd *m.GetFmsMenuByOrgIdQuery) error {
 }
 
 func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
-	var res m.FmsMenu
+	q := m.GetFmsMenuByOrgIdQuery{
+		OrgId: 1,
+	}
+	err := GetFmsMenuByOrgId(&q)
 
-	_, err := x.Table(m.TsFmsMenuTableName).Where("org_id = ?", 1).Get(&res)
+	cmd.Result = q.Result
 
-	fmt.Printf("%+V", res)
+	return err
+}
 
-	cmd.Result = res
+func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
+	result, err := x.Exec(`DELETE FROM '?' WHERE org_id = ?`,
+		m.TsFmsMenuTableName, cmd.OrgId)
+	cmd.Result = result
+
+	return err
+}
+
+func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
+	result, err := x.Exec(`INSERT INTO '?' ('org_id', 'name', 'menu') VALUES (?, '?', '?')`,
+		m.TsFmsMenuTableName, cmd.OrgId, cmd.Name, cmd.Menu)
+	cmd.Result = result
+
+	return err
+}
+
+func UpdateFmsMenu(cmd *m.UpdateFmsMenuCommand) error {
+	result, err := x.Exec(`UPDATE '?' SET name = '?', menu = '?' WHERE org_id = ?`,
+		m.TsFmsMenuTableName, cmd.Name, cmd.Menu, cmd.OrgId)
+
+	cmd.Result = result
 
 	return err
 }
