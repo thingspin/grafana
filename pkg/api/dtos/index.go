@@ -17,7 +17,7 @@ type IndexViewData struct {
 	AppNameBodyClass        string
 
 	// ThingSPIN add codd --------
-	IsThingspinFms bool
+	ThingspinIndexView *TsIndexViewData
 }
 
 type PluginCss struct {

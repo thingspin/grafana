@@ -207,7 +207,7 @@
   </div>
 
   <thingspin-app class="thingspin-app" ng-cloak>
-      [[if .IsThingspinFms]]
+      [[if .ThingspinIndexView.IsFms]]
         [[template "thingspinFms"]]
       [[else]]
       <sidemenu class="sidemenu"></sidemenu>
@@ -262,7 +262,10 @@
     window.grafanaBootData = {
       user: [[.User]],
       settings: [[.Settings]],
-      navTree: [[.NavTree]]
+      navTree: [[.NavTree]],
+      thingspin: {
+        menu: [[.ThingspinIndexView.Menu]],
+      },
     };
 
     window.thingspinBootData = window.grafanaBootData;

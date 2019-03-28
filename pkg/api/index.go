@@ -84,10 +84,14 @@ func (hs *HTTPServer) setIndexViewData(c *m.ReqContext) (*dtos.IndexViewData, er
 		NewGrafanaVersionExists: plugins.GrafanaHasUpdate,
 		AppName:                 setting.ApplicationName,
 		AppNameBodyClass:        getAppNameBodyClass(setting.ApplicationName),
-
-		// ThingSPIN add codes ---------
-		IsThingspinFms: setting.Thingspin.Enabled,
 	}
+
+	// ThingSPIN add codes ---------
+	tsIndexViewData, err := setTsIndexViewData(c)
+	if err != nil {
+		return nil, err
+	}
+	data.ThingspinIndexView = tsIndexViewData
 
 	if setting.DisableGravatar {
 		data.User.GravatarUrl = setting.AppSubUrl + "/public/img/user_profile.png"
