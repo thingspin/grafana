@@ -12,6 +12,6 @@ module.exports = function (grunt) {
         'clean:release',
         'clean:build',
         'phantomjs',
-        'webpack:fms-prod',
+        'exec:webpackFms',
     ]);
 };

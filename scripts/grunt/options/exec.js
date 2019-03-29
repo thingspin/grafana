@@ -1,7 +1,12 @@
+const execFms = require("../thingspin/exec");
+
 module.exports = function(config, grunt) {
   'use strict';
 
   return {
+    // thingspin add code -------
+    ...execFms,
+    // thingspin add code -------
     tslintPackages: {
       command: 'yarn workspaces run tslint',
       src: ['packages/**/*.ts*'],
