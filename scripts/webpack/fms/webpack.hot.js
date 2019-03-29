@@ -27,7 +27,7 @@ let fmsHot = merge(common, {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, '../../../public/views/fms-index.html'),
+      filename: path.resolve(__dirname, '../../../public/views/index.html'),
       template: path.resolve(__dirname, '../../../public/views/fms-index-template.html'),
       inject: 'body',
       alwaysWriteToDisk: true,

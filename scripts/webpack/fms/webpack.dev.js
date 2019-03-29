@@ -56,12 +56,12 @@ let fmsDev = merge(common, {
       filename: "fms.[name].[hash].css"
     }),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, '../../../public/views/fms-error.html'),
+      filename: path.resolve(__dirname, '../../../public/views/error.html'),
       template: path.resolve(__dirname, '../../../public/views/fms-error-template.html'),
       inject: false,
     }),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, '../../../public/views/fms-index.html'),
+      filename: path.resolve(__dirname, '../../../public/views/index.html'),
       template: path.resolve(__dirname, '../../../public/views/fms-index-template.html'),
       inject: 'body',
       chunks: ['manifest', 'vendor', 'app'],

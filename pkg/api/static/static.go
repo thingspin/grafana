@@ -102,7 +102,7 @@ func (fs staticFileSystem) Open(name string) (http.File, error) {
 func prepareStaticOption(dir string, opt StaticOptions) StaticOptions {
 	// Defaults
 	if len(opt.IndexFile) == 0 {
-		opt.IndexFile = "fms-index.html"
+		opt.IndexFile = "index.html"
 	}
 	// Normalize the prefix if provided
 	if opt.Prefix != "" {

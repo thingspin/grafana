@@ -379,7 +379,7 @@ func (hs *HTTPServer) Index(c *m.ReqContext) {
 		c.Handle(500, "Failed to get settings", err)
 		return
 	}
-	c.HTML(200, "fms-index", data)
+	c.HTML(200, "index", data)
 }
 
 func (hs *HTTPServer) NotFoundHandler(c *m.ReqContext) {
@@ -394,7 +394,7 @@ func (hs *HTTPServer) NotFoundHandler(c *m.ReqContext) {
 		return
 	}
 
-	c.HTML(404, "fms-index", data)
+	c.HTML(404, "index", data)
 }
 
 func getAppNameBodyClass(name string) string {
