@@ -9,18 +9,21 @@ import (
 )
 
 func setTsIndexViewData(c *m.ReqContext) (*dtos.TsIndexViewData, error) {
-	orgId := c.OrgId
-
-	q := &tsm.GetFmsMenuByOrgIdQuery{
-		OrgId: orgId,
-	}
-
-	if err := bus.Dispatch(q); err != nil {
-		return nil, err
-	}
-
-	return &dtos.TsIndexViewData{
+	viewData := &dtos.TsIndexViewData{
 		IsFms: setting.Thingspin.Enabled,
-		Menu:  q.Result.Menu,
-	}, nil
+	}
+
+	orgId := c.OrgId
+	if orgId != 0 {
+		q := &tsm.GetFmsMenuByOrgIdQuery{
+			OrgId: orgId,
+		}
+
+		if err := bus.Dispatch(q); err != nil {
+			return nil, err
+		}
+		viewData.Menu = q.Result.Menu
+	}
+
+	return viewData, nil
 }
