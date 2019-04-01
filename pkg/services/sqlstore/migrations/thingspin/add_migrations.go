@@ -10,4 +10,5 @@ func AddThingspinMigrations(mg *Migrator) {
 	addFmsGroupMemberMigrations(mg)
 	addFmsUserMigrations(mg)
 	addFmsMenuMigrations(mg)
+	addFmsExtLinkMigrations(mg)
 }
