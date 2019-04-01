@@ -15,13 +15,13 @@ func addFmsMenuMigrations(mg *Migrator) {
 		"CREATED_DATE" datetime default (datetime('now', 'localtime')),
 		"UPDATED_DATE" datetime default (datetime('now', 'localtime')),
 		PRIMARY KEY("org_id")
-	)`, m.TsFmsMenuTableName)
+	)`, m.TsFmsMenuTbl)
 
 	// create table
 	mg.AddMigration("[thingspin] FMS 그룹 메뉴 테이블 생성", NewRawSqlMigration(query))
 
 	defaultData := fmt.Sprintf(`INSERT INTO '%s' ('org_id', 'name', 'menu') VALUES (%d, '%s', '%s')`,
-		m.TsFmsMenuTableName, 1, `default`, `[{
+		m.TsFmsMenuTbl, 1, `default`, `[{
 			"id": "create",
 			"text": "Create",
 			"icon": "fa fa-fw fa-plus",

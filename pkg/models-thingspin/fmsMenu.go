@@ -5,8 +5,6 @@ import (
 	"time"
 )
 
-var TsFmsMenuTableName = "TS_FMS_GROUP_MENU"
-
 type FmsMenu struct {
 	OrgId       int64                    `json:"orgId"`
 	Name        string                   `json:"name"`

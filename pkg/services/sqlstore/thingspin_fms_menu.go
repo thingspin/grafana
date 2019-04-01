@@ -16,7 +16,7 @@ func init() {
 func GetFmsMenuByOrgId(cmd *m.GetFmsMenuByOrgIdQuery) error {
 	var res []*m.FmsMenu
 
-	err := x.Table(m.TsFmsMenuTableName).Where("org_id = ?", cmd.OrgId).Find(&res)
+	err := x.Table(m.TsFmsMenuTbl).Where("org_id = ?", cmd.OrgId).Find(&res)
 
 	cmd.Result = res[0]
 
@@ -36,7 +36,7 @@ func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
 
 func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
 	result, err := x.Exec(`DELETE FROM '?' WHERE org_id = ?`,
-		m.TsFmsMenuTableName, cmd.OrgId)
+		m.TsFmsMenuTbl, cmd.OrgId)
 	cmd.Result = result
 
 	return err
@@ -44,7 +44,7 @@ func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
 
 func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 	result, err := x.Exec(`INSERT INTO '?' ('org_id', 'name', 'menu') VALUES (?, '?', '?')`,
-		m.TsFmsMenuTableName, cmd.OrgId, cmd.Name, cmd.Menu)
+		m.TsFmsMenuTbl, cmd.OrgId, cmd.Name, cmd.Menu)
 	cmd.Result = result
 
 	return err
@@ -52,7 +52,7 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 
 func UpdateFmsMenu(cmd *m.UpdateFmsMenuCommand) error {
 	result, err := x.Exec(`UPDATE '?' SET name = '?', menu = '?' WHERE org_id = ?`,
-		m.TsFmsMenuTableName, cmd.Name, cmd.Menu, cmd.OrgId)
+		m.TsFmsMenuTbl, cmd.Name, cmd.Menu, cmd.OrgId)
 
 	cmd.Result = result
 
