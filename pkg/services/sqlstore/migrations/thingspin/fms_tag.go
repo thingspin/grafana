@@ -19,5 +19,5 @@ func addFmsTagMigrations(mg *Migrator) {
 		m.TsFmsFieldTbl)
 
 	// create table
-	mg.AddMigration("[thingspin] FMS Field 테이블 생성", NewRawSqlMigration(query))
+	mg.AddMigration("[thingspin] FMS 태그 테이블 생성", NewRawSqlMigration(query))
 }
