@@ -22,6 +22,8 @@ func AddThingspinMigrations(mg *Migrator) {
 	addFmsConnectStateMigrations(mg)
 	addFmsConnectMigrations(mg)
 	addFmsFieldTypeMigrations(mg)
+	addFmsFieldMigrations(mg)
+	addFmsTagMigrations(mg)
 
 	// FMS Alarm Management
 

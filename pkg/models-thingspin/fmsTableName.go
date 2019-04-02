@@ -6,4 +6,6 @@ var (
 	TsFmsConnectTypeTbl  = "TS_FMS_CONNECT_TYPE"
 	TsFmsConnectStateTbl = "TS_FMS_CONNECT_STATE"
 	TsFmsFieldTypeTbl    = "TS_FMS_FIELD_TYPE"
+	TsFmsFieldTbl        = "TS_FMS_FIELD"
+	TsFmsTagTbl          = "TS_FMS_TAG"
 )
