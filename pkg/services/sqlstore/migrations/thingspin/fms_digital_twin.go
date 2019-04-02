@@ -14,7 +14,7 @@ func addFmsDigitalTwinMigrations(mg *Migrator) {
 		'name' varchar(45),
 		'digital_twin' json,
 		'created' datetime default (datetime('now', 'localtime')),
-		'updated' datetime default (datetime('now', 'localtime')),
+		'updated' datetime default (datetime('now', 'localtime'))
 	)`, m.TsFmsDigitalTwinTbl)
 
 	// create table
