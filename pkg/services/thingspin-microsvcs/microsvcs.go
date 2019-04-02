@@ -13,7 +13,6 @@ import (
 	plugins "github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/registry"
 	"github.com/grafana/grafana/pkg/setting"
-	macaron "gopkg.in/macaron.v1"
 )
 
 type server struct {
@@ -81,7 +80,12 @@ func (s *MicroService) Run(ctx context.Context) error {
 	}
 
 	h := &HTTPServerExt{s.log, s.HttpServer}
-	m := macaron.New()
+
+	//macaron.Env = setting.Env
+	//m := macaron.New()
+	//m.SetAutoHead(true)
+	m := s.HttpServer.GetMacaron()
+
 	h.initAPIServerRoutes(m, data.Servers)
 
 	<-ctx.Done()

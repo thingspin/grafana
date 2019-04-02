@@ -24,9 +24,6 @@ type HTTPServerExt struct {
 
 var apiProxyTransport *http.Transport
 
-func (hs *HTTPServerExt) hello(r *macaron.Macaron) {
-}
-
 func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron, servers []server) {
 
 	hs.log.Info("Micro Service", "API Server", "Setup Proxy", "API", "...")

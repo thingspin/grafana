@@ -183,6 +183,10 @@ func (hs *HTTPServer) newMacaron() *macaron.Macaron {
 	return m
 }
 
+func (hs *HTTPServer) GetMacaron() *macaron.Macaron {
+	return hs.macaron
+}
+
 func (hs *HTTPServer) applyRoutes() {
 	// start with middlewares & static routes
 	hs.addMiddlewaresAndStaticRoutes()
