@@ -42,6 +42,7 @@ import (
 	_ "github.com/grafana/grafana/pkg/services/rendering"
 	_ "github.com/grafana/grafana/pkg/services/search"
 	_ "github.com/grafana/grafana/pkg/services/sqlstore"
+	_ "github.com/grafana/grafana/pkg/services/thingspin-microsvcs"
 )
 
 func NewGrafanaServer() *GrafanaServerImpl {

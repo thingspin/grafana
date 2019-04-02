@@ -1,0 +1,30 @@
+{
+    "project": "ThingSPIN Companion API Servers",
+    "creator": "lonycell",
+    "version": "1.0",
+    "ignore": false,
+    "servers": [
+        {
+            "name": "OPC UA Processor",
+            "api": "opcua",
+            "enable": true,
+            "url": "http://google.com",
+            "run": true,
+            "shell": "npm run",
+            "cmd": ".\\"
+        },
+        {
+            "name": "MOUBUS Processor",
+            "api": "modbus",
+            "enable": true,
+            "url": "http://localhost:500001",
+            "run": true,
+            "cmd": "npm run",
+            "path": ".\\",
+            "headers": [
+                {"name": "thingspin", "content":"enterprise"},
+                {"name": "key", "content":"FDSFRTEFFDD-$@REFDSA"}
+            ]
+        }
+    ]
+}
