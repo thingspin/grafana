@@ -18,18 +18,22 @@ func GetFmsMenuByOrgId(cmd *m.GetFmsMenuByOrgIdQuery) error {
 
 	err := x.Table(m.TsFmsMenuTbl).Where("org_id = ?", cmd.OrgId).Find(&res)
 
-	cmd.Result = res[0]
+	if len(res) == 0 {
+		cmd2 := m.GetFmsDefaultMenuQuery{}
+		err = GetFmsDefaultMenu(&cmd2)
+		cmd.Result = cmd2.Result
+	} else {
+		cmd.Result = res[0]
+	}
 
 	return err
 }
 
 func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
-	q := m.GetFmsMenuByOrgIdQuery{
-		OrgId: 1,
-	}
-	err := GetFmsMenuByOrgId(&q)
+	var res []*m.FmsMenu
+	err := x.Table(m.TsFmsMenuTbl).Where("org_id = ?", 0).Find(&res)
 
-	cmd.Result = q.Result
+	cmd.Result = res[0]
 
 	return err
 }
