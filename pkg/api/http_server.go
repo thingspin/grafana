@@ -183,6 +183,7 @@ func (hs *HTTPServer) newMacaron() *macaron.Macaron {
 	return m
 }
 
+// thingspin extention
 func (hs *HTTPServer) GetMacaron() *macaron.Macaron {
 	return hs.macaron
 }

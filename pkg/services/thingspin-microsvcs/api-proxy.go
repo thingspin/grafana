@@ -45,12 +45,12 @@ func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron, servers []serve
 			continue
 		}
 
-		hs.log.Info("API Server", "API", server.API, "Proxy", server.URL)
+		hs.log.Info("API Server Proxy Add", "API", server.API, "Proxy", server.URL)
 
 		url := util.JoinURLFragments("/", server.API)
 		handlers := make([]macaron.Handler, 0)
 		handlers = append(handlers, middleware.Auth(&middleware.AuthOptions{
-			ReqSignedIn: true,
+			ReqSignedIn: false,
 		}))
 
 		if server.ReqRole != "" {

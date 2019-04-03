@@ -103,7 +103,7 @@ func (s *MicroService) Run(ctx context.Context) error {
 				return err
 			}
 			err = cmd.Wait()
-			log.Info("Stopped API Server", "Server", s.Name)
+			log.Info("Closed API Server", "Server", s.Name)
 			return nil
 		}(item, s.log)
 	}

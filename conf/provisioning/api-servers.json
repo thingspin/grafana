@@ -1,19 +1,19 @@
 {
-    "project": "ThingSPIN Companion API Servers",
-    "creator": "lonycell",
-    "version": "1.0",
-    "ignore": false,
-    "servers": [
-        {
-            "name": "API Example Node",
-            "api": "api/hello",
-            "enable": true,
-            "url": "http://localhost:8080",
-            "run": true,
-            "shell": "node.exe",
-            "pwd": "C:\\Users\\lonyc\\works\\thingspin-addon\\drone\\",
-            "cmd": "main.js",
-            "params": "-p 5000"
-        }
-    ]
+  "project": "ThingSPIN Companion API Servers",
+  "creator": "lonycell",
+  "version": "1.0",
+  "ignore": false,
+  "servers": [
+    {
+      "name": "API Example Node",
+      "api": "api/hello",
+      "enable": true,
+      "url": "http://localhost:8080",
+      "run": true,
+      "shell": "node.exe",
+      "pwd": "C:\\Users\\lonyc\\works\\thingspin\\src\\github.com\\grafana\\grafana\\data\\api-servers\\hello",
+      "cmd": "api.hello.js",
+      "params": "-p example 5000"
+    }
+  ]
 }
