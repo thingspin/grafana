@@ -26,8 +26,6 @@ var apiProxyTransport *http.Transport
 
 func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron, servers []server) {
 
-	hs.log.Info("Micro Service", "API Server", "Setup Proxy", "API", "...")
-
 	apiProxyTransport = &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: setting.PluginAppsSkipVerifyTLS,
@@ -43,7 +41,13 @@ func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron, servers []serve
 	}
 
 	for _, server := range servers {
-		url := util.JoinURLFragments("/api/", server.API)
+		if !server.Enable {
+			continue
+		}
+
+		hs.log.Info("API Server", "API", server.API, "Proxy", server.URL)
+
+		url := util.JoinURLFragments("/", server.API)
 		handlers := make([]macaron.Handler, 0)
 		handlers = append(handlers, middleware.Auth(&middleware.AuthOptions{
 			ReqSignedIn: true,
@@ -58,7 +62,6 @@ func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron, servers []serve
 		}
 		handlers = append(handlers, APIServerRoute(server, url, hs))
 		r.Route(url, "*", handlers...)
-		log.Info("Micro Service: Adding proxy route %s", url)
 	}
 }
 

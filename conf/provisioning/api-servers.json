@@ -5,26 +5,15 @@
     "ignore": false,
     "servers": [
         {
-            "name": "OPC UA Processor",
-            "api": "opcua",
+            "name": "API Example Node",
+            "api": "api/hello",
             "enable": true,
-            "url": "http://google.com",
+            "url": "http://localhost:8080",
             "run": true,
-            "shell": "npm run",
-            "cmd": ".\\"
-        },
-        {
-            "name": "MOUBUS Processor",
-            "api": "modbus",
-            "enable": true,
-            "url": "http://localhost:500001",
-            "run": true,
-            "cmd": "npm run",
-            "path": ".\\",
-            "headers": [
-                {"name": "thingspin", "content":"enterprise"},
-                {"name": "key", "content":"FDSFRTEFFDD-$@REFDSA"}
-            ]
+            "shell": "node.exe",
+            "pwd": "C:\\Users\\lonyc\\works\\thingspin-addon\\drone\\",
+            "cmd": "main.js",
+            "params": "-p 5000"
         }
     ]
 }

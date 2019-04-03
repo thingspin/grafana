@@ -2,10 +2,11 @@ package microsvcs
 
 import (
 	"context"
-	"io/ioutil"
-	"path"
-
 	"encoding/json"
+	"io/ioutil"
+	"os/exec"
+	"path"
+	"path/filepath"
 
 	api "github.com/grafana/grafana/pkg/api"
 	"github.com/grafana/grafana/pkg/log"
@@ -21,8 +22,10 @@ type server struct {
 	Enable  bool                           `json:"enable"`
 	URL     string                         `json:"url"`
 	Run     bool                           `json:"run,omitempty"`
-	Shell   string                         `json:"path,omitempty"`
+	Shell   string                         `json:"shell,omitempty"`
+	Pwd     string                         `json:"pwd,omitempty"`
 	Cmd     string                         `json:"cmd,omitempty"`
+	Params  string                         `json:"params,omitempty"`
 	ReqRole m.RoleType                     `json:"role,omitempty"`
 	Headers []plugins.AppPluginRouteHeader `json:"headers,omitempty"`
 }
@@ -46,14 +49,14 @@ func init() {
 }
 
 func (s *MicroService) Init() error {
-	s.log = log.New("microsvcs")
+	s.log = log.New("api.server")
 	return nil
 }
 
 func (s *MicroService) Run(ctx context.Context) error {
 
 	jsonPath := path.Join(s.Cfg.ProvisioningPath, "api-servers.json")
-	s.log.Debug("Micro Service", "API Server Setting from", jsonPath)
+	s.log.Debug("Configurating API Server", "Setting file", jsonPath)
 
 	file, err := ioutil.ReadFile(jsonPath)
 	if err != nil {
@@ -66,29 +69,51 @@ func (s *MicroService) Run(ctx context.Context) error {
 		return err
 	}
 
-	s.log.Info("Micro Service", "API Server", data.Project, "Verion", data.Version)
+	s.log.Info("Configurating API Server", "Project", data.Project, "Verion", data.Version)
 
 	if data.Ignore {
-		s.log.Debug("Micro Service", "API Server", "Ignored.")
+		s.log.Debug("Configurating API Server", "Setup Ignored.")
 		return nil
 	}
 
-	s.log.Debug("Micro Service", "API Server List", data.Servers)
-
 	for _, item := range data.Servers {
-		s.log.Info("Micro Service", "API Server", item.Name, "URL", item.URL, "API", item.API)
+		if !item.Enable {
+			continue
+		}
+
+		if !item.Run {
+			continue
+		}
+
+		s.log.Info("API Server Invoke", "Name", item.Name, "URL", item.URL, "API", item.API)
+
+		path := filepath.Join(item.Pwd, item.Cmd)
+		params := item.Params
+		cmd := exec.Command(item.Shell, path, params)
+		cmd.Dir = filepath.Join(item.Pwd, "")
+
+		s.log.Debug("API Server: full-path : " + path)
+		s.log.Debug("API Server: shell : " + item.Shell)
+		s.log.Debug("API Server: Dir : " + cmd.Dir)
+
+		go func(s server, log log.Logger) error {
+			err := cmd.Start()
+			if err != nil {
+				log.Error("API Server start failed", "Server", s.Name, "Error", err)
+				return err
+			}
+			err = cmd.Wait()
+			log.Info("Stopped API Server", "Server", s.Name)
+			return nil
+		}(item, s.log)
 	}
 
 	h := &HTTPServerExt{s.log, s.HttpServer}
-
-	//macaron.Env = setting.Env
-	//m := macaron.New()
-	//m.SetAutoHead(true)
 	m := s.HttpServer.GetMacaron()
 
 	h.initAPIServerRoutes(m, data.Servers)
 
 	<-ctx.Done()
-	s.log.Error("Micro Service", "API Server sutting down", "END")
+	s.log.Error("Stopped API Servers", "reason", "context canceled")
 	return ctx.Err()
 }
