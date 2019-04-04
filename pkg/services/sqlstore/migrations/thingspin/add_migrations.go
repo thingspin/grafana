@@ -8,14 +8,15 @@ func AddThingspinMigrations(mg *Migrator) {
 	// FMS System management
 	addFmsSettingsMigrations(mg)
 
+	// FMS Contents Management
+	addFmsExtLinkMigrations(mg)
+
 	// FMS User Management
 	addFmsGroupMigrations(mg)
 	addFmsGroupMemberMigrations(mg)
 	addFmsUserMigrations(mg)
+	addFmsMenuBaseMigrations(mg)
 	addFmsMenuMigrations(mg)
-
-	// FMS Contents Management
-	addFmsExtLinkMigrations(mg)
 
 	// FMS Data source Management
 	addFmsConnectTypeMigrations(mg)
