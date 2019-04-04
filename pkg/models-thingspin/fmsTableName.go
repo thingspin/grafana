@@ -1,7 +1,10 @@
 package tsmodels
 
 var (
-	TsFmsMenuTbl         = "TS_FMS_GROUP_MENU"
+	TsFmsExtLinkTbl      = "TS_FMS_EXT_LINK"
+	TsFmsMenuBaseTbl     = "TS_FMS_MENU_BASE"
+	TsFmsMenuTbl         = "TS_FMS_MENU"
+	TsFmsMenuPinTbl      = "TS_FMS_MENU_PIN"
 	TsFmsConnectTbl      = "TS_FMS_CONNECT"
 	TsFmsConnectTypeTbl  = "TS_FMS_CONNECT_TYPE"
 	TsFmsConnectStateTbl = "TS_FMS_CONNECT_STATE"
