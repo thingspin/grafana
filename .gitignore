@@ -37,7 +37,7 @@ public/css/*.min.css
 .vs/
 
 /data/*
-!/data/api-servers/*
+!/data/api-servers/
 /bin/*
 
 conf/custom.ini
