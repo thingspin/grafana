@@ -25,4 +25,7 @@ var (
 	TsFmsAnlyCorrTagTbl  = "TS_FMS_ANLY_CORR_TAG"
 	TsFmsAnlyDiagTbl     = "TS_FMS_ANLY_DIAG"
 	TsFmsDigitalTwinTbl  = "TS_FMS_DIGITAL_TWIN"
+	GfUserTbl            = "user"
+	GfOrgUserTbl         = "org_user"
+	GfOrgTbl             = "org"
 )

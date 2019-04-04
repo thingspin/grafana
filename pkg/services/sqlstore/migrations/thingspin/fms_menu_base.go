@@ -85,5 +85,5 @@ func addFmsMenuBaseMigrations(mg *Migrator) {
 	queries = append(queries, getQueryData(34, "Documentation", "'fa fa-fw fa-file'", "NULL", "'http://docs.grafana.org'", "'_blank'", false, false, false))
 
 	defaultData = defaultData + strings.Join(queries, ", ")
-	mg.AddMigration("[thingspin] FMS 기본 메뉴 추가", NewRawSqlMigration(defaultData))
+	mg.AddMigration("[thingspin] FMS 메뉴 링크 추가", NewRawSqlMigration(defaultData))
 }
