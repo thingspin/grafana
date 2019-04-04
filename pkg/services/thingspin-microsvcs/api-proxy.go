@@ -1,11 +1,15 @@
 package microsvcs
 
 import (
+	"compress/gzip"
 	"crypto/tls"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -44,7 +48,7 @@ func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron) {
 				handlers = append(handlers, middleware.RoleAuth(m.ROLE_EDITOR, m.ROLE_ADMIN))
 			}
 		}
-		handlers = append(handlers, APIServerRoute(server, url))
+		handlers = append(handlers, hs.APIServerRoute(server, url))
 
 		r.Any(url, handlers...)
 		r.Any(url+"/", handlers...)
@@ -52,29 +56,35 @@ func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron) {
 	}
 }
 
-func APIServerRoute(server server, url string) macaron.Handler {
+func (hs *HTTPServerExt) APIServerRoute(server server, url string) macaron.Handler {
 	return func(c *m.ReqContext) {
 		remotePath := c.Params("*")
 		target := server.URL
 
-		proxy := apiServerProxy(remotePath, target)
+		proxy := hs.apiServerProxy(server.API, remotePath, target, server.AttachURL)
 		proxy.ServeHTTP(c.Resp, c.Req.Request)
 		c.Resp.Header().Del("Set-Cookie")
 	}
 }
 
 //==================================================================================================================================================
-func apiServerProxy(remotePath string, host string) *httputil.ReverseProxy {
+func (hs *HTTPServerExt) apiServerProxy(api string, remotePath string, host string, visual bool) *httputil.ReverseProxy {
 	remote, _ := url.Parse(host)
+	apiRoot := util.JoinURLFragments("/", api)
+
 	director := func(req *http.Request) {
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
 		req.Host = remote.Host
 
-		proxyPrefix := strings.Replace(req.URL.Path, remotePath, "", -1)
-		targetURI := strings.Replace(req.RequestURI, proxyPrefix, "", -1)
-		req.RequestURI = targetURI
-		req.URL.Path = util.JoinURLFragments(remote.Path, remotePath)
+		if !isExistRoute(req.RequestURI) {
+			proxyPrefix := strings.Replace(req.URL.Path, remotePath, "", -1)
+			targetURI := strings.Replace(req.RequestURI, proxyPrefix, "", -1)
+			req.RequestURI = targetURI
+			req.URL.Path = util.JoinURLFragments(remote.Path, remotePath)
+		} else {
+			req.URL.Path = util.JoinURLFragments(remote.Path, req.URL.Path)
+		}
 
 		req.Header.Del("Cookie")
 		req.Header.Del("Set-Cookie")
@@ -91,7 +101,74 @@ func apiServerProxy(remotePath string, host string) *httputil.ReverseProxy {
 			TLSHandshakeTimeout: 10 * time.Second,
 		},
 		ModifyResponse: func(resp *http.Response) error {
-			if resp.StatusCode/100 == 2 {
+
+			if !visual {
+				return nil
+			}
+
+			respCode := resp.StatusCode / 100
+
+			if respCode == 2 {
+				contentsType := resp.Header.Get("Content-Type")
+				contentsEncode := resp.Header.Get("Content-Encoding")
+
+				req := resp.Request
+				uri := req.RequestURI
+				path := req.URL.Path
+
+				hs.log.Debug("respCode: ", "respCode", respCode)
+				hs.log.Debug("Contents UrI: " + uri)
+				hs.log.Debug("Contents Type: " + contentsType)
+				hs.log.Debug("Contents Encode: " + contentsEncode)
+
+				if companionBeParse(contentsType, path) {
+					var s string
+
+					switch contentsEncode {
+					case "gzip":
+						reader, err := gzip.NewReader(resp.Body)
+						if err != nil {
+							return err
+						}
+						defer reader.Close()
+
+						b, err := ioutil.ReadAll(reader)
+						if err != nil {
+							return err
+						}
+
+						s = string(b)
+
+					default:
+						reader := resp.Body
+						b, err := ioutil.ReadAll(reader)
+						if err != nil {
+							return err
+						}
+
+						s = string(b)
+					}
+
+					re := regexp.MustCompile(`(&#x2F;)`)
+					s = re.ReplaceAllString(s, `/`)
+
+					re = regexp.MustCompile(`href="(/?[a-z]+/[a-z]+\S+)"`)
+					rp := util.JoinURLFragments(apiRoot, `$1`)
+					s = re.ReplaceAllString(s, `href="`+rp+`"`)
+
+					re = regexp.MustCompile(`src="(/?[a-z]+/[a-z]+\S+)"`)
+					rp = util.JoinURLFragments(apiRoot, `$1`)
+					s = re.ReplaceAllString(s, `src="`+rp+`"`)
+
+					body := ioutil.NopCloser(strings.NewReader(s))
+
+					resp.Body = body
+					resp.ContentLength = int64(len(s))
+
+					resp.Header.Del("Content-Encoding")
+					resp.Header.Add("Accept-Ranges", "bytes")
+					resp.Header.Set("Content-Length", strconv.Itoa(len(s)))
+				}
 			}
 
 			return nil
@@ -100,3 +177,77 @@ func apiServerProxy(remotePath string, host string) *httputil.ReverseProxy {
 }
 
 //===================================================================================================================================
+func companionIsTextType(a string) bool {
+
+	list := []string{
+		"text",
+		"html",
+		"script",
+		"style",
+		"javascript",
+		"css",
+		"js",
+	}
+
+	for _, b := range list {
+		if strings.Contains(a, b) {
+			return true
+		}
+	}
+	return false
+}
+
+func companionBeParse(t string, f string) bool {
+	if !companionIsTextType(t) {
+		return false
+	}
+
+	html := []string{
+		"text",
+		"html",
+		"css",
+		"js",
+	}
+
+	for _, h := range html {
+		if strings.Contains(t, h) {
+			return true
+		}
+	}
+
+	white := []string{
+		"kibana",
+		"bundle",
+		"thingspin",
+	}
+
+	for _, w := range white {
+		if strings.Contains(f, w) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func isExistRoute(p string) bool {
+	white := []string{
+		"/sockjs/",
+		"/cfs/",
+		"/bundles/",
+		"/plugins/kibana/",
+		"/plugins/timelion/",
+		"/es_admin/",
+		"/elasticsearch/",
+		"view/",
+		"vendor/",
+		"comms/",
+	}
+
+	for _, w := range white {
+		if strings.HasPrefix(p, w) {
+			return true
+		}
+	}
+	return false
+}

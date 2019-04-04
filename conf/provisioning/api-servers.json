@@ -19,12 +19,37 @@
       "name": "NodeRED Complex Event Processing",
       "api": "api/cep",
       "enable": true,
-      "url": "http://219.251.4.237:1880",
+      "url": "http://localhost:1880",
+      "attachURL": false,
       "run": false,
       "shell": "node",
       "pwd": "C:\\apps\\node-red-0.20.3\\node-red",
       "cmd": "red.js",
       "params": "-s settings.json"
+    },
+    {
+      "name": "태양광 어레이 검사운용 시스템 API",
+      "api": "api/drone",
+      "enable": false,
+      "url": "http://localhost:5000",
+      "run": true,
+      "shell": "node",
+      "pwd": "C:\\Users\\lonyc\\works\\thingspin\\src\\github.com\\grafana\\grafana\\data\\api-servers\\drone",
+      "cmd": "main.js",
+      "params": "--port=5000"
+    },
+    {
+      "name": "태양광 어레이 검사운용 시스템 API (PYTHON) - DJango",
+      "api": "api/pv",
+      "enable": false,
+      "url": "http://localhost:8000",
+      "attachURL": true,
+      "run": true,
+      "shell": "python",
+      "pwd": "C:\\Users\\lonyc\\works\\thingspin\\src\\github.com\\grafana\\grafana\\data\\api-servers\\pyserv",
+      "cmd": "manage.py",
+      "params": "runserver",
+      "options": "0.0.0.0:8000"
     }
   ]
 }

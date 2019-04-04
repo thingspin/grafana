@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
@@ -17,17 +18,19 @@ import (
 )
 
 type server struct {
-	Name    string                         `json:"name"`
-	API     string                         `json:"api"`
-	Enable  bool                           `json:"enable"`
-	URL     string                         `json:"url"`
-	Run     bool                           `json:"run,omitempty"`
-	Shell   string                         `json:"shell,omitempty"`
-	Pwd     string                         `json:"pwd,omitempty"`
-	Cmd     string                         `json:"cmd,omitempty"`
-	Params  string                         `json:"params,omitempty"`
-	ReqRole m.RoleType                     `json:"role,omitempty"`
-	Headers []plugins.AppPluginRouteHeader `json:"headers,omitempty"`
+	Name      string                         `json:"name"`
+	API       string                         `json:"api"`
+	Enable    bool                           `json:"enable"`
+	URL       string                         `json:"url"`
+	Run       bool                           `json:"run,omitempty"`
+	AttachURL bool                           `json:"attachURL,omitempty"`
+	Shell     string                         `json:"shell,omitempty"`
+	Pwd       string                         `json:"pwd,omitempty"`
+	Cmd       string                         `json:"cmd,omitempty"`
+	Params    string                         `json:"params,omitempty"`
+	Options   string                         `json:"options,omitempty"`
+	ReqRole   m.RoleType                     `json:"role,omitempty"`
+	Headers   []plugins.AppPluginRouteHeader `json:"headers,omitempty"`
 }
 
 type services struct {
@@ -89,8 +92,11 @@ func (s *MicroService) Run(ctx context.Context) error {
 
 		path := filepath.Join(item.Pwd, item.Cmd)
 		params := item.Params
-		cmd := exec.Command(item.Shell, path, params)
+		options := item.Options
+		cmd := exec.Command(item.Shell, path, params, options)
 		cmd.Dir = filepath.Join(item.Pwd, "")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
 
 		s.log.Debug("API Server: full-path : " + path)
 		s.log.Debug("API Server: shell : " + item.Shell)
@@ -102,8 +108,10 @@ func (s *MicroService) Run(ctx context.Context) error {
 				log.Error("API Server start failed", "Server", s.Name, "Error", err)
 				return err
 			}
+
 			err = cmd.Wait()
 			log.Info("Closed API Server", "Server", s.Name)
+
 			return nil
 		}(item, s.log)
 	}
