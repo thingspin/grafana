@@ -14,6 +14,17 @@
       "pwd": "C:\\Users\\lonyc\\works\\thingspin\\src\\github.com\\grafana\\grafana\\data\\api-servers\\hello",
       "cmd": "api.hello.js",
       "params": "-p example 5000"
+    },
+    {
+      "name": "NodeRED",
+      "api": "api/flow",
+      "enable": true,
+      "url": "http://localhost:1880",
+      "run": true,
+      "shell": "node",
+      "pwd": "C:\\apps\\node-red-0.20.3\\node-red",
+      "cmd": "red.js",
+      "params": "-s settings.json"
     }
   ]
 }
