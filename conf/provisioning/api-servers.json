@@ -10,7 +10,7 @@
       "enable": true,
       "url": "http://localhost:8080",
       "run": true,
-      "shell": "node.exe",
+      "shell": "node",
       "pwd": "C:\\Users\\lonyc\\works\\thingspin\\src\\github.com\\grafana\\grafana\\data\\api-servers\\hello",
       "cmd": "api.hello.js",
       "params": "-p example 5000"

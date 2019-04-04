@@ -108,10 +108,10 @@ func (s *MicroService) Run(ctx context.Context) error {
 		}(item, s.log)
 	}
 
-	h := &HTTPServerExt{s.log, s.HttpServer}
+	h := &HTTPServerExt{s.log, s.HttpServer, data.Servers}
 	m := s.HttpServer.GetMacaron()
 
-	h.initAPIServerRoutes(m, data.Servers)
+	h.initAPIServerRoutes(m)
 
 	<-ctx.Done()
 	s.log.Error("Stopped API Servers", "reason", "context canceled")

@@ -4,15 +4,15 @@ import (
 	"crypto/tls"
 	"net"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
+	"strings"
 	"time"
 
 	api "github.com/grafana/grafana/pkg/api"
-	"github.com/grafana/grafana/pkg/api/pluginproxy"
 	"github.com/grafana/grafana/pkg/log"
 	"github.com/grafana/grafana/pkg/middleware"
 	m "github.com/grafana/grafana/pkg/models"
-	"github.com/grafana/grafana/pkg/plugins"
-	"github.com/grafana/grafana/pkg/setting"
 	"github.com/grafana/grafana/pkg/util"
 	macaron "gopkg.in/macaron.v1"
 )
@@ -20,27 +20,11 @@ import (
 type HTTPServerExt struct {
 	log log.Logger
 	*api.HTTPServer
+	servers []server
 }
 
-var apiProxyTransport *http.Transport
-
-func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron, servers []server) {
-
-	apiProxyTransport = &http.Transport{
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: setting.PluginAppsSkipVerifyTLS,
-			Renegotiation:      tls.RenegotiateFreelyAsClient,
-		},
-		Proxy: http.ProxyFromEnvironment,
-		Dial: (&net.Dialer{
-			Timeout:   30 * time.Second,
-			KeepAlive: 30 * time.Second,
-			DualStack: true,
-		}).Dial,
-		TLSHandshakeTimeout: 10 * time.Second,
-	}
-
-	for _, server := range servers {
+func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron) {
+	for _, server := range hs.servers {
 		if !server.Enable {
 			continue
 		}
@@ -60,26 +44,59 @@ func (hs *HTTPServerExt) initAPIServerRoutes(r *macaron.Macaron, servers []serve
 				handlers = append(handlers, middleware.RoleAuth(m.ROLE_EDITOR, m.ROLE_ADMIN))
 			}
 		}
-		handlers = append(handlers, APIServerRoute(server, url, hs))
-		r.Route(url, "*", handlers...)
+		handlers = append(handlers, APIServerRoute(server, url))
+
+		r.Any(url, handlers...)
+		r.Any(url+"/", handlers...)
+		r.Any(url+"/*", handlers...)
 	}
 }
 
-func APIServerRoute(s server, url string, hs *HTTPServerExt) macaron.Handler {
-	appID := s.Name
-	route := &plugins.AppPluginRoute{
-		Path:    url,
-		Method:  "*",
-		ReqRole: s.ReqRole,
-		Url:     s.URL,
-		Headers: s.Headers,
-	}
-
+func APIServerRoute(server server, url string) macaron.Handler {
 	return func(c *m.ReqContext) {
-		path := c.Params("*")
+		remotePath := c.Params("*")
+		target := server.URL
 
-		proxy := pluginproxy.NewApiPluginProxy(c, path, route, appID, hs.Cfg)
-		proxy.Transport = apiProxyTransport
+		proxy := apiServerProxy(remotePath, target)
 		proxy.ServeHTTP(c.Resp, c.Req.Request)
+		c.Resp.Header().Del("Set-Cookie")
 	}
 }
+
+//==================================================================================================================================================
+func apiServerProxy(remotePath string, host string) *httputil.ReverseProxy {
+	remote, _ := url.Parse(host)
+	director := func(req *http.Request) {
+		req.URL.Scheme = remote.Scheme
+		req.URL.Host = remote.Host
+		req.Host = remote.Host
+
+		proxyPrefix := strings.Replace(req.URL.Path, remotePath, "", -1)
+		targetURI := strings.Replace(req.RequestURI, proxyPrefix, "", -1)
+		req.RequestURI = targetURI
+		req.URL.Path = util.JoinURLFragments(remote.Path, remotePath)
+
+		req.Header.Del("Cookie")
+		req.Header.Del("Set-Cookie")
+	}
+	return &httputil.ReverseProxy{
+		Director: director,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			Proxy:           http.ProxyFromEnvironment,
+			Dial: (&net.Dialer{
+				Timeout:   30 * time.Second,
+				KeepAlive: 30 * time.Second,
+			}).Dial,
+			TLSHandshakeTimeout: 10 * time.Second,
+		},
+		ModifyResponse: func(resp *http.Response) error {
+			if resp.StatusCode/100 == 2 {
+			}
+
+			return nil
+		},
+	}
+}
+
+//===================================================================================================================================
