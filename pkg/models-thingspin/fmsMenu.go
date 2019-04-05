@@ -2,16 +2,7 @@ package tsmodels
 
 import (
 	"database/sql"
-	"time"
 )
-
-type FmsMenu struct {
-	OrgId       int64                    `json:"orgId"`
-	Name        string                   `json:"name"`
-	Menu        []map[string]interface{} `json:"menu"`
-	CreatedDate time.Time                `json:"createdDate"`
-	UpdatedDate time.Time                `json:"updatedDate"`
-}
 
 type FmsMenuQueryResult struct {
 	Id           int                      `json:"id"`
@@ -30,14 +21,18 @@ type FmsMenuQueryResult struct {
 	HideFromTabs bool                     `json:"hideFromTabs"`
 	Divider      bool                     `json:"divider"`
 }
+type FmsMenu struct {
+	FmsMenuQueryResult
+	Children []*FmsMenu `json:"children"`
+}
 
 type GetFmsMenuByOrgIdQuery struct {
 	OrgId  int64
-	Result []*FmsMenuQueryResult
+	Result []*FmsMenu
 }
 
 type GetFmsDefaultMenuQuery struct {
-	Result []*FmsMenuQueryResult
+	Result []*FmsMenu
 }
 
 type DeleteFmsMenuByOrgIdQuery struct {

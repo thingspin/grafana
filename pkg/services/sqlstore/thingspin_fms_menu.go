@@ -15,26 +15,34 @@ func init() {
 	bus.AddHandler("sql", UpdateFmsMenu)
 }
 
-func GetFmsMenuByOrgId(cmd *m.GetFmsMenuByOrgIdQuery) error {
-	var res []*m.FmsMenu
+func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
+	keyMap := make(map[int]*m.FmsMenu)
+	var rootNode []*m.FmsMenu
 
-	err := x.Table(m.TsFmsMenuTbl).Where("org_id = ?", cmd.OrgId).Find(&res)
+	var node *m.FmsMenu
+	for _, menu := range menuList {
+		// generate node data
+		node = &m.FmsMenu{
+			FmsMenuQueryResult: *menu,
+			Children:           []*m.FmsMenu{},
+		}
 
-	if len(res) == 0 {
-		cmd2 := m.GetFmsDefaultMenuQuery{}
-		err = GetFmsDefaultMenu(&cmd2)
-		cmd.Result = cmd2.Result
-	} else {
-		// cmd.Result = res[0]
+		// find position
+		if menu.ParentId == 0 { // == nil
+			rootNode = append(rootNode, node)
+		} else {
+			curr := keyMap[menu.ParentId]
+			curr.Children = append(curr.Children, node)
+		}
+
+		keyMap[menu.Id] = node
 	}
-
-	return err
+	return rootNode
 }
 
-func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
+func getFmsMenuByOrgId(orgId int64) ([]*m.FmsMenu, error) {
 	var res []*m.FmsMenuQueryResult
 	selectStr := []string{
-
 		m.TsFmsMenuTbl + ".id",
 		m.TsFmsMenuTbl + ".permission",
 		m.TsFmsMenuTbl + ".parent_id",
@@ -54,10 +62,32 @@ func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
 	err := x.Table(m.TsFmsMenuTbl).
 		Select(strings.Join(selectStr, ", ")).
 		Join("INNER", m.TsFmsMenuBaseTbl, m.TsFmsMenuTbl+".mbid = "+m.TsFmsMenuBaseTbl+".id").
-		Where(m.TsFmsMenuTbl+".org_id = ?", 0).
+		Where(m.TsFmsMenuTbl+".org_id = ?", orgId).
 		Find(&res)
 
-	cmd.Result = res
+	result := convertFmsMenuTree(res)
+
+	return result, err
+}
+
+func GetFmsMenuByOrgId(cmd *m.GetFmsMenuByOrgIdQuery) error {
+	res, err := getFmsMenuByOrgId(cmd.OrgId)
+
+	if len(res) == 0 {
+		cmd2 := m.GetFmsDefaultMenuQuery{}
+		err = GetFmsDefaultMenu(&cmd2)
+		cmd.Result = cmd2.Result
+	} else {
+		cmd.Result = res
+	}
+
+	return err
+}
+
+func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
+	result, err := getFmsMenuByOrgId(0)
+
+	cmd.Result = result
 
 	return err
 }
