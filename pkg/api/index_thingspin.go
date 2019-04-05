@@ -22,7 +22,7 @@ func setTsIndexViewData(c *m.ReqContext) (*dtos.TsIndexViewData, error) {
 		if err := bus.Dispatch(q); err != nil {
 			return nil, err
 		}
-		// viewData.Menu = q.Result
+		viewData.Menu = q.Result
 	}
 
 	return viewData, nil
