@@ -17,6 +17,7 @@ func AddThingspinMigrations(mg *Migrator) {
 	addFmsUserMigrations(mg)
 	addFmsMenuBaseMigrations(mg)
 	addFmsMenuMigrations(mg)
+	addFmsMenuPinMigrations(mg)
 
 	// FMS Data source Management
 	addFmsConnectTypeMigrations(mg)
