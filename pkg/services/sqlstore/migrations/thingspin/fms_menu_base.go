@@ -24,7 +24,7 @@ func addFmsMenuBaseMigrations(mg *Migrator) {
 		'icon' text,
 		'img_path' text,
 		'subtitle' text,
-		'ext_link_id' int references %s(id),
+		'ext_link_id' int references %s(id) on delete cascade,
 		'url' text,
 		'target' text,
 		'hideFromMenu' bool default FALSE,

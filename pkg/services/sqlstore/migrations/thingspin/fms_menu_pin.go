@@ -10,8 +10,8 @@ import (
 func addFmsMenuPinMigrations(mg *Migrator) {
 	query := fmt.Sprintf(`
 		CREATE TABLE IF NOT EXISTS '%s' (
-			'uid' integer references %s(id) NOT NULL,
-			'mid' integer references %s(id) NOT NULL,
+			'uid' integer references %s(id) on delete cascade NOT NULL,
+			'mid' integer references %s(id) on delete cascade NOT NULL,
 			"created" datetime default (datetime('now', 'localtime')),
 			"updated" datetime default (datetime('now', 'localtime')),
 			PRIMARY KEY(uid, mid)
