@@ -19,7 +19,7 @@ class TsMenu extends PureComponent {
 
   constructor(props) {
     super(props);
-    this.navTree = _.cloneDeep(config.bootData.thingspin.menu);
+    this.navTree = _.cloneDeep(config.bootData.navTree);
     this.mainLinks = _.filter(this.navTree, item => !item.hideFromMenu);
 
     this.menuList = [

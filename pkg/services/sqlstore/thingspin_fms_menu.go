@@ -1,6 +1,8 @@
 package sqlstore
 
 import (
+	"strings"
+
 	"github.com/grafana/grafana/pkg/bus"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 )
@@ -23,17 +25,39 @@ func GetFmsMenuByOrgId(cmd *m.GetFmsMenuByOrgIdQuery) error {
 		err = GetFmsDefaultMenu(&cmd2)
 		cmd.Result = cmd2.Result
 	} else {
-		cmd.Result = res[0]
+		// cmd.Result = res[0]
 	}
 
 	return err
 }
 
 func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
-	var res []*m.FmsMenu
-	err := x.Table(m.TsFmsMenuTbl).Where("org_id = ?", 0).Find(&res)
+	var res []*m.FmsMenuQueryResult
+	selectStr := []string{
 
-	cmd.Result = res[0]
+		m.TsFmsMenuTbl + ".id",
+		m.TsFmsMenuTbl + ".permission",
+		m.TsFmsMenuTbl + ".parent_id",
+		m.TsFmsMenuTbl + ".req_params",
+		m.TsFmsMenuTbl + ".'order'",
+
+		m.TsFmsMenuBaseTbl + ".text",
+		m.TsFmsMenuBaseTbl + ".icon",
+		m.TsFmsMenuBaseTbl + ".img_path",
+		m.TsFmsMenuBaseTbl + ".subtitle",
+		m.TsFmsMenuBaseTbl + ".url",
+		m.TsFmsMenuBaseTbl + ".target",
+		m.TsFmsMenuBaseTbl + ".hideFromMenu",
+		m.TsFmsMenuBaseTbl + ".hideFromTabs",
+		m.TsFmsMenuBaseTbl + ".divider",
+	}
+	err := x.Table(m.TsFmsMenuTbl).
+		Select(strings.Join(selectStr, ", ")).
+		Join("INNER", m.TsFmsMenuBaseTbl, m.TsFmsMenuTbl+".mbid = "+m.TsFmsMenuBaseTbl+".id").
+		Where(m.TsFmsMenuTbl+".org_id = ?", 0).
+		Find(&res)
+
+	cmd.Result = res
 
 	return err
 }

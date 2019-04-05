@@ -13,13 +13,31 @@ type FmsMenu struct {
 	UpdatedDate time.Time                `json:"updatedDate"`
 }
 
+type FmsMenuQueryResult struct {
+	Id           int                      `json:"id"`
+	Permission   string                   `json:"permission"`
+	ParentId     int                      `json:"parent_id"`
+	Name         string                   `json:"name"`
+	ReqParams    []map[string]interface{} `json:"req_params"`
+	Order        int                      `json:"order"`
+	Text         string                   `json:"text"`
+	Icon         string                   `json:"icon"`
+	Img_path     string                   `json:"img_path"`
+	Subtitle     string                   `json:"subtitle"`
+	Url          string                   `json:"url"`
+	Target       string                   `json:"target"`
+	HideFromMenu bool                     `json:"hideFromMenu"`
+	HideFromTabs bool                     `json:"hideFromTabs"`
+	Divider      bool                     `json:"divider"`
+}
+
 type GetFmsMenuByOrgIdQuery struct {
 	OrgId  int64
-	Result *FmsMenu
+	Result []*FmsMenuQueryResult
 }
 
 type GetFmsDefaultMenuQuery struct {
-	Result *FmsMenu
+	Result []*FmsMenuQueryResult
 }
 
 type DeleteFmsMenuByOrgIdQuery struct {
