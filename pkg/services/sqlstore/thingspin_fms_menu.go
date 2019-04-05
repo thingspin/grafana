@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/grafana/grafana/pkg/bus"
@@ -13,6 +14,18 @@ func init() {
 	bus.AddHandler("sql", DeleteFmsMenuByOrgId)
 	bus.AddHandler("sql", AddFmsMenu)
 	bus.AddHandler("sql", UpdateFmsMenu)
+}
+
+// recursive function
+func sortFmsMenuTree(menuList []*m.FmsMenu) {
+	sort.Slice(menuList, func(i, j int) bool {
+		//lower -> higher
+		return menuList[i].Order < menuList[j].Order
+	})
+
+	for _, menu := range menuList {
+		sortFmsMenuTree(menu.Children)
+	}
 }
 
 func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
@@ -66,6 +79,7 @@ func getFmsMenuByOrgId(orgId int64) ([]*m.FmsMenu, error) {
 		Find(&res)
 
 	result := convertFmsMenuTree(res)
+	sortFmsMenuTree(result)
 
 	return result, err
 }
