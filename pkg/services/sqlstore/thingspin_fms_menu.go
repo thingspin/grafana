@@ -114,6 +114,14 @@ func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
 	return err
 }
 
+func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
+	result, err := x.Exec(`DELETE FROM '?' WHERE id = ? OR parent_id = ?`,
+		m.TsFmsMenuTbl, cmd.Id, cmd.Id)
+	cmd.Result = result
+
+	return err
+}
+
 func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 	result, err := x.Exec(`INSERT INTO '?' ('org_id', 'name', 'menu') VALUES (?, '?', '?')`,
 		m.TsFmsMenuTbl, cmd.OrgId, cmd.Name, cmd.Menu)

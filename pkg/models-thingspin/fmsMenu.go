@@ -40,6 +40,11 @@ type DeleteFmsMenuByOrgIdQuery struct {
 	Result sql.Result
 }
 
+type DeleteFmsMenuByIdQuery struct {
+	Id     int64
+	Result sql.Result
+}
+
 type AddFmsMenuCommand struct {
 	OrgId  int64                    `json:"orgId"`
 	Name   string                   `json:"name"`
