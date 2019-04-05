@@ -7,7 +7,7 @@
     {
       "name": "API Example Node",
       "api": "api/hello",
-      "enable": true,
+      "enable": false,
       "url": "http://localhost:8080",
       "run": true,
       "shell": "node",
@@ -18,7 +18,7 @@
     {
       "name": "NodeRED Complex Event Processing",
       "api": "api/cep",
-      "enable": true,
+      "enable": false,
       "url": "http://localhost:1880",
       "attachURL": false,
       "run": false,
