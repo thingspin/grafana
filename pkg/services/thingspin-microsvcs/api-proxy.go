@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	urlparser "net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -61,9 +62,15 @@ func (hs *HTTPServerExt) APIServerRoute(server server, url string) macaron.Handl
 		remotePath := c.Params("*")
 		target := server.URL
 
-		proxy := hs.apiServerProxy(server.API, remotePath, target, server.AttachURL)
-		proxy.ServeHTTP(c.Resp, c.Req.Request)
-		c.Resp.Header().Del("Set-Cookie")
+		u, _ := urlparser.Parse(target)
+		if u.Scheme == "ws" || u.Scheme == "wss" {
+			proxy, req := CreateWebsocketProxy(c, remotePath, target)
+			proxy.ServeHTTP(c.Resp, req)
+		} else {
+			proxy := hs.apiServerProxy(server.API, remotePath, target, server.AttachURL)
+			proxy.ServeHTTP(c.Resp, c.Req.Request)
+			c.Resp.Header().Del("Set-Cookie")
+		}
 	}
 }
 
