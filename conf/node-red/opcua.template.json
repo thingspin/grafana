@@ -140,7 +140,7 @@
       "id": "TS-OPC-UA-READ-PARSER-FUNC-ID-{{.FlowId}}",
       "type": "function",
       "name": "OPC/UA Parser",
-      "func": "return msg;",
+      "func": "const { addressSpaceItems, payload } = msg;\n\nlet obj = {};\n\naddressSpaceItems.forEach((item, index) => {\n    const node = payload[index];\n    obj[node.browseName.name] = node.value;\n});\n\nmsg.payload = obj;\n\nreturn msg;",
       "outputs": 1,
       "noerr": 0,
       "x": 480,

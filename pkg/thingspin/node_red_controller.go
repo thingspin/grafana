@@ -13,7 +13,7 @@ import (
 	"github.com/grafana/grafana/pkg/setting"
 )
 
-var (
+const (
 	NodeRedHost = `http://localhost:1880`
 	ContentType = "application/json"
 )
