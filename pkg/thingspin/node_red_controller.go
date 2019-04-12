@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"path"
 	"text/template"
 
@@ -13,7 +14,7 @@ import (
 )
 
 var (
-	NodeRedHost = "http://localhost:1880"
+	NodeRedHost = `http://localhost:1880`
 	ContentType = "application/json"
 )
 
@@ -50,8 +51,13 @@ func LoadNodeRedTemplate(filename string, info interface{}) (string, error) {
 }
 
 func getNodeRedSettings() (*http.Response, error) {
-	Url := path.Join(NodeRedHost, "settings")
-	resp, err := http.Get(Url)
+	u, err := url.Parse(NodeRedHost)
+	if err != nil {
+		return nil, err
+	}
+
+	u.Path = path.Join(u.Path, "settings")
+	resp, err := http.Get(u.String())
 	if err != nil {
 		return nil, err
 	}
@@ -77,26 +83,30 @@ func CheckNodeRedRunning() (bool, error) {
 	return false, errors.New(string(rspBody))
 }
 
-func AddFlowNode(target string, info interface{}) (m.NodeRedResponse, error) {
+func AddFlowNode(target string, info interface{}) (*m.NodeRedResponse, error) {
 	templateStr, err := LoadNodeRedTemplate(target, info)
 	if err != nil {
-		return m.NodeRedResponse{}, err
+		return nil, err
 	}
 
-	Url := path.Join(NodeRedHost, "flow")
+	u, err := url.Parse(NodeRedHost)
+	if err != nil {
+		return nil, err
+	}
+	u.Path = path.Join(u.Path, "flow")
 	byteStr := bytes.NewBufferString(templateStr)
 
-	rsp, err := http.Post(Url, ContentType, byteStr)
+	rsp, err := http.Post(u.String(), ContentType, byteStr)
 	if err != nil {
-		return m.NodeRedResponse{}, err
+		return nil, err
 	}
 
 	rspBody, err := ioutil.ReadAll(rsp.Body)
 	if err != nil {
-		return m.NodeRedResponse{}, err
+		return nil, err
 	}
 
-	return m.NodeRedResponse{
+	return &m.NodeRedResponse{
 		StatusCode: rsp.StatusCode,
 		Body:       string(rspBody),
 	}, nil

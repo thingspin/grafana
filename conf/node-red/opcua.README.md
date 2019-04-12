@@ -12,6 +12,7 @@ ThingSPIN OPCUA Data Connect Documents
 {
     FlowId: "Backend 에서 생성이 필요",
     EndpointUrl: "OPC/UA Endpoint URL",
+    AddressSpaceItems: `배열`,
 }
 ```
 
@@ -24,6 +25,7 @@ Source
 type OpcUaFlowData struct {
     FlowId      string
     EndpointUrl string
+    AddressSpaceItems string
 }
 ```
 
@@ -42,6 +44,11 @@ import (
 opcData := m.OpcUaFlowData{
     FlowId: "test",
     EndpointUrl: "opc.tcp://localhost:53530/OPCUA/SimulationServer",
+    AddressSpaceItems: `[{
+        "name":"sample",
+        "nodeId": "ns=0;i=85",
+        "datatypeName": "sample"
+    }]`
 }
 
 thingspin.AddFlowNode("opcua", opcData)

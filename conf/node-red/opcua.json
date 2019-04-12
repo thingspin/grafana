@@ -159,13 +159,7 @@
       "once": true,
       "startDelay": "",
       "name": "",
-      "addressSpaceItems": [
-        {
-          "name": "sample",
-          "nodeId": "ns=0;i=85",
-          "datatypeName": ""
-        }
-      ],
+      "addressSpaceItems": {{.AddressSpaceItems}},
       "x": 140,
       "y": 240,
       "wires": [["TS-OPC-UA-READ-ID-{{.FlowId}}"]]
