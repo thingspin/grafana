@@ -9,6 +9,7 @@ import moment from 'moment';
 import { coreModule, angularModules } from './grafana_custom/core_module';
 import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
 import { registerAngularDirectives } from './grafana_custom/core';
+import { importPluginModule } from 'app/features/plugins/plugin_loader';
 
 import { fmsSetupAngularRoutes } from './routes/routes';
 import addThingspinReducers from './react/redux/addReducers';
@@ -107,6 +108,11 @@ class ThingspinFmsApp extends GrafanaApp {
 
       this.preBootModules = null;
     });
+
+    // Preload selected app plugins
+    for (const modulePath of config.pluginsToPreload) {
+      importPluginModule(modulePath);
+    }
   }
 }
 
