@@ -23,7 +23,7 @@ Data Structure
     type OpcUaFlowData struct {
         FlowId            string
         EndpointUrl       string
-        AddressSpaceItems interface{}
+        AddressSpaceItems []OpcUaAddressSpaceItem
         Interval          float32
     }
     ```
@@ -45,7 +45,7 @@ Data Structure
     }
     ```
 
-Backend(Golang) example
+Examples
 ---------------------
 
 - 본 내용은 개발자가 이해하기 쉽게 작성한 샘플 내용입니다.
@@ -58,11 +58,12 @@ Backend(Golang) example
         m "github.com/grafana/grafana/pkg/models-thingspin"
         "github.com/grafana/grafana/pkg/thingspin"
     )
-    addressItems := []m.OpcUaAddressSpaceItem{
+    var addressItems []m.OpcUaAddressSpaceItem
+    addressItems = append(addressItems, m.OpcUaAddressSpaceItem{
         Name:         "sample",
         NodeId:       "ns=0;i=85",
         DatatypeName: "sample",
-    }]
+    })
 
     opcData := m.OpcUaFlowData{
         FlowId: "test",
