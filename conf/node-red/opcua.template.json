@@ -159,7 +159,7 @@
       "once": true,
       "startDelay": "",
       "name": "",
-      "addressSpaceItems": {{.AddressSpaceItems}},
+      "addressSpaceItems": {{.AddressSpaceItems | convJsonStr}},
       "x": 140,
       "y": 240,
       "wires": [["TS-OPC-UA-READ-ID-{{.FlowId}}"]]

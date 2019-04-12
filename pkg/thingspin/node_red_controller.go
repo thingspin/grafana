@@ -2,11 +2,14 @@ package thingspin
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
+	"strconv"
 	"text/template"
 
 	m "github.com/grafana/grafana/pkg/models-thingspin"
@@ -18,9 +21,31 @@ const (
 	ContentType = "application/json"
 )
 
+func convJsonStr(value interface{}) string {
+	fmt.Println(value)
+	switch v := value.(type) {
+	case string:
+		return v
+	case int:
+		return strconv.Itoa(v)
+	default:
+		bytes, err := json.Marshal(value)
+		if err != nil {
+			return ""
+		}
+		return string(bytes)
+
+	}
+}
+
 func template2Str(str string, info interface{}) (string, error) {
 	// convert Template file
-	tmpl, err := template.New("stream").Parse(str)
+	tmpl, err := template.
+		New("data connect").
+		Funcs(template.FuncMap{
+			"convJsonStr": convJsonStr,
+		}).
+		Parse(str)
 	if err != nil {
 		return "", err
 	}
