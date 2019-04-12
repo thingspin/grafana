@@ -9,4 +9,5 @@ type OpcUaFlowData struct {
 	FlowId            string
 	EndpointUrl       string
 	AddressSpaceItems string
+	Interval          float32
 }

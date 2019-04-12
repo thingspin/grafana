@@ -36,7 +36,7 @@ func template2Str(str string, info interface{}) (string, error) {
 
 func LoadNodeRedTemplate(filename string, info interface{}) (string, error) {
 	// read file
-	templateFile := path.Join(setting.HomePath, "conf/node-red", filename+".json")
+	templateFile := path.Join(setting.HomePath, "conf/node-red", filename+".template.json")
 	dat, err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		return "", err

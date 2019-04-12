@@ -154,7 +154,7 @@
       "payload": "",
       "payloadType": "date",
       "topic": "",
-      "repeat": "1",
+      "repeat": "{{.Interval}}",
       "crontab": "",
       "once": true,
       "startDelay": "",
