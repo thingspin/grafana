@@ -2,6 +2,7 @@ package thingspin
 
 import (
 	"bytes"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"path"
@@ -9,6 +10,11 @@ import (
 
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/setting"
+)
+
+var (
+	NodeRedHost = "http://localhost:1880"
+	ContentType = "application/json"
 )
 
 func template2Str(str string, info interface{}) (string, error) {
@@ -43,25 +49,55 @@ func LoadNodeRedTemplate(filename string, info interface{}) (string, error) {
 	return template2Str(str, info)
 }
 
-func AddFlowNode(target string, info interface{}) (m.AddFlowResp, error) {
-	templateStr, err := LoadNodeRedTemplate(target, info)
+func getNodeRedSettings() (*http.Response, error) {
+	Url := path.Join(NodeRedHost, "settings")
+	resp, err := http.Get(Url)
 	if err != nil {
-		return m.AddFlowResp{}, err
+		return nil, err
 	}
 
-	byteStr := bytes.NewBufferString(templateStr)
-	rsp, err := http.Post("http://localhost:1880/flow", "application/json", byteStr)
+	return resp, nil
+}
+
+func CheckNodeRedRunning() (bool, error) {
+	resp, err := getNodeRedSettings()
 	if err != nil {
-		return m.AddFlowResp{}, err
+		return false, err
+	}
+
+	if resp.StatusCode == 200 {
+		return true, nil
+	}
+
+	rspBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return false, err
+	}
+
+	return false, errors.New(string(rspBody))
+}
+
+func AddFlowNode(target string, info interface{}) (m.NodeRedResponse, error) {
+	templateStr, err := LoadNodeRedTemplate(target, info)
+	if err != nil {
+		return m.NodeRedResponse{}, err
+	}
+
+	Url := path.Join(NodeRedHost, "flow")
+	byteStr := bytes.NewBufferString(templateStr)
+
+	rsp, err := http.Post(Url, ContentType, byteStr)
+	if err != nil {
+		return m.NodeRedResponse{}, err
 	}
 
 	rspBody, err := ioutil.ReadAll(rsp.Body)
 	if err != nil {
-		return m.AddFlowResp{}, err
+		return m.NodeRedResponse{}, err
 	}
 
-	return m.AddFlowResp{
+	return m.NodeRedResponse{
 		StatusCode: rsp.StatusCode,
-		Body:       rspBody,
+		Body:       string(rspBody),
 	}, nil
 }

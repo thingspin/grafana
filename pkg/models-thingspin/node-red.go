@@ -1,6 +1,6 @@
 package tsmodels
 
-type AddFlowResp struct {
+type NodeRedResponse struct {
 	StatusCode int
-	Body       []byte
+	Body       string
 }
