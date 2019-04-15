@@ -7,7 +7,7 @@ export class TsFacilityManagementCtrl {
 export function tsFacilityManagementDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/facilityManagement/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/facilityManagement/index.html',
     controller: TsFacilityManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

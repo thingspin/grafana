@@ -7,7 +7,7 @@ export class TsScriptAnlyCtrl {
 export function tsScriptAnlyDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/analysisManagement/scriptAnalysis/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/analysisManagement/scriptAnalysis/index.html',
     controller: TsScriptAnlyCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

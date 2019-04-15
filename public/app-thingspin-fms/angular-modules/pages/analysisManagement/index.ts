@@ -7,7 +7,7 @@ export class TsAnalysisManagementCtrl {
 export function tsAlanysisMgmtDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/analysisManagement/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/analysisManagement/index.html',
     controller: TsAnalysisManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

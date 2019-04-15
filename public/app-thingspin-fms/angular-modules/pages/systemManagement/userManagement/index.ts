@@ -7,7 +7,7 @@ export class TsUserManagementCtrl {
 export function tsUserManagementDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/systemManagement/userManagement/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/systemManagement/userManagement/index.html',
     controller: TsUserManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

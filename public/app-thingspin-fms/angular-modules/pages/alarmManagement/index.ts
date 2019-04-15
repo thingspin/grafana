@@ -7,7 +7,7 @@ export class TsAlarmManagementCtrl {
 export function tsAlarmMgmtDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/alarmManagement/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/alarmManagement/index.html',
     controller: TsAlarmManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

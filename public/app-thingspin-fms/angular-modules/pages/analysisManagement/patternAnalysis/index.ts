@@ -7,7 +7,7 @@ export class TsPatternAnlyCtrl {
 export function tsPatternAnlyDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/analysisManagement/patternAnalysis/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/analysisManagement/patternAnalysis/index.html',
     controller: TsPatternAnlyCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

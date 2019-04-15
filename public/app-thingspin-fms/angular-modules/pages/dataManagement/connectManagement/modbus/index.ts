@@ -7,7 +7,7 @@ export class TsModbusConnectCtrl {
 export function tsModbusConnectDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/dataManagement/connectManagement/modbus/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/dataManagement/connectManagement/modbus/index.html',
     controller: TsModbusConnectCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

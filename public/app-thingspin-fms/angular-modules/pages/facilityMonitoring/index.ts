@@ -7,7 +7,7 @@ export class TsFacilityMonitoringCtrl {
 export function tsFacilityMonitoringDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/facilityMonitoring/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/facilityMonitoring/index.html',
     controller: TsFacilityMonitoringCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

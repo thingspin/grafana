@@ -7,7 +7,7 @@ export class TsConnectManagementCtrl {
 export function tsConnectManagementDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/dataManagement/connectManagement/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/dataManagement/connectManagement/index.html',
     controller: TsConnectManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

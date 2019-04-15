@@ -7,7 +7,7 @@ export class TsViewEditManagementCtrl {
 export function tsViewEditManagementDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/thingspin/pages/viewEditManagement/index.html',
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/viewEditManagement/index.html',
     controller: TsViewEditManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',
