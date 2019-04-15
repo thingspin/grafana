@@ -4,6 +4,8 @@ export class TsUserManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsUserManagementDirective() {
   return {
     restrict: 'E',

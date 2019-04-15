@@ -4,10 +4,12 @@ export class TsConnectManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsConnectManagementDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/dataManagement/connectManagement/index.html',
+    templateUrl: require('./index.html'),
     controller: TsConnectManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

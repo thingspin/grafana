@@ -4,6 +4,8 @@ export class TsPatternAnlyCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsPatternAnlyDirective() {
   return {
     restrict: 'E',

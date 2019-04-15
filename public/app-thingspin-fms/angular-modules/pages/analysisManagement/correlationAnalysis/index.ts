@@ -4,6 +4,8 @@ export class TsCorrAnlyCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsCorrAnlyDirective() {
   return {
     restrict: 'E',

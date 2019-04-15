@@ -4,6 +4,8 @@ export class TsOpcUaConnectCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsOpcUaConnectDirective() {
   return {
     restrict: 'E',

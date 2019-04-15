@@ -4,6 +4,8 @@ export class TsModbusConnectCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsModbusConnectDirective() {
   return {
     restrict: 'E',

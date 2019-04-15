@@ -4,6 +4,8 @@ export class TsAlarmManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsAlarmMgmtDirective() {
   return {
     restrict: 'E',

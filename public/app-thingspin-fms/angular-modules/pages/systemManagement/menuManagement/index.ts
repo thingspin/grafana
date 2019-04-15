@@ -4,6 +4,8 @@ export class TsMenuManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsMenuManagementDirective() {
   return {
     restrict: 'E',

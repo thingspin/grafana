@@ -4,6 +4,8 @@ export class TsSystemManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsSystemManagementDirective() {
   return {
     restrict: 'E',
