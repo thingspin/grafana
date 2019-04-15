@@ -1,5 +1,6 @@
 import angular from 'angular';
 import "./index.scss";
+import config from 'app/core/config';
 
 export class TsMenuManagementCtrl {
   static template = require("./index.html");
@@ -8,7 +9,14 @@ export class TsMenuManagementCtrl {
   data: any;
   scope: any;
   /** @ngInject */
-  constructor() {
+  constructor(backendSrv) {
+    console.log(backendSrv);
+    backendSrv.get('/thingspin/menu/'+config.bootData.user.orgId).then( data => {
+      this.data = data;
+      console.log(data);
+    });
+    console.log(config.bootData.user.orgId);
+    /*
     this.data = [{
       'id': 1,
       'title': 'tree1 - item1',
@@ -36,6 +44,7 @@ export class TsMenuManagementCtrl {
       'hide': false,
       'nodes': []
       }];
+      */
   }
 
   hide(scope,node) {
@@ -93,14 +102,14 @@ export class TsMenuManagementCtrl {
 
 /** @ngInject */
 export function tsMenuManagementDirective() {
-  return {
-    restrict: 'E',
-    templateUrl: require("./index.html"),
-    controller: TsMenuManagementCtrl,
-    bindToController: true,
-    controllerAs: 'ctrl',
-    scope: {},
-  };
-}
+    return {
+      restrict: 'E',
+      templateUrl: require("./index.html"),
+      controller: TsMenuManagementCtrl,
+      bindToController: true,
+      controllerAs: 'ctrl',
+      scope: {},
+    };
+  }
 
 angular.module('thingspin.directives').directive('tsMenuManagement', tsMenuManagementDirective);
