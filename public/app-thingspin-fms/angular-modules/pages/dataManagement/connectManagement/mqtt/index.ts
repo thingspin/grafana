@@ -2,7 +2,7 @@ import angular from 'angular';
 import "./index.scss";
 import { BackendSrv } from 'app/core/services/backend_srv';
 // import { url } from 'inspector';
-import { Portal } from '@grafana/ui';
+// import { Portal } from '@grafana/ui';
 
 const DEF_URL = "localhost";
 const DEF_PORT = "1884";
@@ -29,11 +29,11 @@ export class TsMqttConnectCtrl {
     console.log(url);
     console.log(port);
     console.log(name);
-    var object = {
-      "FlowId":"mqtt" + "flow-1",
-      "MqttUrl":url,
-      "MqttPort":port,
-      "MqttTopic":name
+    const object = {
+      "FlowId" : "mqtt" + "flow-1",
+      "MqttUrl" : url,
+      "MqttPort" : port,
+      "MqttTopic" : name
     };
 
     console.log(object);
@@ -51,7 +51,7 @@ export function tsMqttConnectDirective() {
     bindToController: true,
     controllerAs: 'ctrl',
     scope: {}
-  }
+  };
 }
 
 angular.module('thingspin.directives').directive('tsMqttConnect', tsMqttConnectDirective);
