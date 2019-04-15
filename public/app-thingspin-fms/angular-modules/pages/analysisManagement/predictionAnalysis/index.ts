@@ -9,7 +9,7 @@ export class TsPredAnlyCtrl {
 export function tsPredAnlyDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/analysisManagement/predictionAnalysis/index.html',
+    templateUrl: require("./index.html"),
     controller: TsPredAnlyCtrl,
     bindToController: true,
     controllerAs: 'ctrl',
