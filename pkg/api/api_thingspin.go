@@ -3,12 +3,13 @@ package api
 import (
 	"github.com/go-macaron/binding"
 	"github.com/grafana/grafana/pkg/api/routing"
+	"github.com/grafana/grafana/pkg/middleware"
 	tsm "github.com/grafana/grafana/pkg/models-thingspin"
 )
 
 // thingspin용 REST API 정의 함수
 func (hs *HTTPServer) registerThingspinRoutes() {
-	// reqSignedIn := middleware.ReqSignedIn
+	reqSignedIn := middleware.ReqSignedIn
 	r := hs.RouteRegister
 	bind := binding.Bind
 
@@ -25,9 +26,11 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsMenuRoute.Delete("/:orgId", Wrap(DeleteTsMenuByOrgId))
 		})
 
-		tsRoute.Group("/flow-node", func(tsDsRoute routing.RouteRegister) {
-			tsDsRoute.Post("/:target", Wrap(addFlowNode))
+		tsRoute.Group("/flow-node", func(tsFnRoute routing.RouteRegister) {
+			tsFnRoute.Post("/:target", Wrap(addFlowNode))
+
 		})
 
 	})
+	r.Any("/thingspin-page/*", reqSignedIn, hs.Index)
 }
