@@ -4,6 +4,8 @@ export class TsFacilityMonitoringCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsFacilityMonitoringDirective() {
   return {
     restrict: 'E',

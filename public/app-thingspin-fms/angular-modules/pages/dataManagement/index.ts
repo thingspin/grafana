@@ -4,6 +4,8 @@ export class TsDataManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsDataManagementDirective() {
   return {
     restrict: 'E',

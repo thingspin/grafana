@@ -4,6 +4,8 @@ export class TsViewEditManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsViewEditManagementDirective() {
   return {
     restrict: 'E',

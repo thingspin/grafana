@@ -4,6 +4,8 @@ export class TsAnalysisManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsAlanysisMgmtDirective() {
   return {
     restrict: 'E',

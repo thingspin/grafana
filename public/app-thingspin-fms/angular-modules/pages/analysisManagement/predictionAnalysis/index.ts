@@ -4,6 +4,8 @@ export class TsPredAnlyCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsPredAnlyDirective() {
   return {
     restrict: 'E',

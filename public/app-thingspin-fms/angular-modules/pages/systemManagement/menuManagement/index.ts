@@ -90,6 +90,8 @@ export class TsMenuManagementCtrl {
       ctrl.scope = scope;
   }
 }
+
+/** @ngInject */
 export function tsMenuManagementDirective() {
   return {
     restrict: 'E',

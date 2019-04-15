@@ -4,6 +4,8 @@ export class TsMqttConnectCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsMqttConnectDirective() {
   return {
     restrict: 'E',

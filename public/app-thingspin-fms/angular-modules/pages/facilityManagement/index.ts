@@ -4,6 +4,8 @@ export class TsFacilityManagementCtrl {
   /** @ngInject */
   constructor() {}
 }
+
+/** @ngInject */
 export function tsFacilityManagementDirective() {
   return {
     restrict: 'E',
