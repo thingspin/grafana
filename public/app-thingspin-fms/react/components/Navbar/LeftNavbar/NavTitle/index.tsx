@@ -139,7 +139,9 @@ export const mapStateToProps = (state, { $route }) => {
     const { $$route } = $route.current;
     if ($$route) {
       const list = findPathNavItem($$route.originalPath, state);
-      titleObj = getTitle(list);
+      if ( list ) {
+        titleObj = getTitle(list);
+      }
     } else {
       titleObj = getTitle(undefined);
     }
