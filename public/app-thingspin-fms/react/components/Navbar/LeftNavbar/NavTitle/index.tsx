@@ -4,16 +4,19 @@ import { connect } from 'react-redux';
 
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import { NavModelSrv } from 'app/core/core';
-import { NavModelItem, StoreState } from 'app/types';
+import { NavModelItem, StoreState, DashboardInitPhase } from 'app/types';
+import { DashboardModel } from 'app/features/dashboard/state';
 
 export interface Props extends TsBaseProps {
   // redux data
   icon: string;
   menupath: string[];
   isFullpathTitle: boolean;
+  initPhase: DashboardInitPhase;
+  dashboard: DashboardModel | null;
 }
 
-export interface States {
+export interface States extends StoreState {
   isFullpathTitle: boolean;
 }
 
@@ -33,13 +36,27 @@ export class TsNavTitle extends PureComponent<Props, States> {
 
   // get render splitted virtual DOM Methods
   get renderTitle() {
-    const { menupath } = this.props;
+    const { menupath, dashboard, initPhase } = this.props;
+    let title = '';
+    let icon = this.props.icon;
+
+    if ( menupath ) {
+      title = this.props.isFullpathTitle && menupath !== undefined ? menupath.join(' > ') : menupath[menupath.length - 1];
+    } else {
+      if ( initPhase === DashboardInitPhase.Completed) {
+        if ( dashboard ) {
+          title = dashboard.title;
+          if ( !icon ) {
+            icon = 'fa fa-fw fa-television';
+          }
+        }
+      }
+    }
+
     return (
       <>
-        <div className={'ts-nav-title-icon'}>
-          <i className={this.props.icon} />
-        </div>
-        <div>{this.props.isFullpathTitle ? menupath.join(' > ') : menupath[menupath.length - 1]}</div>
+        <div className={'ts-nav-title-icon'}><i className={icon} /></div>
+        <div>{title}</div>
       </>
     );
   }
@@ -51,6 +68,7 @@ export class TsNavTitle extends PureComponent<Props, States> {
   render() {
     return <div className="ts-nav-title">{this.renderTitle}</div>;
   }
+
   // render 함수 호출 후 실행 함수
   componentDidMount() {}
   // prop을 새로 받았을 때 실행 함수
@@ -130,6 +148,8 @@ export const mapStateToProps = (state, { $route }) => {
   return {
     ...titleObj,
     isFullpathTitle: state.thingspinNavbar.isFullpathTitle,
+    dashboard: state.dashboard.model,
+    initPhase: state.dashboard.initPhase,
   };
 };
 
