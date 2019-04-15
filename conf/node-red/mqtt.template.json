@@ -1,0 +1,82 @@
+{
+    "id": "MQTT Flow Format",
+    "label": "{{.FlowId}}",
+    "info": "",
+    "nodes": [
+        {
+            "id": "TS-MQTT-IN-{{.FlowId}}",
+            "type": "mqtt in",
+            "name": "",
+            "topic": "{{.MqttTopic}}",
+            "qos": "0",
+            "datatype": "auto",
+            "broker": "TS-MQTT-CONNECT-{{.FlowId}}",
+            "x": 110,
+            "y": 560,
+            "wires": [
+                [
+                    "TS-MQTT-PARSE-{{.FlowId}}"
+                ]
+            ]
+        },
+        {
+            "id": "TS-MQTT-PARSE-{{.FlowId}}",
+            "type": "function",
+            "name": "",
+            "func": "{{.TopicParse}}",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 290,
+            "y": 560,
+            "wires": [
+                [
+                    "TS-MQTT-OUTPUT-{{.FlowId}}"
+                ]
+            ]
+        },
+        {
+            "id": "TS-MQTT-OUTPUT-{{.FlowId}}",
+            "type": "influxdb batch",
+            "influxdb": "TS-MQTT-INFLUXD-{{.FlowId}}",
+            "precision": "",
+            "retentionPolicy": "",
+            "name": "",
+            "x": 530,
+            "y": 560,
+            "wires": []
+        },
+        {
+            "id": "TS-MQTT-CONNECT-{{.FlowId}}",
+            "type": "mqtt-broker",
+            "name": "{{.MqttUrl}}",
+            "broker": "{{.MqttUrl}}",
+            "port": "{{.MqttPort}}",
+            "clientid": "",
+            "usetls": false,
+            "compatmode": true,
+            "keepalive": "60",
+            "cleansession": true,
+            "birthTopic": "",
+            "birthQos": "0",
+            "birthPayload": "",
+            "closeTopic": "",
+            "closeQos": "0",
+            "closePayload": "",
+            "willTopic": "",
+            "willQos": "0",
+            "willPayload": ""
+        },
+        {
+            "id": "TS-MQTT-INFLUXD-{{.FlowId}}",
+            "type": "influxdb",
+            "z": "",
+            "hostname": "127.0.0.1",
+            "port": "8086",
+            "protocol": "http",
+            "database": "thingspin",
+            "name": "",
+            "usetls": false,
+            "tls": ""
+        }
+    ]
+}
