@@ -11,6 +11,7 @@ import (
 	"path"
 	"strconv"
 	"text/template"
+	// "log"
 
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/setting"
