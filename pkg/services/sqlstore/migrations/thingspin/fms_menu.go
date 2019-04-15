@@ -69,11 +69,12 @@ func addFmsMenuMigrations(mg *Migrator) {
 	insertData = append(insertData, getInsertQueryData(28, 0, "26", "NULL", 28, 2))
 	insertData = append(insertData, getInsertQueryData(29, 0, "26", "NULL", 29, 3))
 	insertData = append(insertData, getInsertQueryData(30, 0, "26", "NULL", 30, 4))
+	insertData = append(insertData, getInsertQueryData(31, 0, "26", "NULL", 31, 5))
 
-	insertData = append(insertData, getInsertQueryData(31, 0, "NULL", "NULL", 31, 8))
-	insertData = append(insertData, getInsertQueryData(32, 0, "31", "NULL", 32, 1))
-	insertData = append(insertData, getInsertQueryData(33, 0, "31", "NULL", 33, 2))
-	insertData = append(insertData, getInsertQueryData(34, 0, "31", "NULL", 34, 3))
+	insertData = append(insertData, getInsertQueryData(32, 0, "NULL", "NULL", 32, 8))
+	insertData = append(insertData, getInsertQueryData(33, 0, "32", "NULL", 33, 1))
+	insertData = append(insertData, getInsertQueryData(34, 0, "32", "NULL", 34, 2))
+	insertData = append(insertData, getInsertQueryData(35, 0, "32", "NULL", 35, 3))
 
 	defaultData = defaultData + strings.Join(insertData, ", ")
 	mg.AddMigration("[thingspin] FMS 기본 메뉴 추가", NewRawSqlMigration(defaultData))

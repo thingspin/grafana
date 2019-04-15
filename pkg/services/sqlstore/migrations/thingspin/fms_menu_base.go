@@ -78,11 +78,12 @@ func addFmsMenuBaseMigrations(mg *Migrator) {
 	queries = append(queries, getQueryData(28, "Orgs", "'gicon gicon-org'", "NULL", "'/admin/orgs'", "NULL", false, false, false))
 	queries = append(queries, getQueryData(29, "Settings", "'gicon gicon-preferences'", "NULL", "'/admin/settings'", "NULL", false, false, false))
 	queries = append(queries, getQueryData(30, "Stats", "'fa fa-fw fa-bar-chart'", "NULL", "'/admin/stats'", "NULL", false, false, false))
+	queries = append(queries, getQueryData(31, "메뉴관리", "'fa fa-fw fa-bar-chart'", "NULL", "'/thingspin-page/system-management/menu-management'", "NULL", false, false, false))
 
-	queries = append(queries, getQueryData(31, "Help", "'gicon gicon-question'", "NULL", "'#'", "NULL", true, false, false))
-	queries = append(queries, getQueryData(32, "Keyboard shortcuts", "'fa fa-fw fa-keyboard-o'", "NULL", "'/shortcuts'", "'_self'", false, false, false))
-	queries = append(queries, getQueryData(33, "Community site", "'fa fa-fw fa-comment'", "NULL", "'http://community.grafana.com'", "'_blank'", false, false, false))
-	queries = append(queries, getQueryData(34, "Documentation", "'fa fa-fw fa-file'", "NULL", "'http://docs.grafana.org'", "'_blank'", false, false, false))
+	queries = append(queries, getQueryData(32, "Help", "'gicon gicon-question'", "NULL", "'#'", "NULL", true, false, false))
+	queries = append(queries, getQueryData(33, "Keyboard shortcuts", "'fa fa-fw fa-keyboard-o'", "NULL", "'/shortcuts'", "'_self'", false, false, false))
+	queries = append(queries, getQueryData(34, "Community site", "'fa fa-fw fa-comment'", "NULL", "'http://community.grafana.com'", "'_blank'", false, false, false))
+	queries = append(queries, getQueryData(35, "Documentation", "'fa fa-fw fa-file'", "NULL", "'http://docs.grafana.org'", "'_blank'", false, false, false))
 
 	defaultData = defaultData + strings.Join(queries, ", ")
 	mg.AddMigration("[thingspin] FMS 메뉴 링크 추가", NewRawSqlMigration(defaultData))
