@@ -1,0 +1,21 @@
+<br></br>
+<div class="section gf-form-group">
+    <div class="gf-form">
+        <label class="gf-form-label width-7">MQTT URL</label>
+        <input type="text" class="gf-form-input width-20 max-width-16"  data-placement="auto" ng-model="ctrl.mqtt.url" placeholder="localhost" ng-blur="ctrl.render()" data-min-length=0 data-items=64 ng-model-onblur>
+        <label class="gf-form-label width-7">PORT</label>
+        <input type="text" class="gf-form-input width-6 max-width-10" data-placement="auto" ng-model="ctrl.mqtt.port" placeholder="1884" ng-blur="ctrl.render()" data-min-length=0 data-items=6 ng-model-onblur>
+        <label class="gf-form-label width-7">Collect Name</label>
+        <input type="text" class="gf-form-input width-20 max-width-24"  data-placement="auto" ng-model="ctrl.mqtt.name" placeholder="Collector" ng-blur="ctrl.render()" data-min-length=0 data-items=64 ng-model-onblur>
+    </div>
+    <br></br>
+    <div class="gf-form">
+        <button class="btn btn-success width-7" ng-click="ctrl.addMqttCollector(this, ctrl.mqtt.url, ctrl.mqtt.port, ctrl.mqtt.name)">
+            연결 확인
+        </button>
+        &nbsp;&nbsp;
+        <button class="btn btn-success width-6" ng-click="ctrl.close()">
+            창 닫기
+        </button>
+    </div>
+</div>

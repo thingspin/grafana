@@ -11,3 +11,10 @@ type OpcUaFlowData struct {
 	AddressSpaceItems string
 	Interval          float32
 }
+
+type MqttFlowData struct {
+	FlowId			string
+	Topic			string
+	MqttUrl			string
+	MqttPort		string
+}
