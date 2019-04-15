@@ -48,7 +48,9 @@ type MicroService struct {
 }
 
 func init() {
-	registry.RegisterService(&MicroService{})
+	registry.RegisterService(&MicroService{
+		log: log.New("thingspin.microservice"),
+	})
 }
 
 func (s *MicroService) Init() error {

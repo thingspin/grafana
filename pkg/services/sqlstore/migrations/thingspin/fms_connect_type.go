@@ -19,7 +19,12 @@ func addFmsConnectTypeMigrations(mg *Migrator) {
 	// create table
 	mg.AddMigration("[thingspin] FMS 연결 종류 테이블 생성", NewRawSqlMigration(query))
 
-	opcType := fmt.Sprintf(`INSERT INTO '%s' ('id', 'name') VALUES ('%s', '%s')`,
-		m.TsFmsConnectTypeTbl, "OPC/UA", "OPC/UA")
+	opcType := fmt.Sprintf(`INSERT INTO '%s' ('id', 'name') VALUES
+		('%s', '%s'),
+		('%s', '%s'),
+		('%s', '%s')`, m.TsFmsConnectTypeTbl,
+		"OPCUA", "OPC/UA",
+		"MODBUS", "Modbus",
+		"MYSQL", "my-sql")
 	mg.AddMigration("[thingspin] FMS OPC/UA 연결 추가", NewRawSqlMigration(opcType))
 }

@@ -11,15 +11,14 @@ func addFmsConnectMigrations(mg *Migrator) {
 	query := fmt.Sprintf(`
 	CREATE TABLE IF NOT EXISTS '%s' (
 		'id' integer PRIMARY KEY AUTOINCREMENT,
-		'state' varchar(30) references %s(id),
+		'flow_id' varchar(30),
 		'type' varchar(30) references %s(id),
-		'server' json,
+		'params' json,
 		'active' bool,
 		'created' datetime default (datetime('now', 'localtime')),
 		'updated' datetime default (datetime('now', 'localtime'))
 	)
 	`, m.TsFmsConnectTbl,
-		m.TsFmsConnectStateTbl,
 		m.TsFmsConnectTypeTbl)
 
 	// create table
