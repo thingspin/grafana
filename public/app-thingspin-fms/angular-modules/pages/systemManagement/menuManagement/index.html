@@ -1,0 +1,181 @@
+<!-- template for preview -->
+<script type="text/ng-template" id="nodes_renderer1.html">
+    <div class="tree-node-content">
+      <a data-nodrag ng-click="ctrl.toggle(this)" style="margin-right: 8px;">
+              <span ng-class="{'fa fa-angle-right': collapsed, 'fa fa-angle-down': !collapsed}"></span>
+          </a>
+          {{node.title}}
+    </div>
+    <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+      <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer1.html'">
+      </li>
+    </ol>
+  </script>
+  
+  <!--template for setting-->
+  <script type="text/ng-template" id="nodes_renderer2.html">
+    <div class="tree-node">
+      <div class="pull-left tree-handle" ui-tree-handle>
+        <span class="fa fa-arrows"></span>
+      </div>
+      <div class="tree-node-content">
+        <a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
+          <span ng-class="{
+            'fa fa-angle-right': collapsed,
+            'fa fa-angle-down': !collapsed
+            }">
+          </span>
+              </a>
+              
+              {{node.title}}
+              
+              <a data-nodrag ng-click="ctrl.hide(this,node)" style="margin-left: 5px;margin-right: 5px">
+                  <span class="fa fa-toggle-on"></span>
+                  <!--
+                  <span class="fa fa-toggle-on"></span>
+                  -->
+              </a>
+              <a data-nodrag ng-click="ctrl.remove(this)" style="margin-left: 5px;margin-right: 5px">
+                      <span class="fa fa-trash"></span>
+                  </a>
+              <a data-nodrag ng-click="ctrl.newSubItem(this)" style="margin-left: 5px;margin-right: 5px">
+                  <span class="fa fa-plus-circle"></span>
+              </a>
+      </div>
+    </div>
+    <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+      <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'nodes_renderer2.html'">
+      </li>
+    </ol>
+  </script>
+  
+  <div class="row">
+      
+      <div class="col-sm-3" style="border:2px solid;">
+            <div>
+                  <span style="font-size:2em;">메뉴 리스트</span>
+                  <a data-nodrag ng-click="ctrl.newItem()" style="margin-left: 15px;">
+                          <span class="fa fa-plus-circle"></span>
+                  </a>
+              </div>
+              
+              <div ui-tree id="tree2-root">
+                  <ol ui-tree-nodes="" ng-model="ctrl.data">
+                      <li ng-repeat="node in ctrl.data" ui-tree-node ng-include="'nodes_renderer2.html'"></li>
+                  </ol>
+              </div>
+      </div>
+  
+      <div class="col-sm-1">
+      </div>
+  
+      <div class="col-sm-2" style="border:2px solid;">
+              <span style="font-size:1.5em;">메뉴 정보</span><br>
+              <div class="editor-row">
+                      <div class="section gf-form-group">
+                          <div class="gf-form">
+                              <label class="gf-form-label width-6">Icon</label>
+                              <!--
+                              <input type="text" class="input-small gf-form-input width-30" ng-model="ctrl.panel.bgimagePath" ng-change="ctrl.render()" ng-model-onblur />
+                              -->
+                          </div>	
+                          <div class="gf-form">
+                                  <label class="gf-form-label width-6">이름</label>
+                                  <input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight"/>
+                          </div>
+                          <div class="gf-form">
+                                  <label class="gf-form-label width-6">URL</label>
+                                  <input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight"/>
+                          </div>
+                          <div class="gf-form">
+                                  <label class="gf-form-label width-6">Parameter</label>
+                                  <!--
+                                  <input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight" ng-change="ctrl.render()" ng-model-onblur />
+                                  -->
+                              </div>
+                      </div>
+              </div>
+      </div>
+      <div class="col-sm-1">
+              <div align="center">
+                      <span class="fa fa-mail-forward"></span>
+              </div>
+      </div>
+    <div class="col-sm-3" style="border:2px solid;">
+          <span style="font-size:2em;">미리보기</span><br>
+      <div ui-tree id="tree1-root" data-nodrop-enabled="true">
+        <ol ui-tree-nodes="" ng-model="ctrl.data">
+          <li ng-repeat="node in ctrl.data" ui-tree-node>
+                          <div class="tree-node">
+                                  <div class="pull-left tree-handle" ui-tree-handle>
+                                      <span class="fa fa-arrows"></span>
+                                  </div>
+                                  <div class="tree-node-content">
+                                      <a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
+                                          <span ng-class="{
+                                              'fa fa-angle-right': collapsed,
+                                              'fa fa-angle-down': !collapsed
+                                              }">
+                                          </span>
+                                      </a>
+                                      
+                                      {{node.title}}
+                                      
+                                      <a data-nodrag ng-click="ctrl.hide(this,node)" style="margin-left: 5px;margin-right: 5px">
+                                          <span class="fa fa-toggle-on"></span>
+                                          <!--
+                                          <span class="fa fa-toggle-on"></span>
+                                          -->
+                                      </a>
+                                      <a data-nodrag ng-click="ctrl.remove(this)" style="margin-left: 5px;margin-right: 5px">
+                                              <span class="fa fa-trash"></span>
+                                          </a>
+                                      <a data-nodrag ng-click="ctrl.newSubItem(this)" style="margin-left: 5px;margin-right: 5px">
+                                          <span class="fa fa-plus-circle"></span>
+                                      </a>
+                                  </div>
+                          </div>
+                              
+                              <!--L2 -->
+                              <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
+                                  <li ng-repeat="node in node.nodes" ui-tree-node>
+                                          <div class="tree-node">
+                                                  <div class="pull-left tree-handle" ui-tree-handle>
+                                                      <span class="fa fa-arrows"></span>
+                                                  </div>
+                                                  <div class="tree-node-content">
+                                                      <a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
+                                                          <span ng-class="{
+                                                              'fa fa-angle-right': collapsed,
+                                                              'fa fa-angle-down': !collapsed
+                                                              }">
+                                                          </span>
+                                                      </a>
+                                                      
+                                                      {{node.title}}
+                                                      
+                                                      <a data-nodrag ng-click="ctrl.hide(this,node)" style="margin-left: 5px;margin-right: 5px">
+                                                          <span class="fa fa-toggle-on"></span>
+                                                          <!--
+                                                          <span class="fa fa-toggle-on"></span>
+                                                          -->
+                                                      </a>
+                                                      <a data-nodrag ng-click="ctrl.remove(this)" style="margin-left: 5px;margin-right: 5px">
+                                                              <span class="fa fa-trash"></span>
+                                                          </a>
+                                                      <a data-nodrag ng-click="ctrl.newSubItem(this)" style="margin-left: 5px;margin-right: 5px">
+                                                          <span class="fa fa-plus-circle"></span>
+                                                      </a>
+                                                  </div>
+                                              </div>
+                                  </li>
+                              </ol>
+                  </li>
+        </ol>
+      </div>
+      </div>
+  
+      <div class="col-sm-1">
+              <a class="btn btn-xs"ng-click="ctrl.save()">저장</a>
+      </div>
+  </div>

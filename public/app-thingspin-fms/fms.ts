@@ -13,6 +13,7 @@ import { importPluginModule } from 'app/features/plugins/plugin_loader';
 
 import { fmsSetupAngularRoutes } from './routes/routes';
 import addThingspinReducers from './react/redux/addReducers';
+import 'angular-ui-tree';
 
 addThingspinReducers();
 
@@ -37,6 +38,7 @@ class ThingspinFmsApp extends GrafanaApp {
       'ui.bootstrap',
       'ui.bootstrap.tpls',
       'react',
+      'ui.tree',
     ];
   }
 
