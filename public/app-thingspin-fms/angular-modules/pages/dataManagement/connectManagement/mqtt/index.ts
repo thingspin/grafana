@@ -9,7 +9,7 @@ export class TsMqttConnectCtrl {
 export function tsMqttConnectDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/dataManagement/connectManagement/mqtt/index.html',
+    templateUrl: require("./index.html"),
     controller: TsMqttConnectCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

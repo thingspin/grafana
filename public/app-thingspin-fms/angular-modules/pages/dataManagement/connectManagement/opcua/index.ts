@@ -9,7 +9,7 @@ export class TsOpcUaConnectCtrl {
 export function tsOpcUaConnectDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/dataManagement/connectManagement/opcua/index.html',
+    templateUrl: require("./index.html"),
     controller: TsOpcUaConnectCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

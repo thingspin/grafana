@@ -9,7 +9,7 @@ export class TsSystemManagementCtrl {
 export function tsSystemManagementDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/systemManagement/index.html',
+    templateUrl: require("./index.html"),
     controller: TsSystemManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

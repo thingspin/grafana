@@ -9,7 +9,7 @@ export class TsCorrAnlyCtrl {
 export function tsCorrAnlyDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/analysisManagement/correlationAnalysis/index.html',
+    templateUrl: require("./index.html"),
     controller: TsCorrAnlyCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

@@ -9,7 +9,7 @@ export class TsDataManagementCtrl {
 export function tsDataManagementDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/dataManagement/index.html',
+    templateUrl: require("./index.html"),
     controller: TsDataManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',

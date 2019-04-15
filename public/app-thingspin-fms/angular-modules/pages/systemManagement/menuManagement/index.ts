@@ -9,7 +9,7 @@ export class TsMenuManagementCtrl {
 export function tsMenuManagementDirective() {
   return {
     restrict: 'E',
-    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/systemManagement/menuManagement/index.html',
+    templateUrl: require("./index.html"),
     controller: TsMenuManagementCtrl,
     bindToController: true,
     controllerAs: 'ctrl',
