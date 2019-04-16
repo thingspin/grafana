@@ -8,11 +8,20 @@ export class NewOrgCtrl {
     $scope.newOrg = { name: '' };
 
     $scope.createOrg = () => {
-      backendSrv.post('/api/orgs/', $scope.newOrg).then(result => {
-        backendSrv.post('/api/user/using/' + result.orgId).then(() => {
-          window.location.href = config.appSubUrl + '/org';
+        backendSrv.post('/api/orgs/', $scope.newOrg).then(result => {
+          // Create the default menu based on default org
+          backendSrv.get("/thingspin/org/default/1").then( defaultData => {
+            const jsonDefaultData = {
+              defaultMenu: defaultData
+            };
+            backendSrv.post('/thingspin/org/new/'+result.orgId,jsonDefaultData).then( () => {
+              // Add the user into the new org
+              backendSrv.post('/api/user/using/' + result.orgId).then(() => {
+                window.location.href = config.appSubUrl + '/org';
+              });
+            });
+          });
         });
-      });
     };
   }
 }

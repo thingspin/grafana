@@ -1,3 +1,9 @@
+var args = require('minimist')(process.argv.slice(2), {  
+  default: {
+      port: 5555
+  },
+});
+
 const express = require('express');
 const app = express();
 
@@ -33,7 +39,6 @@ app.get('/', (req, res) => {
   res.json(item[0]);
 });
 
-
-app.listen(8080, () => {
-  console.log('Example app listening on port 8080!');
+app.listen(args.port, () => {
+  console.log('Sample Microservice listening on port ' + args.port);
 });

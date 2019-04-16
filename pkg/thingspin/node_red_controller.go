@@ -11,8 +11,10 @@ import (
 	"path"
 	"strconv"
 	"text/template"
+
 	// "log"
 
+	"github.com/fatih/structs"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/setting"
 )
@@ -40,7 +42,7 @@ func convJsonStr(value interface{}) string {
 func template2Str(str string, info interface{}) (string, error) {
 	// convert Template file
 	tmpl, err := template.
-		New("data connect").
+		New("thingspin connect").
 		Funcs(template.FuncMap{
 			"convJsonStr": convJsonStr,
 		}).
@@ -49,8 +51,12 @@ func template2Str(str string, info interface{}) (string, error) {
 		return "", err
 	}
 
+	// add data
+	m := structs.Map(info)
+	m["TsSettings"] = setting.Thingspin
+
 	var tpl bytes.Buffer
-	err = tmpl.Execute(&tpl, info)
+	err = tmpl.Execute(&tpl, m)
 	if err != nil {
 		return "", err
 	}
@@ -179,6 +185,7 @@ func UpdateFlowNode(flow_id string, target string, info interface{}) (*m.NodeRed
 	byteStr := bytes.NewBufferString(templateStr)
 
 	req, err := http.NewRequest(http.MethodPut, u.String(), byteStr)
+	req.Header.Set("Content-type", "application/json")
 	if err != nil {
 		return nil, err
 	}

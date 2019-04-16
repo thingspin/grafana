@@ -1,0 +1,478 @@
+@import "../../../../../../../node_modules/tabulator-tables/dist/css/bootstrap/tabulator_bootstrap.min.css";
+
+// TOP TITLE
+.mqtt-main-title {
+    margin-left:21px;
+    margin-top:44px;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.19;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    display:inline-block;
+}
+
+// TOP RIGHT BUTTON 
+.mqtt-right-button-area {
+    display:block;
+    float: right;
+    margin-right: 20px;
+    margin-top: 28px;
+}
+#mqtt-plus-btn {
+    width: 91.1px;
+    height: 36px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #00897b;
+    color:#ffffff;
+}
+#mqtt-cancel-btn {
+    width: 80px;
+    height: 36px;
+    margin-right: 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #6a6a6a;
+    color:#ffffff;
+}
+
+// MAIN BORDER LINE
+#main-view {
+    margin-top: 21px;
+    width: 97.4%;
+    border: solid 1px #ecebeb;
+    background-color: #ffffff;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 28px;
+}
+
+// MAIN VIEW CONTENTS COMMON ATTRIBUTE
+.mqtt-connect-view {
+    width: 100%;
+    margin-left: 9.6%;
+    margin-right: 9.6%;
+}
+.mqtt-title {
+    display:inline-block;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+}
+.mqtt-subtitle {
+    display:inline-block;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;    
+}
+.mqtt-edit-bg {
+    display:inline-block;
+    background-color: rgb(235,235,235);
+}
+#mqtt-edit {
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    background:rgba(0,0,0,0);
+}
+#mqtt-edit-margin {
+    margin-left: 1.17%;
+}
+
+// CONNECTION INFO
+#mqtt-title-connect {
+    margin-left: 8.18%;
+    margin-top: 31px;
+}
+
+// CONNECTION BUTTON
+.mqtt-connect-btn-postion {
+    margin-right: 8.18%;
+    margin-top: 20px;
+    float: right;
+    padding: 0px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ecebeb;
+    width: 30px;
+    height: 30px;
+}
+#mqtt-connect-btn {
+    font-size: 19px;
+    margin: 5px;
+}
+
+.mqtt-state-connected {
+    background-color: #1e88e5;
+    color:#ffffff;
+}
+
+.mqtt-state-retry {
+    background-color: #ecebeb;
+    color: #6a6a6a;
+}
+
+.mqtt-state-disconnect {
+    background-color: #d81b60;
+    color:#ffffff;
+}
+
+// CONTENTS BORDER LINE
+.mqtt-content-line {
+    height: 0;
+    border: solid 1px #ecebeb;
+    margin-top: 16.5px;
+    margin-left: 8.2%;
+    margin-right: 8.14%;
+    align-content: center;
+}
+
+// COLLECTOR EDIT 
+#mqtt-title-collector {
+    // margin-left: 9.6%;
+    margin-top: 2.49%;
+}
+
+// URL EDIT
+#mqtt-title-url-position {
+    margin-left: 1.9%;
+    margin-top: 43px;
+}
+
+// PORT
+#mqtt-title-port {
+    margin-left: 1.9%;
+    margin-top: 43px;
+}
+
+// KEEP ALIVE
+#mqtt-title-alive {
+    margin-left: 1.9%;
+    margin-top: 43px;
+}
+#mqtt-title-alive-sec {
+    margin-left: 0.8%;
+}
+
+// INIT SESSION 
+#mqtt-title-session {
+    margin-left: 7.22%;
+    margin-top: 2.49%;
+}
+#mqtt-session-check {
+    margin-left: 1.4%;   
+}
+
+// TOPIC LIST
+#mqtt-title-topiclist {
+    margin-left: 8.18%;
+    margin-top: 56px;
+    display:inline-block;
+}
+#mqtt-plus-topic-btn {
+    width: 86.1px;
+    height: 28px;
+    margin-top: 45px;
+    margin-right: 8.18%;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #1e88e5;
+    color:#ffffff;
+    float: right;
+}
+
+// TOPIC LIST TABLE
+.mqtt-table-size {
+    margin-left: 8.18%;
+    margin-right: 8.18%;
+    margin-top: 17.5px;
+    width: 83.67%;
+}
+#mqtt-topic-list{
+    background-color:#ccc;
+}
+
+/*Theme the header*/
+#mqtt-topic-list .tabulator-header {
+    background-color: #ecebeb;
+    color:#1e1e1e;
+    border: solid 0px #dcdbdc;
+}
+
+.tabulator .tabulator-tableHolder {
+    background-color: #FFFFFF;
+    min-height: 0px;
+}
+/*Allow column header names to wrap lines*/
+#mqtt-topic-list .tabulator-header .tabulator-col,
+#mqtt-topic-list .tabulator-header .tabulator-col-row-handle {
+    background-color: #ecebeb;
+}
+/*Color the table rows*/
+#mqtt-topic-list .tabulator-tableHolder .tabulator-table .tabulator-row{
+    color:#1e1e1e;
+    background-color: #fff;
+}
+/*Color even rows*/
+#mqtt-topic-list .tabulator-tableHolder .tabulator-table .tabulator-row:nth-child(even) {
+    background-color: #fff;
+}
+#mqtt-topic-list .tabulator .tabulator-footer{
+    background-color: #fff;
+}
+#mqtt-topic-list .tabulator .tabulator-tableHolder{
+    background-color: #fff;
+}
+.tabulator .tabulator-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid #CCCCCC;
+}
+
+//TOPIC ADD VIEW
+.mqtt-topic-add-view {
+    margin-left: 8.18%;
+    margin-right: 8.18%;
+    margin-top: 22px;
+    border: solid 1px #ecebeb;
+    height: 28.44%;
+}
+#mqtt-title-topic-add {
+    margin-left: 1.27%;
+    margin-top: 31px;
+    display: inline-block;
+}
+#mqtt-title-topic-add-info {
+    margin-top: 31px;
+    margin-left: 0.88%;
+    display:inline-block;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e88e5;
+}
+//TOPIC ADD VIEW - BTN AREA
+#mqtt-addview-right-button-area {
+    display:block;
+    float: right;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+//TOPIC ADD VIEW - TOPIC ADD BTN
+#mqtt-topic-add-plus-btn {
+    width: 112.1px;
+    height: 28px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #1e88e5;
+    color:#ffffff;
+}
+//TOPIC ADD VIEW - TOPIC CANCEL BTN
+#mqtt-topic-add-cancel-btn {
+    width: 80px;
+    height: 28px;
+    margin-right: 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #6a6a6a;
+    color:#ffffff;
+}
+//TOPIC ADD VIEW - EDIT : NAME
+#mqtt-topic-name-title {
+    margin-left: 1.47%;
+    margin-top: 43px;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+}
+#mqtt-topic-name-edit {
+    margin-left: 1.17%;
+    margin-top: 33px;
+}
+#mqtt-topic-subtopic-title {
+    margin-left: 2.35%;
+    margin-top: 43px;
+}
+// #mqtt-topic-subtopic-edit {
+//     width:552px;
+//     height:36px;
+//     margin-left: 1.17%;
+//     margin-top:81px;
+//     display:inline-block;
+// }
+#mqtt-topic-creator {
+    display:inline-block;
+}
+#mqtt-topic-value-title {
+    margin-left: 2.35%;
+    margin-top: 43px;
+}
+#mqtt-topic-tags-bg {
+    width: 40.7%;
+    height: 3.44%;
+    margin-left: 2.35%;
+    background-color: #ebebeb;
+}
+
+#mqtt-topic-value-bg {
+    width: 8.7%;
+    height: 3.46%;
+    margin-left: 1.17%;
+}
+#mqtt-topic-value-combobox{
+    width:118px;
+    height:36px;
+    opacity: 1;
+    background-color: rgba(0,0,0,0);
+    font-size: 14px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    background:rgba(0,0,0,0);
+}
+.mqtt-topic-contents-creator-view {
+    border: solid 1px #ecebeb;
+    background-color: #fafafa;
+    margin-left: 23.2%;
+    margin-top: 16px;
+    width: 54%;
+    height: 11%;
+}
+
+#mqtt-topic-topictype-title {
+    margin-left:20px;
+    margin-top:31px;
+}
+#mqtt-topic-type-bg {
+    width: 87px;
+    height: 36px;
+    margin-left:16px;
+}
+#mqtt-topic-type-combobox {
+    width:87px;
+    height:36px;
+    opacity: 1;
+    background-color: rgba(0,0,0,0);
+    font-size: 14px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    background:rgba(0,0,0,0);
+}
+
+#mqtt-topic-type-edit {
+    margin-left:16px;
+    margin-top:21px;
+}
+#mqtt-topic-edit-button-area {
+    margin-right:20px;
+    margin-top:16px;
+    display:block;
+    float: right;
+}
+#mqtt-topic-edit-add-cancel-btn {
+    width: 80px;
+    height: 28px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #6a6a6a;
+    color:#ffffff;
+}
+#mqtt-topic-edit-add-plus-btn {
+    width: 80px;
+    height: 28px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #1e88e5;
+    color:#ffffff;
+    margin-left: 16px;
+}
+#mqtt-title-topic-edit-info {
+    margin-top: 8px;
+    margin-left: 103px;
+    margin-bottom: 20px;
+    display:block;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e88e5;
+}
+
+#topic-list-input .bootstrap-tagsinput input {
+    display: none;
+}
+
+#topic-list-input .bootstrap-tagsinput .label-tag {
+    border-radius: 4px;
+    border: solid 1px #1e88e5;
+    background-color: #ffffff;
+    height: 28px;
+}
+
+#topic-list-input .bootstrap-tagsinput .label {
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e88e5;
+    padding-top: 6px;
+    padding-left: 12px;
+}

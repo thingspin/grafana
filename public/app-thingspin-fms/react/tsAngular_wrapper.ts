@@ -4,6 +4,10 @@ import { TsLeftSidebar } from './components/LeftSidebar';
 import { TsRightSidebar } from './components/RightSidebar';
 import { TsBottombar } from './components/Bottombar';
 import TsToolbarComponent from './components/MainView/Toobar/index';
+import OpcNodeTree from './components/OpcNodeTree';
+
+import { TsConfigs } from './views/system/configs';
+import { TsDrone } from '../pro/drone';
 
 export function tsRegisterAngularDirectives() {
   tsReact2AngularDirective('tsNavbar', TsNavbarComponent, []);
@@ -11,4 +15,19 @@ export function tsRegisterAngularDirectives() {
   tsReact2AngularDirective('tsRightSidebar', TsRightSidebar, []);
   tsReact2AngularDirective('tsBottombar', TsBottombar, []);
   tsReact2AngularDirective('tsToolbar', TsToolbarComponent, []);
+
+  tsReact2AngularDirective('tsConfigView', TsConfigs, []);
+  tsReact2AngularDirective('tsDroneView', TsDrone, []);
+  tsReact2AngularDirective('rcOpcTree', OpcNodeTree, [
+    "flowId",
+    "data",
+    "activeKey",
+    "initialActiveKey",
+    "debounceTime",
+    "initialOpenNodes",
+    "locale",
+    "children",
+    ["onClickItem", { watchDepth: 'reference', wrapApply: true }],
+    ["onClickAdd",  { watchDepth: 'reference', wrapApply: true }],
+  ]);
 }

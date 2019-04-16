@@ -1,0 +1,65 @@
+<div class="opcua-edit-container">
+    <div class="opcua-edit-header">
+        <div class="opcua-edit-title">
+            OPC 접속 정보
+        </div>
+        <div class="opcua-edit-buttons">
+            <button class="ts-btn ts-btn-save {{ctrl.connectStatus}}" ng-click="ctrl.btnClick()" ng-switch="ctrl.connectStatus">                
+                <i ng-switch-when="red" class="tsi icon-ts-connection_off"></i>
+                <i ng-switch-when="yellow" class="tsi icon-ts-connection-loding"></i>
+                <i ng-switch-when="green"class="tsi icon-ts-power"></i>
+                <i ng-switch-default class="tsi icon-ts-power"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="opcua-edit-body connect-info">
+        <div class="ts-input-group">
+            <div class="ts-input-label">수집기 이름</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.input.name" ng-change="ctrl.changeEvt()" />
+                <span ng-class="{separator: true, enable: ctrl.inputEnable.name}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group">
+            <div class="ts-input-label">Endpoint URL</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.input.endpointUrl" ng-change="ctrl.changeEvt()" />
+                <span ng-class="{separator: true, enable: ctrl.inputEnable.endpoint}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="opcua-edit-container">
+    <div class="opcua-edit-header">
+        OPC 추가 정보
+    </div>
+
+    <div class="opcua-edit-body connect-add-info">
+        <div class="ts-input-group">
+            <div class="ts-input-label">Security Policy</div>
+            <div class="ts-input">
+                <select ng-options="p as p for p in ctrl.selectList.policy" ng-model="ctrl.input.securityPolicy"
+                    ng-change="ctrl.changeEvt()"></select>
+                <span ng-class="{separator: true, enable: ctrl.inputEnable.policy}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group">
+            <div class="ts-input-label">Security Mode</div>
+            <div class="ts-input">
+                <select ng-options="mode as mode for mode in ctrl.selectList.mode" ng-model="ctrl.input.securityMode"
+                    ng-change="ctrl.changeEvt()"></select>
+                <span ng-class="{separator: true, enable: ctrl.inputEnable.mode}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group">
+            <div class="ts-input-label">Authentification</div>
+            <div class="ts-input">
+                <select ng-options="auth as auth for auth in ctrl.selectList.auth" ng-model="ctrl.input.auth"
+                    ng-change="ctrl.changeEvt()"></select>
+                <span ng-class="{separator: true, enable: ctrl.inputEnable.auth}"></span>
+            </div>
+        </div>
+    </div>
+</div>

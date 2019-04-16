@@ -1,20 +1,16 @@
 import angular from 'angular';
+import TsConnectManagementCtrl from './controller';
 
-export class TsConnectManagementCtrl {
+class TsConnectManagementDirective implements angular.IDirective {
+  templateUrl = require('./index.html');
+  restrict = 'E';
+  bindToController = true;
+  controllerAs = 'ctrl';
+  controller = TsConnectManagementCtrl;
+
   /** @ngInject */
-  constructor() {}
+  constructor() {
+  }
 }
 
-/** @ngInject */
-export function tsConnectManagementDirective() {
-  return {
-    restrict: 'E',
-    templateUrl: require('./index.html'),
-    controller: TsConnectManagementCtrl,
-    bindToController: true,
-    controllerAs: 'ctrl',
-    scope: {},
-  };
-}
-
-angular.module('thingspin.directives').directive('tsConnectManagement', tsConnectManagementDirective);
+angular.module('thingspin.directives').directive('tsConnectManagement', [() => new TsConnectManagementDirective()]);

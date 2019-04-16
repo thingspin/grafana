@@ -1,0 +1,274 @@
+// container common style
+.blue {
+    color: #1e88e5;
+}
+.opcua-edit-container {
+    font-size: 14px;
+    line-height: 1.14;
+
+    .opcua-edit-header {
+        display: flex;
+
+        font-weight: bold;
+    }
+
+    .opcua-edit-body {
+        display:inline-flex;
+
+        width: 100%;
+
+        margin-top: 16px;
+        border-top: solid 1px #ecebeb;
+        padding: 16.5px 19px 36px 21px;
+
+        font-weight: 500;
+    }
+    .opcua-error-comment {
+        display: block;
+        color: #1e1e1e;
+    }
+}
+
+.ts-input-group {
+    display: inline-flex;
+
+    .ts-input-label {
+        display: flex;
+
+        width: 145px;
+
+        align-items: center;
+    }
+
+    .ts-input {
+        display: inline-block;
+
+        width: 100%;
+
+        &>:first-child {
+            width: 100%;
+            height: 36px;
+            border-radius: 4px;
+            padding-left: 8px;
+
+            background-color: rgba(#1e1e1e, 0.07);
+
+            &:focus + .separator {
+                opacity: 1;
+
+                height: 2px;
+
+                background: #1e88e5;
+
+                transform: scaleX(1) translateY(-2px);   
+            }
+        }
+
+        .separator {
+            display: block;
+            opacity: 0;
+
+            width: 100%;
+
+            background: rgba(#1e1e1e, 0.3);
+
+            transform: scaleX(0) translateY(-2px);
+            transform-origin: 50%;
+            transition: all .15s linear;
+
+            &.enable {
+                opacity: 1;
+
+                height: 1px;
+
+                transform: scaleX(1) translateY(-2px);   
+            }
+        }
+    }
+}
+
+// opc/ua editor main style
+ts-opcua-connect {
+    color: #1e1e1e;
+
+    .opcua-conn-editor {
+        padding: 28px 20px 0 20px;
+
+        background-color: #ffffff;
+    }
+
+    .opcua-edit-banner {
+        display: flex;
+
+        .opcua-banner-title {
+            padding-top: 16px;
+            font-size: 16px;
+            line-height: 1.19;
+        }
+
+        .opcua-banner-buttons {
+            margin-left: auto;
+
+            .ts-btn-cancel {
+                background-color: #6a6a6a;
+            }
+    
+            .ts-btn-save {
+                background-color: #1e88e5;
+            }
+        }
+    }
+
+    .opcua-edit-root {
+        margin-top: 21px;
+        border: solid 1px #ecebeb;
+        padding: 20px 111px 0 111px;
+    }
+}
+
+// angularjs directive style
+ts-opc-connect-info {
+    .opcua-edit-title {
+        padding-top: 11px;
+    }
+
+    .opcua-edit-buttons {
+        margin-left: auto;
+
+        button {
+            color: #6a6a6a;
+            background-color: #ecebeb;
+
+            &.green {
+                color: #ffffff;
+                background-color: #1e88e5;
+            }
+            &.red {
+                color: #ffffff;
+                background-color: #d81b60;
+            }
+
+            i {
+                font-size: 20px;
+            }
+        }
+    }
+
+    .opcua-edit-body {
+
+        &.connect-info {
+            &>div {
+                width: 50%;
+            }
+
+            .ts-input-group:first-child {
+                margin-right: 56px;
+            }
+        }
+
+        &.connect-add-info {
+            &>div {
+                width: 33.3%;
+
+                &:not(:last-child) {
+                    margin-right: 36px;
+                }
+            }
+        }
+    }
+}
+
+ts-opc-node-set {
+    .opcua-tree-title {
+        display: flex;
+
+        padding: 8px 0 7px 0;
+
+        align-items: center;
+        justify-content: center;
+
+        background-color: #f5f5f5;
+        border-bottom: solid 2px #b5b5b5;
+    }
+    .opcua-tree-container {
+        margin: 16px;
+    }
+
+    .opcua-node-tree {
+        width: 33.3%;
+
+        position: relative;
+
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .opcua-node-table {
+        width: 66.6%;
+        margin-left: 36px;
+
+        button {
+            border: 0;
+            background-color: rgba(#000,0);
+        }
+
+        .opc-node-page-rows {
+            display: inline-block;
+
+            .opc-node-table-select {
+                width: 100%;
+
+                border: 0;
+            }
+        }
+
+        .opc-node-table-body {
+            width: 100%;
+            margin: 8px 0; 
+
+            table {
+                width: 100%;
+
+                tr {
+                    border-bottom: solid 1px #dcdbdc;
+
+                    &:first {
+                        margin-left: 16px;
+                    }
+                }
+                .ts-table-row {
+                    &:hover {
+                        background-color: #e3f2fd;
+                        button {
+                            color: #1e88e5;
+                        }
+                    }
+                }
+
+                th {
+                    padding: 7px 0;
+                }
+
+                td {
+                    padding: 12px 0;
+
+
+                }
+
+                .ts-table-header {
+                    background-color: #ecebeb;
+                }
+            }
+        }
+
+        .opc-node-table-footer {
+            width: 100%;
+            display: inline-flex;
+            color: #1e1e1e;
+
+            .table-paging {
+                margin-left: auto;
+                display: inline-block;
+            }
+        }
+    }
+}

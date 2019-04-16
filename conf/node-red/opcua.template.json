@@ -1,16 +1,15 @@
 {
-  "id": "OPC/UA Flow Format",
-  "label": "{{.FlowId}}",
+  "label": "{{.Params.FlowId}}",
   "info": "",
   "nodes": [
     {
-      "id": "TS-OPC-UA-READ-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-READ-ID-{{.Params.FlowId}}",
       "type": "OPCUA-IIoT-Read",
       "attributeId": 0,
       "maxAge": 1,
       "depth": 1,
-      "connector": "TS-OPC-UA-CONNECT-ID-{{.FlowId}}",
-      "name": "{{.FlowId}}",
+      "connector": "TS-OPC-UA-CONNECT-ID-{{.Params.FlowId}}",
+      "name": "{{.Params.FlowId}}",
       "justValue": true,
       "showStatusActivities": false,
       "showErrors": false,
@@ -18,33 +17,33 @@
       "historyDays": 1,
       "x": 310,
       "y": 240,
-      "wires": [["TS-OPC-UA-READ-PARSER-FUNC-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-READ-PARSER-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-READ-STAT-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-READ-STAT-ID-{{.Params.FlowId}}",
       "type": "status",
       "name": "",
-      "scope": ["TS-OPC-UA-READ-ID-{{.FlowId}}"],
+      "scope": ["TS-OPC-UA-READ-ID-{{.Params.FlowId}}"],
       "x": 100,
       "y": 160,
-      "wires": [["TS-OPC-UA-STATUS-FUNC-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-STATUS-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-BROWSER-HTTP-GET-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-BROWSER-HTTP-GET-ID-{{.Params.FlowId}}",
       "type": "http in",
       "name": "",
-      "url": "/opcua/{{.FlowId}}/browser",
+      "url": "/opcua/{{.Params.FlowId}}/browser",
       "method": "get",
       "upload": false,
       "swaggerDoc": "",
       "x": 140,
       "y": 300,
-      "wires": [["TS-OPC-UA-BROWSER-FUNC-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-BROWSER-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-BROWSER-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-BROWSER-ID-{{.Params.FlowId}}",
       "type": "OPCUA-IIoT-Browser",
-      "connector": "TS-OPC-UA-CONNECT-ID-{{.FlowId}}",
+      "connector": "TS-OPC-UA-CONNECT-ID-{{.Params.FlowId}}",
       "nodeId": "",
       "name": "",
       "justValue": false,
@@ -59,10 +58,10 @@
       "showErrors": false,
       "x": 460,
       "y": 300,
-      "wires": [["TS-OPC-UA-BROWSER-HTTP-RESPONSE-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-BROWSER-HTTP-RESPONSE-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-BROWSER-HTTP-RESPONSE-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-BROWSER-HTTP-RESPONSE-ID-{{.Params.FlowId}}",
       "type": "http response",
       "name": "",
       "statusCode": "",
@@ -72,7 +71,7 @@
       "wires": []
     },
     {
-      "id": "TS-OPC-UA-BROWSER-FUNC-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-BROWSER-FUNC-ID-{{.Params.FlowId}}",
       "type": "function",
       "name": "",
       "func": "const nodeId = msg.payload.nodeid || 'ns=0;i=85';\nmsg['addressSpaceItems'] = [\n  {\n    name: \"sample\",\n    nodeId,\n    datatypeName: \"\",\n  }\n];\nreturn msg;",
@@ -80,33 +79,33 @@
       "noerr": 0,
       "x": 310,
       "y": 300,
-      "wires": [["TS-OPC-UA-BROWSER-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-BROWSER-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-STATUS-FUNC-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-STATUS-FUNC-ID-{{.Params.FlowId}}",
       "type": "function",
       "name": "",
-      "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = stat;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
+      "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = status.fill;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
       "outputs": 1,
       "noerr": 0,
       "x": 290,
       "y": 160,
-      "wires": [["TS-OPC-UA-STATUS-WS-OUT-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-STATUS-MQTT-OUT-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-STATUS-HTTP-GET-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-STATUS-HTTP-GET-ID-{{.Params.FlowId}}",
       "type": "http in",
       "name": "",
-      "url": "/opcua/{{.FlowId}}/status",
+      "url": "/opcua/{{.Params.FlowId}}/status",
       "method": "get",
       "upload": false,
       "swaggerDoc": "",
       "x": 140,
       "y": 360,
-      "wires": [["TS-OPC-UA-STATUS-HTTP-GET-FUNC-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-STATUS-HTTP-GET-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-STATUS-HTTP-GET-FUNC-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-STATUS-HTTP-GET-FUNC-ID-{{.Params.FlowId}}",
       "type": "function",
       "name": "",
       "func": "const {url} = msg.req;\nconst list = url.split(\"/\");\nconst id = list[list.length-2];\nconst status = global.get('ts-status');\nmsg.payload = status[id];\nreturn msg;",
@@ -114,10 +113,10 @@
       "noerr": 0,
       "x": 310,
       "y": 360,
-      "wires": [["TS-OPC-UA-STATUS-HTTP-RESPONSE-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-STATUS-HTTP-RESPONSE-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-STATUS-HTTP-RESPONSE-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-STATUS-HTTP-RESPONSE-ID-{{.Params.FlowId}}",
       "type": "http response",
       "name": "",
       "statusCode": "",
@@ -127,51 +126,82 @@
       "wires": []
     },
     {
-      "id": "TS-OPC-UA-STATUS-WS-OUT-ID-{{.FlowId}}",
-      "type": "websocket out",
+      "id": "TS-OPC-UA-STATUS-MQTT-OUT-ID-{{.Params.FlowId}}",
+      "type": "mqtt out",
+      "z": "9d5a2adb.d70968",
       "name": "",
-      "server": "TS-WS-LISTENER-ID-{{.FlowId}}",
-      "client": "",
-      "x": 470,
+      "topic": "/thingspin/connect/{{.Params.FlowId}}/status",
+      "qos": "2",
+      "retain": "true",
+      "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+      "x": 450,
       "y": 160,
       "wires": []
     },
     {
-      "id": "TS-OPC-UA-READ-PARSER-FUNC-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-READ-PARSER-FUNC-ID-{{.Params.FlowId}}",
       "type": "function",
       "name": "OPC/UA Parser",
-      "func": "const { addressSpaceItems, payload } = msg;\n\nlet obj = {};\n\naddressSpaceItems.forEach((item, index) => {\n    const node = payload[index];\n    obj[node.browseName.name] = node.value;\n});\n\nmsg.payload = obj;\n\nreturn msg;",
+      "func": "const { addressSpaceItems, payload } = msg;\n\nlet obj = {};\n\naddressSpaceItems.forEach((item, index) => {\n    const node = payload[index];\n    obj[node.browseName.name] = node.value;\n});\n\nmsg.payload = obj;\nmsg.id = {{.Id}};\n\n\nreturn msg;",
       "outputs": 1,
       "noerr": 0,
       "x": 480,
       "y": 240,
-      "wires": [[]]
+      "wires": [[
+        {{if .Enable }} "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}" {{end}}
+      ]]
     },
     {
-      "id": "TS-OPC-UA-READ-INJECT-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-READ-INJECT-ID-{{.Params.FlowId}}",
       "type": "OPCUA-IIoT-Inject",
       "injectType": "inject",
       "payload": "",
       "payloadType": "date",
       "topic": "",
-      "repeat": "{{.Interval}}",
+      "repeat": "{{.Intervals}}",
       "crontab": "",
       "once": true,
       "startDelay": "",
       "name": "",
-      "addressSpaceItems": {{.AddressSpaceItems | convJsonStr}},
+      "addressSpaceItems": {{.Params.nodes | convJsonStr}},
       "x": 140,
       "y": 240,
-      "wires": [["TS-OPC-UA-READ-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-READ-ID-{{.Params.FlowId}}"]]
+    },
+    {
+      "id": "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
+      "type": "function",
+      "name": "",
+      "func": "const { payload, id } = msg;\n\nconst result = [];\nif (Array.isArray(payload)) {\n    for(const item of payload) {\n        result.push({\n            measurement: id,\n            fields: {\n                ...item,\n            },\n        });\n    }\n} else {\n    result.push({\n        measurement: id,\n        fields: {\n            ...payload,\n        },\n    });\n}\nmsg.payload = result;\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 690,
+      "y": 240,
+      "wires": [
+          [
+              "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}"
+          ]
+      ]
+    },
+    {
+      "id": "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}",
+      "type": "influxdb batch",
+      "influxdb": "TS-INFLUXDB-NODE-ID-{{.Params.FlowId}}",
+      "precision": "",
+      "retentionPolicy": "",
+      "name": "",
+      "x": 950,
+      "y": 240,
+      "wires": []
     }
   ],
   "configs": [
     {
-      "id": "TS-OPC-UA-CONNECT-ID-{{.FlowId}}",
+      "id": "TS-OPC-UA-CONNECT-ID-{{.Params.FlowId}}",
       "type": "OPCUA-IIoT-Connector",
       "z": "",
       "discoveryUrl": "",
-      "endpoint": "{{.EndpointUrl}}",
+      "endpoint": "{{.Params.EndpointUrl}}",
       "keepSessionAlive": true,
       "loginEnabled": false,
       "securityPolicy": "None",
@@ -194,11 +224,36 @@
       "maxBadSessionRequests": "10"
     },
     {
-      "id": "TS-WS-LISTENER-ID-{{.FlowId}}",
-      "type": "websocket-listener",
+      "id": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+      "type": "mqtt-broker",
       "z": "",
-      "path": "/ws/{{.FlowId}}",
-      "wholemsg": "false"
+      "broker": "{{.TsSettings.Mqtt.Host}}",
+      "port": "{{.TsSettings.Mqtt.Port}}",
+      "clientid": "",
+      "usetls": false,
+      "compatmode": true,
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": ""
+    },
+    {
+      "id": "TS-INFLUXDB-NODE-ID-{{.Params.FlowId}}",
+      "type": "influxdb",
+      "hostname": "{{.TsSettings.Influx.Host}}",
+      "port": "{{.TsSettings.Influx.Port}}",
+      "protocol": "http",
+      "database": "{{.TsSettings.Influx.Database}}",
+      "name": "",
+      "usetls": false,
+      "tls": ""
     }
   ]
 }

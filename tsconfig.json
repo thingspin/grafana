@@ -40,6 +40,8 @@
     "public/app/**/*.tsx",
     "public/app-thingspin-fms/**/*.ts",
     "public/app-thingspin-fms/**/*.tsx",
-    "public/test/**/*.ts"
+    "public/test/**/*.ts",
+    "public/vendor/**/*.ts",
+    "public/e2e-test/**/*.ts"
   ]
 }

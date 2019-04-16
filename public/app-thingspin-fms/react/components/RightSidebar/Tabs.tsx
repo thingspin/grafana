@@ -56,7 +56,7 @@ class Tabs extends PureComponent<{}, State> {
   }
 
   private handleTabClick = (name: string, content: ReactNode) => {
-    this.setState({ activeName: name, activeContent: content });
+    //sooskim tempo out - this.setState({ activeName: name, activeContent: content });
   };
 }
 

@@ -2,8 +2,9 @@
   "type": "panel",
   "name": "Plugin list",
   "id": "pluginlist",
+  "state": "alpha",
 
-  "dataFormats": [],
+  "skipDataQuery": true,
 
   "info": {
     "description": "Plugin List for Grafana",

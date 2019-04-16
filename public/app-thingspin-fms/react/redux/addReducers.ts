@@ -3,11 +3,16 @@ import { addRootReducer } from 'app/store/configureStore';
 import { tsNavbarReducer as thingspinNavbar } from './reducers/navbar';
 import { tsToolbarReducer as thingspinToolbar } from './reducers/toolbar';
 
+import { projectListReducer as droneProjects } from '../../pro/drone/state/reducer';
+import { projectReducer as droneProject } from '../../pro/drone/state/reducer';
+
 export default function addThingspinReducers() {
   addRootReducer([
     {
       thingspinNavbar,
       thingspinToolbar,
+      droneProjects,
+      droneProject,
     },
   ]);
 }

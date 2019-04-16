@@ -1,0 +1,39 @@
+<div class="gf-form-group">
+        <div class="grafana-info-box">
+            <h2>단말설정</h2>
+        </div>
+    </div>
+        
+    <form class="gf-form-group" accept-charset="utf-8" id="sms-command" name = "sms-command" method = "get">
+      <div class="gf-form">
+          <span class="gf-form-label width-10">통신회선번호</span>
+          <input type="text" required placeholder="01089619571" class="gf-form-input max-width-14" id = "to" name = "to" maxlength="11">
+      </div>
+      <div class="gf-form">
+          <span class="gf-form-label width-10">명령어</span>
+          <input type="text" required class="gf-form-input max-width-40" id="text" name="text" placeholder="CMD=232321" maxlength="80">
+      </div>
+      <input type="hidden" id="user" name="user" value="kksworks">
+      <input type="hidden" id="password" name="password" value="virt1004">
+      <input type="hidden" id="from" name="from" value="01086687577">
+      <div class="gf-form-button-row">
+          <button type = "submit" class="btn btn-primary">전송</button>
+      </div>
+    </form>
+    
+    <script>
+        $('#sms-command').submit(function(e){
+        e.preventDefault();
+        $.ajax({
+            url:'http://api.coolsms.co.kr/sendmsg',
+            type:'get',
+            data:$('#sms-command').serialize(),
+            success: function() {
+                alert("명령을 전송 하였습니다.");
+            },
+            error: function(data) { 
+                alert("명령을 전송 하였습니다."); 
+            },
+        });
+    });
+    </script>

@@ -5,6 +5,7 @@
 ts-left-sidebar {
   display: none;
   color: rgba(255, 255, 255, 0.95);
+  overflow: hidden;
   a {
     color: rgba(255, 255, 255, 0.95);
     &:hover {
@@ -22,20 +23,31 @@ ts-left-sidebar {
 
     // 삭제 필요...
     background-color: #1976d2;
+
+    .fms-menu-dividers {
+      &-divider {
+        border-top: 1px solid rgba(176, 190, 197, 0.3);
+        width: 196px;
+        margin-bottom: 0px;
+        margin-top: 0px;
+      }
+    }
+    
+    .fms-menu-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items:flex-start;
+      height: calc(100% - 70px);
+      overflow-y: scroll;
+
+      &::-webkit-scrollbar {display:none;}
+    }    
   }
 }
 
 .sidemenu-hidden {
   ts-left-sidebar {
     display: none;
-  }
-}
-
-.fms-menu-dividers {
-  &-divider {
-    border-top: 1px solid rgba(176, 190, 197, 0.3);
-    width: 196px;
-    margin-bottom: 0px;
-    margin-top: 0px;
   }
 }

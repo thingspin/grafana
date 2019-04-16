@@ -36,8 +36,9 @@ public/css/*.min.css
 .vscode/
 .vs/
 
-/data/*
-!/data/api-servers/
+/data/grafana.db*
+/data/log/*
+/data/png/*
 /bin/*
 
 conf/custom.ini
@@ -88,3 +89,7 @@ debug.test
 
 # ThingSPIN ADD ignore code
 *DS_Store
+devenv/thingspin/docker/influxdb
+theOutput/
+data/drone/
+data/thingspin.db

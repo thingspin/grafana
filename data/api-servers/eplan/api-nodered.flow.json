@@ -1,0 +1,383 @@
+[
+    {
+        "id": "1855254f.c35a6b",
+        "type": "tab",
+        "label": "EPLAN API",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "3c311939.007076",
+        "type": "inject",
+        "z": "1855254f.c35a6b",
+        "name": "0.1 초",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "0.1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 100,
+        "y": 260,
+        "wires": [
+            [
+                "d3380fa2.f4e36"
+            ]
+        ]
+    },
+    {
+        "id": "eda8142a.b32c78",
+        "type": "influxdb out",
+        "z": "1855254f.c35a6b",
+        "influxdb": "9754abe7.6be748",
+        "name": "",
+        "measurement": "sine",
+        "precision": "n",
+        "retentionPolicy": "",
+        "x": 750,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "facb7e9.6a52f8",
+        "type": "curve",
+        "z": "1855254f.c35a6b",
+        "fexpression": "sin(x)",
+        "valuex": "count",
+        "outputtype": "float",
+        "name": "",
+        "topic": "",
+        "x": 530,
+        "y": 300,
+        "wires": [
+            [
+                "eda8142a.b32c78",
+                "6e2f7c1f.200e74"
+            ]
+        ]
+    },
+    {
+        "id": "6e2f7c1f.200e74",
+        "type": "debug",
+        "z": "1855254f.c35a6b",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 675,
+        "y": 320,
+        "wires": [],
+        "l": false
+    },
+    {
+        "id": "d3380fa2.f4e36",
+        "type": "counter",
+        "z": "1855254f.c35a6b",
+        "name": "",
+        "init": "0",
+        "step": "1",
+        "lower": "",
+        "upper": "",
+        "mode": "increment",
+        "outputs": "1",
+        "x": 340,
+        "y": 340,
+        "wires": [
+            [
+                "facb7e9.6a52f8",
+                "8e92dbcc.6e2aa8"
+            ]
+        ]
+    },
+    {
+        "id": "f4a5f221.e6b2b",
+        "type": "inject",
+        "z": "1855254f.c35a6b",
+        "name": "1초",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 90,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "571253cc.f3640c",
+        "type": "inject",
+        "z": "1855254f.c35a6b",
+        "name": "0.5 초",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "0.5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 100,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9f26867f.0bcd78",
+        "type": "inject",
+        "z": "1855254f.c35a6b",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 400,
+        "y": 180,
+        "wires": [
+            [
+                "a210ea09.e24db8"
+            ]
+        ]
+    },
+    {
+        "id": "a210ea09.e24db8",
+        "type": "function",
+        "z": "1855254f.c35a6b",
+        "name": "fault - sine",
+        "func": "msg.payload = 3.0;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 570,
+        "y": 180,
+        "wires": [
+            [
+                "eda8142a.b32c78"
+            ]
+        ]
+    },
+    {
+        "id": "8e92dbcc.6e2aa8",
+        "type": "curve",
+        "z": "1855254f.c35a6b",
+        "fexpression": "cos(x)",
+        "valuex": "count",
+        "outputtype": "float",
+        "name": "",
+        "topic": "",
+        "x": 530,
+        "y": 360,
+        "wires": [
+            [
+                "b624ab13.567a98",
+                "6e2f7c1f.200e74"
+            ]
+        ]
+    },
+    {
+        "id": "b624ab13.567a98",
+        "type": "influxdb out",
+        "z": "1855254f.c35a6b",
+        "influxdb": "9754abe7.6be748",
+        "name": "",
+        "measurement": "cos",
+        "precision": "n",
+        "retentionPolicy": "",
+        "x": 730,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "2298a5b4.e9c81a",
+        "type": "inject",
+        "z": "1855254f.c35a6b",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 380,
+        "y": 420,
+        "wires": [
+            [
+                "4fbfa5c2.3ecf7c"
+            ]
+        ]
+    },
+    {
+        "id": "4fbfa5c2.3ecf7c",
+        "type": "function",
+        "z": "1855254f.c35a6b",
+        "name": "fault - cosine",
+        "func": "msg.payload = 3.0;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 550,
+        "y": 420,
+        "wires": [
+            [
+                "b624ab13.567a98"
+            ]
+        ]
+    },
+    {
+        "id": "1ff3616e.5af07f",
+        "type": "function",
+        "z": "1855254f.c35a6b",
+        "name": "fault - sine",
+        "func": "msg.payload = -3.0;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 570,
+        "y": 220,
+        "wires": [
+            [
+                "eda8142a.b32c78"
+            ]
+        ]
+    },
+    {
+        "id": "3027609a.99f89",
+        "type": "inject",
+        "z": "1855254f.c35a6b",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 400,
+        "y": 220,
+        "wires": [
+            [
+                "1ff3616e.5af07f"
+            ]
+        ]
+    },
+    {
+        "id": "e31afcf.a4f57",
+        "type": "function",
+        "z": "1855254f.c35a6b",
+        "name": "fault - cosine",
+        "func": "msg.payload = -3.0;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 550,
+        "y": 460,
+        "wires": [
+            [
+                "b624ab13.567a98"
+            ]
+        ]
+    },
+    {
+        "id": "173af5ae.8caa2a",
+        "type": "inject",
+        "z": "1855254f.c35a6b",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 380,
+        "y": 460,
+        "wires": [
+            [
+                "e31afcf.a4f57"
+            ]
+        ]
+    },
+    {
+        "id": "f41b4ac5.54cec8",
+        "type": "http in",
+        "z": "1855254f.c35a6b",
+        "name": "API - (POST) /eplan",
+        "url": "/eplan",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "168c8b9b.8ef5d4",
+                "7d2d113f.f8154"
+            ]
+        ]
+    },
+    {
+        "id": "168c8b9b.8ef5d4",
+        "type": "debug",
+        "z": "1855254f.c35a6b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 330,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "7d2d113f.f8154",
+        "type": "http response",
+        "z": "1855254f.c35a6b",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 580,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "9f15c238.aef8b",
+        "type": "comment",
+        "z": "1855254f.c35a6b",
+        "name": "REST API for E-Plan",
+        "info": "",
+        "x": 90,
+        "y": 20,
+        "wires": []
+    },
+    {
+        "id": "ec989d8c.41ce7",
+        "type": "comment",
+        "z": "1855254f.c35a6b",
+        "name": "Simulator for Sin/Cos (with alert)",
+        "info": "",
+        "x": 130,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "9754abe7.6be748",
+        "type": "influxdb",
+        "z": "",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "simula",
+        "name": "simula",
+        "usetls": false,
+        "tls": ""
+    }
+]

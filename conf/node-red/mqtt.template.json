@@ -1,56 +1,51 @@
 {
     "id": "MQTT Flow Format",
-    "label": "{{.FlowId}}",
+    "label": "{{.Params.FlowId}}",
     "info": "",
     "nodes": [
+        {{if .Enable}}
+            {{.Params.AddTopicList | convJsonStr}},
+        {{else}}
+            {{.Params.AddDisTopicList | convJsonStr}},
+        {{end}}
         {
-            "id": "TS-MQTT-IN-{{.FlowId}}",
-            "type": "mqtt in",
+            "id": "TS-MQTT-STATUS-{{.Params.UUID}}",
+            "type": "status",
             "name": "",
-            "topic": "{{.MqttTopic}}",
-            "qos": "0",
-            "datatype": "auto",
-            "broker": "TS-MQTT-CONNECT-{{.FlowId}}",
-            "x": 110,
-            "y": 560,
+            "scope": ["TS-MQTT-CHECKNODE-{{.Params.UUID}}"],
+            "x": 200,
+            "y": 60,
             "wires": [
-                [
-                    "TS-MQTT-PARSE-{{.FlowId}}"
-                ]
+                ["TS-MQTT-STATUS-DATA-PROCESS-{{.Params.UUID}}"]
             ]
-        },
-        {
-            "id": "TS-MQTT-PARSE-{{.FlowId}}",
+        }, {
+            "id": "TS-MQTT-STATUS-DATA-PROCESS-{{.Params.UUID}}",
             "type": "function",
-            "name": "",
-            "func": "{{.TopicParse}}",
+            "name": "Data Process",
+            "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = status.fill;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
             "outputs": 1,
             "noerr": 0,
-            "x": 290,
-            "y": 560,
+            "x": 470,
+            "y": 60,
             "wires": [
-                [
-                    "TS-MQTT-OUTPUT-{{.FlowId}}"
-                ]
+                ["TS-MQTT-MQTTOUT-{{.Params.UUID}}"]
             ]
-        },
-        {
-            "id": "TS-MQTT-OUTPUT-{{.FlowId}}",
-            "type": "influxdb batch",
-            "influxdb": "TS-MQTT-INFLUXD-{{.FlowId}}",
-            "precision": "",
-            "retentionPolicy": "",
+        }, {
+            "id": "TS-MQTT-MQTTOUT-{{.Params.UUID}}",
+            "type": "mqtt out",
             "name": "",
-            "x": 530,
-            "y": 560,
+            "topic": "/thingspin/connect/{{.Params.UUID}}/status",
+            "qos": "2",
+            "retain": "true",
+            "broker": "TS-MQTT-TSBROKER-{{.Params.UUID}}",
+            "x": 880,
+            "y": 60,
             "wires": []
-        },
-        {
-            "id": "TS-MQTT-CONNECT-{{.FlowId}}",
+        }, {
+            "id": "TS-MQTT-TSBROKER-{{.Params.UUID}}",
             "type": "mqtt-broker",
-            "name": "{{.MqttUrl}}",
-            "broker": "{{.MqttUrl}}",
-            "port": "{{.MqttPort}}",
+            "broker": "localhost",
+            "port": "1883",
             "clientid": "",
             "usetls": false,
             "compatmode": true,
@@ -67,7 +62,39 @@
             "willPayload": ""
         },
         {
-            "id": "TS-MQTT-INFLUXD-{{.FlowId}}",
+            "id": "TS-MQTT-OUTPUT-{{.Params.UUID}}",
+            "type": "influxdb batch",
+            "influxdb": "TS-MQTT-INFLUXD-{{.Params.UUID}}",
+            "precision": "",
+            "retentionPolicy": "",
+            "name": "",
+            "x": 830,
+            "y": 220,
+            "wires": []
+        },
+        {
+            "id": "TS-MQTT-CONNECT-{{.Params.UUID}}",
+            "type": "mqtt-broker",
+            "name": "{{.Params.Host}}",
+            "broker": "{{.Params.Host}}",
+            "port": "{{.Params.Port}}",
+            "clientid": "",
+            "usetls": false,
+            "compatmode": true,
+            "keepalive": "{{.Params.KeepAlive}}",
+            "cleansession": "{{.Params.Session}}",
+            "birthTopic": "",
+            "birthQos": "0",
+            "birthPayload": "",
+            "closeTopic": "",
+            "closeQos": "0",
+            "closePayload": "",
+            "willTopic": "",
+            "willQos": "0",
+            "willPayload": ""
+        },
+        {
+            "id": "TS-MQTT-INFLUXD-{{.Params.UUID}}",
             "type": "influxdb",
             "z": "",
             "hostname": "127.0.0.1",

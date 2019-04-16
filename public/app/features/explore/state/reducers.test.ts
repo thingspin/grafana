@@ -97,7 +97,6 @@ describe('Explore item reducer', () => {
         const queryTransactions: QueryTransaction[] = [];
         const initalState: Partial<ExploreItemState> = {
           datasourceError: null,
-          queryTransactions: [{} as QueryTransaction],
           graphResult: [],
           tableResult: {} as TableModel,
           logsResult: {} as LogsModel,
@@ -497,6 +496,44 @@ describe('Explore reducer', () => {
                       ...initalState.left.urlState.ui,
                       showingGraph: true,
                     },
+                  },
+                },
+              };
+
+              reducerTester()
+                .givenReducer(exploreReducer, stateWithDifferentDataSource)
+                .whenActionIsDispatched(
+                  updateLocation({
+                    query: {
+                      left: serializedUrlState,
+                    },
+                    path: '/explore',
+                  })
+                )
+                .thenStateShouldEqual(expectedState);
+            });
+          });
+
+          describe('and refreshInterval differs', () => {
+            it('then it should return update refreshInterval', () => {
+              const { initalState, serializedUrlState } = setup();
+              const expectedState = {
+                ...initalState,
+                left: {
+                  ...initalState.left,
+                  update: {
+                    ...initalState.left.update,
+                    refreshInterval: true,
+                  },
+                },
+              };
+              const stateWithDifferentDataSource = {
+                ...initalState,
+                left: {
+                  ...initalState.left,
+                  urlState: {
+                    ...initalState.left.urlState,
+                    refreshInterval: '5s',
                   },
                 },
               };

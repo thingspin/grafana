@@ -2,9 +2,7 @@
   "type": "panel",
   "name": "React Table",
   "id": "table2",
-  "state": "alpha",
-
-  "dataFormats": ["table"],
+  "state": "devel",
 
   "info": {
     "author": {

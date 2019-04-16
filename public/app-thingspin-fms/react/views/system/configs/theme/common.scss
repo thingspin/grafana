@@ -1,0 +1,110 @@
+ts-config-view {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .grafana-info-box {
+        flex: none;
+        padding: 4px;
+        margin: 4px 4px 1px 4px;
+    }
+
+    .config-sections {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow: auto;
+        margin: 2px;
+        padding: 1px 4px 1px 1px;
+        margin-bottom: auto;
+
+        .config-section {
+            flex: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: calc(50% - 12px);
+            min-height: 180px;
+            overflow: auto;
+            margin: 2px 2px 2px 2px;
+            padding: 0px 0px 2px 0px;
+            margin-bottom: auto;
+
+            border: solid;
+            border-width: 1px;
+            border-color: rgba(35, 31, 41, 0.37);
+    
+            .title {
+                flex: none;
+                padding-left: 2px;
+                padding-right: 2px;
+                background: rgba(67, 69, 73, 0.459);
+            }
+    
+            .item {
+                padding-left: 4px;
+                padding-right: 4px;
+                margin-top: 2px;
+                margin-bottom: 2px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+
+                &.attribute {
+                    display: inline-flex;
+                    flex-direction: row;
+                }
+
+                > .under-construction {
+                    margin-top: auto;
+                    align-items: center;
+                    flex: 1;
+                    justify-content: center;
+                    display: flex;
+                    color: rgba(57, 65, 133, 0.20);
+                    .fa {
+                        font-size: 10em;
+                    }
+                }
+
+                &.devel {
+                    margin-top: auto;
+                    margin-bottom: auto;
+                }
+            }
+        }
+
+        &.solo {
+            flex-direction: column;
+            > .config-section {
+                width: calc(100% - 4px);
+                min-height: calc(100vh - 82px);
+                overflow-y: auto;
+            }
+        }
+
+        > *:first-child {
+            width: calc(100% - 4px);
+        }
+    }
+
+    // > .config-footer {
+    //     height: 0px;
+    //     background-color: transparent;
+    //     width: calc(100% - 4px);
+    //     margin-top: auto;
+    // }
+}
+
+.icon-button {
+    background-color: transparent;
+    color: rgba(36, 12, 122, 0.411);
+    padding: 8px 8px;
+}

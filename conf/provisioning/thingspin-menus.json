@@ -5,65 +5,198 @@
   "ignore": false,
   "menus": [
     {
-      "text": "설비 관리",
-      "icon": "fa fa-fw fa-database",
-      "url": "/thingspin/manage/facility",
-      "children" : [
+      "text": "요약",
+      "icon": "fa fa-list-alt",
+      "url": "",
+      "canDelete": true,
+      "children": []
+    },
+    {
+      "text": "설비 모니터링",
+      "icon": "fa fa-eye",
+      "url": "/thingspin/manage/monitoring",
+      "canDelete": true,
+      "children": []
+    },
+    {
+      "text": "데이터 관리",
+      "icon": "fa fa-bar-chart",
+      "url": "/thingspin/manage/data",
+      "canDelete": true,
+      "children": [
         {
-          "text": "설비 모니터링",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "text": "사이트 관리",
+          "icon": "fa fa-bar-chart",
+          "url": "/thingspin/manage/data/connect",
+          "canDelete": true,
+          "children": []
         },
         {
-          "text": "정비 이력",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "text": "컨텐츠 관리",
+          "icon": "fa fa-bar-chart",
+          "url": "/thingspin/manage/data/connect",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "연결 관리",
+          "icon": "fa fa-bar-chart",
+          "url": "/thingspin/manage/data/connect",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "설비 관리",
+          "icon": "fa fa-bar-chart",
+          "url": "/thingspin/manage/facility",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "태그 관리",
+          "icon": "fa fa-bar-chart",
+          "url": "/thingspin/manage/data/connect",
+          "canDelete": true,
+          "children": []
         }
       ]
     },
     {
-      "text": "생산 관리",
-      "icon": "fa fa-fw fa-database",
-      "url": "/thingspin/manage/facility",
-      "children" : [
+      "text": "화면 저작",
+      "icon": "fa fa-tv",
+      "url": "",
+      "children": [
         {
-          "text": "생산 모니터링",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "text": "대시보드",
+          "icon": "fa fa-tv",
+          "url": "/dashboards",
+          "placeBottom": true,
+          "canDelete": true,
+          "children": []
         },
         {
-          "text": "불량 이력",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "text": "스카다 저작",
+          "icon": "fa fa-tv",
+          "url": "",
+          "canDelete": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "text": "알림 설정",
+      "icon": "gicon gicon-alert",
+      "url": "/thingspin/manage/alarm",
+      "canDelete": true,
+      "children": [
+        {
+          "text": "알림 통합 검색",
+          "icon": "gicon gicon-alert-rules",
+          "url": "/thingspin/manage/alarm",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "알림 규칙 설정",
+          "icon": "gicon gicon-alert-rules",
+          "url": "/alerting/list",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "알림 채널",
+          "icon": "gicon gicon-alert-notification-channel",
+          "url": "/alerting/notifications",
+          "canDelete": true,
+          "children": []
         }
       ]
     },
     {
       "text": "데이터 분석",
-      "icon": "fa fa-fw fa-database",
-      "url": "/thingspin/manage/facility",
+      "icon": "fa fa-search",
+      "url": "/thingspin/manage/analysis",
+      "canDelete": true,
       "children" : [
         {
-          "text": "정비이력 분석",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "text": "상관관계 분석",
+          "icon": "fa fa-search",
+          "url": "/thingspin/manage/analysis/correlation",
+          "canDelete": true,
+          "children": []
         },
         {
-          "text": "생산량 분석",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "text": "예측 분석",
+          "icon": "fa fa-search",
+          "url": "/thingspin/manage/analysis/prediction",
+          "canDelete": true,
+          "children": []
         },
         {
-          "text": "설비예지정비",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "text": "스크립트 분석",
+          "icon": "fa fa-search",
+          "url": "/thingspin/manage/analysis/script",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "예지진단 분석",
+          "icon": "fa fa-search",
+          "url": "/thingspin/manage/analysis/pattern",
+          "canDelete": true,
+          "children": []
         }
       ]
+    },
+    {
+      "text": "디지털 트윈",
+      "icon": "fa fa-exchange",
+      "url": "",
+      "canDelete": true,
+      "children": [
+        {
+          "text": "3D 갤러리",
+          "icon": "fa fa-exchange",
+          "url": "",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "트윈 정의",
+          "icon": "fa fa-exchange",
+          "url": "",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "해석 스크립트",
+          "icon": "fa fa-exchange",
+          "url": "",
+          "canDelete": true,
+          "children": []
+        },
+        {
+          "text": "프로퍼티 정의",
+          "icon": "fa fa-exchange",
+          "url": "",
+          "canDelete": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "text": "보고서",
+      "icon": "fa fa-file",
+      "url": "",
+      "canDelete": true,
+      "children": []
     },
     {
       "text": "대시보드",
       "icon": "fa fa-fw fa-home",
       "url": "/",
+      "hideFromMenu": false,
+      "placeBottom": true,
       "children" : [
         {
           "text": "추가",
@@ -83,125 +216,91 @@
       ]
     },
     {
-      "text": "알림 설정",
-      "icon": "gicon gicon-alert",
-      "url": "/thingspin/manage/alarm",
-      "children" : [
-        {
-          "text": "알림 통합 검색",
-          "icon": "gicon gicon-alert-rules",
-          "url": "/thingspin/manage/alarm"
-        },
-        {
-          "text": "알림 규칙 설정",
-          "icon": "gicon gicon-alert-rules",
-          "url": "/alerting/list"
-        },
-        {
-          "text": "알림 채널",
-          "icon": "gicon gicon-alert-notification-channel",
-          "url": "/alerting/notifications"
-        }
-      ]
-    },
-    {
-      "text": "연결 관리",
-      "icon": "fa fa-fw fa-database",
-      "url": "/thingspin/manage/data/connect",
-      "children" : [
-        {
-          "text": "OPC UA 연결/수집",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
-        },
-        {
-          "text": "MODBUS 연결/수집",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
-        },
-        {
-          "text": "MQTT 연결/수집",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
-        }
-      ]
-    },
-    {
-      "text": "코드 관리",
-      "icon": "fa fa-fw fa-database",
-      "url": "/thingspin/manage/data",
-      "children" : [
-        {
-          "text": "코드 마스터",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
-        },
-        {
-          "text": "설비/부품 코드",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
-        },
-        {
-          "text": "운전/제어 코드",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
-        },
-        {
-          "text": "오류/알람 코드",
-          "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
-        }
-      ]
-    },
-    {
-      "text": "시스템",
+      "text": "플랫폼 관리",
       "icon": "gicon gicon-shield",
       "url": "/thingspin/manage/system",
+      "placeBottom": true,
+      "canDelete": false,
       "children" : [
         {
-          "text": "조직",
+          "text": "그룹 관리",
           "icon": "gicon gicon-team",
-          "url": "/org"
+          "url": "/org",
+          "canDelete": false
         },
         {
-          "text": "사용자",
-          "icon": "gicon gicon-team",
-          "url": "/admin/users"
+          "text": "사용자 관리",
+          "icon": "gicon gicon-shield",
+          "url": "/thingspin/manage/system/user",
+          "canDelete": false
+        },
+        {
+          "text": "라이센스 관리",
+          "icon": "gicon gicon-shield",
+          "url": "",
+          "canDelete": false
         },
         {
           "text": "메뉴 관리",
           "icon": "fa fa-fw fa-keyboard-o",
-          "url": "/thingspin/manage/system/menu"
+          "url": "/thingspin/manage/system/menu",
+          "canDelete": false
         },
         {
-          "text": "데이터소스",
-          "icon": "gicon gicon-datasources",
-          "url": "/datasources"
+          "text": "데이터 소스",
+          "icon": "gicon gicon-shield",
+          "url": "/datasources",
+          "canDelete": false
+        },
+        {
+          "text": "플러그인",
+          "icon": "gicon gicon-plugins",
+          "url": "/plugins"
+        },
+        {
+          "text": "시스템 경고",
+          "icon": "gicon gicon-alert-rules",
+          "url": "/alerting",
+          "canDelete": false
+        },
+        {
+          "text": "로그",
+          "icon": "gicon gicon-shield",
+          "url": "#",
+          "canDelete": true
         }
       ]
     },
     {
-      "text": "내정보",
-      "icon": "fa fa-user-circle",
-      "url": "/profile",
-      "hideFromMenu": true,
-      "hideFromTab": true,
+      "text": "시스템 관리",
+      "icon": "gicon gicon-shield",
+      "url": "/v1.0/sys/config",
+      "placeBottom": true,
+      "canDelete": false,
       "children" : [
         {
-          "text": "환경설정",
-          "icon": "gicon gicon-preferences",
-          "url": "/profile"
+          "text": "콘텐츠 스토리지",
+          "icon": "gicon gicon-cog",
+          "url": "/v1.0/sys/config/contents",
+          "canDelete": false
         },
         {
-          "text": "비밀번호 변경",
-          "icon": "fa fa-fw fa-lock",
-          "url": "/profile/password"
+          "text": "라이센스 관리",
+          "icon": "gicon gicon-cog",
+          "url": "/v1.0/sys/config/license",
+          "canDelete": false
         },
         {
-          "text": "로그아웃",
-          "icon": "fa fa-fw fa-sign-out",
-          "url": "/logout",
-          "target": "_self"
+          "text": "확장 데몬 관리",
+          "icon": "gicon gicon-cog",
+          "url": "/v1.0/sys/config/service",
+          "canDelete": false
+        },
+        {
+          "text": "API",
+          "icon": "gicon gicon-cog",
+          "url": "/v1.0/sys/config/api",
+          "canDelete": false
         }
       ]
     }

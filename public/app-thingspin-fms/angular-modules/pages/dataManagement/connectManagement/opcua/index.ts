@@ -1,20 +1,20 @@
 import angular from 'angular';
 
-export class TsOpcUaConnectCtrl {
+import './connectInfo';
+import './nodeset';
+
+import TsOpcUaConnectCtrl from './controller';
+
+export class TsOpcUaConnectDirective implements angular.IDirective {
+  templateUrl = require('./index.html');
+  restrict = 'E';
+  bindToController = true;
+  controllerAs = 'ctrl';
+  controller = TsOpcUaConnectCtrl;
+
   /** @ngInject */
-  constructor() {}
+  constructor() {
+  }
 }
 
-/** @ngInject */
-export function tsOpcUaConnectDirective() {
-  return {
-    restrict: 'E',
-    templateUrl: require("./index.html"),
-    controller: TsOpcUaConnectCtrl,
-    bindToController: true,
-    controllerAs: 'ctrl',
-    scope: {},
-  };
-}
-
-angular.module('thingspin.directives').directive('tsOpcuaConnect', tsOpcUaConnectDirective);
+angular.module('thingspin.directives').directive('tsOpcuaConnect', [() => new TsOpcUaConnectDirective()]);

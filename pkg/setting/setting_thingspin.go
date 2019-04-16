@@ -15,10 +15,23 @@ var (
 	TsInitPath = "conf/defaults_thingspin.ini"
 )
 
+type MqttSettings struct {
+	Host      string
+	Port      int
+	Websocket int
+}
+type InfluxSettings struct {
+	Host     string
+	Port     int
+	Database string
+}
 type ThingspinSettings struct {
 	Enabled           bool
 	NodeRedHost       string
 	NodeRedModuleList []string
+	DroneBaseFolder   string
+	Mqtt              MqttSettings
+	Influx            InfluxSettings
 }
 
 func (cfg *Cfg) loadTsIniFile() error {
@@ -51,12 +64,31 @@ func (cfg *Cfg) readThingspinSettings() {
 	sec := TsRaw.Section("thingspin")
 	Thingspin.Enabled = sec.Key("enabled").MustBool(true)
 
+	// Node-Red
 	nrSec := TsRaw.Section("node-red")
 	Thingspin.NodeRedHost = nrSec.Key("host").String()
-
 	for _, module := range util.SplitString(nrSec.Key("modules").String()) {
 		Thingspin.NodeRedModuleList = append(Thingspin.NodeRedModuleList, module)
 	}
+
+	// MQTT
+	mqttSec := TsRaw.Section("mqtt")
+	Thingspin.Mqtt = MqttSettings{
+		Host:      mqttSec.Key("host").MustString("localhost"),
+		Port:      mqttSec.Key("port").MustInt(1883),
+		Websocket: mqttSec.Key("websocket").MustInt(1884),
+	}
+
+	// InfluxDB
+	influxSec := TsRaw.Section("influx")
+	Thingspin.Influx = InfluxSettings{
+		Host:     influxSec.Key("host").MustString("localhost"),
+		Port:     influxSec.Key("port").MustInt(8086),
+		Database: influxSec.Key("database").MustString("thingspin"),
+	}
+
+	dronSec := TsRaw.Section("drone")
+	Thingspin.DroneBaseFolder = dronSec.Key("base").String()
 
 	cfg.Thingspin = Thingspin
 }

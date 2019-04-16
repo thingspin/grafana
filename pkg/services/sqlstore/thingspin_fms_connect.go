@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/grafana/grafana/pkg/bus"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
@@ -15,6 +16,26 @@ func init() {
 	bus.AddHandler("thingspin-sql", UpdateConnectFlow)
 	bus.AddHandler("thingspin-sql", UpdateActiveConnect)
 	bus.AddHandler("thingspin-sql", DelelteTsConnect)
+	bus.AddHandler("thingspin-sql", GetAllTsConnectType)
+}
+
+type InsertTsConnect struct {
+	Id        int64  `xorm:"'id' pk autoincr"`
+	Name      string `xorm:"'name'"`
+	FlowId    string `xorm:"'flow_id'"`
+	Params    string `xorm:"'params'"`
+	Intervals int64  `xorm:"'intervals'"`
+	Type      string `xorm:"'type'"`
+}
+
+type UpdateTsConnect struct {
+	Id        int       `xorm:"'id' pk autoincr"`
+	Name      string    `xorm:"'name'"`
+	FlowId    string    `xorm:"'flow_id'"`
+	Params    string    `xorm:"'params'"`
+	Intervals int64     `xorm:"'intervals'"`
+	Enable    bool      `xorm:"'enable'"`
+	Updated   time.Time `xorm:"'updated'"`
 }
 
 func GetAllTsConnect(cmd *m.GetAllTsConnectQuery) error {
@@ -30,7 +51,7 @@ func GetAllTsConnect(cmd *m.GetAllTsConnectQuery) error {
 func GetTsConnect(cmd *m.GetTsConnectQuery) error {
 	var res []m.TsConnectField
 
-	err := x.Table(m.TsFmsConnectTbl).ID(cmd.Id).Find(&res)
+	err := x.Table(m.TsFmsConnectTbl).Where(`id=?`, cmd.Id).Find(&res)
 
 	length := len(res)
 	if length == 0 {
@@ -45,44 +66,51 @@ func GetTsConnect(cmd *m.GetTsConnectQuery) error {
 }
 
 func AddTsConnect(cmd *m.AddTsConnectQuery) error {
-	sqlQuery := fmt.Sprintf(`INSERT INTO
-	'%s'
-		('type', 'params') 
-	values
-		('%s', '%s')`, m.TsFmsConnectTbl, cmd.Type, cmd.Params)
-	result, err := x.Exec(sqlQuery)
+	q := &InsertTsConnect{
+		Name:      cmd.Name,
+		FlowId:    cmd.FlowId,
+		Params:    cmd.Params,
+		Intervals: cmd.Intervals,
+		Type:      cmd.Type,
+	}
 
-	cmd.Result = result
+	_, err := x.Table(m.TsFmsConnectTbl).Insert(q)
+	cmd.Result = q.Id
 
 	return err
 }
 
 func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
-	sqlQuery := fmt.Sprintf(`UPDATE '%s'
-	SET 
-		flow_id='%s', 
-		params='%s', 
-		updated=datetime('now','localtime')
-	WHERE id=%d`,
-		m.TsFmsConnectTbl, cmd.FlowId, cmd.Params, cmd.Id)
-	result, err := x.Exec(sqlQuery)
-
-	cmd.Result = result
+	q := &UpdateTsConnect{
+		Id:        cmd.Id,
+		Enable:    cmd.Enable,
+		FlowId:    cmd.FlowId,
+		Intervals: cmd.Intervals,
+		Name:      cmd.Name,
+		Params:    cmd.Params,
+		Updated:   time.Now(),
+	}
+	/*
+		sqlQuery := fmt.Sprintf(`UPDATE '%s'
+		SET
+			name='%s',
+			flow_id='%s',
+			params='%s',
+			enable=%t,
+			intervals=%d,
+			updated=datetime('now','localtime')
+		WHERE id=%d`,
+			m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Enable, cmd.Intervals, cmd.Id)
+	*/
+	_, err := x.Table(m.TsFmsConnectTbl).Where("id = ?", cmd.Id).AllCols().Update(q)
+	cmd.Result = q.Id
 
 	return err
 }
 
 func UpdateActiveConnect(cmd *m.UpdateActiveTsConnectQuery) error {
-	sqlQuery := fmt.Sprintf(`UPDATE '%s'
-	SET 
-		active=%t,
-		flow_id='%s', 
-		updated=datetime('now','localtime')
-	WHERE id=%d`,
-		m.TsFmsConnectTbl, cmd.Active, cmd.FlowId, cmd.Id)
-	result, err := x.Exec(sqlQuery)
-
-	cmd.Result = result
+	_, err := x.Table(m.TsFmsConnectTbl).Where("id = ?", cmd.Id).AllCols().Omit("result").Update(cmd)
+	cmd.Result = cmd.Id
 
 	return err
 }
@@ -93,6 +121,15 @@ func DelelteTsConnect(cmd *m.DeleteTsConnectQuery) error {
 	result, err := x.Exec(sqlQuery)
 
 	cmd.Result = result
+
+	return err
+}
+
+func GetAllTsConnectType(cmd *m.GetAllTsConnectTypeQuery) error {
+	var res []m.TsConnectType
+	err := x.Table(m.TsFmsConnectTypeTbl).Find(&res)
+
+	cmd.Result = res
 
 	return err
 }

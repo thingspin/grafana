@@ -1,0 +1,63 @@
+{
+  "project": "ThingSPIN Companion API Servers",
+  "creator": "lonycell",
+  "version": "1.0",
+  "ignore": false,
+  "servers": [
+    {
+      "name": "API Example Node",
+      "api": "api/hello",
+      "enable": true,
+      "url": "http://localhost:5555",
+      "run": true,
+      "shell": "node",
+      "pwd": "data/api-servers/hello",
+      "cmd": "api.hello.js",
+      "params": "--port 5555"
+    },
+    {
+      "name": "NodeRED Complex Event Processing",
+      "api": "api/cep",
+      "enable": true,
+      "url": "http://localhost:1880",
+      "attachURL": true,
+      "run": false,
+      "shell": "node",
+      "pwd": "C:\\apps\\node-v10.15.3-win-x64\\node_modules\\node-red",
+      "cmd": "red.js",
+      "params": "-s settings.json"
+    },
+    {
+      "name": "태양광 어레이 검사운용 시스템 API",
+      "api": "api/drone",
+      "enable": false,
+      "url": "http://localhost:5000",
+      "run": true,
+      "shell": "node",
+      "pwd": "data/api-servers/drone",
+      "cmd": "main.js",
+      "params": "--port=5000"
+    },
+    {
+      "name": "태양광 어레이 검사운용 시스템 API (PYTHON) - DJango",
+      "api": "api/pv",
+      "enable": false,
+      "url": "http://localhost:8000",
+      "attachURL": true,
+      "run": true,
+      "shell": "python",
+      "pwd": "data/api-servers/pyserv",
+      "cmd": "manage.py",
+      "params": "runserver",
+      "options": "0.0.0.0:8000"
+    },
+    {
+      "name": "ThingSPIN Local Broker",
+      "api": "thingspin-proxy/mqtt",
+      "enable": true,
+      "url": "ws://localhost:1884",
+      "attachURL": true,
+      "run": false
+    }
+  ]
+}

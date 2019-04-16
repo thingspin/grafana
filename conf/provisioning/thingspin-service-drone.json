@@ -1,0 +1,10 @@
+{
+  "project": "ThingSPIN Service Description for Drone.",
+  "creator": "lonycell",
+  "version": "1.0",
+  "ignore": false,
+  "baseFolder": "C:\\DRONE-DATA",
+  "pix4dBase": "C:\\Users\\lonyc\\Documents\\pix4d",
+  "configs": [
+  ]
+}

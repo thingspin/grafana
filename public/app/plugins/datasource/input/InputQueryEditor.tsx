@@ -2,12 +2,12 @@
 import React, { PureComponent } from 'react';
 
 // Types
-import { InputDatasource } from './datasource';
-import { InputQuery } from './types';
+import { InputDatasource } from './InputDatasource';
+import { InputQuery, InputOptions } from './types';
 
 import { FormLabel, Select, QueryEditorProps, SelectOptionItem, SeriesData, TableInputCSV, toCSV } from '@grafana/ui';
 
-type Props = QueryEditorProps<InputDatasource, InputQuery>;
+type Props = QueryEditorProps<InputDatasource, InputQuery, InputOptions>;
 
 const options = [
   { value: 'panel', label: 'Panel', description: 'Save data in the panel configuration.' },
@@ -29,7 +29,7 @@ export class InputQueryEditor extends PureComponent<Props, State> {
     this.setState({ text });
   }
 
-  onSourceChange = (item: SelectOptionItem) => {
+  onSourceChange = (item: SelectOptionItem<string>) => {
     const { datasource, query, onChange, onRunQuery } = this.props;
     let data: SeriesData[] | undefined = undefined;
     if (item.value === 'panel') {
@@ -94,5 +94,3 @@ export class InputQueryEditor extends PureComponent<Props, State> {
     );
   }
 }
-
-export default InputQueryEditor;

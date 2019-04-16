@@ -1,61 +1,88 @@
 import React, { PureComponent } from 'react';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
+
+// import { StoreState } from 'app/types';
+import { TsBaseProps } from 'app-thingspin-fms/models/common';
+
+import { savePinState } from './pinMenu';
+import { notifyApp } from 'app/core/actions';
+import { createSuccessNotification } from 'app/core/copy/appNotification';
+
 import TsMenuLv2 from './MenuLv2';
 
-interface Props {
+export interface Props extends TsBaseProps {
   menu: any;
+  pinned: boolean;
+  savePinState: typeof savePinState;
+  notifyApp: typeof notifyApp;
 }
 
 interface State {
-  opendedSubmenu: boolean;
-  maxDisplayChildren: number;
+  open: boolean;
+  maxChild: number;
   pin: boolean;
 }
 
-export default class TsMenuLv1 extends PureComponent<Props, State> {
-  constructor(props) {
-    super(props);
+class TsMenuLv1 extends PureComponent<Props, State> {
+  state: State = {
+    open: this.props.pinned,
+    maxChild: 8,
+    pin: this.props.pinned,
+  };
 
-    // init state
-    this.state = {
-      opendedSubmenu: false,
-      maxDisplayChildren: 8,
-      pin: false,
-    };
+  componentWillMount() {
+    const { pinned } = this.props;
+    this.setState( {
+      pin: pinned,
+      open: pinned
+    });
   }
+  async componentDidMount() {
+
+  }
+  componentWillUnmount() {}
+  componentDidUpdate(prevProps: Props) {}
 
   arrowClickEvt = () => {
-    const { opendedSubmenu } = this.state;
-    const pin = opendedSubmenu ? false : this.state.pin;
+    const { open } = this.state;
+    const pin = open ? false : this.state.pin;
 
     this.setState({
-      opendedSubmenu: !opendedSubmenu,
+      open: !open,
       pin,
     });
   };
 
   pinClickEvt = () => {
+    const { menu } = this.props;
+    this.props.savePinState({
+      menuID: menu.id,
+      Pinned: !this.state.pin
+    });
     this.setState({ pin: !this.state.pin });
+    this.props.notifyApp(createSuccessNotification(`메뉴`, this.state.pin ? `메뉴를 닫아 둡니다.` : `메뉴를 열어 둡니다.`));
   };
 
   get arrowDOM() {
-    const { menu } = this.props,
-      { opendedSubmenu } = this.state;
-    const arrowIcon = opendedSubmenu ? 'fa fa-caret-down' : 'fa fa-caret-up';
+    const { menu } = this.props, { pin, open } = this.state;
+    const { pinned } = this.props;
+    const arrowIcon = (pinned || open) ? 'fa fa-caret-down' : 'fa fa-caret-up';
 
     return (
       <div className="fms-menu-header-controls-arrow" onClick={this.arrowClickEvt}>
         <span>
-          <i className={menu.children ? arrowIcon : null} />
+          <i className={menu.children ? (pin ? null : arrowIcon) : null} />
         </span>
       </div>
     );
   }
 
   get pinDOM() {
-    const { opendedSubmenu, pin } = this.state;
-    const pinIcon = pin ? 'ts-leftsidebar-icons ts-left-icon-pin-on' : 'ts-leftsidebar-icons ts-left-icon-pin-off';
+    const { open, pin } = this.state;
+    const { pinned } = this.props;
+    const pinIcon = (pinned || pin) ? 'ts-leftsidebar-icons ts-left-icon-pin-on' : 'ts-leftsidebar-icons ts-left-icon-pin-off';
 
-    return opendedSubmenu ? (
+    return (pinned || open) ? (
       <div className="fms-menu-header-controls-pin" onClick={this.pinClickEvt}>
         <span>
           <i className={pinIcon} />
@@ -65,13 +92,12 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
   }
 
   get childrenDOM() {
-    const { menu } = this.props,
-      { maxDisplayChildren, opendedSubmenu } = this.state;
+    const { menu, pinned } = this.props, { maxChild, open } = this.state;
 
     const bodyStyle =
-      menu.children && menu.children.length >= maxDisplayChildren
+      menu.children && menu.children.length >= maxChild
         ? {
-            height: `${maxDisplayChildren * 28}px`,
+            height: `${maxChild * 28}px`,
           }
         : {};
 
@@ -79,6 +105,7 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
       <div key="menulv2" className="fms-menu-body" style={bodyStyle}>
         {' '}
         {menu.children
+          .filter(item => !item.hideFromMenu)
           .filter(item => !item.divider)
           .map((item, idx) => (
             <TsMenuLv2 key={idx} menu={item} />
@@ -86,7 +113,7 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
       </div>
     ) : null;
 
-    return opendedSubmenu ? DOM : null;
+    return (pinned || open) ? DOM : null;
   }
 
   render() {
@@ -115,3 +142,14 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
     ];
   }
 }
+
+const mapDispatchToProps = {
+  savePinState,
+  notifyApp,
+};
+
+const mapStateToProps = () => ({});
+
+export default connectWithStore(TsMenuLv1, mapStateToProps, mapDispatchToProps);
+
+// export default hot(module)(connect(mapStateToProps,mapDispatchToProps)(TsMenuLv1));

@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-// import { TsIMenuItem } from 'app-thingspin-fms/models/LeftSidebar';
 
 interface Props {
   menu: any;
