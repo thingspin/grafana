@@ -20,8 +20,8 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
     .when('/thingspin-page/analysis-management', { template: '<ts-analysis-management />', })
     .when('/thingspin-page/analysis-management/correlation-analysis', { template: '<ts-corr-analysis />', })
     .when('/thingspin-page/analysis-management/pattern-analysis', { template: '<ts-pattern-analysis />', })
-    .when('/thingspin-page/analysis-management/predition-analysis', { template: '<ts-prediction-analysis />', })
-    .when('/thingspin-page/analysis-management/scrip-analysis', { template: '<ts-script-analysis />', })
+    .when('/thingspin-page/analysis-management/prediction-analysis', { template: '<ts-prediction-analysis />', })
+    .when('/thingspin-page/analysis-management/script-analysis', { template: '<ts-script-analysis />', })
 
     .when('/thingspin-page/data-management', { template: '<ts-data-management />', })
     .when('/thingspin-page/data-management/connect-management', { template: '<ts-connect-management />', })
