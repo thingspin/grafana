@@ -41,7 +41,7 @@ func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
 		}
 
 		// find position
-		if menu.ParentId == 0 { // == nil
+		if menu.ParentId == -1 || menu.ParentId == 0 { // == nil
 			rootNode = append(rootNode, node)
 		} else {
 			curr := keyMap[menu.ParentId]
@@ -50,6 +50,7 @@ func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
 
 		keyMap[menu.Id] = node
 	}
+
 	return rootNode
 }
 

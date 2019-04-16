@@ -1,0 +1,167 @@
+{
+  "project": "ThingSPIN Initial Default Menus",
+  "creator": "lonycell",
+  "version": "1.0",
+  "ignore": false,
+  "menus": [
+    {
+      "text": "생성",
+      "icon": "fa fa-fw fa-plus",
+      "url": "/dashboard/new",
+      "children" : [
+        {
+          "text": "대시보드",
+          "icon": "gicon gicon-dashboard-new",
+          "url": "/dashboard/new"
+        },
+        {
+          "text": "폴더",
+          "icon": "gicon gicon-dashboard-new",
+          "url": "/dashboards/folder/new"
+        },
+        {
+          "text": "불러오기",
+          "icon": "gicon gicon-dashboard-import",
+          "url": "/dashboard/import"
+        }
+      ]
+    },
+    {
+      "text": "대시보드",
+      "icon": "gicon gicon-dashboard",
+      "url": "/",
+      "children" : [
+        {
+          "text": "관리",
+          "icon": "gicon gicon-manage",
+          "url": "/dashboards"
+        },
+        {
+          "text": "재생목록",
+          "icon": "gicon gicon-playlists",
+          "url": "/playlists"
+        },
+        {
+          "text": "불러오기",
+          "icon": "gicon gicon-snapshots",
+          "url": "/dashboard/snapshots"
+        }
+      ]
+    },
+    {
+      "text": "알림 설정",
+      "icon": "gicon gicon-alert",
+      "url": "/alerting/list",
+      "children" : [
+        {
+          "text": "알림 룰",
+          "icon": "gicon gicon-alert-rules",
+          "url": "/alerting/list"
+        },
+        {
+          "text": "알림 채널",
+          "icon": "gicon gicon-alert-notification-channel",
+          "url": "/alerting/notifications"
+        }
+      ]
+    },
+    {
+      "text": "조직 설정",
+      "icon": "gicon gicon-cog",
+      "url": "/datasources",
+      "children" : [
+        {
+          "text": "메뉴 설정",
+          "icon": "fa fa-fw fa-keyboard-o",
+          "url": "/thingspin-page/system-management/menu-management"
+        },
+        {
+          "text": "조직의 사용자",
+          "icon": "gicon gicon-user",
+          "url": "/org/users"
+        },
+        {
+          "text": "조직의 팀",
+          "icon": "gicon gicon-team",
+          "url": "/org/teams"
+        },
+        {
+          "text": "환경 설정",
+          "icon": "gicon gicon-team",
+          "url": "/org/teams"
+        },
+        {
+          "text": "메뉴 설정",
+          "icon": "fa fa-fw fa-keyboard-o",
+          "url": "/thingspin-page/system-management/menu-management"
+        },
+        {
+          "text": "데이터소스",
+          "icon": "gicon gicon-datasources",
+          "url": "/datasources"
+        },
+        {
+          "text": "플러그인",
+          "icon": "gicon gicon-plugins",
+          "url": "/datasources"
+        },
+        {
+          "text": "API 키관리",
+          "icon": "gicon gicon-apikeys",
+          "url": "/org/apikeys"
+        }
+      ]
+    },
+    {
+      "text": "시스템",
+      "icon": "gicon gicon-shield",
+      "url": "/admin/users",
+      "children" : [
+        {
+          "text": "사용자",
+          "icon": "gicon gicon-user",
+          "url": "/admin/users"
+        },
+        {
+          "text": "조직",
+          "icon": "gicon gicon-org",
+          "url": "/admin/orgs"
+        },
+        {
+          "text": "세팅",
+          "icon": "gicon gicon-preferences",
+          "url": "/admin/settings"
+        },
+        {
+          "text": "사용 통계",
+          "icon": "fa fa-fw fa-bar-chart",
+          "url": "/admin/stats"
+        }
+      ]
+    },
+    {
+      "text": "내정보",
+      "icon": "fa fa-user-circle",
+      "url": "/profile",
+      "hideFromMenu": true,
+      "children" : [
+        {
+          "text": "환경설정",
+          "icon": "gicon gicon-preferences",
+          "url": "/profile"
+        },
+        {
+          "text": "비밀번호 변경",
+          "icon": "fa fa-fw fa-lock",
+          "url": "/profile/password"
+        },
+        {
+          "text": "로그아웃",
+          "icon": "fa fa-fw fa-sign-out",
+          "url": "/logout",
+          "target": "_self"
+        }
+      ]
+    }
+  ]
+}
