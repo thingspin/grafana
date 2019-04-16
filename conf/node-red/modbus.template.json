@@ -1,0 +1,136 @@
+{
+    "id": "MODBUS Flow Format",
+    "label": "{{.FlowId}}",
+    "info": "",
+    "nodes":[
+    {
+        "id": "TS-MODBUS-GETTER-ID-{{.FlowId}}", 
+        "type": "modbus-getter",
+        "z": "b8db9bb5.5bd948",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "logIOActivities": false,
+        "unitid": "",
+        "dataType": "HoldingRegister",
+        "adr": "40031",
+        "quantity": "9",
+        "server": "TS-MODBUS-SERVER-ID-{{.FlowId}}",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "x": 440,
+        "y": 140,
+        "wires": [
+            [
+                "TS-MODBUS-DEBUG-1-{{.FlowId}}"
+            ],
+            [
+                "TS-MODBUS-DEBUG-2-{{.FlowId}}"
+            ]
+        ]
+    },
+    {
+        "id": "TS-MODBUS-INJECT-ID-{{.FlowId}}",
+        "type": "inject",
+        "z": "b8db9bb5.5bd948",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 250,
+        "y": 140,
+        "wires": [
+            [
+                "TS-MODBUS-GETTER-ID-{{.FlowId}}"
+            ]
+        ]
+    },
+    {
+        "id": "TS-MODBUS-DEBUG-1-{{.FlowId}}",
+        "type": "debug",
+        "z": "b8db9bb5.5bd948",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 630,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "TS-MODBUS-DEBUG-2-{{.FlowId}}",
+        "type": "debug",
+        "z": "b8db9bb5.5bd948",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 630,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "TS-MODBUS-STATE-{{.FlowId}}",
+        "type": "status",
+        "z": "b8db9bb5.5bd948",
+        "name": "",
+        "scope": [
+            "TS-MODBUS-GETTER-ID-{{.FlowId}}"
+        ],
+        "x": 220,
+        "y": 220,
+        "wires": [
+            [
+                "TS-MODBUS-DEBUG-3-{{.FlowId}}"
+            ]
+        ]
+    },
+    {
+        "id": "TS-MODBUS-DEBUG-3-{{.FlowId}}",
+        "type": "debug",
+        "z": "b8db9bb5.5bd948",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 430,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "TS-MODBUS-SERVER-ID-{{.FlowId}}",
+        "type": "modbus-client",
+        "z": "b8db9bb5.5bd948",
+        "name": "",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": true,
+        "tcpHost": "192.168.0.188",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "unit_id": 1,
+        "commandDelay": 1,
+        "clientTimeout": 3000,
+        "reconnectTimeout": 2000
+    }
+]
+}
