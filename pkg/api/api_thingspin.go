@@ -16,6 +16,8 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 	// register thingspin rest api
 	r.Group("/thingspin", func(tsRoute routing.RouteRegister) {
 		tsRoute.Get("/", hs.Index)
+		// FMS Front-end Routing Enable
+		tsRoute.Any("/manage/*", reqSignedIn, hs.Index)
 
 		// left sidebar menu rest api's
 		tsRoute.Group("/menu", func(tsMenuRoute routing.RouteRegister) {
@@ -26,11 +28,14 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsMenuRoute.Delete("/:orgId", Wrap(DeleteTsMenuByOrgId))
 		})
 
-		tsRoute.Group("/flow-node", func(tsFnRoute routing.RouteRegister) {
-			tsFnRoute.Post("/:target", Wrap(addFlowNode))
+		tsRoute.Group("/connect", func(tsFnRoute routing.RouteRegister) {
+			tsFnRoute.Get("/", Wrap(getAllTsConnect))
+			tsFnRoute.Post("/:target", Wrap(addTsConnect))
 
+			tsFnRoute.Get("/:connId", Wrap(getTsConnect))
+			tsFnRoute.Put("/:connId", Wrap(updateTsConnect))
+			tsFnRoute.Patch("/:connId", Wrap(activeTsConnect))
+			tsFnRoute.Delete("/:connId", Wrap(deleteTsConnect))
 		})
-
 	})
-	r.Any("/thingspin-page/*", reqSignedIn, hs.Index)
 }
