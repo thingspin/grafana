@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
 
 	"github.com/grafana/grafana/pkg/thingspin"
 
@@ -39,11 +39,7 @@ func getTsConnectInfo(id int) (*m.TsConnectField, error) {
 		return nil, err
 	}
 
-	if len(conn.Result) != 1 {
-		return nil, errors.New("Duplicate Result")
-	}
-
-	return &conn.Result[0], nil
+	return &conn.Result, nil
 }
 
 func getTsConnect(c *gfm.ReqContext) Response {
@@ -152,18 +148,23 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 		return Error(500, "ThingSPIN Server Error", err)
 	}
 
-	// get updated flowId
-	body := nodeResp.Body.([]byte)
-	var common map[string]interface{}
-	err = json.Unmarshal(body, &common)
-	if err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+	if nodeResp.StatusCode == 200 { // success
+		body := nodeResp.Body.([]byte)
+		fmt.Println(nodeResp.StatusCode)
+		var common map[string]interface{}
+		err = json.Unmarshal(body, &common)
+		if err != nil {
+			return Error(500, "ThingSPIN Server Error", err)
+		}
+		newFlowId := common["id"].(string)
+		info.FlowId = newFlowId
+	} else if nodeResp.StatusCode == 204 { //no contents
+		info.FlowId = ""
 	}
-	newFlowId := common["id"].(string)
-	info.FlowId = newFlowId
+	// get updated flowId
 
 	q := m.UpdateActiveTsConnectQuery{
-		Active: true,
+		Active: info.Active,
 		FlowId: info.FlowId,
 		Id:     connId,
 	}

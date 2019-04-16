@@ -131,7 +131,7 @@ func AddFlowNode(target string, info interface{}) (*m.NodeRedResponse, error) {
 
 	return &m.NodeRedResponse{
 		StatusCode: rsp.StatusCode,
-		Body:       string(rspBody),
+		Body:       rspBody,
 	}, nil
 }
 
@@ -160,7 +160,7 @@ func RemoveFlowNode(flow_id string) (*m.NodeRedResponse, error) {
 
 	return &m.NodeRedResponse{
 		StatusCode: resp.StatusCode,
-		Body:       string(rspBody),
+		Body:       rspBody,
 	}, nil
 }
 

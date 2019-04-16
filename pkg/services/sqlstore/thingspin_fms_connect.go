@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/grafana/grafana/pkg/bus"
@@ -9,6 +10,7 @@ import (
 
 func init() {
 	bus.AddHandler("thingspin-sql", GetAllTsConnect)
+	bus.AddHandler("thingspin-sql", GetTsConnect)
 	bus.AddHandler("thingspin-sql", AddTsConnect)
 	bus.AddHandler("thingspin-sql", UpdateConnectFlow)
 	bus.AddHandler("thingspin-sql", UpdateActiveConnect)
@@ -16,11 +18,28 @@ func init() {
 }
 
 func GetAllTsConnect(cmd *m.GetAllTsConnectQuery) error {
-	var res []map[string]interface{}
+	var res []m.TsConnectField
 
 	err := x.Table(m.TsFmsConnectTbl).Find(&res)
 
 	cmd.Result = res
+
+	return err
+}
+
+func GetTsConnect(cmd *m.GetTsConnectQuery) error {
+	var res []m.TsConnectField
+
+	err := x.Table(m.TsFmsConnectTbl).ID(cmd.Id).Find(&res)
+
+	length := len(res)
+	if length == 0 {
+		return errors.New("Connect is not found")
+	} else if length != 1 {
+		return errors.New("Duplicate Id")
+	}
+
+	cmd.Result = res[0]
 
 	return err
 }
@@ -43,7 +62,7 @@ func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
 	SET 
 		flow_id='%s', 
 		params='%s', 
-		updated=now()
+		updated=datetime('now','localtime')
 	WHERE id=%d`,
 		m.TsFmsConnectTbl, cmd.FlowId, cmd.Params, cmd.Id)
 	result, err := x.Exec(sqlQuery)
@@ -58,7 +77,7 @@ func UpdateActiveConnect(cmd *m.UpdateActiveTsConnectQuery) error {
 	SET 
 		active=%t,
 		flow_id='%s', 
-		updated=now()
+		updated=datetime('now','localtime')
 	WHERE id=%d`,
 		m.TsFmsConnectTbl, cmd.Active, cmd.FlowId, cmd.Id)
 	result, err := x.Exec(sqlQuery)

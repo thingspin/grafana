@@ -16,12 +16,12 @@ type TsConnectField struct {
 }
 
 type GetAllTsConnectQuery struct {
-	Result []map[string]interface{}
+	Result []TsConnectField
 }
 
 type GetTsConnectQuery struct {
 	Id     int
-	Result []TsConnectField
+	Result TsConnectField
 }
 
 type AddTsConnectQuery struct {
