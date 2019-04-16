@@ -88,12 +88,12 @@
       "url": "/thingspin/manage/alarm",
       "children" : [
         {
-          "text": "알림 요약",
+          "text": "알림 통합 검색",
           "icon": "gicon gicon-alert-rules",
           "url": "/thingspin/manage/alarm"
         },
         {
-          "text": "알림 룰",
+          "text": "알림 규칙 설정",
           "icon": "gicon gicon-alert-rules",
           "url": "/alerting/list"
         },
@@ -105,15 +105,32 @@
       ]
     },
     {
-      "text": "데이터 관리",
+      "text": "연결 관리",
       "icon": "fa fa-fw fa-database",
-      "url": "/thingspin/manage/data",
+      "url": "/thingspin/manage/data/connect",
       "children" : [
         {
-          "text": "연결 관리",
+          "text": "OPC UA 연결/수집",
           "icon": "gicon gicon-team",
           "url": "/thingspin/manage/data/connect"
         },
+        {
+          "text": "MODBUS 연결/수집",
+          "icon": "gicon gicon-team",
+          "url": "/thingspin/manage/data/connect"
+        },
+        {
+          "text": "MQTT 연결/수집",
+          "icon": "gicon gicon-team",
+          "url": "/thingspin/manage/data/connect"
+        }
+      ]
+    },
+    {
+      "text": "코드 관리",
+      "icon": "fa fa-fw fa-database",
+      "url": "/thingspin/manage/data",
+      "children" : [
         {
           "text": "코드 마스터",
           "icon": "gicon gicon-team",
@@ -168,6 +185,7 @@
       "icon": "fa fa-user-circle",
       "url": "/profile",
       "hideFromMenu": true,
+      "hideFromTab": true,
       "children" : [
         {
           "text": "환경설정",

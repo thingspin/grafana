@@ -17,7 +17,7 @@ export default class TsMenuLv1 extends PureComponent<Props, State> {
 
     // init state
     this.state = {
-      opendedSubmenu: true,
+      opendedSubmenu: false,
       maxDisplayChildren: 8,
       pin: false,
     };
