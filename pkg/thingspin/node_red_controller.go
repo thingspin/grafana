@@ -17,12 +17,10 @@ import (
 )
 
 const (
-	NodeRedHost = `http://localhost:1880`
 	ContentType = "application/json"
 )
 
 func convJsonStr(value interface{}) string {
-	fmt.Println(value)
 	switch v := value.(type) {
 	case string:
 		return v
@@ -76,7 +74,7 @@ func LoadNodeRedTemplate(filename string, info interface{}) (string, error) {
 }
 
 func getNodeRedSettings() (*http.Response, error) {
-	u, err := url.Parse(NodeRedHost)
+	u, err := url.Parse(setting.Thingspin.NodeRedHost)
 	if err != nil {
 		return nil, err
 	}
@@ -114,7 +112,7 @@ func AddFlowNode(target string, info interface{}) (*m.NodeRedResponse, error) {
 		return nil, err
 	}
 
-	u, err := url.Parse(NodeRedHost)
+	u, err := url.Parse(setting.Thingspin.NodeRedHost)
 	if err != nil {
 		return nil, err
 	}
@@ -122,6 +120,120 @@ func AddFlowNode(target string, info interface{}) (*m.NodeRedResponse, error) {
 	byteStr := bytes.NewBufferString(templateStr)
 
 	rsp, err := http.Post(u.String(), ContentType, byteStr)
+	if err != nil {
+		return nil, err
+	}
+
+	rspBody, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return &m.NodeRedResponse{
+		StatusCode: rsp.StatusCode,
+		Body:       string(rspBody),
+	}, nil
+}
+
+func RemoveFlowNode(flow_id string) (*m.NodeRedResponse, error) {
+	u, err := url.Parse(setting.Thingspin.NodeRedHost)
+	if err != nil {
+		return nil, err
+	}
+	u.Path = path.Join(u.Path, "flow", flow_id)
+
+	req, err := http.NewRequest(http.MethodDelete, u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	cli := &http.Client{}
+	resp, err := cli.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	rspBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return &m.NodeRedResponse{
+		StatusCode: resp.StatusCode,
+		Body:       string(rspBody),
+	}, nil
+}
+
+func UpdateFlowNode(flow_id string, target string, info interface{}) (*m.NodeRedResponse, error) {
+	templateStr, err := LoadNodeRedTemplate(target, info)
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := url.Parse(setting.Thingspin.NodeRedHost)
+	if err != nil {
+		return nil, err
+	}
+	u.Path = path.Join(u.Path, "flow", flow_id)
+	byteStr := bytes.NewBufferString(templateStr)
+
+	req, err := http.NewRequest(http.MethodPut, u.String(), byteStr)
+	if err != nil {
+		return nil, err
+	}
+
+	cli := &http.Client{}
+	resp, err := cli.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return &m.NodeRedResponse{
+		StatusCode: resp.StatusCode,
+		Body:       respBody,
+	}, nil
+}
+
+func GetNodeRedModules() (*m.NodeRedResponse, error) {
+	u, err := url.Parse(setting.Thingspin.NodeRedHost)
+	if err != nil {
+		return nil, err
+	}
+	u.Path = path.Join(u.Path, "nodes")
+
+	rsp, err := http.Get(u.String())
+	if err != nil {
+		return nil, err
+	}
+
+	rspBody, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return &m.NodeRedResponse{
+		StatusCode: rsp.StatusCode,
+		Body:       string(rspBody),
+	}, nil
+
+}
+
+func InstallNodeRedModule(moduleName string) (*m.NodeRedResponse, error) {
+	u, err := url.Parse(setting.Thingspin.NodeRedHost)
+	if err != nil {
+		return nil, err
+	}
+	u.Path = path.Join(u.Path, "nodes")
+
+	str := fmt.Sprintf(`{ "module": "%s" }`, moduleName)
+	payload := bytes.NewBufferString(str)
+
+	rsp, err := http.Post(u.String(), ContentType, payload)
 	if err != nil {
 		return nil, err
 	}

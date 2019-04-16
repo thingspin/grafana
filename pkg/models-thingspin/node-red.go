@@ -2,7 +2,7 @@ package tsmodels
 
 type NodeRedResponse struct {
 	StatusCode int
-	Body       string
+	Body       interface{}
 }
 
 type OpcUaFlowData struct {
@@ -10,4 +10,7 @@ type OpcUaFlowData struct {
 	EndpointUrl       string
 	AddressSpaceItems string
 	Interval          float32
+}
+type NodeRedFlowResponse struct {
+	Id string `json:"id"`
 }
