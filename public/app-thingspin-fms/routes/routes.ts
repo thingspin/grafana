@@ -15,27 +15,27 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
     controller: 'LoginCtrl',
     pageClass: 'login-page sidemenu-hidden',
   })
-    .when('/thingspin-page/alarm-management', { template: '<ts-alarm-management />', })
+    .when('/thingspin/manage/alarm', { template: '<ts-alarm-management />', })
 
-    .when('/thingspin-page/analysis-management', { template: '<ts-analysis-management />', })
-    .when('/thingspin-page/analysis-management/correlation-analysis', { template: '<ts-corr-analysis />', })
-    .when('/thingspin-page/analysis-management/pattern-analysis', { template: '<ts-pattern-analysis />', })
-    .when('/thingspin-page/analysis-management/predition-analysis', { template: '<ts-prediction-analysis />', })
-    .when('/thingspin-page/analysis-management/scrip-analysis', { template: '<ts-script-analysis />', })
+    .when('/thingspin/manage/analysis', { template: '<ts-analysis-management />', })
+    .when('/thingspin/manage/analysis/correlation', { template: '<ts-corr-analysis />', })
+    .when('/thingspin/manage/analysis/pattern', { template: '<ts-pattern-analysis />', })
+    .when('/thingspin/manage/analysis/prediction', { template: '<ts-prediction-analysis />', })
+    .when('/thingspin/manage/analysis/script', { template: '<ts-script-analysis />', })
 
-    .when('/thingspin-page/data-management', { template: '<ts-data-management />', })
-    .when('/thingspin-page/data-management/connect-management', { template: '<ts-connect-management />', })
-    .when('/thingspin-page/data-management/connect-management/opcua', { template: '<ts-opcua-connect />', })
-    .when('/thingspin-page/data-management/connect-management/modbus', { template: '<ts-modbus-connect />', })
-    .when('/thingspin-page/data-management/connect-management/mqtt', { template: '<ts-mqtt-connect />', })
+    .when('/thingspin/manage/data', { template: '<ts-data-management />', })
+    .when('/thingspin/manage/data/connect', { template: '<ts-connect-management />', })
+    .when('/thingspin/manage/data/connect/opcua', { template: '<ts-opcua-connect />', })
+    .when('/thingspin/manage/data/connect/modbus', { template: '<ts-modbus-connect />', })
+    .when('/thingspin/manage/data/connect/mqtt', { template: '<ts-mqtt-connect />', })
 
-    .when('/thingspin-page/facility-management', { template: '<ts-facility-management />', })
+    .when('/thingspin/manage/facility', { template: '<ts-facility-management />', })
 
-    .when('/thingspin-page/facility-monitoring', { template: '<ts-facility-monitoring />', })
+    .when('/thingspin/manage/monitoring', { template: '<ts-facility-monitoring />', })
 
-    .when('/thingspin-page/system-management', { template: '<ts-system-management />', })
-    .when('/thingspin-page/system-management/user-management', { template: '<ts-user-management />', })
-    .when('/thingspin-page/system-management/menu-management', { template: '<ts-menu-management />', })
+    .when('/thingspin/manage/system', { template: '<ts-system-management />', })
+    .when('/thingspin/manage/system/user', { template: '<ts-user-management />', })
+    .when('/thingspin/manage/system/menu', { template: '<ts-menu-management />', })
 
-    .when('/thingspin-page/view-edit-management', { template: '<ts-view-edit-management />', });
+    .when('/thingspin/manage/view-edit-management', { template: '<ts-view-edit-management />', });
 }

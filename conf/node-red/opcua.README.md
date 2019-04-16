@@ -75,7 +75,58 @@ Examples
     thingspin.AddFlowNode("opcua", opcData)
     ```
 
-2. Frontend (ES6) - Promise
+2. Angularjs backendSrv (Grafana)
+
+    ```typescript
+    import { BackendSrv } from 'app/core/services/backend_srv';
+
+    class SomeClass {
+        constructor(private backendSrv: BackendSrv){ }
+
+        // Promise
+        someFunction() {
+            this.backendSrv.post('/thingspin/flow-node/opcua', {
+                FlowId: "sample",
+                EndPointUrl: "opc.tcp://localhost:53530/OPCUA/SimulationServer",
+                AddressSpaceItems: [{
+                    name: "sample",
+                    nodeId: "ns=0;i=85",
+                    datatypeName: "sample"
+                }],
+                Interval: 1 // 1 second
+            }).then((response) => {
+                // 데이터 정상적으로 가져왔을 경우 처리
+            }).catch((err) => {
+                // 요청에 오류가 있는 경우 처리
+            });
+        }
+
+        // Async / await
+        async someFunction2() {
+            return this.backendSrv.post('/thingspin/flow-node/opcua', {
+                FlowId: "sample",
+                EndPointUrl: "opc.tcp://localhost:53530/OPCUA/SimulationServer",
+                AddressSpaceItems: [{
+                    name: "sample",
+                    nodeId: "ns=0;i=85",
+                    datatypeName: "sample"
+                }],
+                Interval: 1 // 1 second
+            });
+        }
+
+        async someFunction3() {
+            try {
+                const response = await this.someFunction2();
+                // 데이터 정상적으로 가져왔을 경우 처리
+            } catch(e) {
+                // 요청에 오류가 있는 경우 처리
+            }
+        }
+    }
+    ```
+
+3. Frontend (ES6) - Promise
 
     ```javascript
     import axios from "axios"; // promise based http client open source library
@@ -96,7 +147,7 @@ Examples
     });
     ```
 
-3. Frontend (ES7) - async, await
+4. Frontend (ES7) - async, await
 
     ```javascript
     import axios from "axios"; // promise based http client open source library
