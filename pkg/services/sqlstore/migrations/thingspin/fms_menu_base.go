@@ -78,7 +78,7 @@ func addFmsMenuBaseMigrations(mg *Migrator) {
 	queries = append(queries, getQueryData(28, "Orgs", "'gicon gicon-org'", "NULL", "'/admin/orgs'", "NULL", false, false, false))
 	queries = append(queries, getQueryData(29, "Settings", "'gicon gicon-preferences'", "NULL", "'/admin/settings'", "NULL", false, false, false))
 	queries = append(queries, getQueryData(30, "Stats", "'fa fa-fw fa-bar-chart'", "NULL", "'/admin/stats'", "NULL", false, false, false))
-	queries = append(queries, getQueryData(31, "메뉴관리", "'fa fa-fw fa-bar-chart'", "NULL", "'/thingspin-page/system-management/menu-management'", "NULL", false, false, false))
+	queries = append(queries, getQueryData(31, "메뉴관리", "'fa fa-fw fa-bar-chart'", "NULL", "'/thingspin/manage/system/menu'", "NULL", false, false, false))
 
 	queries = append(queries, getQueryData(32, "Help", "'gicon gicon-question'", "NULL", "'#'", "NULL", true, false, false))
 	queries = append(queries, getQueryData(33, "Keyboard shortcuts", "'fa fa-fw fa-keyboard-o'", "NULL", "'/shortcuts'", "'_self'", false, false, false))
