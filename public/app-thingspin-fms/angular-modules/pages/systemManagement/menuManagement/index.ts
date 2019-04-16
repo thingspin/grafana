@@ -7,15 +7,63 @@ export class TsMenuManagementCtrl {
   tree1: any;
   tree2: any;
   data: any;
+  clickedData: any;
   scope: any;
+  options: any;
   /** @ngInject */
   constructor(backendSrv) {
+    this.options = {
+      dropped: (event) => {
+        console.log("dropped");
+        console.log(event);
+        /*
+        let cnt = 0;
+        let cnt2 = 0;
+        for (const _i in this.data) {
+          this.data[_i]["idx"] = cnt;
+          cnt = cnt + 1;
+          cnt2 = 0;
+          for (const _j in this.data[_i].children) {
+            this.data[_i].children[_j]["idx"] = cnt2;
+            cnt2 = cnt2 + 1;
+          }
+        }
+        */
+      }
+    };
     console.log(backendSrv);
     backendSrv.get('/thingspin/menu/'+config.bootData.user.orgId).then( data => {
       this.data = data;
-      console.log(data);
+      console.log("raw data");
+      console.log(this.data);
+      /*
+      let cnt = 0;
+      let cnt2 = 0;
+      for (const _i in this.data) {
+        console.log(_i);
+        console.log(this.data[_i]);
+        this.data[_i]["idx"] = cnt;
+        cnt = cnt + 1;
+        cnt2 = 0;
+        for (const _j in this.data[_i].children) {
+          this.data[_i].children[_j]["idx"] = cnt2;
+          cnt2 = cnt2 + 1;
+        }
+      }
+       */
+      /*
+      for (const i, const ele2 in this.data) {
+        console.log(ele);
+        ele["idx"] = cnt;
+        for (let _j = 0; _j < ele["children"].length; _j++) {
+          ele["children"][_j]["idx"] = _j;
+        }
+        cnt = cnt + 1;
+      }
+      */
     });
-    console.log(config.bootData.user.orgId);
+
+    //console.log(config.bootData.user.orgId);
     /*
     this.data = [{
       'id': 1,
@@ -68,7 +116,7 @@ export class TsMenuManagementCtrl {
         hide: false
       });
   }
-
+/*
   newSubItem(scope) {
       console.log("new item");
       console.log(scope);
@@ -80,7 +128,7 @@ export class TsMenuManagementCtrl {
         nodes: []
       });
   }
-
+*/
   remove(scope) {
       console.log(scope);
       console.log("remove");
@@ -96,7 +144,7 @@ export class TsMenuManagementCtrl {
   };
   */
   link(scope, elem, attrs, ctrl) {
-      ctrl.scope = scope;
+      //ctrl.scope = scope;
   }
 }
 

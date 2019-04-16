@@ -2,7 +2,7 @@ package tsmodels
 
 type NodeRedResponse struct {
 	StatusCode int
-	Body       string
+	Body       interface{}
 }
 
 type OpcUaFlowData struct {
@@ -13,8 +13,11 @@ type OpcUaFlowData struct {
 }
 
 type MqttFlowData struct {
-	FlowId			string
-	Topic			string
-	MqttUrl			string
-	MqttPort		string
+	FlowId   string
+	Topic    string
+	MqttUrl  string
+	MqttPort string
+}
+type NodeRedFlowResponse struct {
+	Id string `json:"id"`
 }
