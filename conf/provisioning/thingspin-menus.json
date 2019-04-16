@@ -112,17 +112,17 @@
         {
           "text": "OPC UA 연결/수집",
           "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
+          "url": "/thingspin/manage/data/connect/opcua"
         },
         {
           "text": "MODBUS 연결/수집",
           "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
+          "url": "/thingspin/manage/data/connect/modbus"
         },
         {
           "text": "MQTT 연결/수집",
           "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/data/connect"
+          "url": "/thingspin/manage/data/connect/mqtt"
         }
       ]
     },
