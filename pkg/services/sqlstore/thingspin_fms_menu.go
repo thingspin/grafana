@@ -71,6 +71,7 @@ func getFmsMenuByOrgId(orgId int64) ([]*m.FmsMenu, error) {
 		m.TsFmsMenuBaseTbl + ".target",
 		m.TsFmsMenuBaseTbl + ".hideFromMenu",
 		m.TsFmsMenuBaseTbl + ".hideFromTabs",
+		m.TsFmsMenuBaseTbl + ".canDelete",
 		m.TsFmsMenuBaseTbl + ".divider",
 	}
 	err := x.Table(m.TsFmsMenuTbl).

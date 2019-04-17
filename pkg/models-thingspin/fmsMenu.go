@@ -20,6 +20,7 @@ type FmsMenuQueryResult struct {
 	HideFromMenu bool                     `xorm:"bool notnull 'hideFromMenu'" json:"hideFromMenu"`
 	HideFromTabs bool                     `xorm:"bool notnull 'hideFromTabs'" json:"hideFromTabs"`
 	Divider      bool                     `xorm:"bool notnull 'divider'" json:"divider"`
+	CanDelete    bool                     `xorm:"bool notnull 'canDelete'" json:"canDelete"`
 }
 
 type FmsMenu struct {

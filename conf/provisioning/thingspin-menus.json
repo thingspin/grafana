@@ -25,16 +25,19 @@
       "text": "생산 관리",
       "icon": "fa fa-fw fa-database",
       "url": "/thingspin/manage/facility",
+      "canDelete": true,
       "children" : [
         {
           "text": "생산 모니터링",
           "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "url": "/thingspin/manage/monitoring",
+          "canDelete": true
         },
         {
           "text": "불량 이력",
           "icon": "gicon gicon-team",
-          "url": "/thingspin/manage/monitoring"
+          "url": "/thingspin/manage/monitoring",
+          "canDelete": true
         }
       ]
     },
