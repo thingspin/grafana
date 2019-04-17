@@ -5,22 +5,23 @@ import (
 )
 
 type FmsMenuQueryResult struct {
-	Id           int                      `json:"id"`
-	Permission   string                   `json:"permission"`
-	ParentId     int                      `json:"parent_id"`
-	Name         string                   `json:"name"`
-	ReqParams    []map[string]interface{} `json:"req_params"`
-	Order        int                      `json:"order"`
-	Text         string                   `json:"text"`
-	Icon         string                   `json:"icon"`
-	Img_path     string                   `json:"img_path"`
-	Subtitle     string                   `json:"subtitle"`
-	Url          string                   `json:"url"`
-	Target       string                   `json:"target"`
-	HideFromMenu bool                     `json:"hideFromMenu"`
-	HideFromTabs bool                     `json:"hideFromTabs"`
-	Divider      bool                     `json:"divider"`
+	Id           int                      `xorm:"int notnull 'id'" json:"id"`
+	Permission   string                   `xorm:"text 'permission'" json:"permission"`
+	ParentId     int                      `xorm:"int notnull 'parent_id'" json:"parent_id"`
+	Name         string                   `xorm:"text 'name'" json:"name"`
+	ReqParams    []map[string]interface{} `xorm:"jsonb 'req_params'" json:"req_params"`
+	Order        int                      `xorm:"int notnull 'order'" json:"order"`
+	Text         string                   `xorm:"text notnull 'text'" json:"text"`
+	Icon         string                   `xorm:"text notnull 'icon'" json:"icon"`
+	Img_path     string                   `xorm:"text 'img_path'" json:"img_path"`
+	Subtitle     string                   `xorm:"text 'subtitle'" json:"subtitle"`
+	Url          string                   `xorm:"text notnull 'url'" json:"url"`
+	Target       string                   `xorm:"text 'target'" json:"target"`
+	HideFromMenu bool                     `xorm:"bool notnull 'hideFromMenu'" json:"hideFromMenu"`
+	HideFromTabs bool                     `xorm:"bool notnull 'hideFromTabs'" json:"hideFromTabs"`
+	Divider      bool                     `xorm:"bool notnull 'divider'" json:"divider"`
 }
+
 type FmsMenu struct {
 	FmsMenuQueryResult
 	Children []*FmsMenu `json:"children"`
