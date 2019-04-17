@@ -84,7 +84,7 @@
         "type": "function",
         "z": "43cffeef.084d5",
         "name": "Parser",
-        "func": "var Total_item = 9;\n\nvar res = [\n            {\n                measurement:'test_modbus',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '40031'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+        "func": "var Total_item = {{.Quantity}};\n\nvar res = [\n            {\n                measurement:'{{.FlowId}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '40031'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 670,
@@ -92,21 +92,33 @@
         "wires": [
             [
                 "TS-MODBUS-PARSER-DEBUG-{{.FlowId}}",
-                "TS-MODBUS-INFLUXDB-{{.FlowId}}"
+                "TS-MODBUS-INFLUXDB-BATCH-{{.FlowId}}"
             ]
         ]
     },
     {
-        "id": "TS-MODBUS-INFLUXDB-{{.FlowId}}",
+        "id": "TS-MODBUS-INFLUXDB-BATCH-{{.FlowId}}",
         "type": "influxdb batch",
         "z": "43cffeef.084d5",
-        "influxdb": "51d134d4.6f1d6c",
+        "influxdb": "TS-MODBUS-INFLUXDB-{{.FlowId}}",
         "precision": "",
         "retentionPolicy": "",
         "name": "",
         "x": 870,
         "y": 180,
         "wires": []
+    },
+    {
+        "id": "TS-MODBUS-INFLUXDB-{{.FlowId}}",
+        "type": "influxdb",
+        "z": "",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "thingspin",
+        "name": "",
+        "usetls": false,
+        "tls": ""
     },
     {
         "id": "TS-MODBUS-PARSER-DEBUG-{{.FlowId}}",
