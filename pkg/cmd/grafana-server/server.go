@@ -42,6 +42,8 @@ import (
 	_ "github.com/grafana/grafana/pkg/services/rendering"
 	_ "github.com/grafana/grafana/pkg/services/search"
 	_ "github.com/grafana/grafana/pkg/services/sqlstore"
+
+	// thingspin add codes
 	_ "github.com/grafana/grafana/pkg/services/thingspin-microsvcs"
 )
 

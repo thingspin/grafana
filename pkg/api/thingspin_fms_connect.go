@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/grafana/grafana/pkg/thingspin"
 
@@ -62,15 +61,12 @@ func activeNodeRedFlow(info m.TsConnectField) (*m.NodeRedResponse, error) {
 	return thingspin.RemoveFlowNode(info.FlowId)
 }
 
-func addTsConnect(c *gfm.ReqContext) Response {
+func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	target := c.Params(":target")
-	jsonStr, err := c.Req.Body().String()
-	if err != nil {
-		return Error(500, "ThingSPIN server Error", err)
-	}
 
 	q := m.AddTsConnectQuery{
-		Params: jsonStr,
+		Name:   req.Name,
+		Params: req.Params,
 		Type:   target,
 	}
 	if err := bus.Dispatch(&q); err != nil {
@@ -80,12 +76,8 @@ func addTsConnect(c *gfm.ReqContext) Response {
 	return JSON(200, q.Result)
 }
 
-func updateTsConnect(c *gfm.ReqContext) Response {
+func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	connId := c.ParamsInt(":connId")
-	jsonBytes, err := c.Req.Body().Bytes()
-	if err != nil {
-		return Error(500, "ThingSPIN server Error", err)
-	}
 
 	// 이전 flow 정보 가져오기
 	info, err := getTsConnectInfo(connId)
@@ -94,7 +86,7 @@ func updateTsConnect(c *gfm.ReqContext) Response {
 	}
 
 	// 새로운 params으로 변경
-	params, err := str2Json(jsonBytes)
+	params, err := str2Json([]byte(req.Params))
 	if err != nil {
 		return Error(500, "ThingSPIN Server Error", err)
 	}
@@ -121,8 +113,9 @@ func updateTsConnect(c *gfm.ReqContext) Response {
 
 	q := m.UpdateTsConnectFlowQuery{
 		Id:     connId,
+		Name:   req.Name,
 		FlowId: info.FlowId,
-		Params: string(jsonBytes),
+		Params: req.Params,
 	}
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Server Error", err)
@@ -150,7 +143,6 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 
 	if nodeResp.StatusCode == 200 { // success
 		body := nodeResp.Body.([]byte)
-		fmt.Println(nodeResp.StatusCode)
 		var common map[string]interface{}
 		err = json.Unmarshal(body, &common)
 		if err != nil {
