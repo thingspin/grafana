@@ -47,9 +47,9 @@ func GetTsConnect(cmd *m.GetTsConnectQuery) error {
 func AddTsConnect(cmd *m.AddTsConnectQuery) error {
 	sqlQuery := fmt.Sprintf(`INSERT INTO
 	'%s'
-		('type', 'params') 
+		('name', 'type', 'params') 
 	values
-		('%s', '%s')`, m.TsFmsConnectTbl, cmd.Type, cmd.Params)
+		('%s', '%s', '%s')`, m.TsFmsConnectTbl, cmd.Name, cmd.Type, cmd.Params)
 	result, err := x.Exec(sqlQuery)
 
 	cmd.Result = result
@@ -60,11 +60,12 @@ func AddTsConnect(cmd *m.AddTsConnectQuery) error {
 func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
 	sqlQuery := fmt.Sprintf(`UPDATE '%s'
 	SET 
+		name='%s', 
 		flow_id='%s', 
 		params='%s', 
 		updated=datetime('now','localtime')
 	WHERE id=%d`,
-		m.TsFmsConnectTbl, cmd.FlowId, cmd.Params, cmd.Id)
+		m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Id)
 	result, err := x.Exec(sqlQuery)
 
 	cmd.Result = result
