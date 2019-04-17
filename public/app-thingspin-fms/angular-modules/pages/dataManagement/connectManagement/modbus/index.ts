@@ -27,7 +27,16 @@ export class TsModbusConnectCtrl {
 
   testCreate() {
     const object = {
-      "FlowId" : "test_modbus1"
+      "FlowId" : "test_modbus1",
+      "DataType": "HoldingRegister",
+      "Addr" : "40031",
+      "Quantity" : "9",
+      "Intervals" : "1",
+      "Host" : "192.168.0.188",
+      "Port" : "502",
+      "UnitId" : 1,
+      "TimeOut" : 1000,
+      "ReTimeOut" : 2000
     };
     console.log(object);
     this.backendSrv.post('/thingspin/flow-node/modbus',object).then((result: any) => {

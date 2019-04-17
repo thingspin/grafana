@@ -12,9 +12,9 @@
         "showErrors": false,
         "logIOActivities": false,
         "unitid": "",
-        "dataType": "HoldingRegister",
-        "adr": "40031",
-        "quantity": "9",
+        "dataType": "{{.DataType}}",
+        "adr": "{{.Addr}}",
+        "quantity": "{{.Quantity}}",
         "server": "TS-MODBUS-SERVER-ID-{{.FlowId}}",
         "useIOFile": false,
         "ioFile": "",
@@ -23,7 +23,8 @@
         "y": 140,
         "wires": [
             [
-                "TS-MODBUS-DEBUG-1-{{.FlowId}}"
+                "TS-MODBUS-DEBUG-1-{{.FlowId}}",
+                "TS-MODBUS-PARSER-{{.FlowId}}"
             ],
             [
                 "TS-MODBUS-DEBUG-2-{{.FlowId}}"
@@ -38,7 +39,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "repeat": "1",
+        "repeat": "{{.Intervals}}",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
@@ -76,6 +77,49 @@
         "complete": "false",
         "x": 630,
         "y": 160,
+        "wires": []
+    },
+    {
+        "id": "TS-MODBUS-PARSER-{{.FlowId}}",
+        "type": "function",
+        "z": "43cffeef.084d5",
+        "name": "Parser",
+        "func": "var Total_item = 9;\n\nvar res = [\n            {\n                measurement:'test_modbus',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '40031'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 140,
+        "wires": [
+            [
+                "TS-MODBUS-PARSER-DEBUG-{{.FlowId}}",
+                "TS-MODBUS-INFLUXDB-{{.FlowId}}"
+            ]
+        ]
+    },
+    {
+        "id": "TS-MODBUS-INFLUXDB-{{.FlowId}}",
+        "type": "influxdb batch",
+        "z": "43cffeef.084d5",
+        "influxdb": "51d134d4.6f1d6c",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "",
+        "x": 870,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "TS-MODBUS-PARSER-DEBUG-{{.FlowId}}",
+        "type": "debug",
+        "z": "43cffeef.084d5",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 870,
+        "y": 140,
         "wires": []
     },
     {
@@ -117,8 +161,8 @@
         "clienttype": "tcp",
         "bufferCommands": true,
         "stateLogEnabled": true,
-        "tcpHost": "192.168.0.188",
-        "tcpPort": "502",
+        "tcpHost": "{{.Host}}",
+        "tcpPort": "{{.Port}}",
         "tcpType": "DEFAULT",
         "serialPort": "/dev/ttyUSB",
         "serialType": "RTU-BUFFERD",
@@ -127,10 +171,10 @@
         "serialStopbits": "1",
         "serialParity": "none",
         "serialConnectionDelay": "100",
-        "unit_id": 1,
+        "unit_id": "{{.UnitId}}",
         "commandDelay": 1,
-        "clientTimeout": 3000,
-        "reconnectTimeout": 2000
+        "clientTimeout": "{{.TimeOut}}",
+        "reconnectTimeout": "{{.ReTimeOut}}"
     }
 ]
 }
