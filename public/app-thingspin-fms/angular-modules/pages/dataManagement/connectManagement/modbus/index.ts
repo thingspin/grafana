@@ -38,10 +38,50 @@ export class TsModbusConnectCtrl {
       "TimeOut" : 1000,
       "ReTimeOut" : 2000
     };
-    console.log(object);
+    console.log(this);
+    //console.log(object);
+
+    /*
     this.backendSrv.post('/thingspin/flow-node/modbus',object).then((result: any) => {
       console.log(result);
     });
+    */
+
+
+    this.backendSrv.post("/thingspin/connect/modbus",object).then((result: any) => {
+      console.log(result);
+    });
+/*
+    this.backendSrv.post("/thingspin/connect/modbus",{
+      "FlowId" : "test_modbus1",
+      "DataType": "HoldingRegister",
+      "Addr" : "40031",
+      "Quantity" : "9",
+      "Intervals" : "1",
+      "Host" : "192.168.0.188",
+      "Port" : "502",
+      "UnitId" : 1,
+      "TimeOut" : 1000,
+      "ReTimeOut" : 2000
+    }).then((result: any) => {
+      console.log(result);
+    });
+*/
+
+/*
+this.backendSrv.post("/thingspin/connect/opcua",{
+  "FlowId": "sample",
+  "EndpointUrl": "opc.tcp://localhost:53530/OPCUA/SimulationServer",
+  "AddressSpaceItems": [{
+      "name": "sample",
+      "nodeId": "ns=0;i=85",
+      "datatypeName": "sample"
+  }],
+  "Interval": 1
+}).then((result: any) => {
+console.log(result);
+});
+*/
   }
 
 }

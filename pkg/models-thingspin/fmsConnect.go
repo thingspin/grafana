@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+type TsConnectReq struct {
+	Name   string `json:"name"`
+	Params string `json:"params"`
+}
+
 type TsConnectField struct {
 	Id      int                    `json:"id"`
 	FlowId  string                 `json:"flow_id"`
@@ -25,6 +30,7 @@ type GetTsConnectQuery struct {
 }
 
 type AddTsConnectQuery struct {
+	Name   string
 	Params string
 	Type   string
 	Result sql.Result
@@ -32,6 +38,7 @@ type AddTsConnectQuery struct {
 
 type UpdateTsConnectFlowQuery struct {
 	Id     int
+	Name   string
 	FlowId string
 	Params string
 	Result sql.Result

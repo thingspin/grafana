@@ -30,10 +30,10 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 
 		tsRoute.Group("/connect", func(tsFnRoute routing.RouteRegister) {
 			tsFnRoute.Get("/", Wrap(getAllTsConnect))
-			tsFnRoute.Post("/:target", Wrap(addTsConnect))
+			tsFnRoute.Post("/:target", bind(tsm.TsConnectReq{}), Wrap(addTsConnect))
 
 			tsFnRoute.Get("/:connId", Wrap(getTsConnect))
-			tsFnRoute.Put("/:connId", Wrap(updateTsConnect))
+			tsFnRoute.Put("/:connId", bind(tsm.TsConnectReq{}), Wrap(updateTsConnect))
 			tsFnRoute.Patch("/:connId", Wrap(activeTsConnect))
 			tsFnRoute.Delete("/:connId", Wrap(deleteTsConnect))
 		})
