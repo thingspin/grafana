@@ -1,6 +1,10 @@
 
 <div class="row">
-	<div class="col-sm-3" style="border:2px solid;">
+	<div class="col-sm-3">
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-5" style="border:2px solid;">
 		<div>
 			<span style="font-size:2em;">메뉴 리스트</span>
 			
@@ -24,7 +28,7 @@
 
 						{{node.text}} {{node.idx}}
 											
-						<a data-nodrag ng-click="ctrl.hide(this,node)" style="margin-left: 5px;margin-right: 5px">
+						<a data-nodrag ng-click="ctrl.hide(this, node)" style="margin-left: 5px;margin-right: 5px">
 							<span class="fa fa-toggle-on"></span>
 								<!--
 								<span class="fa fa-toggle-on"></span>
@@ -75,16 +79,16 @@
 
 	<div class="col-sm-1">
 	</div>
-
+<!--
 	<div class="col-sm-2" style="border:2px solid;">
 		<span style="font-size:1.5em;">메뉴 정보</span><br>
 		<div class="editor-row">
 			<div class="section gf-form-group">
 				<div class="gf-form">
 					<label class="gf-form-label width-6">Icon</label>
-					<!--
+					<
 					<input type="text" class="input-small gf-form-input width-30" ng-model="ctrl.panel.bgimagePath" ng-change="ctrl.render()" ng-model-onblur />
-					-->
+					
 				</div>	
 				<div class="gf-form">
 					<label class="gf-form-label width-6">이름</label>
@@ -96,9 +100,9 @@
 				</div>
 				<div class="gf-form">
 					<label class="gf-form-label width-6">Parameter</label>
-					<!--
+					<
 					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight" ng-change="ctrl.render()" ng-model-onblur />
-					-->
+					
 				</div>
 			</div>
 		</div>
@@ -108,42 +112,7 @@
 			<span class="fa fa-mail-forward"></span>
 		</div>
 	</div>
-<div class="col-sm-3" style="border:2px solid;">
-	<span style="font-size:2em;">미리보기</span><br>
-	<div ui-tree id="tree1-root" data-nodrop-enabled="true">
-		<ol ui-tree-nodes="" ng-model="ctrl.data">
-			<li ng-repeat="node in ctrl.data" ui-tree-node>
-				<div class="tree-node">
-								<div class="tree-node-content">
-										<a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
-												<span ng-class="{
-														'fa fa-angle-right': collapsed,
-														'fa fa-angle-down': !collapsed
-														}">
-												</span>
-										</a>
-										
-										{{node.text}}
-								</div>
-				</div>
-													
-				<!--L2 -->
-				<ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
-					<li ng-repeat="node in node.children" ui-tree-node>
-						<div class="tree-node">
-							{{node.text}}	
-						</div>
-					</li>
-				</ol>
-			</li>
-		</ol>
-	</div>
-	</div>
 
-	<div class="col-sm-1">
-		<a class="btn btn-xs"ng-click="ctrl.save()">저장</a>
-	</div>
-</div>
 
 <div class="row">
 	<div class="col-sm-6">
@@ -151,3 +120,4 @@
 	</div>
   
 </div>
+-->

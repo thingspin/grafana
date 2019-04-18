@@ -189,3 +189,13 @@ func deleteTsConnect(c *gfm.ReqContext) Response {
 
 	return JSON(200, q.Result)
 }
+
+func getTsConnectType(c *gfm.ReqContext) Response {
+	q := m.GetAllTsConnectTypeQuery{}
+
+	if err := bus.Dispatch(&q); err != nil {
+		return Error(500, "ThingSPIN Server Error", err)
+	}
+
+	return JSON(200, q.Result)
+}

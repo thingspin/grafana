@@ -15,6 +15,7 @@ func init() {
 	bus.AddHandler("thingspin-sql", UpdateConnectFlow)
 	bus.AddHandler("thingspin-sql", UpdateActiveConnect)
 	bus.AddHandler("thingspin-sql", DelelteTsConnect)
+	bus.AddHandler("thingspin-sql", GetAllTsConnectType)
 }
 
 func GetAllTsConnect(cmd *m.GetAllTsConnectQuery) error {
@@ -94,6 +95,15 @@ func DelelteTsConnect(cmd *m.DeleteTsConnectQuery) error {
 	result, err := x.Exec(sqlQuery)
 
 	cmd.Result = result
+
+	return err
+}
+
+func GetAllTsConnectType(cmd *m.GetAllTsConnectTypeQuery) error {
+	var res []m.TsConnectType
+	err := x.Table(m.TsFmsConnectTypeTbl).Find(&res)
+
+	cmd.Result = res
 
 	return err
 }

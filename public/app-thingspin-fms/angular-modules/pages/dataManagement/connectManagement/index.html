@@ -1,0 +1,32 @@
+<div ng-class="{open: ctrl.connectMenuOpen}" class="dropdown">
+  <button class="btn btn-primary" ng-mouseover="ctrl.showConnectMode()">추가</button>
+  <ul class="dropdown-menu">
+    <li ng-repeat="t in ctrl.connectTypeList">
+      <a ng-click="ctrl.changePage(t.id)">{{t.name}}</a>
+    </li>
+  </ul>
+</div>
+<table class="filter-table" ng-repeat="(connectType, list) in ctrl.groupList">
+  <thead>
+    <tr>
+      <th>Index</th>
+      <th>수집기 이름</th>
+      <th>수집기 종류</th>
+      <th>수집기 상태</th>
+      <!-- <th>생성 일자</th> -->
+      <!-- <th>갱신 일자</th> -->
+      <th>수집기 제어</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="(index, item) in list">
+      <td> {{ index + 1 }} </td>
+      <td> {{ item.name }} </td>
+      <td> {{ item.type }} </td>
+      <td> {{ item.active ? "동작 중" : "정지" }} </td>
+      <!-- <td> {{ item.created | date:"yyyy/MM/dd 'at' h:mma"}} </td> -->
+      <!-- <td> {{ item.updated | date:"yyyy/MM/dd 'at' h:mma"}} </td> -->
+      <td> 제작 중...</td>
+    </tr>
+  </tbody>
+</table>
