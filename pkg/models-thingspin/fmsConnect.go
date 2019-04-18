@@ -6,12 +6,13 @@ import (
 )
 
 type TsConnectReq struct {
-	Name   string `json:"name"`
-	Params string `json:"params"`
+	Name   string                 `json:"name"`
+	Params map[string]interface{} `json:"params"`
 }
 
 type TsConnectField struct {
 	Id      int                    `json:"id"`
+	Name    string                 `json:"name"`
 	FlowId  string                 `json:"flow_id"`
 	Type    string                 `json:"type"`
 	Params  map[string]interface{} `json:"params"`
