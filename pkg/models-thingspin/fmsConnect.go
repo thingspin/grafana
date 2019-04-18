@@ -6,8 +6,8 @@ import (
 )
 
 type TsConnectReq struct {
-	Name   string `json:"name"`
-	Params string `json:"params"`
+	Name   string                 `json:"name"`
+	Params map[string]interface{} `json:"params"`
 }
 
 type TsConnectField struct {
