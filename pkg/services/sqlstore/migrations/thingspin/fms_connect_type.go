@@ -23,8 +23,8 @@ func addFmsConnectTypeMigrations(mg *Migrator) {
 		('%s', '%s'),
 		('%s', '%s'),
 		('%s', '%s')`, m.TsFmsConnectTypeTbl,
-		"OPCUA", "OPC/UA",
-		"MODBUS", "Modbus",
-		"MYSQL", "my-sql")
+		"opcua", "OPC/UA",
+		"modbus", "Modbus",
+		"mqtt", "MQTT")
 	mg.AddMigration("[thingspin] FMS OPC/UA 연결 추가", NewRawSqlMigration(opcType))
 }

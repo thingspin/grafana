@@ -4,22 +4,37 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
+    connectMenuOpen: boolean;
+    connectTypeList: string[];
     groupList: GroupTsConnect;
 
     /** @ngInject */
     constructor(private $scope: angular.IScope, private backendSrv: BackendSrv) { }// Dependency Injection
 
     $onInit(): void {
-        this.ayncUpdateList();
+        this.connectMenuOpen = false;
+        this.asyncUpdateTypeList();
+        this.asyncUpdateList();
     }
 
-    async ayncUpdateList(): Promise<void> {
+    async asyncUpdateTypeList(): Promise<void> {
+        try {
+            const list = await this.backendSrv.get("thingspin/type/connect");
+            this.connectTypeList = list;
+
+            this.$scope.$applyAsync();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async asyncUpdateList(): Promise<void> {
         try {
             const list = await this.backendSrv.get("thingspin/connect");
-            this.groupList = this.getGroupList(list);
-
-            // 데이터 반영
-            this.$scope.$applyAsync();
+            if (list) {
+                this.groupList = this.getGroupList(list);
+                this.$scope.$applyAsync();
+            }
         } catch (e) {
             console.error(e);
         }
@@ -39,5 +54,13 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
 
         return result;
+    }
+
+    showConnectMode(): void {
+        this.connectMenuOpen = true;
+    }
+
+    changePage(type: string): void {
+        history.replaceState({data: `/${type}`,}, "", `/thingspin/manage/data/connect/${type}`);
     }
 }
