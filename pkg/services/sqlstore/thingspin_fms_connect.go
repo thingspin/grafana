@@ -31,7 +31,7 @@ func GetAllTsConnect(cmd *m.GetAllTsConnectQuery) error {
 func GetTsConnect(cmd *m.GetTsConnectQuery) error {
 	var res []m.TsConnectField
 
-	err := x.Table(m.TsFmsConnectTbl).ID(cmd.Id).Find(&res)
+	err := x.Table(m.TsFmsConnectTbl).Where(`id=?`, cmd.Id).Find(&res)
 
 	length := len(res)
 	if length == 0 {
