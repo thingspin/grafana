@@ -64,9 +64,11 @@ func activeNodeRedFlow(info m.TsConnectField) (*m.NodeRedResponse, error) {
 func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	target := c.Params(":target")
 
+	paramsStr, _ := json.Marshal(req.Params)
+
 	q := m.AddTsConnectQuery{
 		Name:   req.Name,
-		Params: req.Params,
+		Params: string(paramsStr),
 		Type:   target,
 	}
 	if err := bus.Dispatch(&q); err != nil {
@@ -86,11 +88,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	}
 
 	// 새로운 params으로 변경
-	params, err := str2Json([]byte(req.Params))
-	if err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
-	}
-	info.Params = params
+	info.Params = req.Params
 
 	// 기존에 동작 중인 Connect에 업데이트를 할 경우
 	if info.Active == true {
@@ -111,11 +109,12 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		info.FlowId = newFlowId
 	}
 
+	paramsStr, _ := json.Marshal(req.Params)
 	q := m.UpdateTsConnectFlowQuery{
 		Id:     connId,
 		Name:   req.Name,
 		FlowId: info.FlowId,
-		Params: req.Params,
+		Params: string(paramsStr),
 	}
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Server Error", err)

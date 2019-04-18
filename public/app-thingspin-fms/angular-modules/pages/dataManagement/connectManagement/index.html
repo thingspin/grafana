@@ -1,5 +1,5 @@
-<div ng-class="{open: ctrl.connectMenuOpen}" class="dropdown">
-  <button class="btn btn-primary" ng-mouseover="ctrl.showConnectMode()">추가</button>
+<div ng-class="{open: ctrl.connectMenuOpen}" class="dropdown" ng-mouseleave="ctrl.showConnectMode(false)" >
+  <button class="btn btn-primary" ng-mouseover="ctrl.showConnectMode(true)">추가</button>
   <ul class="dropdown-menu">
     <li ng-repeat="t in ctrl.connectTypeList">
       <a ng-click="ctrl.changePage(t.id)">{{t.name}}</a>
@@ -26,7 +26,13 @@
       <td> {{ item.active ? "동작 중" : "정지" }} </td>
       <!-- <td> {{ item.created | date:"yyyy/MM/dd 'at' h:mma"}} </td> -->
       <!-- <td> {{ item.updated | date:"yyyy/MM/dd 'at' h:mma"}} </td> -->
-      <td> 제작 중...</td>
+      <td>
+        <div class="form-inline">
+            <button class="btn" ng-if="!item.active" ng-click="ctrl.toggleConnect(connectType, item.id)">시작</button>
+            <button class="btn" ng-if="item.active" ng-click="ctrl.toggleConnect(connectType, item.id)">중지</button>
+            <button class="btn" ng-click="ctrl.removeConnect(connectType, item.id)">삭제</button>
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>
