@@ -28,6 +28,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsMenuRoute.Delete("/:orgId", Wrap(DeleteTsMenuByOrgId))
 		})
 
+		// 연결 관리 기본 동작 API
 		tsRoute.Group("/connect", func(tsFnRoute routing.RouteRegister) {
 			tsFnRoute.Get("/", Wrap(getAllTsConnect))
 			tsFnRoute.Post("/:target", bind(tsm.TsConnectReq{}), Wrap(addTsConnect))
@@ -36,6 +37,10 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsFnRoute.Put("/:connId", bind(tsm.TsConnectReq{}), Wrap(updateTsConnect))
 			tsFnRoute.Patch("/:connId", Wrap(activeTsConnect))
 			tsFnRoute.Delete("/:connId", Wrap(deleteTsConnect))
+		})
+
+		tsRoute.Group("/type", func(tsTypeRoute routing.RouteRegister) {
+			tsTypeRoute.Get("/connect", Wrap(getTsConnectType))
 		})
 	})
 }
