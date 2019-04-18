@@ -56,8 +56,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
         return result;
     }
 
-    showConnectMode(): void {
-        this.connectMenuOpen = true;
+    showConnectMode(enable: boolean): void {
+        this.connectMenuOpen = enable;
     }
 
     changePage(type: string): void {

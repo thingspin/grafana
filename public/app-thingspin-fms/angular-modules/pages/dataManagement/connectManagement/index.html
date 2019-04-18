@@ -1,5 +1,5 @@
-<div ng-class="{open: ctrl.connectMenuOpen}" class="dropdown">
-  <button class="btn btn-primary" ng-mouseover="ctrl.showConnectMode()">추가</button>
+<div ng-class="{open: ctrl.connectMenuOpen}" class="dropdown" ng-mouseleave="ctrl.showConnectMode(false)" >
+  <button class="btn btn-primary" ng-mouseover="ctrl.showConnectMode(true)">추가</button>
   <ul class="dropdown-menu">
     <li ng-repeat="t in ctrl.connectTypeList">
       <a ng-click="ctrl.changePage(t.id)">{{t.name}}</a>
