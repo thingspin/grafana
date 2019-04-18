@@ -40,6 +40,39 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
+    async removeConnect(type: string, id: number): Promise<void> {
+        try {
+            await this.backendSrv.delete(`thingspin/connect/${id}`);
+            const list = this.groupList[type];
+            for (const index in list) {
+                if (list[index].id === id) {
+                    list.splice(parseInt(index, 10), 1);
+                    break;
+                }
+            }
+            this.$scope.$applyAsync();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async toggleConnect(type: string, id: number): Promise<void> {
+        try {
+            await this.backendSrv.patch(`thingspin/connect/${id}`, {});
+            const list = this.groupList[type];
+            for (const index in list) {
+                if (list[index].id === id) {
+                    list[index].active = !list[index].active;
+                    break;
+                }
+            }
+            this.$scope.$applyAsync();
+        } catch (e) {
+            console.error(e);
+        }
+
+    }
+
     getGroupList(list: TsConnect[]): GroupTsConnect {
         const result: GroupTsConnect = {};
 
@@ -63,4 +96,5 @@ export default class TsConnectManagementCtrl implements angular.IController {
     changePage(type: string): void {
         history.replaceState({data: `/${type}`,}, "", `/thingspin/manage/data/connect/${type}`);
     }
+    
 }
