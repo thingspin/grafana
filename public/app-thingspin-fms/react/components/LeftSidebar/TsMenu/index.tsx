@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import cloneDeep from 'lodash/cloneDeep';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 import config from 'app/core/config';
+import { contextSrv } from 'app/core/services/context_srv';
 
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import TsMenuLv1 from './MenuLv1';
@@ -20,13 +21,16 @@ export class TsMenu extends PureComponent<Props, State> {
   state: State = {
     load: false,
   };
+  isSignedIn = contextSrv.isSignedIn;
 
   navTree = cloneDeep(config.bootData.thingspin.menu);
   pins: any;
 
   async componentWillMount() {
-    this.pins = await this.props.getUserPins();
-    this.setState( {load: true} );
+    if ( this.isSignedIn ) {
+      this.pins = await this.props.getUserPins();
+      this.setState( {load: true} );
+    }
   }
   async componentDidMount() {}
   componentWillUnmount() {}
@@ -38,7 +42,7 @@ export class TsMenu extends PureComponent<Props, State> {
       .filter(item => item.icon)
       .filter(item => !item.divider)
     .map((item, idx) => {
-      item.pinned = (this.pins === undefined) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
+      item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
       return (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned}/>);
     });
   }
