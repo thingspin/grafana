@@ -1,6 +1,8 @@
 package api
 
 import (
+	"strconv"
+
 	"github.com/grafana/grafana/pkg/bus"
 	gfm "github.com/grafana/grafana/pkg/models"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
@@ -62,4 +64,28 @@ func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
 	}
 
 	return JSON(200, cmd.Result)
+}
+
+func UpdateFmsMenuPinSate(c *gfm.ReqContext, cmd m.UpdateFmsMenuPinSateCommand) Response {
+	cmd.UserID = c.UserId
+	cmd.ID = c.ParamsInt(":menuId")
+	pin := c.Params(":pin")
+
+	cmd.Pin, _ = strconv.ParseBool(pin)
+
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[ThingSPIN] 핀 설정에 실패하였습니다.", err)
+	}
+
+	return JSON(200, cmd)
+}
+
+func GetFmsMenuPin(c *gfm.ReqContext, cmd m.GetFmsMenuPinCommand) Response {
+	cmd.UserID = c.UserId
+
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[ThingSPIN] 사용자의 핀 메뉴를 가져올 수 없습니다.", err)
+	}
+
+	return JSON(200, cmd.MenuIDs)
 }

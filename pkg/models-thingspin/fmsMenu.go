@@ -57,3 +57,14 @@ type AddFmsMenuCommand struct {
 type UpdateFmsMenuCommand struct {
 	AddFmsMenuCommand
 }
+
+type UpdateFmsMenuPinSateCommand struct {
+	UserID int64 `xorm:"int notnull 'uid'" json:"uid"`
+	ID     int   `xorm:"int notnull 'id'" json:"id"`
+	Pin    bool  `xorm:"bool notnull 'pin'" json:"pin"`
+}
+
+type GetFmsMenuPinCommand struct {
+	UserID  int64 `xorm:"int notnull 'uid'" json:"uid"`
+	MenuIDs []int
+}

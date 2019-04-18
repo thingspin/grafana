@@ -26,6 +26,8 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsMenuRoute.Post("/:orgId", bind(tsm.AddFmsMenuCommand{}), Wrap(AddTsNewMenuByOrgId))
 			tsMenuRoute.Put("/:orgId", bind(tsm.UpdateFmsMenuCommand{}), Wrap(EditTsMenu8yOrgId))
 			tsMenuRoute.Delete("/:orgId", Wrap(DeleteTsMenuByOrgId))
+			tsMenuRoute.Get("/pin", bind(tsm.GetFmsMenuPinCommand{}), Wrap(GetFmsMenuPin))
+			tsMenuRoute.Post("/pin/:menuId/:pin", bind(tsm.UpdateFmsMenuPinSateCommand{}), Wrap(UpdateFmsMenuPinSate))
 		})
 
 		tsRoute.Group("/connect", func(tsFnRoute routing.RouteRegister) {

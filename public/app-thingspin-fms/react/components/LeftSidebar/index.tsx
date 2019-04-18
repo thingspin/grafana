@@ -1,15 +1,16 @@
 import React, { PureComponent } from 'react';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
+
+import { EViewModeState } from 'app-thingspin-fms/models/common';
+import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import TsLogo from './TsLogo';
 import TsMenu from './TsMenu';
-import { EViewModeState } from 'app-thingspin-fms/models/common';
 
-export class TsLeftSidebar extends PureComponent {
-  viewMode: EViewModeState;
+export interface Props extends TsBaseProps {
+}
 
-  constructor(props) {
-    super(props);
-    this.viewMode = EViewModeState.Mode0;
-  }
+export class TsLeftSidebar extends PureComponent<Props> {
+  viewMode: EViewModeState = EViewModeState.Mode0;
 
   render() {
     return [
@@ -17,7 +18,12 @@ export class TsLeftSidebar extends PureComponent {
       <div className="fms-menu-dividers" key="ts-dividers">
         <hr className="fms-menu-dividers-divider" key="ts-divider" />
       </div>,
-      <TsMenu key="tsmenu" />,
+      <TsMenu key="tsmenu" {...this.props} />,
     ];
   }
 }
+
+const mapStateToProps = () => ({});
+const mapDispatchToProps = {};
+
+export default connectWithStore(TsLeftSidebar, mapStateToProps, mapDispatchToProps);

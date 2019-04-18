@@ -14,6 +14,8 @@ func init() {
 	bus.AddHandler("sql", DeleteFmsMenuByOrgId)
 	bus.AddHandler("sql", AddFmsMenu)
 	bus.AddHandler("sql", UpdateFmsMenu)
+	bus.AddHandler("sql", UpdateFmsMenuPinSate)
+	bus.AddHandler("sql", GetFmsMenuUsersPin)
 }
 
 // recursive function
@@ -137,6 +139,28 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuCommand) error {
 		m.TsFmsMenuTbl, cmd.Name, cmd.Menu, cmd.OrgId)
 
 	cmd.Result = result
+
+	return err
+}
+
+func UpdateFmsMenuPinSate(cmd *m.UpdateFmsMenuPinSateCommand) error {
+	if cmd.Pin == false {
+		_, err := x.Exec(`DELETE FROM`+` `+m.TsFmsMenuPinTbl+` `+`WHERE uid = ? AND mid = ?`, cmd.UserID, cmd.ID)
+		return err
+	}
+
+	has, err := x.Table(m.TsFmsMenuPinTbl).Where("uid = ? AND mid = ?", cmd.UserID, cmd.ID).Exist()
+
+	if !has {
+		_, err = x.Exec(`INSERT INTO `+` `+m.TsFmsMenuPinTbl+` `+` ('uid', 'mid') VALUES (?, ?)`, cmd.UserID, cmd.ID)
+	}
+
+	return err
+}
+
+func GetFmsMenuUsersPin(cmd *m.GetFmsMenuPinCommand) error {
+
+	err := x.Table(m.TsFmsMenuPinTbl).Where("uid = ?", cmd.UserID).Cols("mid").Find(&cmd.MenuIDs)
 
 	return err
 }
