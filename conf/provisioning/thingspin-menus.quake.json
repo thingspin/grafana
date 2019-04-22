@@ -1,0 +1,113 @@
+{
+  "project": "ThingSPIN Initial Default Menus",
+  "creator": "lonycell",
+  "version": "1.0",
+  "ignore": false,
+  "menus": [
+    {
+      "text": "홈",
+      "icon": "fa fa-fw fa-home",
+      "url": "/",
+      "children" : [
+        {
+          "text": "추가",
+          "icon": "gicon gicon-dashboard-new",
+          "url": "/dashboard/new"
+        },
+        {
+          "text": "불러오기",
+          "icon": "gicon gicon-dashboard-import",
+          "url": "/dashboard/import"
+        },
+        {
+          "text": "관리",
+          "icon": "gicon gicon-manage",
+          "url": "/dashboards"
+        }
+      ]
+    },
+    {
+      "text": "V2X 단말분석",
+      "icon": "icon-gf icon-gf-panel",
+      "url": "/",
+      "children" : [
+        {
+          "text": "단말기 목록",
+          "icon": "icon-gf icon-gf-panel",
+          "url": "/d/10000000"
+        },
+        {
+          "text": "위치 추적",
+          "icon": "icon-gf icon-gf-panel",
+          "url": "/d/20000000"
+        },
+        {
+          "text": "데이터 로그",
+          "icon": "icon-gf icon-gf-panel",
+          "url": "/d/30000000"
+        }
+      ]
+    },
+
+    {
+      "text": "시스템",
+      "icon": "gicon gicon-shield",
+      "url": "/thingspin/manage/system",
+      "hideFromMenu": false,
+      "placeBottom": true,
+      "children" : [
+        {
+          "text": "조직",
+          "icon": "gicon gicon-team",
+          "url": "/org"
+        },
+        {
+          "text": "사용자",
+          "icon": "gicon gicon-team",
+          "url": "/admin/users"
+        },
+        {
+          "text": "메뉴 관리",
+          "icon": "fa fa-fw fa-keyboard-o",
+          "url": "/thingspin/manage/system/menu"
+        },
+        {
+          "text": "데이터소스",
+          "icon": "gicon gicon-datasources",
+          "url": "/datasources"
+        },
+        {
+          "text": "플러그인",
+          "icon": "gicon gicon-plugins",
+          "url": "/plugins"
+        }
+      ]
+    },
+    {
+      "text": "내정보",
+      "icon": "fa fa-user-circle",
+      "url": "/profile",
+      "hideFromMenu": false,
+      "hideFromTab": true,
+      "placeBottom": true,
+      "children" : [
+        {
+          "text": "환경설정",
+          "icon": "gicon gicon-preferences",
+          "url": "/profile"
+        },
+        {
+          "text": "비밀번호 변경",
+          "icon": "fa fa-fw fa-lock",
+          "url": "/profile/password"
+        },
+        {
+          "text": "로그아웃",
+          "icon": "fa fa-fw fa-sign-out",
+          "url": "/logout",
+          "target": "_self"
+        }
+      ]
+    }
+  ]
+}
