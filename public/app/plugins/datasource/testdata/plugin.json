@@ -2,6 +2,7 @@
   "type": "datasource",
   "name": "TestData DB",
   "id": "testdata",
+  "state": "alpha",
 
   "metrics": true,
   "alerting": true,

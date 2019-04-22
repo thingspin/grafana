@@ -2,7 +2,8 @@
   "type": "datasource",
   "name": "OpenTSDB",
   "id": "opentsdb",
-
+  "state": "alpha",
+  
   "metrics": true,
   "defaultMatchFormat": "pipe",
   "annotations": true,

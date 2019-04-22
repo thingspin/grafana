@@ -2,7 +2,6 @@
   "type": "datasource",
   "name": "Direct Input",
   "id": "input",
-  "state": "alpha",
 
   "metrics": true,
   "alerting": false,

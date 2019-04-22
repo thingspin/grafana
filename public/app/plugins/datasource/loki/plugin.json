@@ -2,7 +2,8 @@
   "type": "datasource",
   "name": "Loki",
   "id": "loki",
-
+  "state": "alpha",
+  
   "metrics": true,
   "alerting": false,
   "annotations": false,
