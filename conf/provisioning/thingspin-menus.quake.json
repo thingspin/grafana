@@ -5,9 +5,11 @@
   "ignore": false,
   "menus": [
     {
-      "text": "홈",
+      "text": "대시보드",
       "icon": "fa fa-fw fa-home",
       "url": "/",
+      "hideFromMenu": false,
+      "placeBottom": true,
       "children" : [
         {
           "text": "추가",
@@ -87,7 +89,7 @@
       "text": "내정보",
       "icon": "fa fa-user-circle",
       "url": "/profile",
-      "hideFromMenu": false,
+      "hideFromMenu": true,
       "hideFromTab": true,
       "placeBottom": true,
       "children" : [
