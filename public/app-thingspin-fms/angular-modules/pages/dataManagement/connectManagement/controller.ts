@@ -1,20 +1,39 @@
 import angular from "angular";
+
+import mqtt from "mqtt";
+
 import { TsConnect, GroupTsConnect } from "app-thingspin-fms/models/connect";
 import { BackendSrv } from 'app/core/services/backend_srv';
 
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
+    mqttClient: mqtt.Client;
     connectMenuOpen: boolean;
     connectTypeList: string[];
     groupList: GroupTsConnect;
 
     /** @ngInject */
-    constructor(private $scope: angular.IScope, private backendSrv: BackendSrv) { }// Dependency Injection
+    constructor(private $scope: angular.IScope, private backendSrv: BackendSrv,
+    private $location: angular.ILocationService) { }// Dependency Injection
 
     $onInit(): void {
         this.connectMenuOpen = false;
         this.asyncUpdateTypeList();
         this.asyncUpdateList();
+        this.mqttClient = mqtt.connect(
+            `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt`
+        );
+        this.mqttClient.subscribe("/thingspin/#");
+        this.mqttClient.on("message", (topic, payload) => {
+            const str: string = new TextDecoder("utf-8").decode(payload);
+            let obj: string | object;
+            try {
+                obj = JSON.parse(str);
+            } catch (e) {
+                obj = str;
+            }
+            console.log(topic, obj);
+        });
     }
 
     async asyncUpdateTypeList(): Promise<void> {

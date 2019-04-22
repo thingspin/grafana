@@ -198,6 +198,7 @@
     "moment": "2.24.0",
     "mousetrap": "1.6.3",
     "mousetrap-global-bind": "1.1.0",
+    "mqtt": "^2.18.8",
     "nodemon": "1.18.10",
     "papaparse": "4.6.3",
     "prismjs": "1.16.0",

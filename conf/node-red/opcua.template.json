@@ -200,7 +200,7 @@
       "id": "TS-MQTT-LISTENER-ID-{{.FlowId}}",
       "type": "mqtt-broker",
       "z": "",
-      "broker": "localhost",
+      "broker": "thingspin.mqtt",
       "port": "1883",
       "clientid": "",
       "usetls": false,
