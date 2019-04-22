@@ -15,7 +15,7 @@ func addFmsConnectMigrations(mg *Migrator) {
 		'flow_id' varchar(30),
 		'type' varchar(30) references %s(id),
 		'params' json,
-		'active' bool default false,
+		'active' bool default true,
 		'created' datetime default (datetime('now', 'localtime')),
 		'updated' datetime default (datetime('now', 'localtime'))
 	)

@@ -38,6 +38,7 @@ type GetTsConnectQuery struct {
 
 type AddTsConnectQuery struct {
 	Name   string
+	FlowId string
 	Params string
 	Type   string
 	Result sql.Result
