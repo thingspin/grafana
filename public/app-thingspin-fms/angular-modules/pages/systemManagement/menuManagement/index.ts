@@ -61,16 +61,6 @@ export class TsMenuManagementCtrl {
             // 1. source idx 부터 하위 L1 들의 순서변경
             // 2-1. dest id로 부모 노드를 찾는다.
             // 2-2. dest 부모 노드의 자식 dst idx 부터 하위 L2 들의 순서변경
-            for ( let _i = from.index; _i < this.data.length; _i++) {
-              this.data[_i].order = _i;
-              const newData = {
-                "menu": this.data[_i]
-              };
-              this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-                console.log("Update :" + this.data[_i].text+" > new order:",_i);
-              });
-            }
-
             for ( let _i = 0; _i < this.data.length; _i++) {
               if ( toNode.node.id === this.data[_i].id) {
                 // 부모 id 변경
@@ -88,21 +78,44 @@ export class TsMenuManagementCtrl {
                 break;
               }
             }
+            for ( let _i = from.index; _i < this.data.length; _i++) {
+              this.data[_i].order = _i;
+              const newData = {
+                "menu": this.data[_i]
+              };
+              this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+                console.log("Update :" + this.data[_i].text+" > new order:",_i);
+              });
+            }
           } else if ( fromNode.parent_id !== -1 && toNode == null ) {
             console.log("L2 -> L1");
             // L2 -> L1
             // Change some L1 ordering and the L2 ordering
             // 1. 이동 후 현재포함 하위 L1 들의 순서 변경
             // 2. src id로 부모 노드를 찾고, idx 부터 하위 노드들의 순서 변경
+            this.data[to.index].parent_id = -1;
+            console.log("Parent Update :" +this.data[to.index].text+" > new order:",-1);
             for ( let _i = to.index; _i < this.data.length; _i++) {
-              console.log("Update :" + this.data[_i].text+" > new order:",_i);
+              this.data[_i].order = _i;
+                const newData = {
+                  "menu": this.data[_i]
+              };
+              this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+                console.log("Update :" + this.data[_i].text+" > new order:",_i);
+              });
             }
 
             for ( let _i = 0; _i < this.data.length; _i++) {
               if ( fromNodeParent.id === this.data[_i].id) {
                 console.log("Found parent - ",this.data[_i].text);
                 for ( let _j = from.index; _j < this.data[_i].children.length; _j++) {
-                  console.log("Child Update :" +this.data[_i].children[_j].text+" > new order:",_j);
+                  this.data[_i].children[_j].order = _j;
+                  const newData = {
+                    "menu": this.data[_i].children[_j]
+                  };
+                  this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+                    console.log("Child Update :" +this.data[_i].children[_j].text+" > new order:",_j);
+                  });
                 }
                 break;
               }
