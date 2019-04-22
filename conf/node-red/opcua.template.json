@@ -1,5 +1,5 @@
 {
-  "id": "OPC/UA Flow Format",
+  "id": "{{.FlowId}}",
   "label": "{{.FlowId}}",
   "info": "",
   "nodes": [
@@ -91,7 +91,7 @@
       "noerr": 0,
       "x": 290,
       "y": 160,
-      "wires": [["TS-OPC-UA-STATUS-WS-OUT-ID-{{.FlowId}}"]]
+      "wires": [["TS-OPC-UA-STATUS-MQTT-OUT-ID-{{.FlowId}}"]]
     },
     {
       "id": "TS-OPC-UA-STATUS-HTTP-GET-ID-{{.FlowId}}",
@@ -127,12 +127,15 @@
       "wires": []
     },
     {
-      "id": "TS-OPC-UA-STATUS-WS-OUT-ID-{{.FlowId}}",
-      "type": "websocket out",
+      "id": "TS-OPC-UA-STATUS-MQTT-OUT-ID-{{.FlowId}}",
+      "type": "mqtt out",
+      "z": "9d5a2adb.d70968",
       "name": "",
-      "server": "TS-WS-LISTENER-ID-{{.FlowId}}",
-      "client": "",
-      "x": 470,
+      "topic": "/thingspin/connect/{{.FlowId}}",
+      "qos": "2",
+      "retain": "true",
+      "broker": "TS-MQTT-LISTENER-ID-{{.FlowId}}",
+      "x": 450,
       "y": 160,
       "wires": []
     },
@@ -194,11 +197,25 @@
       "maxBadSessionRequests": "10"
     },
     {
-      "id": "TS-WS-LISTENER-ID-{{.FlowId}}",
-      "type": "websocket-listener",
+      "id": "TS-MQTT-LISTENER-ID-{{.FlowId}}",
+      "type": "mqtt-broker",
       "z": "",
-      "path": "/ws/{{.FlowId}}",
-      "wholemsg": "false"
+      "broker": "localhost",
+      "port": "1883",
+      "clientid": "",
+      "usetls": false,
+      "compatmode": true,
+      "keepalive": "60",
+      "cleansession": true,
+      "birthTopic": "",
+      "birthQos": "0",
+      "birthPayload": "",
+      "closeTopic": "",
+      "closeQos": "0",
+      "closePayload": "",
+      "willTopic": "",
+      "willQos": "0",
+      "willPayload": ""
     }
   ]
 }

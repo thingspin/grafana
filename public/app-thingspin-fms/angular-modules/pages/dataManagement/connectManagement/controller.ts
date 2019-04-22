@@ -40,7 +40,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
-    async removeConnect(type: string, id: number): Promise<void> {
+    async asyncRemoveConnect(type: string, id: number): Promise<void> {
         try {
             await this.backendSrv.delete(`thingspin/connect/${id}`);
             const list = this.groupList[type];
@@ -56,7 +56,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
-    async toggleConnect(type: string, id: number): Promise<void> {
+    async asyncToggleConnect(type: string, id: number): Promise<void> {
         try {
             await this.backendSrv.patch(`thingspin/connect/${id}`, {});
             const list = this.groupList[type];

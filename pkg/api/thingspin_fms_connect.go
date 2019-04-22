@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/grafana/grafana/pkg/thingspin"
 
@@ -63,16 +64,39 @@ func activeNodeRedFlow(info m.TsConnectField) (*m.NodeRedResponse, error) {
 
 func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	target := c.Params(":target")
+	newFlowId := req.Params["FlowId"].(string)
+
+	// add node-red flow
+	nodeResp, err := thingspin.AddFlowNode(target, req.Params)
+	if err != nil {
+		return Error(500, "ThingSPIN Connect Error", err)
+	}
+
+	// check Reponse Status
+	if nodeResp.StatusCode != 200 {
+		err = errors.New(string(nodeResp.Body.([]byte)))
+		return Error(nodeResp.StatusCode, "ThingSPIN Connect Error", err)
+	} else {
+		var common map[string]interface{}
+		err = json.Unmarshal(nodeResp.Body.([]byte), &common)
+		if err != nil {
+			return Error(500, "ThingSPIN Parsing Error", err)
+		}
+		newFlowId = common["id"].(string)
+	}
 
 	paramsStr, _ := json.Marshal(req.Params)
 
 	q := m.AddTsConnectQuery{
 		Name:   req.Name,
+		FlowId: newFlowId,
 		Params: string(paramsStr),
 		Type:   target,
 	}
+
+	// save db
 	if err := bus.Dispatch(&q); err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+		return Error(500, "ThingSPIN Store Error", err)
 	}
 
 	return JSON(200, q.Result)
@@ -84,7 +108,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	// 이전 flow 정보 가져오기
 	info, err := getTsConnectInfo(connId)
 	if err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+		return Error(500, "ThingSPIN Store Error", err)
 	}
 
 	// 새로운 params으로 변경
@@ -95,7 +119,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		// Node-red에 적용된 Flow 업데이트
 		nodeResp, err := thingspin.UpdateFlowNode(info.FlowId, info.Type, info.Params)
 		if err != nil {
-			return Error(500, "ThingSPIN Server Error", err)
+			return Error(500, "ThingSPIN Connect Error", err)
 		}
 
 		// get updated flowId
@@ -103,10 +127,9 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		var common map[string]interface{}
 		err = json.Unmarshal(body, &common)
 		if err != nil {
-			return Error(500, "ThingSPIN Server Error", err)
+			return Error(500, "ThingSPIN Parsing Error", err)
 		}
-		newFlowId := common["id"].(string)
-		info.FlowId = newFlowId
+		info.FlowId = common["id"].(string)
 	}
 
 	paramsStr, _ := json.Marshal(req.Params)
@@ -117,7 +140,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		Params: string(paramsStr),
 	}
 	if err := bus.Dispatch(&q); err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+		return Error(500, "ThingSPIN Store Error", err)
 	}
 
 	return JSON(200, q.Result)
@@ -129,7 +152,7 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 	// 이전 flow 정보 가져오기
 	info, err := getTsConnectInfo(connId)
 	if err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+		return Error(500, "ThingSPIN Store Error", err)
 	}
 
 	// toggle Active
@@ -137,7 +160,7 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 
 	nodeResp, err := activeNodeRedFlow(*info)
 	if err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+		return Error(500, "ThingSPIN Connect Error", err)
 	}
 
 	if nodeResp.StatusCode == 200 { // success
@@ -145,10 +168,9 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 		var common map[string]interface{}
 		err = json.Unmarshal(body, &common)
 		if err != nil {
-			return Error(500, "ThingSPIN Server Error", err)
+			return Error(500, "ThingSPIN Connect Error", err)
 		}
-		newFlowId := common["id"].(string)
-		info.FlowId = newFlowId
+		info.FlowId = common["id"].(string)
 	} else if nodeResp.StatusCode == 204 { //no contents
 		info.FlowId = ""
 	}
@@ -161,7 +183,7 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 	}
 
 	if err := bus.Dispatch(&q); err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+		return Error(500, "ThingSPIN Store Error", err)
 	}
 
 	return JSON(200, q.Result)
@@ -169,21 +191,31 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 
 func deleteTsConnect(c *gfm.ReqContext) Response {
 	connId := c.ParamsInt(":connId")
+
+	// 이전 flow 정보 가져오기
+	info, err := getTsConnectInfo(connId)
+	if err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	// Remove Flow Node
+	nodeResp, err := thingspin.RemoveFlowNode(info.FlowId)
+	if err != nil {
+		return Error(500, "ThingSPIN Connect Error", err)
+	}
+
+	// Check Response Code
+	if nodeResp.StatusCode != 204 && nodeResp.StatusCode != 404 {
+		err = errors.New(string(nodeResp.Body.([]byte)))
+		return Error(nodeResp.StatusCode, "ThingSPIN Connect Error", err)
+	}
+
+	// remove Connect Table Row
 	q := m.DeleteTsConnectQuery{
 		Id: connId,
 	}
-
-	info, err := getTsConnectInfo(connId)
-	if err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
-	}
-
-	if info.Active == true {
-		return JSON(403, "Connect is Running")
-	}
-
 	if err := bus.Dispatch(&q); err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+		return Error(500, "ThingSPIN Store Error", err)
 	}
 
 	return JSON(200, q.Result)
@@ -193,7 +225,7 @@ func getTsConnectType(c *gfm.ReqContext) Response {
 	q := m.GetAllTsConnectTypeQuery{}
 
 	if err := bus.Dispatch(&q); err != nil {
-		return Error(500, "ThingSPIN Server Error", err)
+		return Error(500, "ThingSPIN Store Error", err)
 	}
 
 	return JSON(200, q.Result)

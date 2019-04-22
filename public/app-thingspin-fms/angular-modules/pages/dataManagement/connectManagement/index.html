@@ -28,9 +28,9 @@
       <!-- <td> {{ item.updated | date:"yyyy/MM/dd 'at' h:mma"}} </td> -->
       <td>
         <div class="form-inline">
-            <button class="btn" ng-if="!item.active" ng-click="ctrl.toggleConnect(connectType, item.id)">시작</button>
-            <button class="btn" ng-if="item.active" ng-click="ctrl.toggleConnect(connectType, item.id)">중지</button>
-            <button class="btn" ng-click="ctrl.removeConnect(connectType, item.id)">삭제</button>
+            <button class="btn" ng-if="!item.active" ng-click="ctrl.asyncToggleConnect(connectType, item.id)">시작</button>
+            <button class="btn" ng-if="item.active" ng-click="ctrl.asyncToggleConnect(connectType, item.id)">중지</button>
+            <button class="btn" ng-click="ctrl.asyncRemoveConnect(connectType, item.id)">삭제</button>
         </div>
       </td>
     </tr>
