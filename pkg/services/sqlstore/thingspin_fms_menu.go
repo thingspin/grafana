@@ -6,6 +6,8 @@ import (
 
 	"github.com/grafana/grafana/pkg/bus"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
+	"database/sql"
+	"fmt"
 )
 
 func init() {
@@ -33,6 +35,46 @@ func sortFmsMenuTree(menuList []*m.FmsMenu) {
 func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
 	keyMap := make(map[int]*m.FmsMenu)
 	var rootNode []*m.FmsMenu
+	// Parent first
+	var node *m.FmsMenu
+	for _, menu := range menuList {
+		// generate node data
+		node = &m.FmsMenu{
+			FmsMenuQueryResult: *menu,
+			Children:           []*m.FmsMenu{},
+		}
+		// find position
+		if menu.ParentId == -1 || menu.ParentId == 0 { // == nil
+			keyMap[menu.Id] = node
+		}
+	}
+	// Child mapping
+	for _, menu := range menuList {
+		// find position
+		if menu.ParentId > 0 { // == nil
+			if _, ok := keyMap[menu.ParentId]; ok {
+				//do something here
+			}
+			// generate node data
+			node = &m.FmsMenu{
+				FmsMenuQueryResult: *menu,
+				Children:           []*m.FmsMenu{},
+			}
+			//log.Error(3, "error",menu.ParentId)
+			curr := keyMap[menu.ParentId]
+			curr.Children = append(curr.Children, node)
+		}
+	}
+
+	for _, node := range keyMap {
+		rootNode = append(rootNode, node)
+	}
+	return rootNode
+}
+/*
+func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
+	keyMap := make(map[int]*m.FmsMenu)
+	var rootNode []*m.FmsMenu
 
 	var node *m.FmsMenu
 	for _, menu := range menuList {
@@ -55,7 +97,7 @@ func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
 
 	return rootNode
 }
-
+*/
 func getFmsMenuByOrgId(orgId int64) ([]*m.FmsMenu, error) {
 	var res []*m.FmsMenuQueryResult
 	selectStr := []string{
@@ -134,10 +176,38 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 	return err
 }
 
+/*
 func UpdateFmsMenu(cmd *m.UpdateFmsMenuCommand) error {
 	result, err := x.Exec(`UPDATE '?' SET name = '?', menu = '?' WHERE org_id = ?`,
 		m.TsFmsMenuTbl, cmd.Name, cmd.Menu, cmd.OrgId)
 
+	cmd.Result = result
+
+	return err
+}
+*/
+func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
+	var err error
+	var has bool
+	var result sql.Result
+	// L2로 이동할 때 자식이 있는지 검사
+	if cmd.Menu.FmsMenuQueryResult.ParentId != -1 {
+		has, err = x.Table(m.TsFmsMenuTbl).
+					Where(`parent_id IN ( SELECT id FROM `+ m.TsFmsMenuTbl+` WHERE parent_id = -1 and id = ?)`,cmd.Menu.FmsMenuQueryResult.Id).Exist()
+		//log.Error(3, "error",cmd.Menu.FmsMenuQueryResult.Order,cmd.Menu.FmsMenuQueryResult.ParentId,cmd.Menu.FmsMenuQueryResult.Text,cmd.OrgId,cmd.Menu.FmsMenuQueryResult.Id)
+		if err != nil {
+			return err
+		}
+		if has {
+			return fmt.Errorf("This menu has childs, can't move to L2")
+		}
+
+	}
+	
+	result, err = x.Exec(`UPDATE `+ m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND id = ?`,
+		cmd.Menu.FmsMenuQueryResult.ParentId, cmd.Menu.FmsMenuQueryResult.Order, cmd.OrgId, cmd.Menu.FmsMenuQueryResult.Id)
+
+	//log.Error(3, "error",err)
 	cmd.Result = result
 
 	return err

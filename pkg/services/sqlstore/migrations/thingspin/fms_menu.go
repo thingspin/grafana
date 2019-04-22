@@ -82,9 +82,9 @@ func addFmsMenuMigrations(mg *Migrator) {
 		insertData = append(insertData, getInsertQueryData(35, 0, 32, "NULL", 35, 3))
 	} else {
 		for _, menu := range menus {
-			insertData = append(insertData, getInsertQueryData(menu.Id, 0, menu.ParentId, menu.Name, menu.Id, menu.Order))
+			insertData = append(insertData, getInsertQueryData(menu.Id, 1, menu.ParentId, menu.Name, menu.Id, menu.Order))
 			for _, child := range menu.Children {
-				insertData = append(insertData, getInsertQueryData(child.Id, 0, child.ParentId, child.Name, child.Id, child.Order))
+				insertData = append(insertData, getInsertQueryData(child.Id, 1, child.ParentId, child.Name, child.Id, child.Order))
 			}
 		}
 	}

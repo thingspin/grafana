@@ -89,3 +89,14 @@ func GetFmsMenuPin(c *gfm.ReqContext, cmd m.GetFmsMenuPinCommand) Response {
 
 	return JSON(200, cmd.MenuIDs)
 }
+
+func EditTsMenuByOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuOrderCommand) Response {
+	orgId := c.ParamsInt64(":orgId")
+	cmd.OrgId = orgId
+
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[thingspin] Menu update command failed", err)
+	}
+
+	return JSON(200, cmd.Result)
+}

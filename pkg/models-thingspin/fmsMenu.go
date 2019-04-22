@@ -68,3 +68,9 @@ type GetFmsMenuPinCommand struct {
 	UserID  int64 `xorm:"int notnull 'uid'" json:"uid"`
 	MenuIDs []int
 }
+
+type UpdateFmsMenuOrderCommand struct {
+	OrgId  int64                    `json:"orgId"`
+	Menu   FmsMenu                 `json:"menu"`
+	Result sql.Result                
+}
