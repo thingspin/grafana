@@ -36,9 +36,21 @@ export class TsMenu extends PureComponent<Props, State> {
   componentWillUnmount() {}
   componentDidUpdate(prevProps: Props) {}
 
-  get dom() {
+  get top() {
     return this.navTree
       .filter(item => !item.hideFromMenu)
+      .filter(item => !item.placeBottom)
+      .filter(item => item.icon)
+      .filter(item => !item.divider)
+    .map((item, idx) => {
+      item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
+      return (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned}/>);
+    });
+  }
+  get bottom() {
+    return this.navTree
+      .filter(item => !item.hideFromMenu)
+      .filter(item => item.placeBottom)
       .filter(item => item.icon)
       .filter(item => !item.divider)
     .map((item, idx) => {
@@ -48,7 +60,15 @@ export class TsMenu extends PureComponent<Props, State> {
   }
 
   render() {
-    return (<div className="fms-menu">{this.dom}</div>);
+    return ([
+      <div className="fms-menu fms-menu-top" key="menu-top">{this.top}</div>,
+      <div className="fms-menu fms-menu-bottom" key="menu-bottom">
+        <div className="fms-menu-dividers" key="ts-dividers">
+          <hr className="fms-menu-dividers-divider" key="ts-divider" />
+        </div>
+        {this.bottom}
+      </div>
+    ]);
   }
 }
 

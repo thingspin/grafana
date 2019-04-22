@@ -18,7 +18,9 @@ export class TsLeftSidebar extends PureComponent<Props> {
       <div className="fms-menu-dividers" key="ts-dividers">
         <hr className="fms-menu-dividers-divider" key="ts-divider" />
       </div>,
-      <TsMenu key="tsmenu" {...this.props} />,
+      <div className="fms-menu-container" key="fms-menu-container">
+        <TsMenu key="tsmenu" {...this.props} />
+      </div>,
     ];
   }
 }

@@ -19,6 +19,7 @@ type FmsMenuQueryResult struct {
 	Target       string                   `xorm:"text 'target'" json:"target"`
 	HideFromMenu bool                     `xorm:"bool notnull 'hideFromMenu'" json:"hideFromMenu"`
 	HideFromTabs bool                     `xorm:"bool notnull 'hideFromTabs'" json:"hideFromTabs"`
+	PlaceBottom  bool                     `xorm:"bool notnull 'placeBottom'" json:"placeBottom"`
 	Divider      bool                     `xorm:"bool notnull 'divider'" json:"divider"`
 	CanDelete    bool                     `xorm:"bool notnull 'canDelete'" json:"canDelete"`
 }
@@ -70,7 +71,7 @@ type GetFmsMenuPinCommand struct {
 }
 
 type UpdateFmsMenuOrderCommand struct {
-	OrgId  int64                    `json:"orgId"`
-	Menu   FmsMenu                 `json:"menu"`
-	Result sql.Result                
+	OrgId  int64   `json:"orgId"`
+	Menu   FmsMenu `json:"menu"`
+	Result sql.Result
 }

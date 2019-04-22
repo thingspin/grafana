@@ -4,10 +4,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/grafana/grafana/pkg/bus"
-	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"database/sql"
 	"fmt"
+
+	"github.com/grafana/grafana/pkg/bus"
+	m "github.com/grafana/grafana/pkg/models-thingspin"
 )
 
 func init() {
@@ -71,6 +72,7 @@ func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
 	}
 	return rootNode
 }
+
 /*
 func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
 	keyMap := make(map[int]*m.FmsMenu)
@@ -115,6 +117,7 @@ func getFmsMenuByOrgId(orgId int64) ([]*m.FmsMenu, error) {
 		m.TsFmsMenuBaseTbl + ".target",
 		m.TsFmsMenuBaseTbl + ".hideFromMenu",
 		m.TsFmsMenuBaseTbl + ".hideFromTabs",
+		m.TsFmsMenuBaseTbl + ".placeBottom",
 		m.TsFmsMenuBaseTbl + ".canDelete",
 		m.TsFmsMenuBaseTbl + ".divider",
 	}
@@ -193,7 +196,7 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 	// L2로 이동할 때 자식이 있는지 검사
 	if cmd.Menu.FmsMenuQueryResult.ParentId != -1 {
 		has, err = x.Table(m.TsFmsMenuTbl).
-					Where(`parent_id IN ( SELECT id FROM `+ m.TsFmsMenuTbl+` WHERE parent_id = -1 and id = ?)`,cmd.Menu.FmsMenuQueryResult.Id).Exist()
+			Where(`parent_id IN ( SELECT id FROM `+m.TsFmsMenuTbl+` WHERE parent_id = -1 and id = ?)`, cmd.Menu.FmsMenuQueryResult.Id).Exist()
 		//log.Error(3, "error",cmd.Menu.FmsMenuQueryResult.Order,cmd.Menu.FmsMenuQueryResult.ParentId,cmd.Menu.FmsMenuQueryResult.Text,cmd.OrgId,cmd.Menu.FmsMenuQueryResult.Id)
 		if err != nil {
 			return err
@@ -203,8 +206,8 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 		}
 
 	}
-	
-	result, err = x.Exec(`UPDATE `+ m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND id = ?`,
+
+	result, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND id = ?`,
 		cmd.Menu.FmsMenuQueryResult.ParentId, cmd.Menu.FmsMenuQueryResult.Order, cmd.OrgId, cmd.Menu.FmsMenuQueryResult.Id)
 
 	//log.Error(3, "error",err)
