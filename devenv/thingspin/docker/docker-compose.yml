@@ -1,0 +1,22 @@
+version: '3'
+services:
+  thingspin.mqtt:
+    image: eclipse-mosquitto
+    container_name: thingspin.mqtt
+    ports:
+        - "1883:1883"
+        - "1884:1884"
+    volumes:
+        - /Users/whitesky0109/2019/github/grafana/src/github.com/grafana/grafana/devenv/thingspin/docker/mqtt:/mosquitto/config
+    restart: always
+  thingspin.node:
+    image: nodered/node-red-docker
+    container_name: thingspin.node
+    ports:
+        - "1880:1880"
+    links:
+        - thingspin.mqtt
+    depends_on:
+        - thingspin.mqtt
+    restart: always
+     
