@@ -96,5 +96,4 @@ export default class TsConnectManagementCtrl implements angular.IController {
     changePage(type: string): void {
         history.replaceState({data: `/${type}`,}, "", `/thingspin/manage/data/connect/${type}`);
     }
-    
 }
