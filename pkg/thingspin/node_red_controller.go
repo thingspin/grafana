@@ -41,7 +41,7 @@ func convJsonStr(value interface{}) string {
 func template2Str(str string, info interface{}) (string, error) {
 	// convert Template file
 	tmpl, err := template.
-		New("data connect").
+		New("thingspin connect").
 		Funcs(template.FuncMap{
 			"convJsonStr": convJsonStr,
 		}).
@@ -180,6 +180,7 @@ func UpdateFlowNode(flow_id string, target string, info interface{}) (*m.NodeRed
 	byteStr := bytes.NewBufferString(templateStr)
 
 	req, err := http.NewRequest(http.MethodPut, u.String(), byteStr)
+	req.Header.Set("Content-type", "application/json")
 	if err != nil {
 		return nil, err
 	}
