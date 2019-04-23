@@ -38,7 +38,7 @@ public/css/*.min.css
 
 /data/*
 !/data/api-servers/
-!/data/plugins/trackmap/
+!/data/plugins/trackmap/**
 /bin/*
 
 conf/custom.ini
