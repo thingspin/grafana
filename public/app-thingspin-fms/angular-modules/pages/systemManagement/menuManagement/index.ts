@@ -238,10 +238,11 @@ export class TsMenuManagementCtrl {
       });
   }
 */
-  remove(scope) {
+  remove(scope, node) {
       console.log(scope);
+      console.log(node);
       console.log("remove");
-      scope.remove();
+      //scope.remove();
   }
   /*
   collapseAll() {
