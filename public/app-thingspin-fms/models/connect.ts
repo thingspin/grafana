@@ -2,7 +2,7 @@
 export interface TsConnect {
     id: number;
     name: string;
-    flowid: string;
+    flow_id: string;
     type: string;
     params: any;
     active: boolean;

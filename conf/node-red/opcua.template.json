@@ -1,5 +1,4 @@
 {
-  "id": "{{.FlowId}}",
   "label": "{{.FlowId}}",
   "info": "",
   "nodes": [

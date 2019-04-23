@@ -18,7 +18,7 @@
     {
       "name": "NodeRED Complex Event Processing",
       "api": "api/cep",
-      "enable": false,
+      "enable": true,
       "url": "http://localhost:1880",
       "attachURL": false,
       "run": false,
@@ -50,6 +50,13 @@
       "cmd": "manage.py",
       "params": "runserver",
       "options": "0.0.0.0:8000"
+    }, {
+      "name": "ThingSPIN Local Broker",
+      "api": "thingspin-proxy/mqtt",
+      "enable": true,
+      "url": "ws://localhost:1884",
+      "attachURL": true,
+      "run": false
     }
   ]
 }
