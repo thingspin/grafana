@@ -34,7 +34,7 @@
 								<span class="fa fa-toggle-on"></span>
 								-->
 						</a>
-						<a data-nodrag ng-click="ctrl.remove(this)" style="margin-left: 5px;margin-right: 5px">
+						<a ng-if="node.children.length" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
 							<span class="fa fa-trash"></span>
 						</a>
 
