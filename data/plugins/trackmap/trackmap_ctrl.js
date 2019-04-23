@@ -310,16 +310,17 @@ System.register(["./leaflet/leaflet.js", "moment", "app/core/app_events", "app/p
           value: function addDataToMap() {
             var _this2 = this;
 
-            this.coords.map(function (x) {
-              L.marker(x.position, {
-                icon: _this2.icon
-              }).addTo(_this2.leafMap).bindPopup("Here!");
-            }, this), this.polyline = L.polyline(this.coords.map(function (x) {
+            this.polyline = L.polyline(this.coords.map(function (x) {
               return x.position;
             }, this), {
               color: this.panel.lineColor,
               weight: 3
             }).addTo(this.leafMap);
+            this.coords.map(function (x) {
+              L.marker(x.position, {
+                icon: _this2.icon
+              }).addTo(_this2.leafMap).bindPopup("Here!");
+            }, this);
             this.zoomToFit();
           }
         }, {
@@ -386,7 +387,6 @@ System.register(["./leaflet/leaflet.js", "moment", "app/core/app_events", "app/p
         }, {
           key: "onDataSnapshotLoad",
           value: function onDataSnapshotLoad(snapshotData) {
-            log("onSnapshotLoad");
             this.onDataReceived(snapshotData);
           }
         }]);
