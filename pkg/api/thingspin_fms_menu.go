@@ -55,6 +55,18 @@ func DeleteTsMenuByOrgId(c *gfm.ReqContext) Response {
 	return JSON(200, q.Result)
 }
 
+func DeleteTsMenuById(c *gfm.ReqContext) Response {
+	id := c.ParamsInt64(":id")
+	q := m.DeleteFmsMenuByIdQuery{
+		Id: id,
+	}
+	if err := bus.Dispatch(&q); err != nil {
+		return Error(500, "[thingspin] Menu delete command failed", err)
+	}
+
+	return JSON(200, q.Result)
+}
+
 func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
 	orgId := c.ParamsInt64(":orgId")
 	cmd.OrgId = orgId
