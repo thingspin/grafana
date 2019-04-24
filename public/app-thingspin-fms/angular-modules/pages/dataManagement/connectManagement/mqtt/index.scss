@@ -1,0 +1,375 @@
+// TOP TITLE
+.mqtt-title-top {
+    margin-left:21px;
+    margin-top:44px;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.19;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    display:inline-block;
+}
+
+// MAIN BORDER LINE
+#main-view {
+    margin-top:21px;
+    width: 97.4%;
+    border: solid 1px #ecebeb;
+    background-color: #ffffff;
+    margin-left:18px;
+    margin-right:20px;
+    margin-bottom: 45px;
+}
+
+// TOP RIGHT BUTTON
+.mqtt-right-button-area {
+    display:block;
+    float: right;
+    margin-right: 19.9px;
+    margin-top:28px;
+}
+#mqtt-plus-btn {
+    width: 91.1px;
+    height: 36px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #00897b;
+    color:#ffffff;
+}
+#mqtt-cancel-btn {
+    width: 80px;
+    height: 36px;
+    margin-right: 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #6a6a6a;
+    color:#ffffff;
+}
+
+// MAIN VIEW CONTENTS COMMON ATTRIBUTE
+.mqtt-title {
+    display:inline-block;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+}
+.mqtt-subtitle {
+    display:inline-block;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;    
+}
+.mqtt-edit-bg {
+    display:inline-block;
+    background-color: rgb(235,235,235);
+}
+#mqtt-edit {
+    font-size: 14px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    background:rgba(0,0,0,0);
+}
+
+// COLLECTOR 
+#mqtt-title-collector {
+    margin-left:113px;
+    margin-top:30px;
+}
+#mqtt-edit-collector-position {
+    margin-left:47px;
+}
+
+// CONNECT
+#mqtt-title-connect {
+    margin-left:113px;
+    margin-top:30px;
+}
+
+// CONTENTS BORDER LINE
+.mqtt-content-line {
+  height: 0;
+  border: solid 1px #ecebeb;
+  margin-top:16.5px;
+  margin-left:113.5px;
+  margin-right:108.5px;
+  width:84%;
+  align-content: center;
+}
+
+// URL 
+#mqtt-title-url {
+    margin-left:133px;
+    margin-top:30.5px;
+}
+#mqtt-edit-url-position {
+    margin-left:16px;
+    width:276px;
+}
+
+// PORT
+#mqtt-title-port {
+    margin-left:87px;
+    margin-top:30.5px;
+}
+#mqtt-edit-port-position {
+    margin-left:16px;
+    width:164px;
+}
+
+// KEEP ALIVE
+#mqtt-title-alive {
+    margin-left:45px;
+    margin-top:30.5px;
+}
+#mqtt-edit-alive-position {
+    margin-left:16px;
+    width:108px;
+}
+#mqtt-title-alive-sec {
+    margin-left:16px;
+}
+
+// INIT SESSION 
+#mqtt-title-session {
+    margin-left:119px;
+    margin-top:30.5px;
+}
+#mqtt-session-check {
+    margin-left:16px;   
+}
+
+// TOPIC LIST
+#mqtt-title-topiclist {
+    margin-left:113px;
+    margin-top:47px;
+    display:inline-block;
+}
+#mqtt-plus-topic-btn {
+    width: 86.1px;
+    height: 28px;
+    margin-top:47px;
+    margin-right: 110.9px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #1e88e5;
+    color:#ffffff;
+    float: right;
+}
+
+//TOPIC ADD VIEW
+.mqtt-topic-add-view {
+    margin-left:113px;
+    margin-right:109px;
+    margin-top:21px;
+    border: solid 1px #ecebeb;
+}
+#mqtt-title-topic-add {
+    margin-left:20px;
+    margin-top:31px;
+    display: inline-block;
+}
+#mqtt-title-topic-add-info {
+    margin-top:31px;
+    margin-left:16px;
+    display:inline-block;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e88e5;
+}
+//TOPIC ADD VIEW - BTN AREA
+.mqtt-right-button-area {
+    display:block;
+    float: right;
+    margin-right: 19.9px;
+    margin-top:20px;
+}
+//TOPIC ADD VIEW - TOPIC ADD BTN
+#mqtt-topic-add-plus-btn {
+    width: 112.1px;
+    height: 28px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #1e88e5;
+    color:#ffffff;
+}
+//TOPIC ADD VIEW - TOPIC CANCEL BTN
+#mqtt-topic-add-cancel-btn {
+    width: 80px;
+    height: 28px;
+    margin-right: 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #6a6a6a;
+    color:#ffffff;
+}
+//TOPIC ADD VIEW - EDIT : NAME
+#mqtt-topic-name-title {
+    margin-left:20px;
+    margin-top:43px;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+}
+#mqtt-topic-name-edit {
+    margin-left:16px;
+    margin-top:33px;
+}
+#mqtt-topic-subtopic-title {
+    margin-left:32px;
+    margin-top:43px;
+}
+#mqtt-topic-subtopic-edit {
+    width:552px;
+    height:36px;
+    margin-left:16px;
+    margin-top:81px;
+    display:inline-block;
+}
+#mqtt-topic-creator {
+    display:inline-block;
+}
+#mqtt-topic-value-title {
+    margin-left:32px;
+    margin-top:43px;
+}
+#mqtt-topic-tags-bg {
+    width:552px;
+    height:36px;
+}
+
+#mqtt-topic-value-bg {
+    width: 118px;
+    height: 36px;
+    margin-left:16px;
+}
+#mqtt-topic-value-combobox{
+    width:118px;
+    height:36px;
+    opacity: 1;
+    background-color: rgba(0,0,0,0);
+    font-size: 14px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    background:rgba(0,0,0,0);
+}
+.mqtt-topic-contents-creator-view {
+    border: solid 1px #ecebeb;
+    background-color: #fafafa;
+    margin-left:300px;
+    margin-top:16px;
+    width: 608px;
+    height:144px;
+}
+
+#mqtt-topic-topictype-title {
+    margin-left:20px;
+    margin-top:31px;
+}
+#mqtt-topic-type-bg {
+    width: 87px;
+    height: 36px;
+    margin-left:16px;
+}
+#mqtt-topic-type-combobox {
+    width:87px;
+    height:36px;
+    opacity: 1;
+    background-color: rgba(0,0,0,0);
+    font-size: 14px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    background:rgba(0,0,0,0);
+}
+
+#mqtt-topic-type-edit {
+    margin-left:16px;
+    margin-top:21px;
+}
+#mqtt-topic-edit-button-area {
+    margin-right:20px;
+    margin-top:16px;
+    float:right;
+}
+#mqtt-topic-edit-add-cancel-btn {
+    width: 80px;
+    height: 28px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #6a6a6a;
+    color:#ffffff;
+}
+#mqtt-topic-edit-add-plus-btn {
+    width: 80px;
+    height: 28px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #1e88e5;
+    color:#ffffff;
+}
+#mqtt-title-topic-edit-info {
+    margin-top:8px;
+    margin-left:103px;
+    display:block;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e88e5;
+}
