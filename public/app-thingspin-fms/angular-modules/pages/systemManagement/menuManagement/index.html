@@ -34,7 +34,7 @@
 								<span class="fa fa-toggle-on"></span>
 								-->
 						</a>
-						<a ng-if="node.children.length" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
+						<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
 							<span class="fa fa-trash"></span>
 						</a>
 
@@ -58,7 +58,7 @@
 									<span class="fa fa-toggle-on"></span>
 								
 								</a>
-								<a data-nodrag ng-click="ctrl.remove(this)" style="margin-left: 5px;margin-right: 5px">
+								<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
 									<span class="fa fa-trash"></span>
 								</a>
 										<!--
@@ -121,3 +121,6 @@
   
 </div>
 -->
+
+
+<button class="btn btn-success width-6" onclick="location.href='http://219.251.4.237:3000'" type="button">적용</button>

@@ -16462,6 +16462,11 @@ table@^3.7.8:
     slice-ansi "0.0.4"
     string-width "^2.0.0"
 
+tabulator-tables@^4.2.5:
+  version "4.2.5"
+  resolved "https://registry.yarnpkg.com/tabulator-tables/-/tabulator-tables-4.2.5.tgz#ed7250439ee99c6d18935dff5a9568c688939547"
+  integrity sha512-puuoXO3CvDry+10VJV0eNIAyx0ol3aoq+AFSAaF0ZxmQz3Uq0q+4SAtzQiiQugczRL5rhK6OIDQlgH1qlPjT1g==
+
 tabulator@^0.2.40:
   version "0.2.40"
   resolved "https://registry.yarnpkg.com/tabulator/-/tabulator-0.2.40.tgz#4f3649dee735c2c9edaf108585d494a81815384c"

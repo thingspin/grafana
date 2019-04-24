@@ -242,7 +242,59 @@ export class TsMenuManagementCtrl {
       console.log(scope);
       console.log(node);
       console.log("remove");
-      //scope.remove();
+      console.log("Same Parent");
+      scope.remove();
+      // 삭제후에 순서 재조정
+      if (node.parent_id === -1) {
+        // L1
+        this.backendSrv.delete('/thingspin/menu/'+node.id).then((res: any) => {
+          console.log(res);
+          // 삭제 후 L2 순서 재조정
+          for ( let _i = node.order; _i < this.data.length; _i++) {
+              this.data[_i].order = _i;
+              const newData = {
+                "menu": this.data[_i]
+              };
+              this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+                console.log("Child Update :" +this.data[_i].text+" > new order:",_i);
+              });
+          }
+        });
+      } else {
+        // L2
+        this.backendSrv.delete('/thingspin/menu/'+node.id).then((res: any) => {
+          console.log("res");
+          // 삭제 후 L2 순서 재조정
+          const parent = scope.$parent.$parent.$parentNodeScope.node;
+          for ( let _i = 0; _i < this.data.length; _i++) {
+            if ( parent.id === this.data[_i].id) {
+              console.log("Found parent - ",this.data[_i].text);
+              for ( let _j = node.order; _j < this.data[_i].children.length; _j++) {
+                this.data[_i].children[_j].order = _j;
+                const newData = {
+                  "menu": this.data[_i].children[_j]
+                };
+                this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+                  console.log("Child Update :" +this.data[_i].children[_j].text+" > new order:",_j);
+                });
+              }
+              break;
+            }
+          }
+        });
+      }
+      /*
+      let newData = {
+        "menu": this.data[fromNodeParent.order].children[from.index]
+      };
+      this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+        newData = {
+          "menu": this.data[fromNodeParent.order].children[to.index]
+        };
+        this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+        });
+      });
+      */
   }
   /*
   collapseAll() {

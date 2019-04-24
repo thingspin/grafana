@@ -35,7 +35,7 @@
     this.placeholderText = element.hasAttribute('placeholder') ? this.$element.attr('placeholder') : '';
 
     this.$container = $('<div class="bootstrap-tagsinput"></div>');
-    this.$input = $('<input class="gf-form-input ' + this.widthClass + '" type="text" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container);
+    this.$input = $('<input id="tag-input" class="gf-form-input ' + this.widthClass + '" type="text" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container);
 
     this.$element.after(this.$container);
 
