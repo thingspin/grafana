@@ -1,0 +1,310 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "QUAKE",
+        "enable": false,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "limit": 100,
+        "name": "이벤트",
+        "query": "select lon from quake where $timeFilter slimit 50",
+        "showIn": 0,
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "id": 7,
+  "iteration": 1556089244844,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": true,
+      "tags": [
+        "QUAKE"
+      ],
+      "title": "단말별 조회",
+      "type": "dashboards"
+    }
+  ],
+  "panels": [
+    {
+      "autoZoom": true,
+      "datasource": "QUAKE",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "lineColor": "#56A64B",
+      "links": [],
+      "maxDataPoints": 500,
+      "pointColor": "royalblue",
+      "scrollWheelZoom": true,
+      "targets": [
+        {
+          "alias": "$col",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "quake",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "lat"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "lat"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "lon"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "lon"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "TEL",
+              "operator": "=",
+              "value": "01226152680"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Vehicle - $TEL",
+      "type": "thingspin-trackmap-panel"
+    },
+    {
+      "columns": [],
+      "datasource": "QUAKE",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 6,
+      "links": [],
+      "pageSize": null,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "$col",
+          "groupBy": [],
+          "measurement": "quake",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "A1"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "A2"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "A3"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "C772"
+                ],
+                "type": "field"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "C773"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "slimit": "20000",
+          "tags": [
+            {
+              "key": "TEL",
+              "operator": "=",
+              "value": "01226152680"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "$TEL",
+      "transform": "timeseries_to_columns",
+      "type": "table"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 18,
+  "style": "dark",
+  "tags": [
+    "QUAKE"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "text": "01226152680",
+          "value": "01226152680"
+        },
+        "hide": 2,
+        "label": "등록번호",
+        "name": "TEL",
+        "options": [
+          {
+            "selected": true,
+            "text": "01226152680",
+            "value": "01226152680"
+          }
+        ],
+        "query": "01226152680",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "text": "53하1276",
+          "value": "53하1276"
+        },
+        "hide": 0,
+        "label": "차량번호",
+        "name": "ID",
+        "options": [
+          {
+            "text": "53하1276",
+            "value": "53하1276"
+          }
+        ],
+        "query": "53하1276",
+        "skipUrlSync": false,
+        "type": "textbox"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "1s",
+      "5s",
+      "10s",
+      "30s",
+      "1m"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "012-2615-2680",
+  "uid": "1BW5QvzZk",
+  "version": 11
+}

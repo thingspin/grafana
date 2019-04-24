@@ -47,6 +47,11 @@
           "text": "데이터 로그",
           "icon": "icon-gf icon-gf-panel",
           "url": "/d/30000000"
+        },
+        {
+          "text": "단말기 등록",
+          "icon": "icon-gf icon-gf-panel",
+          "url": "/d/40000000"
         }
       ]
     },
