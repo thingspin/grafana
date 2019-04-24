@@ -19,14 +19,14 @@ func addFmsMenuMigrations(mg *Migrator) {
 		"id" integer PRIMARY KEY AUTOINCREMENT,
 		"permission" varchar(20),
 		"org_id" integer,
-		'parent_id' integer references %s(id) on delete cascade,
+		'parent_id',
 		'name' text,
 		'mbid' integer references %s(id) on delete cascade,
 		'req_params' json,
 		'order' integer,
 		"created" datetime default (datetime('now', 'localtime')),
 		"updated" datetime default (datetime('now', 'localtime'))
-	)`, m.TsFmsMenuTbl, m.TsFmsMenuTbl, m.TsFmsMenuBaseTbl)
+	)`, m.TsFmsMenuTbl, m.TsFmsMenuBaseTbl)
 
 	// create table
 	mg.AddMigration("[thingspin] FMS 그룹 메뉴 테이블 생성", NewRawSqlMigration(query))
