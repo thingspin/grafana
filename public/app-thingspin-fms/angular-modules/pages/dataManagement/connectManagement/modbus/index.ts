@@ -1,4 +1,5 @@
 import angular from 'angular';
+import "./index.scss";
 import { BackendSrv } from 'app/core/services/backend_srv';
 import Tabulator from 'tabulator-tables';
 //import $ from 'jquery';
