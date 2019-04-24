@@ -1,4 +1,5 @@
 import angular from 'angular';
+import "./index.scss";
 import { BackendSrv } from 'app/core/services/backend_srv';
 import Tabulator from 'tabulator-tables';
 //import $ from 'jquery';
@@ -27,6 +28,7 @@ export class TsModbusConnectCtrl {
 
   /** @ngInject */
   constructor(private $scope , private backendSrv: BackendSrv) {
+    //for tabulator table
     this.defTabulatorOpts = {
       pagination: "local",
       paginationSize: 20,
@@ -53,30 +55,27 @@ export class TsModbusConnectCtrl {
     this.modbusQuantity = "9";
   }
   /*
-  initAddressTable() {
-    const table = new Tabulator("#addresstable", {
-      height: "311px",
-      addRowPos: "bottom",
-      columns: [
-          {title: "Name", field: "name", width: 200, editor: "input"},
-          {title: "Progress", field: "progress", width: 100, align: "right", sorter: "number", editor: "input"},
-          {title: "Gender", field: "gender", editor: "input"},
-          {title: "Rating", field: "rating", align: "center", width: 80, editor: "input"},
-        ],
-      });
-      console.log(table);
-  }
   */
+ //
+ goPrev() {
+ }
+ addAddress() {
+   console.log("addAddress button");
+ }
+ editAddress() {
+   console.log("edit button");
+ }
+ deleteAddress() {
+   console.log("delete button");
+ }
+
+ //--Tabulator 관련
  initAddressTable() {
   const opts = Object.assign({ // deep copy
       rowClick: (e, row) => { //trigger an alert message when the row is clicke
           //intput init
-
-          //--
           this.showEtcMenu(row.getData());
           this.showSelectedEdit(row.getData());
-
-          //console.log(this.selectObj.Orderid);
       },
   }, this.defTabulatorOpts);
 

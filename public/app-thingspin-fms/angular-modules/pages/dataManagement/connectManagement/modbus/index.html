@@ -37,7 +37,7 @@
                             <input class="gf-form-input width-30" ng-model="ctrl.modbusReadIntervals" type="text">
                         </div>
                         <div class="gf-form">
-                            <input type=button value="add" onclick="addOrder()">
+                            <input type=button value="add" ng-click="ctrl.addAddress()">
                             <h1>Address List</h1>
                             <div id="addressTable" ng-init="ctrl.initAddressTable()"></div>
                         </div>
@@ -52,5 +52,5 @@
 
 <div class="button-row">
     <button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">등록</button>
-    <button type="button" class="btn btn-success" ng-click="ctrl.prev()">이전</button>
+    <button type="button" class="btn btn-success" ng-click="ctrl.goPrev()">이전</button>
 </div>
