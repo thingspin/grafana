@@ -14,7 +14,8 @@ import (
 func init() {
 	bus.AddHandler("sql", GetFmsMenuByOrgId)
 	bus.AddHandler("sql", GetFmsDefaultMenu)
-	bus.AddHandler("sql", DeleteFmsMenuByOrgId)
+	//bus.AddHandler("sql", DeleteFmsMenuByOrgId)
+	bus.AddHandler("sql", DeleteFmsMenuById)
 	bus.AddHandler("sql", AddFmsMenu)
 	bus.AddHandler("sql", UpdateFmsMenu)
 	bus.AddHandler("sql", UpdateFmsMenuPinSate)
@@ -103,7 +104,8 @@ func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
 func getFmsMenuByOrgId(orgId int64) ([]*m.FmsMenu, error) {
 	var res []*m.FmsMenuQueryResult
 	selectStr := []string{
-		m.TsFmsMenuTbl + ".id",
+		//m.TsFmsMenuTbl + ".id",
+		m.TsFmsMenuBaseTbl + ".id",
 		m.TsFmsMenuTbl + ".permission",
 		m.TsFmsMenuTbl + ".parent_id",
 		m.TsFmsMenuTbl + ".req_params",
@@ -164,10 +166,9 @@ func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
 }
 
 func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
-	result, err := x.Exec(`DELETE FROM '?' WHERE id = ? OR parent_id = ?`,
-		m.TsFmsMenuTbl, cmd.Id, cmd.Id)
+	//result, err := x.Exec(`PRAGMA foreign_keys = ON`)
+	result, err := x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
 	cmd.Result = result
-
 	return err
 }
 
@@ -196,7 +197,7 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 	// L2로 이동할 때 자식이 있는지 검사
 	if cmd.Menu.FmsMenuQueryResult.ParentId != -1 {
 		has, err = x.Table(m.TsFmsMenuTbl).
-			Where(`parent_id IN ( SELECT id FROM `+m.TsFmsMenuTbl+` WHERE parent_id = -1 and id = ?)`, cmd.Menu.FmsMenuQueryResult.Id).Exist()
+			Where(`parent_id IN ( SELECT mbid FROM `+m.TsFmsMenuTbl+` WHERE parent_id = -1 and mbid = ?)`, cmd.Menu.FmsMenuQueryResult.Id).Exist()
 		//log.Error(3, "error",cmd.Menu.FmsMenuQueryResult.Order,cmd.Menu.FmsMenuQueryResult.ParentId,cmd.Menu.FmsMenuQueryResult.Text,cmd.OrgId,cmd.Menu.FmsMenuQueryResult.Id)
 		if err != nil {
 			return err
@@ -207,7 +208,7 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 
 	}
 
-	result, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND id = ?`,
+	result, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
 		cmd.Menu.FmsMenuQueryResult.ParentId, cmd.Menu.FmsMenuQueryResult.Order, cmd.OrgId, cmd.Menu.FmsMenuQueryResult.Id)
 
 	//log.Error(3, "error",err)
