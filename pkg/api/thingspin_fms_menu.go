@@ -34,7 +34,6 @@ func GetTsDefaultMenu(c *gfm.ReqContext) Response {
 func AddTsNewMenuByOrgId(c *gfm.ReqContext, cmd m.AddFmsMenuCommand) Response {
 	orgId := c.ParamsInt64(":orgId")
 	cmd.OrgId = orgId
-
 	if err := bus.Dispatch(&cmd); err != nil {
 		return Error(500, "[thingspin] Menu add command failed", err)
 	}

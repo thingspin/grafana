@@ -8,7 +8,7 @@
 		<div>
 			<span style="font-size:2em;">메뉴 리스트</span>
 			
-			<a data-nodrag ng-click="ctrl.newItem()" style="margin-left: 15px;">
+			<a data-nodrag ng-click="ctrl.newMenu()" style="margin-left: 15px;">
 				<span class="fa fa-plus-circle"></span>
 			</a>
 				
@@ -79,48 +79,36 @@
 
 	<div class="col-sm-1">
 	</div>
-<!--
+
 	<div class="col-sm-2" style="border:2px solid;">
 		<span style="font-size:1.5em;">메뉴 정보</span><br>
 		<div class="editor-row">
 			<div class="section gf-form-group">
 				<div class="gf-form">
-					<label class="gf-form-label width-6">Icon</label>
-					<
-					<input type="text" class="input-small gf-form-input width-30" ng-model="ctrl.panel.bgimagePath" ng-change="ctrl.render()" ng-model-onblur />
-					
-				</div>	
-				<div class="gf-form">
-					<label class="gf-form-label width-6">이름</label>
-					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight"/>
+					<label class="gf-form-label width-10">Icon</label>
+					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.icon"/>
 				</div>
 				<div class="gf-form">
-					<label class="gf-form-label width-6">URL</label>
-					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight"/>
+					<label class="gf-form-label width-10">이름</label>
+					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.text"/>
+				</div>
+				<div class="gf-form">
+					<label class="gf-form-label width-10">URL</label>
+					<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched" ng-model="ctrl.url">
+						
+						<option ng-repeat="option in ctrl.dashboardList" value="{{option.url}}">{{option.title}}</option>
+					</select>
 				</div>
 				<div class="gf-form">
 					<label class="gf-form-label width-6">Parameter</label>
-					<
-					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight" ng-change="ctrl.render()" ng-model-onblur />
-					
+					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.param"/>
 				</div>
 			</div>
 		</div>
+		<button class="btn btn-success width-6" ng-click="ctrl.newMenu()" type="button">등록</button>
 	</div>
-	<div class="col-sm-1">
-		<div align="center">
-			<span class="fa fa-mail-forward"></span>
-		</div>
-	</div>
-
-
-<div class="row">
-	<div class="col-sm-6">
-	  <pre class="code">{{ ctrl.data | json }}</pre>
-	</div>
-  
 </div>
--->
+
 
 
 <button class="btn btn-success width-6" onclick="location.href='http://219.251.4.237:3000'" type="button">적용</button>
