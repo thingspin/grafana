@@ -229,7 +229,13 @@ export class TsMenuManagementCtrl {
     console.log(scope);
     console.log(node);
     node.hideFromMenu = !node.hideFromMenu;
-    this.backendSrv.put('/thingspin/menu/'+node.id+'/'+node.hideFromMenu).then((res: any) => {
+    /*
+    const newData = {
+      "id": node.id,
+      "hideFromMenu": node.hideFromMenu
+    };
+    */
+    this.backendSrv.put('/thingspin/menu/hide/'+node.id+'/'+node.hideFromMenu,{}).then((res: any) => {
       // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
     });
   }

@@ -20,6 +20,7 @@ func init() {
 	bus.AddHandler("sql", UpdateFmsMenu)
 	bus.AddHandler("sql", UpdateFmsMenuPinSate)
 	bus.AddHandler("sql", GetFmsMenuUsersPin)
+	bus.AddHandler("sql", UpdateFmsMenuHideState)
 }
 
 // recursive function
@@ -275,8 +276,7 @@ func GetFmsMenuUsersPin(cmd *m.GetFmsMenuPinCommand) error {
 }
 
 
-func UpdateFmsMenuHideStateCommand(cmd *m.UpdateFmsMenuHideStateCommand) error {
-	_, err := x.Exec(`UPDATE `+m.TsFmsMenuBaseTbl+` SET hideFromMenu = ? WHERE id = ?`,
-		cmd.Id, cmd.HideFromMenu)
+func UpdateFmsMenuHideState(cmd *m.UpdateFmsMenuHideStateCommand) error {
+	_, err := x.Exec(`UPDATE `+m.TsFmsMenuBaseTbl+` SET hideFromMenu = ? WHERE id = ?`, cmd.HideFromMenu, cmd.Id)
 	return err
 }

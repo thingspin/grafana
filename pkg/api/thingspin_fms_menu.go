@@ -2,7 +2,7 @@ package api
 
 import (
 	"strconv"
-
+	//"fmt"
 	"github.com/grafana/grafana/pkg/bus"
 	gfm "github.com/grafana/grafana/pkg/models"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
@@ -82,9 +82,8 @@ func UpdateFmsMenuHideState(c *gfm.ReqContext, cmd m.UpdateFmsMenuHideStateComma
 	hide := c.Params(":hide")
 
 	cmd.HideFromMenu, _ = strconv.ParseBool(hide)
-
 	if err := bus.Dispatch(&cmd); err != nil {
-		return Error(500, "[ThingSPIN] 핀 설정에 실패하였습니다.", err)
+		return Error(500, "[ThingSPIN] 숨김 설정에 실패하였습니다.", err)
 	}
 
 	return JSON(200, cmd)
