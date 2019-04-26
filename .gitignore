@@ -36,10 +36,9 @@ public/css/*.min.css
 .vscode/
 .vs/
 
-/data/*
-!/data/api-servers/
-!/data/plugins/sys/**
-!/data/plugins/trackmap/**
+/data/grafana.db
+/data/log/*
+/data/png/*
 /bin/*
 
 conf/custom.ini
