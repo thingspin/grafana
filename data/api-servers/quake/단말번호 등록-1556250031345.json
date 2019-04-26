@@ -12,10 +12,10 @@
       }
     ]
   },
-  "editable": true,
+  "editable": false,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 10,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -40,7 +40,7 @@
       "datasource": "QUAKE",
       "fontSize": "100%",
       "gridPos": {
-        "h": 11,
+        "h": 20,
         "w": 24,
         "x": 0,
         "y": 9
@@ -79,7 +79,7 @@
           "unit": "short"
         },
         {
-          "alias": "옵션",
+          "alias": "삭제",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -90,10 +90,10 @@
           "decimals": 2,
           "link": true,
           "linkTargetBlank": true,
-          "linkTooltip": "DELETE $__cell_1 ($__cell_2)",
+          "linkTooltip": "삭제하기 $__cell_1 ($__cell_2)",
           "linkUrl": "api/cep/quake/vehiclemap/car/$__cell_1/delete",
           "mappingType": 1,
-          "pattern": "opt",
+          "pattern": "del",
           "preserveFormat": false,
           "rangeMaps": [
             {
@@ -109,6 +109,32 @@
           "valueMaps": [
             {
               "text": "<button class=\"btn btn-primary\" onclick=\"alert('hello')\"><span><i class=\"fa fa-trash\"></i></span></button>",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "alias": "위치",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "link": true,
+          "linkTooltip": "",
+          "linkUrl": "d/20000000?var-CAR=$__cell_1&var-TEL=$__cell_2",
+          "mappingType": 1,
+          "pattern": "pos",
+          "sanitize": true,
+          "thresholds": [],
+          "type": "string",
+          "unit": "short",
+          "valueMaps": [
+            {
+              "text": "<span><i class=\"fa fa-map-pin\"></i></span>",
               "value": "1"
             }
           ]
@@ -176,7 +202,25 @@
               },
               {
                 "params": [
-                  "opt"
+                  "pos"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "o"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "del"
                 ],
                 "type": "alias"
               }
@@ -203,6 +247,7 @@
     "to": "now"
   },
   "timepicker": {
+    "hidden": true,
     "refresh_intervals": [
       "5s",
       "10s",
@@ -229,6 +274,6 @@
   },
   "timezone": "",
   "title": "단말번호 등록",
-  "uid": "40000000",
-  "version": 90
+  "uid": "60000000",
+  "version": 1
 }

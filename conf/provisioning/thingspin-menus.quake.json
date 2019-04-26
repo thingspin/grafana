@@ -29,33 +29,29 @@
       ]
     },
     {
-      "text": "V2X 단말분석",
+      "text": "단말기 목록",
       "icon": "icon-gf icon-gf-panel",
-      "url": "/",
-      "children" : [
-        {
-          "text": "단말기 목록",
-          "icon": "icon-gf icon-gf-panel",
-          "url": "/d/10000000"
-        },
-        {
-          "text": "위치 추적",
-          "icon": "icon-gf icon-gf-panel",
-          "url": "/d/20000000"
-        },
-        {
-          "text": "데이터 로그",
-          "icon": "icon-gf icon-gf-panel",
-          "url": "/d/30000000"
-        },
-        {
-          "text": "단말기 등록",
-          "icon": "icon-gf icon-gf-panel",
-          "url": "/d/40000000"
-        }
-      ]
+      "url": "/d/10000000",
+      "children" : []
     },
-
+    {
+      "text": "단말 데이터",
+      "icon": "icon-gf icon-gf-panel",
+      "url": "/d/30000000",
+      "children" : []
+    },
+    {
+      "text": "단말 설정",
+      "icon": "icon-gf icon-gf-panel",
+      "url": "/d/50000000",
+      "children" : []
+    },
+    {
+      "text": "단말 등록",
+      "icon": "icon-gf icon-gf-panel",
+      "url": "/d/60000000",
+      "children" : []
+    },
     {
       "text": "시스템",
       "icon": "gicon gicon-shield",

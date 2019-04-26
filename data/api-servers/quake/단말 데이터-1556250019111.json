@@ -15,50 +15,114 @@
       }
     ]
   },
-  "editable": true,
+  "editable": false,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 2,
-  "iteration": 1556113510644,
-  "links": [
-    {
-      "asDropdown": true,
-      "icon": "external link",
-      "keepTime": true,
-      "tags": [
-        "QUAKE"
-      ],
-      "type": "dashboards"
-    },
-    {
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
-      "tags": [
-        "MENU01"
-      ],
-      "type": "dashboards"
-    },
-    {
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
-      "tags": [
-        "MENU03"
-      ],
-      "type": "dashboards"
-    },
-    {
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
-      "tags": [
-        "MENU04"
-      ],
-      "type": "dashboards"
-    }
-  ],
+  "id": 6,
+  "iteration": 1556250014549,
+  "links": [],
   "panels": [
+    {
+      "cacheTimeout": null,
+      "colorBackground": false,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#d44a3a"
+      ],
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 10,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "전화번호 : ",
+      "prefixFontSize": "80%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "alias": "$col",
+          "groupBy": [],
+          "measurement": "quake-ids",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "t"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "CAR",
+              "operator": "=~",
+              "value": "/^$CAR$/"
+            }
+          ]
+        }
+      ],
+      "thresholds": "",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "",
+      "type": "singlestat",
+      "valueFontSize": "80%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueName": "current"
+    },
     {
       "aliasColors": {
         "count": "blue"
@@ -69,9 +133,9 @@
       "datasource": "QUAKE",
       "fill": 1,
       "gridPos": {
-        "h": 4,
-        "w": 24,
-        "x": 0,
+        "h": 3,
+        "w": 14,
+        "x": 10,
         "y": 0
       },
       "id": 6,
@@ -80,7 +144,7 @@
         "current": false,
         "max": false,
         "min": false,
-        "show": true,
+        "show": false,
         "total": false,
         "values": false
       },
@@ -107,7 +171,7 @@
           "groupBy": [
             {
               "params": [
-                "10m"
+                "1h"
               ],
               "type": "time"
             },
@@ -127,19 +191,13 @@
             [
               {
                 "params": [
-                  "geohash"
+                  "raw"
                 ],
                 "type": "field"
               },
               {
                 "params": [],
                 "type": "count"
-              },
-              {
-                "params": [
-                  "10분 당  패킷"
-                ],
-                "type": "alias"
               }
             ]
           ],
@@ -156,7 +214,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "패킷 수신 카운터",
+      "title": "패킷 수신 카운트",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -196,13 +254,14 @@
     {
       "autoZoom": true,
       "datasource": "QUAKE",
+      "description": "",
       "gridPos": {
-        "h": 14,
+        "h": 8,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 3
       },
-      "id": 4,
+      "id": 10,
       "lineColor": "#56A64B",
       "links": [],
       "maxDataPoints": 500,
@@ -279,37 +338,146 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Vehicle - $TEL",
+      "title": "$CAR - $TEL",
       "type": "thingspin-trackmap-panel"
+    },
+    {
+      "columns": [],
+      "datasource": "QUAKE",
+      "description": "",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "id": 2,
+      "links": [],
+      "pageSize": null,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "link": false,
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": "row",
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "/.*/",
+          "preserveFormat": false,
+          "rangeMaps": [],
+          "sanitize": true,
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "$col",
+          "groupBy": [],
+          "limit": "10000",
+          "measurement": "quake",
+          "orderByTime": "DESC",
+          "policy": "default",
+          "query": "SELECT \"raw\" FROM \"quake\" WHERE (\"TEL\" =~ /^$TEL$/) AND $timeFilter ORDER BY time DESC LIMIT 100000",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "raw"
+                ],
+                "type": "field"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "TEL",
+              "operator": "=~",
+              "value": "/^$TEL$/"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "RAW PACKET HISTORY ($CAR : $TEL)",
+      "transform": "timeseries_to_columns",
+      "type": "table"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 18,
   "style": "dark",
   "tags": [
-    "MENU02"
+    "MENU04"
   ],
   "templating": {
     "list": [
       {
         "allValue": null,
         "current": {
-          "text": "01226152680",
-          "value": "01226152680"
+          "text": "43가5174",
+          "value": "43가5174"
         },
         "datasource": "QUAKE",
-        "definition": "show tag values from /quake/ with key=TEL",
+        "definition": "SHOW TAG VALUES FROM \"quake-ids\" WITH KEY=CAR",
         "hide": 0,
         "includeAll": false,
-        "label": "등록번호",
+        "label": "차량번호",
         "multi": false,
-        "name": "TEL",
+        "name": "CAR",
         "options": [],
-        "query": "show tag values from /quake/ with key=TEL",
+        "query": "SHOW TAG VALUES FROM \"quake-ids\" WITH KEY=CAR",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
-        "sort": 1,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "01074646222",
+          "value": "01074646222"
+        },
+        "datasource": "QUAKE",
+        "definition": "SELECT \"t\" FROM \"quake-ids\" WHERE \"CAR\" = '$CAR'",
+        "hide": 2,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "TEL",
+        "options": [],
+        "query": "SELECT \"t\" FROM \"quake-ids\" WHERE \"CAR\" = '$CAR'",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
         "tagValuesQuery": "",
         "tags": [],
         "tagsQuery": "",
@@ -319,12 +487,13 @@
     ]
   },
   "time": {
-    "from": "now-24h",
-    "to": "now"
+    "from": "now/d",
+    "to": "now/d"
   },
   "timepicker": {
     "refresh_intervals": [
       "1s",
+      "3s",
       "5s",
       "10s",
       "30s",
@@ -343,7 +512,7 @@
     ]
   },
   "timezone": "",
-  "title": "위치 검색",
-  "uid": "20000000",
-  "version": 7
+  "title": "단말 데이터",
+  "uid": "30000000",
+  "version": 17
 }

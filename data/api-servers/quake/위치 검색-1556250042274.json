@@ -18,56 +18,9 @@
   "editable": false,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 9,
-  "iteration": 1556113532519,
-  "links": [
-    {
-      "asDropdown": true,
-      "icon": "external link",
-      "keepTime": true,
-      "tags": [
-        "QUAKE"
-      ],
-      "title": "단말별조회",
-      "type": "dashboards"
-    },
-    {
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
-      "tags": [
-        "MENU01"
-      ],
-      "type": "dashboards"
-    },
-    {
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
-      "tags": [
-        "MENU02"
-      ],
-      "type": "dashboards"
-    },
-    {
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
-      "tags": [
-        "MENU03"
-      ],
-      "type": "dashboards"
-    },
-    {
-      "icon": "external link",
-      "includeVars": true,
-      "keepTime": true,
-      "tags": [
-        "MENU04"
-      ],
-      "type": "dashboards"
-    }
-  ],
+  "id": 5,
+  "iteration": 1556250036235,
+  "links": [],
   "panels": [
     {
       "aliasColors": {
@@ -90,7 +43,7 @@
         "current": false,
         "max": false,
         "min": false,
-        "show": false,
+        "show": true,
         "total": false,
         "values": false
       },
@@ -117,7 +70,7 @@
           "groupBy": [
             {
               "params": [
-                "1h"
+                "10m"
               ],
               "type": "time"
             },
@@ -128,7 +81,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "quake-raw",
+          "measurement": "quake",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -137,24 +90,36 @@
             [
               {
                 "params": [
-                  "raw"
+                  "geohash"
                 ],
                 "type": "field"
               },
               {
                 "params": [],
                 "type": "count"
+              },
+              {
+                "params": [
+                  "10분 당  패킷"
+                ],
+                "type": "alias"
               }
             ]
           ],
-          "tags": []
+          "tags": [
+            {
+              "key": "TEL",
+              "operator": "=~",
+              "value": "/^$TEL$/"
+            }
+          ]
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "패킷 수신 카운트",
+      "title": "패킷 수신 카운터",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -192,70 +157,78 @@
       }
     },
     {
-      "columns": [],
+      "autoZoom": true,
       "datasource": "QUAKE",
-      "fontSize": "100%",
+      "description": "",
       "gridPos": {
-        "h": 17,
+        "h": 14,
         "w": 24,
         "x": 0,
         "y": 4
       },
-      "id": 2,
+      "id": 4,
+      "lineColor": "#56A64B",
       "links": [],
-      "pageSize": null,
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "link": false,
-          "pattern": "Time",
-          "type": "date"
-        },
-        {
-          "alias": "",
-          "colorMode": "row",
-          "colors": [
-            "rgba(50, 172, 45, 0.97)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(245, 54, 54, 0.9)"
-          ],
-          "decimals": 2,
-          "mappingType": 1,
-          "pattern": "/.*/",
-          "preserveFormat": false,
-          "rangeMaps": [],
-          "sanitize": true,
-          "thresholds": [],
-          "type": "string",
-          "unit": "short"
-        }
-      ],
+      "maxDataPoints": 500,
+      "pointColor": "royalblue",
+      "scrollWheelZoom": true,
       "targets": [
         {
           "alias": "$col",
-          "groupBy": [],
-          "limit": "10000",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
           "measurement": "quake",
-          "orderByTime": "DESC",
+          "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT \"raw\" FROM \"quake\" WHERE $timeFilter ORDER BY time DESC LIMIT 10000",
-          "rawQuery": false,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
             [
               {
                 "params": [
-                  "raw"
+                  "lat"
                 ],
                 "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "lat"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "lon"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "last"
+              },
+              {
+                "params": [
+                  "lon"
+                ],
+                "type": "alias"
               }
             ]
           ],
@@ -263,59 +236,67 @@
             {
               "key": "TEL",
               "operator": "=~",
-              "value": "/^$TEL$/"
+              "value": "/^$TEL/"
             }
           ]
         }
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "RAW PACKET HISTORY",
-      "transform": "timeseries_to_columns",
-      "type": "table"
+      "title": "$CAR - $TEL",
+      "type": "thingspin-trackmap-panel"
     }
   ],
-  "refresh": "3s",
+  "refresh": false,
   "schemaVersion": 18,
   "style": "dark",
   "tags": [
-    "MENU04"
+    "MENU02"
   ],
   "templating": {
     "list": [
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "selected": false,
+          "text": "43가5174",
+          "value": "43가5174"
+        },
+        "datasource": "QUAKE",
+        "definition": "show tag values from /quake-ids/ with key=CAR",
+        "hide": 0,
+        "includeAll": false,
+        "label": "차량번호",
+        "multi": false,
+        "name": "CAR",
+        "options": [],
+        "query": "show tag values from /quake-ids/ with key=CAR",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
           "text": "01074646222",
           "value": "01074646222"
         },
         "datasource": "QUAKE",
-        "definition": "show tag values from /quake/ with key=TEL",
-        "hide": 0,
-        "includeAll": true,
-        "label": null,
-        "multi": true,
+        "definition": "SELECT t FROM /quake-ids/ WHERE (\"CAR\" = '$CAR')",
+        "hide": 2,
+        "includeAll": false,
+        "label": "등록번호",
+        "multi": false,
         "name": "TEL",
-        "options": [
-          {
-            "selected": false,
-            "text": "All",
-            "value": "$__all"
-          },
-          {
-            "selected": true,
-            "text": "01074646222",
-            "value": "01074646222"
-          },
-          {
-            "selected": false,
-            "text": "01226152680",
-            "value": "01226152680"
-          }
-        ],
-        "query": "show tag values from /quake/ with key=TEL",
-        "refresh": 0,
+        "options": [],
+        "query": "SELECT t FROM /quake-ids/ WHERE (\"CAR\" = '$CAR')",
+        "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
         "sort": 1,
@@ -328,8 +309,8 @@
     ]
   },
   "time": {
-    "from": "now-24h",
-    "to": "now"
+    "from": "2019-04-22T21:36:21.298Z",
+    "to": "2019-04-25T06:08:18.490Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -353,7 +334,7 @@
     ]
   },
   "timezone": "",
-  "title": "데이터 로그",
-  "uid": "30000000",
-  "version": 15
+  "title": "위치 검색",
+  "uid": "20000000",
+  "version": 3
 }
