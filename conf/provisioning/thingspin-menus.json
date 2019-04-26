@@ -69,7 +69,7 @@
         {
           "text": "대시보드",
           "icon": "fa fa-tv",
-          "url": "",
+          "url": "/dashboards",
           "placeBottom": true,
           "canDelete": true,
           "children": []
