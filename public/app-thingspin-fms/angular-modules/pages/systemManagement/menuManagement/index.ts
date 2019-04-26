@@ -8,10 +8,15 @@ export class TsMenuManagementCtrl {
   options: any;
   backendSrv: any;
   evt: any;
+  icon: any;
+  text: any;
+  url: any;
+  param: any;
+  dashboardList: any;
   /** @ngInject */
   constructor(backendSrv) {
     this.backendSrv = backendSrv;
-
+    this.icon = "fa fa-folder-o";
     this.options = {
       dropped: (event) => {
         console.log(event);
@@ -203,6 +208,10 @@ export class TsMenuManagementCtrl {
       }
       */
     });
+    this.backendSrv.get('/api/search').then( data => {
+      this.dashboardList = data;
+      console.log(this.dashboardList);
+    });
   }
   hide(scope,node) {
     console.log("hide!");
@@ -217,13 +226,53 @@ export class TsMenuManagementCtrl {
       //scope.toggle();
   }
 
-  newItem() {
+  newMenu() {
       //var nodeData = this.tree2[this.tree2.length - 1];
-      this.data.push({
-        id: this.data.length + 1,
-        title: 'node ' + (this.data.length + 1),
-        hide: false
+      let max = 100;
+      if (this.data.length > 0) {
+        max = this.data[0].id;
+        for ( let _i = 1; _i < this.data.length; _i++) {
+          if (max < this.data[_i].id) {
+            max = this.data[_i].id;
+          }
+        }
+      }
+      console.log("new Menu");
+      const newData = {
+        id: max + 100,
+        order: this.data.length,
+        icon: this.icon,
+        text: this.text,
+        url: this.url
+      };
+      console.log(newData);
+      this.data.push(newData);
+      this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+        // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
+        console.log(res);
       });
+      /*
+      this.data.push({
+        canDelete: true,
+        children : [],
+        divider: false,
+        hideFromMenu: false,
+        hideFromTabs: false,
+        icon: "fa fa-bar-chart",
+        img_path: "",
+        name: "",
+        order: this.data.length,
+        parent_id: -1,
+        permission: "",
+        placeBottom: false,
+        req_params: null,
+        subtitle: "",
+        target: "",
+        text: "new",
+        url: "/thingspin/manage/data"
+        //id: this.data.length + 1,
+      });
+       */
   }
 /*
   newSubItem(scope) {

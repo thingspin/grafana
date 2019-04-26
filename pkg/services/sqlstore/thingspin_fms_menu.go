@@ -172,10 +172,45 @@ func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
 	return err
 }
 
+func doTransaction(callback dbTransactionFunc) error {
+	var err error
+	sess := &DBSession{Session: x.NewSession()}
+	defer sess.Close()
+	if err = sess.Begin(); err != nil {
+		return err
+	}
+	err = callback(sess)
+
+	if err != nil {
+		sess.Rollback()
+		return err
+	} else if err = sess.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
-	result, err := x.Exec(`INSERT INTO '?' ('org_id', 'name', 'menu') VALUES (?, '?', '?')`,
-		m.TsFmsMenuTbl, cmd.OrgId, cmd.Name, cmd.Menu)
-	cmd.Result = result
+	err := doTransaction(func(sess *DBSession) error {
+		deletes := []string{
+			`INSERT INTO `+m.TsFmsMenuBaseTbl+` ('id', 'text', 'icon', 'img_path', 'url', 'target', 'hideFromMenu', 
+				'hideFromTabs', 'placeBottom', 'divider', 'canDelete') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			`INSERT INTO `+m.TsFmsMenuTbl+` ('org_id', 'parent_id','name','mbid','order') VALUES (?,?,?,?,?)`,
+		}
+	
+		result, err := sess.Exec(deletes[0], cmd.Id, cmd.Name, cmd.Icon, "NULL", cmd.Url, "NULL", false, false, false, false, true)
+		cmd.Result = result
+		if err != nil {
+			return err
+		}
+		result, err = sess.Exec(deletes[1], cmd.OrgId, -1, cmd.Name, cmd.Id, cmd.Order)
+		cmd.Result = result
+		if err != nil {
+			return err
+		}
+		return nil
+	})
 
 	return err
 }

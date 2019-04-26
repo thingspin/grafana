@@ -1,20 +1,21 @@
+<div class="row" >
+	<span style="font-size:1.5em;margin-top:20px;margin-left:40px">메뉴 관리</span><br>
+	<span style="font-size:0.5em;margin-top:30px;margin-left:10px">메뉴 리스트의 항목은 사용자 편의에 따라 숨기기가 가능하며, 새로운 메뉴 추가와 삭제 기능을 지원합니다.(단 추가 한 메뉴 리스트만 삭제 가능 합니다.)</span><br>
 
-<div class="row">
-	<div class="col-sm-3">
-	</div>
+	<button style="margin-top:20px;margin-left:150px;background-color:#1e88e5" class="btn width-6" onclick="location.href='http://219.251.4.237:3000'" type="button">적용</button>
 </div>
 <div class="row">
-	<div class="col-sm-5" style="border:2px solid;">
-		<div>
-			<span style="font-size:2em;">메뉴 리스트</span>
+	<div class="col-sm-4" ng-style="{'margin-left': '40px','width':'650px'}">
+		<div style="text-align:center;margin-top:10px;margin-bottom:10px;background-color:#f5f5f5;height:32px">
+			<span style="font-size:2em">전체 메뉴 리스트</span>
 			
-			<a data-nodrag ng-click="ctrl.newItem()" style="margin-left: 15px;">
+			<a data-nodrag ng-click="ctrl.newMenu()" style="margin-left: 15px;">
 				<span class="fa fa-plus-circle"></span>
 			</a>
 				
 		</div>
 					
-		<div ui-tree="ctrl.options" id="tree2-root">
+		<div ui-tree="ctrl.options" id="tree2-root" style="background-color:rgba(255,255,255,0.52)">
 			<ol ui-tree-nodes="" ng-model="ctrl.data">
 				<li ng-repeat="node in ctrl.data" ui-tree-node>
 					<div ui-tree-handle class="tree-node tree-node-content">
@@ -76,51 +77,32 @@
 		</div>
 					
 	</div>
-
-	<div class="col-sm-1">
-	</div>
-<!--
-	<div class="col-sm-2" style="border:2px solid;">
-		<span style="font-size:1.5em;">메뉴 정보</span><br>
+	<div class="col-sm-4" ng-style="{'margin-left': '40px','background-color':'rgba(255,255,255,0.52)','width':'650px'}">
+		<div style="text-align:center;background-color:#f5f5f5;height:32px">
+			<span style="font-size:2em;margin-top:10px;margin-bottom:10px">메뉴 정보</span>		
+		</div>
 		<div class="editor-row">
 			<div class="section gf-form-group">
 				<div class="gf-form">
 					<label class="gf-form-label width-6">Icon</label>
-					<
-					<input type="text" class="input-small gf-form-input width-30" ng-model="ctrl.panel.bgimagePath" ng-change="ctrl.render()" ng-model-onblur />
-					
-				</div>	
+					<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.icon"/>
+				</div>
 				<div class="gf-form">
 					<label class="gf-form-label width-6">이름</label>
-					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight"/>
+					<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.text"/>
 				</div>
 				<div class="gf-form">
 					<label class="gf-form-label width-6">URL</label>
-					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight"/>
+					<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched width-18" ng-model="ctrl.url">
+						<option ng-repeat="option in ctrl.dashboardList" value="{{option.url}}">{{option.title}}</option>
+					</select>
 				</div>
 				<div class="gf-form">
 					<label class="gf-form-label width-6">Parameter</label>
-					<
-					<input type="text" class="input-small gf-form-input width-5" ng-model="ctrl.panel.imageHeight" ng-change="ctrl.render()" ng-model-onblur />
-					
+					<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.param"/>
 				</div>
 			</div>
 		</div>
+		<button class="btn width-7" ng-click="ctrl.newMenu()" style="background-color:#1e88e5" type="button">등록 하기</button>
 	</div>
-	<div class="col-sm-1">
-		<div align="center">
-			<span class="fa fa-mail-forward"></span>
-		</div>
-	</div>
-
-
-<div class="row">
-	<div class="col-sm-6">
-	  <pre class="code">{{ ctrl.data | json }}</pre>
-	</div>
-  
 </div>
--->
-
-
-<button class="btn btn-success width-6" onclick="location.href='http://219.251.4.237:3000'" type="button">적용</button>
