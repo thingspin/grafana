@@ -273,3 +273,10 @@ func GetFmsMenuUsersPin(cmd *m.GetFmsMenuPinCommand) error {
 
 	return err
 }
+
+
+func UpdateFmsMenuHideStateCommand(cmd *m.UpdateFmsMenuHideStateCommand) error {
+	_, err := x.Exec(`UPDATE `+m.TsFmsMenuBaseTbl+` SET hideFromMenu = ? WHERE id = ?`,
+		cmd.Id, cmd.HideFromMenu)
+	return err
+}

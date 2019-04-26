@@ -78,3 +78,8 @@ type UpdateFmsMenuOrderCommand struct {
 	Menu   FmsMenu `json:"menu"`
 	Result sql.Result
 }
+
+type UpdateFmsMenuHideStateCommand struct {
+	Id           int      `xorm:"int notnull 'id'" json:"id"`
+	HideFromMenu bool     `xorm:"bool notnull 'hideFromMenu'" json:"hideFromMenu"`
+}

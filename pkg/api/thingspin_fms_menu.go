@@ -77,6 +77,19 @@ func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
 	return JSON(200, cmd.Result)
 }
 
+func UpdateFmsMenuHideState(c *gfm.ReqContext, cmd m.UpdateFmsMenuHideStateCommand) Response {
+	cmd.Id = c.ParamsInt(":id")
+	hide := c.Params(":hide")
+
+	cmd.HideFromMenu, _ = strconv.ParseBool(hide)
+
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[ThingSPIN] 핀 설정에 실패하였습니다.", err)
+	}
+
+	return JSON(200, cmd)
+}
+
 func UpdateFmsMenuPinSate(c *gfm.ReqContext, cmd m.UpdateFmsMenuPinSateCommand) Response {
 	cmd.UserID = c.UserId
 	cmd.ID = c.ParamsInt(":menuId")
