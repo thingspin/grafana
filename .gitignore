@@ -36,7 +36,7 @@ public/css/*.min.css
 .vscode/
 .vs/
 
-/data/grafana.db
+/data/grafana.db*
 /data/log/*
 /data/png/*
 /bin/*
