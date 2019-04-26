@@ -1,11 +1,10 @@
-# # config file version
 apiVersion: 1
 
-#providers:
-# - name: 'default'
-#   orgId: 1
-#   folder: ''
-#   folderUid: ''
-#   type: file
-#   options:
-#     path: /var/lib/grafana/dashboards
+providers:
+- name: 'samples'
+  orgId: 1
+  folder: 'samples'
+  folderUid: '0000000'
+  type: file
+  options:
+    path: conf\\provisioning\\dashboards\\samples

@@ -19,7 +19,7 @@
       "name": "NodeRED Complex Event Processing",
       "api": "api/cep",
       "enable": true,
-      "url": "http://localhost:1880",
+      "url": "http://219.251.4.237:1880",
       "attachURL": true,
       "run": false,
       "shell": "node",

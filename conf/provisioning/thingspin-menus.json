@@ -192,6 +192,30 @@
       "children": []
     },
     {
+      "text": "대시보드",
+      "icon": "fa fa-fw fa-home",
+      "url": "/",
+      "hideFromMenu": false,
+      "placeBottom": true,
+      "children" : [
+        {
+          "text": "추가",
+          "icon": "gicon gicon-dashboard-new",
+          "url": "/dashboard/new"
+        },
+        {
+          "text": "불러오기",
+          "icon": "gicon gicon-dashboard-import",
+          "url": "/dashboard/import"
+        },
+        {
+          "text": "관리",
+          "icon": "gicon gicon-manage",
+          "url": "/dashboards"
+        }
+      ]
+    },
+    {
       "text": "시스템 관리",
       "icon": "gicon gicon-shield",
       "url": "/thingspin/manage/system",
