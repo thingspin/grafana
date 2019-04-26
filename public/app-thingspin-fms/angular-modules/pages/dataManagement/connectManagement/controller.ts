@@ -1,62 +1,60 @@
-import angular from "angular";
-
-import mqtt from "mqtt";
+ import angular from "angular";
 
 import { TsConnect, GroupTsConnect } from "app-thingspin-fms/models/connect";
 import { BackendSrv } from 'app/core/services/backend_srv';
 
+import TsMqttController from 'app-thingspin-fms/utils/mqttController';
+
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
-    mqttClient: mqtt.Client;
-    connectMenuOpen: boolean;
+    readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
+    readonly listenerTopic: string = "/thingspin/connect/#" as string;
+    mqttClient: TsMqttController; // mqtt client instance
+
+    connectMenuOpen: boolean = false as boolean;
     connectTypeList: string[];
     groupList: GroupTsConnect;
-    mqttPubOpts: mqtt.IClientPublishOptions = {
-        retain: true,
-        qos: 0,
-        dup: false,
-    };
 
     /** @ngInject */
     constructor(private $scope: angular.IScope, private $location: angular.ILocationService,
     private backendSrv: BackendSrv,) { }// Dependency Injection
 
     $onInit(): void {
-        this.connectMenuOpen = false;
         this.asyncUpdateTypeList();
         this.asyncUpdateList();
+
         this.initMqtt();
     }
 
-    initMqtt() {
-        const url = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
-        const listenerTopic = "/thingspin/connect/#" as string;
-
-        this.mqttClient = mqtt.connect(url)
-            .subscribe(listenerTopic)
-            .on("message", this.recvMqttMessage);
+    $onDestroy(): void {
+        if (this.mqttClient) {
+            this.mqttClient.end();
+        }
     }
 
-    recvMqttMessage(topic: string, payload: Uint16Array) {
-        const topics: string[] = topic.split("/"),
-            str: string = payload.toString();
-
-        let obj: string | object;
+    async initMqtt() {
+        this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
         try {
-            obj = JSON.parse(str); // parse try
+            await this.mqttClient.run(this.recvMqttMessage.bind(this));
+            console.log("MQTT Connected");
         } catch (e) {
-            // is not json object
-            obj = str;
+            console.error(e);
         }
-        console.log(topics, obj);
     }
 
-    publishMqtt(topic: string, message: string): void {
+    recvMqttMessage(topic: string, payload: string | object): void {
+        console.log(topic, payload);
+    }
+
+    publishMqtt(topic: string, message: string): Error {
         if (!this.mqttClient) {
-            return;
+            const message: string = "MQTT Client is not generated" as string;
+            console.error(message);
+
+            return new Error(message);
         }
 
-        this.mqttClient.publish(topic, message, this.mqttPubOpts);
+        return this.mqttClient.publish(topic, message);
     }
 
     async asyncUpdateTypeList(): Promise<void> {
@@ -86,13 +84,15 @@ export default class TsConnectManagementCtrl implements angular.IController {
         try {
             await this.backendSrv.delete(`thingspin/connect/${id}`);
             // publish mqtt data
-            const list = this.groupList[type];
+            const list: TsConnect[] = this.groupList[type];
             for (const index in list) {
                 const item: TsConnect = list[index];
+
                 if (item.id === id) {
-                    const baseTopic = `/thingspin/connect/${item.flow_id}`;
+                    const baseTopic: string = `/thingspin/connect/${item.flow_id}` as string;
                     this.publishMqtt(`${baseTopic}/status`, '');
                     this.publishMqtt(`${baseTopic}/data`, '');
+
                     list.splice(parseInt(index, 10), 1);
                     break;
                 }
@@ -106,7 +106,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     async asyncToggleConnect(type: string, id: number): Promise<void> {
         try {
             await this.backendSrv.patch(`thingspin/connect/${id}`, {});
-            const list = this.groupList[type];
+            const list: TsConnect[] = this.groupList[type];
             for (const index in list) {
                 if (list[index].id === id) {
                     list[index].active = !list[index].active;
@@ -124,7 +124,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         const result: GroupTsConnect = {};
 
         for (const item of list) {
-            const { type } = item;
+            const { type }: { type: string } = item;
 
             if (result[type]) {
                 result[type].push(item);
