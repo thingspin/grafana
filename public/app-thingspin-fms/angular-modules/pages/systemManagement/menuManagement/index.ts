@@ -13,10 +13,21 @@ export class TsMenuManagementCtrl {
   url: any;
   param: any;
   dashboardList: any;
+  isNew: any;
+  isModi: any;
+  menuInfoType: any;
   /** @ngInject */
   constructor(backendSrv) {
     this.backendSrv = backendSrv;
+    // init for menuInfo
     this.icon = "fa fa-folder-o";
+    this.isNew = false;
+    this.isModi = false;
+    this.text = "";
+    this.url = "";
+    this.param = "";
+    this.menuInfoType = "";
+
     this.options = {
       dropped: (event) => {
         console.log(event);
@@ -213,10 +224,17 @@ export class TsMenuManagementCtrl {
       console.log(this.dashboardList);
     });
   }
-  hide(scope,node) {
+  blur(scope,node) {
     console.log("hide!");
     console.log(scope);
     console.log(node);
+    node.hideFromMenu = !node.hideFromMenu;
+    /*
+    this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+      // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
+      console.log(res);
+    });
+    */
   }
 
   toggle(scope) {
@@ -226,53 +244,49 @@ export class TsMenuManagementCtrl {
       //scope.toggle();
   }
 
-  newMenu() {
-      //var nodeData = this.tree2[this.tree2.length - 1];
-      let max = 100;
-      if (this.data.length > 0) {
-        max = this.data[0].id;
-        for ( let _i = 1; _i < this.data.length; _i++) {
-          if (max < this.data[_i].id) {
-            max = this.data[_i].id;
-          }
+  createNewMenu() {
+    console.log("trying to create a menu!");
+    //var nodeData = this.tree2[this.tree2.length - 1];
+    let max = 100;
+    if (this.data.length > 0) {
+      max = this.data[0].id;
+      for ( let _i = 1; _i < this.data.length; _i++) {
+        if (max < this.data[_i].id) {
+          max = this.data[_i].id;
         }
       }
-      console.log("new Menu");
-      const newData = {
-        id: max + 100,
-        order: this.data.length,
-        icon: this.icon,
-        text: this.text,
-        url: this.url
-      };
-      console.log(newData);
-      this.data.push(newData);
-      this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-        // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
-        console.log(res);
-      });
-      /*
-      this.data.push({
-        canDelete: true,
-        children : [],
-        divider: false,
-        hideFromMenu: false,
-        hideFromTabs: false,
-        icon: "fa fa-bar-chart",
-        img_path: "",
-        name: "",
-        order: this.data.length,
-        parent_id: -1,
-        permission: "",
-        placeBottom: false,
-        req_params: null,
-        subtitle: "",
-        target: "",
-        text: "new",
-        url: "/thingspin/manage/data"
-        //id: this.data.length + 1,
-      });
-       */
+    }
+    console.log("new Menu");
+    const newData = {
+      id: max + 100,
+      order: this.data.length,
+      icon: this.icon,
+      text: this.text,
+      url: this.url
+    };
+    console.log(newData);
+    this.data.push(newData);
+    this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+      // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
+      console.log(res);
+    });
+    // init
+    this.isNew = false;
+    this.isModi = false;
+    this.text = "";
+    this.url = "";
+    this.param = "";
+    this.menuInfoType = "";
+  }
+
+  newMenu() {
+      console.log("Create button Clicked!");
+      this.isNew = true;
+      this.isModi = false;
+      this.text = "";
+      this.url = "";
+      this.param = "";
+      this.menuInfoType = "";
   }
 /*
   newSubItem(scope) {
