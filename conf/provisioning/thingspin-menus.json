@@ -224,38 +224,50 @@
       "children" : [
         {
           "text": "그룹 관리",
-          "icon": "gicon gicon-shield",
-          "url": "",
-          "canDelete": true,
-          "children": []
+          "icon": "gicon gicon-team",
+          "url": "/org",
+          "canDelete": false
         },
         {
           "text": "사용자 관리",
           "icon": "gicon gicon-shield",
           "url": "/thingspin/manage/system/user",
-          "canDelete": true,
-          "children": []
+          "canDelete": false
         },
         {
           "text": "라이센스 관리",
           "icon": "gicon gicon-shield",
           "url": "",
-          "canDelete": true,
-          "children": []
+          "canDelete": false
         },
         {
           "text": "메뉴 관리",
           "icon": "fa fa-fw fa-keyboard-o",
           "url": "/thingspin/manage/system/menu",
-          "canDelete": false,
-          "children": []
+          "canDelete": false
+        },
+        {
+          "text": "데이터 소스",
+          "icon": "gicon gicon-shield",
+          "url": "/alerting",
+          "canDelete": false
+        },
+        {
+          "text": "플러그인",
+          "icon": "gicon gicon-plugins",
+          "url": "/plugins"
+        },
+        {
+          "text": "시스템 경고",
+          "icon": "gicon gicon-alert-rules",
+          "url": "/alerting",
+          "canDelete": false
         },
         {
           "text": "로그",
           "icon": "gicon gicon-shield",
           "url": "",
-          "canDelete": true,
-          "children": []
+          "canDelete": true
         }
       ]
     }
