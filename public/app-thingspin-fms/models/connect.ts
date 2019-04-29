@@ -6,6 +6,8 @@ export interface TsConnect {
     type: string;
     params: any;
     active: boolean;
+    enable: boolean;
+    intervals: number;
     creatd: Date;
     updated: Date;
 }

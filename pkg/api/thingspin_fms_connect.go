@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"strconv"
 
 	"github.com/grafana/grafana/pkg/thingspin"
 
@@ -56,7 +57,7 @@ func getTsConnect(c *gfm.ReqContext) Response {
 func activeNodeRedFlow(info m.TsConnectField) (*m.NodeRedResponse, error) {
 	if info.Active == true {
 		// not exist node-red flow
-		return thingspin.AddFlowNode(info.Type, info.Params)
+		return thingspin.AddFlowNode(info.Type, info)
 	}
 	// already added node-red flow
 	return thingspin.RemoveFlowNode(info.FlowId)
@@ -67,7 +68,7 @@ func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	newFlowId := req.Params["FlowId"].(string)
 
 	// add node-red flow
-	nodeResp, err := thingspin.AddFlowNode(target, req.Params)
+	nodeResp, err := thingspin.AddFlowNode(target, req)
 	if err != nil {
 		return Error(500, "ThingSPIN Connect Error", err)
 	}
@@ -88,10 +89,11 @@ func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	paramsStr, _ := json.Marshal(req.Params)
 
 	q := m.AddTsConnectQuery{
-		Name:   req.Name,
-		FlowId: newFlowId,
-		Params: string(paramsStr),
-		Type:   target,
+		Name:      req.Name,
+		FlowId:    newFlowId,
+		Intervals: req.Intervals,
+		Params:    string(paramsStr),
+		Type:      target,
 	}
 
 	// save db
@@ -117,7 +119,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	// 기존에 동작 중인 Connect에 업데이트를 할 경우
 	if info.Active == true {
 		// Node-red에 적용된 Flow 업데이트
-		nodeResp, err := thingspin.UpdateFlowNode(info.FlowId, info.Type, info.Params)
+		nodeResp, err := thingspin.UpdateFlowNode(info.FlowId, info.Type, info)
 		if err != nil {
 			return Error(500, "ThingSPIN Connect Error", err)
 		}
@@ -178,6 +180,57 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 
 	q := m.UpdateActiveTsConnectQuery{
 		Active: info.Active,
+		Enable: info.Enable,
+		FlowId: info.FlowId,
+		Id:     connId,
+	}
+
+	if err := bus.Dispatch(&q); err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	return JSON(200, q.Result)
+}
+
+func enableTsConnect(c *gfm.ReqContext) Response {
+	connId := c.ParamsInt(":connId")
+
+	// 이전 flow 정보 가져오기
+	info, err := getTsConnectInfo(connId)
+	if err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	str, err := c.Req.Body().String()
+	if err != nil {
+		return Error(500, "ThingSPIN Convert Error", err)
+	}
+
+	enable, err := strconv.ParseBool(str)
+	if err != nil {
+		return Error(500, "ThingSPIN Convert Error", err)
+	}
+	info.Enable = enable
+
+	if info.Active == true {
+		nodeResp, err := thingspin.UpdateFlowNode(info.FlowId, info.Type, info)
+		if err != nil {
+			return Error(500, "ThingSPIN Connect Error", err)
+		}
+
+		// get updated flowId
+		body := nodeResp.Body.([]byte)
+		var common map[string]interface{}
+		err = json.Unmarshal(body, &common)
+		if err != nil {
+			return Error(500, "ThingSPIN Parsing Error", err)
+		}
+		info.FlowId = common["id"].(string)
+	}
+
+	q := m.UpdateActiveTsConnectQuery{
+		Active: info.Active,
+		Enable: info.Enable,
 		FlowId: info.FlowId,
 		Id:     connId,
 	}

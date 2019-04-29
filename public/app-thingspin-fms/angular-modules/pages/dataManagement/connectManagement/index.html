@@ -6,33 +6,4 @@
     </li>
   </ul>
 </div>
-<table class="filter-table" ng-repeat="(connectType, list) in ctrl.groupList">
-  <thead>
-    <tr>
-      <th>Index</th>
-      <th>수집기 이름</th>
-      <th>수집기 종류</th>
-      <th>수집기 상태</th>
-      <!-- <th>생성 일자</th> -->
-      <!-- <th>갱신 일자</th> -->
-      <th>수집기 제어</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="(index, item) in list">
-      <td> {{ index + 1 }} </td>
-      <td> {{ item.name }} </td>
-      <td> {{ item.type }} </td>
-      <td> {{ item.active ? "동작 중" : "정지" }} </td>
-      <!-- <td> {{ item.created | date:"yyyy/MM/dd 'at' h:mma"}} </td> -->
-      <!-- <td> {{ item.updated | date:"yyyy/MM/dd 'at' h:mma"}} </td> -->
-      <td>
-        <div class="form-inline">
-            <button class="btn" ng-if="!item.active" ng-click="ctrl.asyncToggleConnect(connectType, item.id)">시작</button>
-            <button class="btn" ng-if="item.active" ng-click="ctrl.asyncToggleConnect(connectType, item.id)">중지</button>
-            <button class="btn" ng-click="ctrl.asyncRemoveConnect(connectType, item.id)">삭제</button>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div id="ts-tabulator"></div>
