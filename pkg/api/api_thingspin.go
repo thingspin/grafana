@@ -25,6 +25,8 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsMenuRoute.Get("/:orgId", Wrap(GetTsMenuByOrgId))
 			tsMenuRoute.Post("/:orgId", bind(tsm.AddFmsMenuCommand{}), Wrap(AddTsNewMenuByOrgId))
 			tsMenuRoute.Put("/:orgId", bind(tsm.UpdateFmsMenuOrderCommand{}), Wrap(EditTsMenuByOrgId))
+			tsMenuRoute.Put("/", bind(tsm.UpdateFmsMenuInfoCommand{}), Wrap(EditTsMenuInfo))
+	
 			//tsMenuRoute.Put("/:orgId", bind(tsm.UpdateFmsMenuCommand{}), Wrap(EditTsMenu8yOrgId))
 			//tsMenuRoute.Delete("/:orgId", Wrap(DeleteTsMenuByOrgId))
 			tsMenuRoute.Delete("/:id", Wrap(DeleteTsMenuById))
