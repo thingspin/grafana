@@ -8,6 +8,7 @@ import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
+    readonly pageBathPath: string = `/thingspin/manage/data/connect` as string;
     readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
     readonly listenerTopic: string = "/thingspin/connect/#" as string;
     mqttClient: TsMqttController; // mqtt client instance
@@ -80,6 +81,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 <div class="${data.type}">${data.type}</div>
             </div>
             `)(this.$scope);
+
             onRendered((): void => {
                 $(cell.getElement()).append($html);
             });
@@ -126,6 +128,14 @@ export default class TsConnectManagementCtrl implements angular.IController {
         });
     }
 
+    showEdit(type: string, id: number) {
+        this.$location.path(`${this.pageBathPath}/${type}/${id}`);
+    }
+
+    changePage(type: string): void {
+        this.$location.path(`${this.pageBathPath}/${type}`);
+    }
+
     async asyncRun(id: number, enable: boolean) {
         if (!confirm(`데이터 수집을 ${enable ? '시작' : '중지'}하시겠습니까?`)) {
             return;
@@ -136,10 +146,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
         } catch (e) {
             console.error(e);
         }
-    }
-
-    showEdit(type: string, id: number) {
-        this.$location.path(`/thingspin/manage/data/connect/${type}/${id}`);
     }
 
     async asyncUpdateTypeList(): Promise<void> {
@@ -228,9 +234,5 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     showConnectMode(enable: boolean): void {
         this.connectMenuOpen = enable;
-    }
-
-    changePage(type: string): void {
-        this.$location.path(`/thingspin/manage/data/connect/${type}`);
     }
 }

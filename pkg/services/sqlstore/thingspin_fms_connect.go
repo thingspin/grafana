@@ -80,7 +80,7 @@ func UpdateActiveConnect(cmd *m.UpdateActiveTsConnectQuery) error {
 	sqlQuery := fmt.Sprintf(`UPDATE '%s'
 	SET 
 		active=%t,
-		enable=%t
+		enable=%t,
 		flow_id='%s', 
 		updated=datetime('now','localtime')
 	WHERE id=%d`,
