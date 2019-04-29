@@ -2,7 +2,8 @@
   "type": "datasource",
   "name": "CloudWatch",
   "id": "cloudwatch",
-
+  "state": "alpha",
+  
   "metrics": true,
   "alerting": true,
   "annotations": true,

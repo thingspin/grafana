@@ -1,0 +1,50 @@
+<div class="gf-form-group">
+    <div class="grafana-info-box">
+        <h2>자동차번호/통신회선 매핑</h2>
+        <p>
+            자동차 등록번호와 전화번호를 입력하여 조회에 사용 하도록 합니다.<br>
+            <code>(예) 43가6172 : 01075646321</code>
+        </p>
+    </div>
+</div>
+    
+<form class="gf-form-group" accept-charset="utf-8" id="vehicle_map" name = "vehicle_map" method = "post">
+    <legend>입력</legend>
+
+    <div class="gf-form-group section">
+        <div class="gf-form">
+            <span class="gf-form-label width-10">자동차 번호</span>
+            <input type="text" required class="gf-form-input max-width-14" name = "vid" placeholder="43가5174">
+        </div>
+
+        <div class="gf-form">
+            <span class="gf-form-label width-10">통신회선번호</span>
+            <input type="text" required placeholder="00011112222" class="gf-form-input max-width-14" name = "tid" placeholder="01074646221">
+        </div>
+    </div>
+    <div class="gf-form-group section">
+        <div class="gf-form-button-row">
+            <button type = "submit" class="btn btn-primary">저장</button>
+            <button type = "reset" class="btn btn-primary">취소</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    $('#vehicle_map').submit(function(e){
+    e.preventDefault();
+    $.ajax({
+        url:'api/cep/quake/vehiclemap',
+        type:'post',
+        data:$('#vehicle_map').serialize(),
+        success: function() {
+            //alert("등록을 성공하였습니다.");
+            //location = location;
+            location.reload(true/false);
+        },
+        error: function(data ) { 
+            alert("등록하지 못하였습니다. - " + data); 
+        },
+    });
+});
+</script>

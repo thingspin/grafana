@@ -2,7 +2,25 @@
 
 .fms-menu {
   position: relative;
-  margin: 0px;
+  // margin: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  width: 100%;
+  flex: 1;
+  display: flex;
 
   background-color: #1976d2;
+
+  &-top {
+    margin-bottom: auto;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  &-bottom {
+    margin-top: auto;
+    padding-bottom: 18px;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
 }

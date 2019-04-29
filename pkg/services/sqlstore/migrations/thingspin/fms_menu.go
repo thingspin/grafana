@@ -19,14 +19,14 @@ func addFmsMenuMigrations(mg *Migrator) {
 		"id" integer PRIMARY KEY AUTOINCREMENT,
 		"permission" varchar(20),
 		"org_id" integer,
-		'parent_id' integer references %s(id) on delete cascade,
+		'parent_id',
 		'name' text,
 		'mbid' integer references %s(id) on delete cascade,
 		'req_params' json,
 		'order' integer,
 		"created" datetime default (datetime('now', 'localtime')),
 		"updated" datetime default (datetime('now', 'localtime'))
-	)`, m.TsFmsMenuTbl, m.TsFmsMenuTbl, m.TsFmsMenuBaseTbl)
+	)`, m.TsFmsMenuTbl, m.TsFmsMenuBaseTbl)
 
 	// create table
 	mg.AddMigration("[thingspin] FMS 그룹 메뉴 테이블 생성", NewRawSqlMigration(query))
@@ -82,9 +82,9 @@ func addFmsMenuMigrations(mg *Migrator) {
 		insertData = append(insertData, getInsertQueryData(35, 0, 32, "NULL", 35, 3))
 	} else {
 		for _, menu := range menus {
-			insertData = append(insertData, getInsertQueryData(menu.Id, 0, menu.ParentId, menu.Name, menu.Id, menu.Order))
+			insertData = append(insertData, getInsertQueryData(menu.Id, 1, menu.ParentId, menu.Name, menu.Id, menu.Order))
 			for _, child := range menu.Children {
-				insertData = append(insertData, getInsertQueryData(child.Id, 0, child.ParentId, child.Name, child.Id, child.Order))
+				insertData = append(insertData, getInsertQueryData(child.Id, 1, child.ParentId, child.Name, child.Id, child.Order))
 			}
 		}
 	}

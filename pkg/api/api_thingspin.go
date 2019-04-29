@@ -24,8 +24,13 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsMenuRoute.Get("/default", Wrap(GetTsDefaultMenu))
 			tsMenuRoute.Get("/:orgId", Wrap(GetTsMenuByOrgId))
 			tsMenuRoute.Post("/:orgId", bind(tsm.AddFmsMenuCommand{}), Wrap(AddTsNewMenuByOrgId))
-			tsMenuRoute.Put("/:orgId", bind(tsm.UpdateFmsMenuCommand{}), Wrap(EditTsMenu8yOrgId))
-			tsMenuRoute.Delete("/:orgId", Wrap(DeleteTsMenuByOrgId))
+			tsMenuRoute.Put("/:orgId", bind(tsm.UpdateFmsMenuOrderCommand{}), Wrap(EditTsMenuByOrgId))
+			//tsMenuRoute.Put("/:orgId", bind(tsm.UpdateFmsMenuCommand{}), Wrap(EditTsMenu8yOrgId))
+			//tsMenuRoute.Delete("/:orgId", Wrap(DeleteTsMenuByOrgId))
+			tsMenuRoute.Delete("/:id", Wrap(DeleteTsMenuById))
+			tsMenuRoute.Put("/hide/:id/:hide", bind(tsm.UpdateFmsMenuHideStateCommand{}), Wrap(UpdateFmsMenuHideState))
+			tsMenuRoute.Get("/pin", bind(tsm.GetFmsMenuPinCommand{}), Wrap(GetFmsMenuPin))
+			tsMenuRoute.Post("/pin/:menuId/:pin", bind(tsm.UpdateFmsMenuPinSateCommand{}), Wrap(UpdateFmsMenuPinSate))
 		})
 
 		// 연결 관리 기본 동작 API

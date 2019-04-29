@@ -19,6 +19,7 @@ type FmsMenuQueryResult struct {
 	Target       string                   `xorm:"text 'target'" json:"target"`
 	HideFromMenu bool                     `xorm:"bool notnull 'hideFromMenu'" json:"hideFromMenu"`
 	HideFromTabs bool                     `xorm:"bool notnull 'hideFromTabs'" json:"hideFromTabs"`
+	PlaceBottom  bool                     `xorm:"bool notnull 'placeBottom'" json:"placeBottom"`
 	Divider      bool                     `xorm:"bool notnull 'divider'" json:"divider"`
 	CanDelete    bool                     `xorm:"bool notnull 'canDelete'" json:"canDelete"`
 }
@@ -49,11 +50,36 @@ type DeleteFmsMenuByIdQuery struct {
 
 type AddFmsMenuCommand struct {
 	OrgId  int64                    `json:"orgId"`
-	Name   string                   `json:"name"`
-	Menu   []map[string]interface{} `json:"menu"`
+	Id     int                      `json:"id"`
+	Order  int                      `json:"order"`
+	Icon   string                   `json:"icon"`
+	Name   string                   `json:"text"`
+	Url    string                   `json:"url"`
 	Result sql.Result
 }
 
 type UpdateFmsMenuCommand struct {
 	AddFmsMenuCommand
+}
+
+type UpdateFmsMenuPinSateCommand struct {
+	UserID int64 `xorm:"int notnull 'uid'" json:"uid"`
+	ID     int   `xorm:"int notnull 'id'" json:"id"`
+	Pin    bool  `xorm:"bool notnull 'pin'" json:"pin"`
+}
+
+type GetFmsMenuPinCommand struct {
+	UserID  int64 `xorm:"int notnull 'uid'" json:"uid"`
+	MenuIDs []int
+}
+
+type UpdateFmsMenuOrderCommand struct {
+	OrgId  int64   `json:"orgId"`
+	Menu   FmsMenu `json:"menu"`
+	Result sql.Result
+}
+
+type UpdateFmsMenuHideStateCommand struct {
+	Id           int      `xorm:"int notnull 'id'" json:"id"`
+	HideFromMenu bool     `xorm:"bool notnull 'hideFromMenu'" json:"hideFromMenu"`
 }

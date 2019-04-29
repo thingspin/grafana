@@ -2,7 +2,8 @@
   "name": "Graphite",
   "type": "datasource",
   "id": "graphite",
-
+  "state": "alpha",
+  
   "includes": [{ "type": "dashboard", "name": "Graphite Carbon Metrics", "path": "dashboards/carbon_metrics.json" }],
 
   "metrics": true,

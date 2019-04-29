@@ -7,8 +7,7 @@
             </div>
             <div class="page-body">
                 <div class="gf-form-group">
-                    <div class="gf-form-inline">
-                        
+                    <div class="gf-form-inline">                       
                         <div class="gf-form">
                             <span class="gf-form-label width-10">1. 연결이름</span>
                             <input class="gf-form-input width-30" ng-model="ctrl.connName" type="text">
@@ -22,18 +21,6 @@
                             <input class="gf-form-input width-30" ng-model="ctrl.modbusPort" type="text">
                         </div>
                         <div class="gf-form">
-                            <span class="gf-form-label width-10">4. ADDRESS</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusAddress" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <span class="gf-form-label width-10">5. Quantity</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusQuantity" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <span class="gf-form-label width-10">6. FC</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusFC" type="text">
-                        </div>
-                        <div class="gf-form">
                             <span class="gf-form-label width-10">7. Unit-ID</span>
                             <input class="gf-form-input width-30" ng-model="ctrl.modbusUnitID" type="text">
                         </div>
@@ -42,19 +29,28 @@
                             <input class="gf-form-input width-30" ng-model="ctrl.modbusTimeOut" type="text">
                         </div>
                         <div class="gf-form">
-                            <span class="gf-form-label width-10">9. Reconnect TimeOut(ms)</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusReTimeOut" type="text">
+                            <span class="gf-form-label width-15">9. Reconnect Time Out(ms)</span>
+                            <input class="gf-form-input width-25" ng-model="ctrl.modbusReTimeOut" type="text">
                         </div>
                         <div class="gf-form">
                             <span class="gf-form-label width-10">10. Read Intervals</span>
                             <input class="gf-form-input width-30" ng-model="ctrl.modbusReadIntervals" type="text">
                         </div>
-                            <button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">등록</button>
-                        <div class="gf-form-button-row">    
-                            <a class="btn btn-link" ng-click="ctrl.Mode = 'list'">이전</a>
+                        <div class="gf-form">
+                            <input type=button value="add" ng-click="ctrl.addAddress()">
+                            <h1>Address List</h1>
+                            <div id="addressTable" ng-init="ctrl.initAddressTable()"></div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
         </div>
+</div>
+
+
+
+<div class="button-row">
+    <button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">등록</button>
+    <button type="button" class="btn btn-success" ng-click="ctrl.goPrev()">이전</button>
+</div>
