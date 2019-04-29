@@ -234,7 +234,7 @@ export class TsMenuManagementCtrl {
     console.log(node);
     console.log("clicked!");
     this.menuInfo = true;
-    this.url = "";
+    //this.url = "";
     this.clickedMenu = node;
   }
   blur(scope,node) {
@@ -254,7 +254,11 @@ export class TsMenuManagementCtrl {
   }
 
   changeUrl() {
-    this.clickedMenu.url = this.url;
+    console.log("change url");
+    console.log(this.url);
+    if (this.url != null) {
+      this.clickedMenu.url = this.url;
+    }
     //this.url = "";
   }
   toggle(scope) {
@@ -281,20 +285,20 @@ export class TsMenuManagementCtrl {
       this.clickedMenu.id = max + 100;
       this.clickedMenu.order = this.data.length;
       this.data.push(this.clickedMenu);
-      this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,this.clickedMenu).then((res: any) => {
-        // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
-        console.log(res);
+      const newData = {
+        "menu": this.clickedMenu
+      };
+      this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
       });
     } else {
       console.log("modify Menu");
-      /*
-      this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,this.clickedMenu).then((res: any) => {
-        // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
-        console.log(res);
+      console.log(this.clickedMenu);
+      const newData = {
+        "menu": this.clickedMenu
+      };
+      this.backendSrv.put('/thingspin/menu/',newData).then((res: any) => {
       });
-      */
     }
-    console.log(this.clickedMenu);
     // init
     this.menuInfo = false;
   }

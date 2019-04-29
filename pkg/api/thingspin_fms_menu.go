@@ -2,7 +2,7 @@ package api
 
 import (
 	"strconv"
-	//"fmt"
+	"fmt"
 	"github.com/grafana/grafana/pkg/bus"
 	gfm "github.com/grafana/grafana/pkg/models"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
@@ -76,6 +76,16 @@ func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
 
 	return JSON(200, cmd.Result)
 }
+
+func EditTsMenuInfo(c *gfm.ReqContext, cmd m.UpdateFmsMenuInfoCommand) Response {
+	fmt.Println("====================info")
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[thingspin] Menu update info command failed", err)
+	}
+
+	return JSON(200, cmd)
+}
+
 
 func UpdateFmsMenuHideState(c *gfm.ReqContext, cmd m.UpdateFmsMenuHideStateCommand) Response {
 	cmd.Id = c.ParamsInt(":id")
