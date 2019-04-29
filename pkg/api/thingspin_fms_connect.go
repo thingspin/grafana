@@ -115,6 +115,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 
 	// 새로운 params으로 변경
 	info.Params = req.Params
+	info.Enable = req.Enable
 
 	// 기존에 동작 중인 Connect에 업데이트를 할 경우
 	if info.Active == true {
@@ -139,6 +140,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		Id:     connId,
 		Name:   req.Name,
 		FlowId: info.FlowId,
+		Enable: info.Enable,
 		Params: string(paramsStr),
 	}
 	if err := bus.Dispatch(&q); err != nil {

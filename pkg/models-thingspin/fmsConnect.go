@@ -53,6 +53,7 @@ type UpdateTsConnectFlowQuery struct {
 	Id     int
 	Name   string
 	FlowId string
+	Enable bool
 	Params string
 	Result sql.Result
 }

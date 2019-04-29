@@ -64,9 +64,10 @@ func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
 		name='%s', 
 		flow_id='%s', 
 		params='%s', 
+		enable=%t,
 		updated=datetime('now','localtime')
 	WHERE id=%d`,
-		m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Id)
+		m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Enable, cmd.Id)
 	result, err := x.Exec(sqlQuery)
 
 	cmd.Result = result
