@@ -26,8 +26,11 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
     .when('/thingspin/manage/data', { template: '<ts-data-management />', })
     .when('/thingspin/manage/data/connect', { template: '<ts-connect-management />', })
     .when('/thingspin/manage/data/connect/opcua', { template: '<ts-opcua-connect />', })
+    .when('/thingspin/manage/data/connect/opcua/:id', { template: '<ts-opcua-connect />', })
     .when('/thingspin/manage/data/connect/modbus', { template: '<ts-modbus-connect />', })
+    .when('/thingspin/manage/data/connect/modbus/:id', { template: '<ts-modbus-connect />', })
     .when('/thingspin/manage/data/connect/mqtt', { template: '<ts-mqtt-connect />', })
+    .when('/thingspin/manage/data/connect/mqtt/:id', { template: '<ts-mqtt-connect />', })
 
     .when('/thingspin/manage/facility', { template: '<ts-facility-management />', })
 
