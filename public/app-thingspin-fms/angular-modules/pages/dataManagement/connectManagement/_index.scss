@@ -1,5 +1,31 @@
+@import '~tabulator-tables/dist/css/tabulator.min.css';
 ts-connect-management {
     ul {
         margin: 0 !important;
+    }
+}
+
+.ts-connect-type {
+    font-size: 14px;
+    div {
+        width: fit-content;
+
+        padding: 8px 16px 8px 16px;
+        border-radius: 4px;
+
+        &.opcua {
+            border: solid 1px #fb8002;
+            color: #fb8002;
+        }
+        
+        &.modbus {
+            border: solid 1px #8e24aa;
+            color: #8e24aa;
+        }
+        
+        &.mqtt {
+            border: solid 1px #00897b;
+            color: #00897b;
+        }
     }
 }

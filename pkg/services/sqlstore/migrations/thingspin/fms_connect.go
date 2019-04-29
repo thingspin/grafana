@@ -16,6 +16,8 @@ func addFmsConnectMigrations(mg *Migrator) {
 		'type' varchar(30) references %s(id),
 		'params' json,
 		'active' bool default true,
+		'enable' bool default false,
+		'intervals' integer default 0,
 		'created' datetime default (datetime('now', 'localtime')),
 		'updated' datetime default (datetime('now', 'localtime'))
 	)
