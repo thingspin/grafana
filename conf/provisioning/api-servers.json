@@ -19,11 +19,10 @@
       "name": "NodeRED Complex Event Processing",
       "api": "api/cep",
       "enable": true,
-      "url": "http://219.251.4.237:1880",
+      "url": "http://localhost:1880",
       "attachURL": true,
-      "run": false,
       "shell": "node",
-      "pwd": "C:\\apps\\node-red-0.20.3\\node-red",
+      "pwd": "C:\\apps\\node-v10.15.3-win-x64\\node_modules\\node-red",
       "cmd": "red.js",
       "params": "-s settings.json"
     },
