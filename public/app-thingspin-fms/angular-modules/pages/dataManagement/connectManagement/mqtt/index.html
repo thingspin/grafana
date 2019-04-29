@@ -1,4 +1,4 @@
-<div class="mqtt-title-top">
+<div class="mqtt-main-title" ng-init="ctrl.initAddressTable()">
     MQTT 추가 양식
 </div>
 <div class="mqtt-right-button-area">
@@ -11,38 +11,39 @@
 </div>
 
 <div class="section gf-form-group" id="main-view">
-    <div>
-        <span class="mqtt-title" id="mqtt-title-collector">
+    <span class="mqtt-title" id="mqtt-title-connect">
+        MQTT 접속 정보
+    </span>
+    <button class="mqtt-connect-btn-postion" onClick="">
+        <i id="mqtt-connect-btn" class="fa fa-plug"></i>
+    </button>
+    <div class="mqtt-content-line"></div>
+    <div class="mqtt-connect-view">
+        <span class="mqtt-subtitle" id="mqtt-title-collector">
             수집기 이름
         </span>
-        <div class="mqtt-edit-bg" id="mqtt-edit-collector-position">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-30 max-width-36"  data-placement="auto" ng-model="ctrl.mqtt.collector" placeholder="원하는 이름을 적어주세요." ng-blur="ctrl.render()" data-min-length=0 data-items=128 ng-model-onblur>
+        <div class="mqtt-edit-bg" id="mqtt-edit-margin">
+            <input id="mqtt-edit" type="text" class="gf-form-input width-16"  data-placement="auto" ng-model="ctrl.mqtt.collector" placeholder="수집기 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
         </div>
-    </div>        
-    <div class="mqtt-title" id="mqtt-title-connect">
-        접속 정보
-    </div>
-    <div class="mqtt-content-line"></div>
-    <div>
-        <span class="mqtt-subtitle" id="mqtt-title-url">
-            서버
+        <span class="mqtt-subtitle" id="mqtt-title-url-position">
+            HOST
         </span>
-        <div class="mqtt-edit-bg" id="mqtt-edit-url-position">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-20 max-width-20"  data-placement="auto" ng-model="ctrl.mqtt.url" placeholder="MQTT 서버 IP를 입력해주세요." ng-blur="ctrl.render()" data-min-length=0 data-items=60 ng-model-onblur>
+        <div class="mqtt-edit-bg" id="mqtt-edit-margin">
+            <input id="mqtt-edit" type="text" class="gf-form-input width-11"  data-placement="auto" ng-model="ctrl.mqtt.url" placeholder="127.0.0.1" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
         </div>
         <span class="mqtt-subtitle" id="mqtt-title-port">
-            포트
+            PORT
         </span>
-        <div class="mqtt-edit-bg" id="mqtt-edit-port-position">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-12 max-width-12"  data-placement="auto" ng-model="ctrl.mqtt.port" placeholder="PORT를 입력해주세요." ng-blur="ctrl.render()" data-min-length=0 data-items=60 ng-model-onblur>
+        <div class="mqtt-edit-bg" id="mqtt-edit-margin">
+            <input id="mqtt-edit" type="text" class="gf-form-input width-6"  data-placement="auto" ng-model="ctrl.mqtt.port" placeholder="1884" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
         </div>
         <span class="mqtt-subtitle" id="mqtt-title-alive">
             Keep Alive
         </span>
-        <div class="mqtt-edit-bg" id="mqtt-edit-alive-position">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-8 max-width-8"  data-placement="auto" ng-model="ctrl.mqtt.alive" placeholder="60" ng-blur="ctrl.render()" data-min-length=0 data-items=60 ng-model-onblur>
-        </div>
-         <span class="mqtt-subtitle" id="mqtt-title-alive-sec">
+        <div class="mqtt-edit-bg" id="mqtt-edit-margin">
+            <input id="mqtt-edit" type="text" class="gf-form-input width-4"  data-placement="auto" ng-model="ctrl.mqtt.alive" placeholder="60" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+        </div>        
+        <span class="mqtt-subtitle" id="mqtt-title-alive-sec">
             Sec
         </span>
         <span class="mqtt-subtitle" id="mqtt-title-session">
@@ -50,12 +51,16 @@
         </span>
         <input id="mqtt-session-check" type="checkbox" ng-model="ctrl.mqtt.session">
     </div>
+
+
     <div class="mqtt-title" id="mqtt-title-topiclist">
         수집 Topic List
     </div>
     <button id="mqtt-plus-topic-btn" className="btn" ng-click="ctrl.onShowTopicEditView()" ng-show="ctrl.isTopicEditBtn">
         + Topic
     </button>
+    <div class="mqtt-content-line"></div>
+    <div id="mqtt-topic-list" class="mqtt-table-size"></div>
 
     <div class="mqtt-topic-add-view" ng-show="ctrl.isTopicEditView">
         <div class="mqtt-title" id="mqtt-title-topic-add">
@@ -64,7 +69,7 @@
         <span id="mqtt-title-topic-add-info">
             Topic 아이템 구성하기
         </span>
-        <div class="mqtt-right-button-area">
+        <div id="mqtt-addview-right-button-area">
             <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView()">
                 취소
             </button>
@@ -77,13 +82,14 @@
                 Name
             </span>
             <div class="mqtt-edit-bg" id="mqtt-topic-name-edit">
-                <input id="mqtt-edit" type="text" class="gf-form-input width-14 max-width-14"  data-placement="auto" ng-model="ctrl.mqtt.topic.name" placeholder="Topic 이름 입력" ng-blur="ctrl.render()" data-min-length=0 data-items=60 ng-model-onblur>
+                <input id="mqtt-edit" type="text" class="gf-form-input width-16"  data-placement="auto" ng-model="ctrl.mqtt.topic.name" placeholder="Topic 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
             </div>
             <span class="mqtt-subtitle" id="mqtt-topic-subtopic-title">
                 Topic
             </span>
             <div class="mqtt-edit-bg" id="mqtt-topic-tags-bg">
                 <bootstrap-tagsinput
+                    id="topic-list-input"
                     ng-model="ctrl.mqtt.values"
                     tagclass="label label-tag"
                     placeholder="add tags"
@@ -104,7 +110,7 @@
                     <select id="mqtt-topic-type-combobox" ng-model="ctrl.typeSelected" ng-options="opts for opts in ctrl.mqtt.types"></select>
                 </div> 
                 <div class="mqtt-edit-bg" id="mqtt-topic-type-edit">
-                    <input id="mqtt-edit" type="text" class="gf-form-input width-27 max-width-27"  data-placement="auto" ng-model="ctrl.mqtt.topic.item" placeholder="Topic 이름 입력" ng-blur="ctrl.render()" data-min-length=0 data-items=60 ng-model-onblur>
+                    <input id="mqtt-edit" type="text" class="gf-form-input width-30"  data-placement="auto" ng-model="ctrl.mqtt.topic.item" placeholder="Topic 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
                 </div>
                 <div id="mqtt-title-topic-edit-info">
                     # 과 + 의 경우 해당 부분을 호칭할 Tag 이름을 정의

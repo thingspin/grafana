@@ -4,6 +4,7 @@ import "./index.scss";
 import { BackendSrv } from 'app/core/services/backend_srv';
 // import { url } from 'inspector';
 // import { Portal } from '@grafana/ui';
+import Tabulator from 'tabulator-tables';
 
 const DEF_URL = "localhost";
 const DEF_PORT = "1884";
@@ -19,6 +20,9 @@ export class TsMqttConnectCtrl {
   isTopicEditBtn: boolean;
 
   element: any;
+  defTabulatorOpts: object;
+  orderTable: any;
+  topicList: any;
 
   /** @ngInject */
   constructor(private backendSrv: BackendSrv) {
@@ -29,6 +33,24 @@ export class TsMqttConnectCtrl {
        values: ['String', 'Integer', 'Float', 'Boolean'],
        types: ['String','#','+']
      };
+     this.defTabulatorOpts = {
+      pagination: "local",
+      paginationSize: 20,
+      selectable: 1,
+      responsivelayout: true,
+      height: "200px",
+      layout: "fitColumns",
+      columns: [
+        {title: "No",field: "no"},
+        {title: "이름",field: "name"},
+        {title: "Topic",field: "topic"},
+        {title: "Value Type",field: "return"},
+        {title: "동작", field:""}
+      ],
+     };
+     this.topicList = {
+
+     }
      this.valueSelected = this.mqtt.values[0];
      this.typeSelected = this.mqtt.types[0];
      this.isTopicEditView = false;
@@ -79,6 +101,14 @@ export class TsMqttConnectCtrl {
     }
   }
 
+  initAddressTable() {
+    const opts = Object.assign({ // deep copy
+        rowClick: (e, row) => { //trigger an alert message when the row is clicke
+        },
+    }, this.defTabulatorOpts);
+  
+    this.orderTable = new Tabulator("#mqtt-topic-list",opts);
+  }
 }
 export function tsMqttConnectDirective() {
   return {
