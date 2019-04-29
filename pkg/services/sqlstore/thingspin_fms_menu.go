@@ -21,6 +21,7 @@ func init() {
 	bus.AddHandler("sql", UpdateFmsMenuPinSate)
 	bus.AddHandler("sql", GetFmsMenuUsersPin)
 	bus.AddHandler("sql", UpdateFmsMenuHideState)
+	bus.AddHandler("sql", UpdateFmsMenuInfo)
 }
 
 // recursive function
@@ -252,7 +253,11 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 
 	return err
 }
-
+func UpdateFmsMenuInfo(cmd *m.UpdateFmsMenuInfoCommand) error {
+	_, err := x.Exec(`UPDATE `+m.TsFmsMenuBaseTbl+` SET icon = ?, text = ?, url = ? WHERE id = ?`,
+		cmd.Menu.FmsMenuQueryResult.Icon, cmd.Menu.FmsMenuQueryResult.Text, cmd.Menu.FmsMenuQueryResult.Url, cmd.Menu.FmsMenuQueryResult.Id)
+	return err
+}
 func UpdateFmsMenuPinSate(cmd *m.UpdateFmsMenuPinSateCommand) error {
 	if cmd.Pin == false {
 		_, err := x.Exec(`DELETE FROM`+` `+m.TsFmsMenuPinTbl+` `+`WHERE uid = ? AND mid = ?`, cmd.UserID, cmd.ID)
