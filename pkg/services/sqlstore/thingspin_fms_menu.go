@@ -254,9 +254,6 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 	return err
 }
 func UpdateFmsMenuInfo(cmd *m.UpdateFmsMenuInfoCommand) error {
-	fmt.Println(cmd.Menu.FmsMenuQueryResult.Id)
-	fmt.Println(cmd.Menu.FmsMenuQueryResult.Text)
-	fmt.Println(cmd.Menu.FmsMenuQueryResult.Url)
 	_, err := x.Exec(`UPDATE `+m.TsFmsMenuBaseTbl+` SET icon = ?, text = ?, url = ? WHERE id = ?`,
 		cmd.Menu.FmsMenuQueryResult.Icon, cmd.Menu.FmsMenuQueryResult.Text, cmd.Menu.FmsMenuQueryResult.Url, cmd.Menu.FmsMenuQueryResult.Id)
 	return err
