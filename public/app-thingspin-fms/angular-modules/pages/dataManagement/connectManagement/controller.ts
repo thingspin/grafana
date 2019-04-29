@@ -87,6 +87,11 @@ export default class TsConnectManagementCtrl implements angular.IController {
             });
         };
 
+        const intervalFormatter = (cell: any) => {
+            const data: TsConnect = cell.getData();
+            return data.intervals ? `${data.intervals} 초` : "-";
+        };
+
         const actionFormatter = (cell: any, formatterParams, onRendered: Function) => {
             const data: TsConnect = cell.getData();
             const index: number = this.list.findIndex((value: TsConnect) => {
@@ -109,11 +114,12 @@ export default class TsConnectManagementCtrl implements angular.IController {
             `)(this.$scope);
 
             onRendered((): void => {
+                this.$scope.$applyAsync();
                 $(cell.getElement()).append($html);
             });
         };
 
-        this.tableInst = new Tabulator("#ts-tabulator", {
+        this.tableInst = new Tabulator("#ts-connect", {
             index: 'index',
             layout: "fitColumns",      //fit columns to width of table
             resizableRows: true,       //allow row order to be changed
@@ -121,7 +127,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 { title: "No", formatter: indexFormatter, },
                 { title: "연결 타입", formatter: typeFormatter, },
                 { title: "이름", field: "name", },
-                { title: "수집 주기(초)", field: "intervals", },
+                { title: "수집 주기", formatter: intervalFormatter, },
                 { title: "최근 변경 날짜", field: "updated", },
                 { title: "동작", formatter: actionFormatter, }
             ],
@@ -141,8 +147,16 @@ export default class TsConnectManagementCtrl implements angular.IController {
             return;
         }
 
+        const index: number = this.list.findIndex((value: TsConnect) => {
+            return value.id === id;
+        });
+
         try {
             await this.backendSrv.patch(`thingspin/connect/${id}/enable`, enable);
+            this.list[index].enable = enable;
+            this.$scope.$applyAsync();
+
+            this.tableInst.replaceData(this.list);
         } catch (e) {
             console.error(e);
         }

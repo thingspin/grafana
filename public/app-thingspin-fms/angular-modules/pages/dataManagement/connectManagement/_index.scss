@@ -1,8 +1,93 @@
 @import '~tabulator-tables/dist/css/tabulator.min.css';
+$OPCUA_COLOR: #fb8002;
+$MOSBUS_COLOR: #8e24aa;
+$MQTT_COLOR: #00897b;
+$blue: #1e88e5;
+
 ts-connect-management {
-    ul {
-        margin: 0 !important;
+    width: 100%;
+    height: 100%;
+
+    font-family: Roboto;
+    color: #1e1e1e;
+}
+
+.ts-blue {
+    color: $blue;
+}
+
+.ts-btn {
+    @extend .btn;
+
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    border-radius: 4px;
+    color: #ffffff;
+
+    margin-left: 15.9px;
+
+    &.opcua {
+        background-color: $OPCUA_COLOR;
     }
+    &.modbus {
+        background-color: $MOSBUS_COLOR;
+    }
+    &.mqtt {
+        background-color: $MQTT_COLOR;
+    }
+
+    i {
+        font-size: 11.7px;
+        padding-right: 8.2px;
+    }
+}
+
+.ts-connect-banner {
+    width: 100%;
+
+    background-color: white;
+    border-bottom: solid 1px #dcdbdc;
+
+    &>div {
+        padding: 44px 20px 36px 20px;
+
+        .ts-connect-banner-title {
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.19;
+            padding: 0 0 20px 0;
+        }
+        .ts-connect-banner-desc {
+            border-left: solid 1px #1e1e1e;
+            padding-left: 8px;
+        
+            font-size: 14px;
+            line-height: 1.71;
+        }
+    }
+}
+
+.ts-connect-container { 
+    padding: 36px 16px 0px 16px;
+    background-color: #ffffff;
+}
+
+.ts-connect-title-container {
+    border-bottom: solid 1px #ecebeb;
+    display: flex;
+
+    .ts-connect-title {
+        font-size: 16px;
+        line-height: 1.19;
+    }
+
+    .ts-connect-buttons {
+        margin-left: auto;
+        margin-bottom: 12.5px;
+    }
+}
+
+.ts-connect-table-container {
+    margin-top: 44.6px;
 }
 
 .ts-connect-type {
@@ -14,18 +99,18 @@ ts-connect-management {
         border-radius: 4px;
 
         &.opcua {
-            border: solid 1px #fb8002;
-            color: #fb8002;
+            border: solid 1px $OPCUA_COLOR;
+            color: $OPCUA_COLOR;
         }
         
         &.modbus {
-            border: solid 1px #8e24aa;
-            color: #8e24aa;
+            border: solid 1px $MOSBUS_COLOR;
+            color: $MOSBUS_COLOR;
         }
         
         &.mqtt {
-            border: solid 1px #00897b;
-            color: #00897b;
+            border: solid 1px $MQTT_COLOR;
+            color: $MQTT_COLOR;
         }
     }
 }
