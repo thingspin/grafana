@@ -24,6 +24,19 @@ let fmsHot = merge(common, {
     pathinfo: false,
   },
 
+  devServer: {
+    publicPath: '/public/build/',
+    hot: true,
+    port: 3333,
+    proxy: {
+      '!/public/build': 'http://localhost:3000',
+      '/thingspin-proxy/mqtt': {
+        target: 'ws://localhost:3000',
+        ws: true,
+      },
+    },
+  },
+
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
@@ -47,11 +60,10 @@ let fmsHot = merge(common, {
 });
 
 //Copy already used Grafana webpack.hot.js
-const { resolve, devtool, devServer, optimization, } = gfHot;
+const { resolve, devtool, optimization, } = gfHot;
 fmsHot = Object.assign(fmsHot, {
   resolve,
   devtool,
-  devServer,
   optimization,
   module: gfHot.module,
 

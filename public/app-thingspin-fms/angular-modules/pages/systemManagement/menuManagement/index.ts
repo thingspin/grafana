@@ -8,26 +8,32 @@ export class TsMenuManagementCtrl {
   options: any;
   backendSrv: any;
   evt: any;
-  icon: any;
-  text: any;
+  //icon: any;
+  //text: any;
   url: any;
-  param: any;
+  //param: any;
   dashboardList: any;
-  isNew: any;
-  isModi: any;
+  menuInfo: any;
+  //isModi: any;
   menuInfoType: any;
+  clickedMenu: any;
   /** @ngInject */
   constructor(backendSrv) {
     this.backendSrv = backendSrv;
     // init for menuInfo
-    this.icon = "fa fa-folder-o";
-    this.isNew = false;
-    this.isModi = false;
-    this.text = "";
+   // this.icon = "fa fa-folder-o";
+    this.menuInfo = false;
+    //this.isModi = false;
+   // this.text = "";
     this.url = "";
-    this.param = "";
+    //this.param = "";
     this.menuInfoType = "";
-
+    this.clickedMenu = {
+      id: -100,
+      icon: "fa fa-folder-o",
+      text: "",
+      url: ""
+    };
     this.options = {
       dropped: (event) => {
         console.log(event);
@@ -224,6 +230,13 @@ export class TsMenuManagementCtrl {
       console.log(this.dashboardList);
     });
   }
+  menuClicked(node) {
+    console.log(node);
+    console.log("clicked!");
+    this.menuInfo = true;
+    this.url = "";
+    this.clickedMenu = node;
+  }
   blur(scope,node) {
     console.log("hide!");
     console.log(scope);
@@ -240,6 +253,10 @@ export class TsMenuManagementCtrl {
     });
   }
 
+  changeUrl() {
+    this.clickedMenu.url = this.url;
+    //this.url = "";
+  }
   toggle(scope) {
       console.log("toggle!");
       console.log(scope);
@@ -247,7 +264,7 @@ export class TsMenuManagementCtrl {
       //scope.toggle();
   }
 
-  createNewMenu() {
+  createMenu() {
     console.log("trying to create a menu!");
     //var nodeData = this.tree2[this.tree2.length - 1];
     let max = 100;
@@ -259,37 +276,39 @@ export class TsMenuManagementCtrl {
         }
       }
     }
-    console.log("new Menu");
-    const newData = {
-      id: max + 100,
-      order: this.data.length,
-      icon: this.icon,
-      text: this.text,
-      url: this.url
-    };
-    console.log(newData);
-    this.data.push(newData);
-    this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-      // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
-      console.log(res);
-    });
+    if (this.clickedMenu.id < 0) {
+      console.log("new Menu");
+      this.clickedMenu.id = max + 100;
+      this.clickedMenu.order = this.data.length;
+      this.data.push(this.clickedMenu);
+      this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,this.clickedMenu).then((res: any) => {
+        // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
+        console.log(res);
+      });
+    } else {
+      console.log("modify Menu");
+      /*
+      this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,this.clickedMenu).then((res: any) => {
+        // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
+        console.log(res);
+      });
+      */
+    }
+    console.log(this.clickedMenu);
     // init
-    this.isNew = false;
-    this.isModi = false;
-    this.text = "";
-    this.url = "";
-    this.param = "";
-    this.menuInfoType = "";
+    this.menuInfo = false;
   }
 
   newMenu() {
       console.log("Create button Clicked!");
-      this.isNew = true;
-      this.isModi = false;
-      this.text = "";
+      this.menuInfo = true;
       this.url = "";
-      this.param = "";
-      this.menuInfoType = "";
+      this.clickedMenu = {
+        id: -100,
+        icon: "fa fa-folder-o",
+        text: "",
+        url: ""
+      };
   }
 /*
   newSubItem(scope) {

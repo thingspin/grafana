@@ -1,10 +1,10 @@
 {
     "id": "MODBUS Flow Format",
-    "label": "{{.FlowId}}",
+    "label": "{{.Params.FlowId}}",
     "info": "",
     "nodes":[
     {
-        "id": "TS-MODBUS-GETTER-ID-{{.FlowId}}", 
+        "id": "TS-MODBUS-GETTER-ID-{{.Params.FlowId}}", 
         "type": "modbus-getter",
         "z": "b8db9bb5.5bd948",
         "name": "",
@@ -12,10 +12,10 @@
         "showErrors": false,
         "logIOActivities": false,
         "unitid": "",
-        "dataType": "{{.DataType}}",
-        "adr": "{{.Addr}}",
-        "quantity": "{{.Quantity}}",
-        "server": "TS-MODBUS-SERVER-ID-{{.FlowId}}",
+        "dataType": "{{.Params.DataType}}",
+        "adr": "{{.Params.Addr}}",
+        "quantity": "{{.Params.Quantity}}",
+        "server": "TS-MODBUS-SERVER-ID-{{.Params.FlowId}}",
         "useIOFile": false,
         "ioFile": "",
         "useIOForPayload": false,
@@ -23,23 +23,23 @@
         "y": 140,
         "wires": [
             [
-                "TS-MODBUS-DEBUG-1-{{.FlowId}}",
-                "TS-MODBUS-PARSER-{{.FlowId}}"
+                "TS-MODBUS-DEBUG-1-{{.Params.FlowId}}",
+                "TS-MODBUS-PARSER-{{.Params.FlowId}}"
             ],
             [
-                "TS-MODBUS-DEBUG-2-{{.FlowId}}"
+                "TS-MODBUS-DEBUG-2-{{.Params.FlowId}}"
             ]
         ]
     },
     {
-        "id": "TS-MODBUS-INJECT-ID-{{.FlowId}}",
+        "id": "TS-MODBUS-INJECT-ID-{{.Params.FlowId}}",
         "type": "inject",
         "z": "b8db9bb5.5bd948",
         "name": "",
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "repeat": "{{.Intervals}}",
+        "repeat": "{{.Params.Intervals}}",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
@@ -47,12 +47,12 @@
         "y": 140,
         "wires": [
             [
-                "TS-MODBUS-GETTER-ID-{{.FlowId}}"
+                "TS-MODBUS-GETTER-ID-{{.Params.FlowId}}"
             ]
         ]
     },
     {
-        "id": "TS-MODBUS-DEBUG-1-{{.FlowId}}",
+        "id": "TS-MODBUS-DEBUG-1-{{.Params.FlowId}}",
         "type": "debug",
         "z": "b8db9bb5.5bd948",
         "name": "",
@@ -66,7 +66,7 @@
         "wires": []
     },
     {
-        "id": "TS-MODBUS-DEBUG-2-{{.FlowId}}",
+        "id": "TS-MODBUS-DEBUG-2-{{.Params.FlowId}}",
         "type": "debug",
         "z": "b8db9bb5.5bd948",
         "name": "",
@@ -80,27 +80,27 @@
         "wires": []
     },
     {
-        "id": "TS-MODBUS-PARSER-{{.FlowId}}",
+        "id": "TS-MODBUS-PARSER-{{.Params.FlowId}}",
         "type": "function",
         "z": "43cffeef.084d5",
         "name": "Parser",
-        "func": "var Total_item = {{.Quantity}};\n\nvar res = [\n            {\n                measurement:'{{.FlowId}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '40031'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+        "func": "var Total_item = {{.Params.Quantity}};\n\nvar res = [\n            {\n                measurement:'{{.Params.FlowId}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '40031'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 670,
         "y": 140,
         "wires": [
             [
-                "TS-MODBUS-PARSER-DEBUG-{{.FlowId}}",
-                "TS-MODBUS-INFLUXDB-BATCH-{{.FlowId}}"
+                "TS-MODBUS-PARSER-DEBUG-{{.Params.FlowId}}",
+                "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}"
             ]
         ]
     },
     {
-        "id": "TS-MODBUS-INFLUXDB-BATCH-{{.FlowId}}",
+        "id": "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}",
         "type": "influxdb batch",
         "z": "43cffeef.084d5",
-        "influxdb": "TS-MODBUS-INFLUXDB-{{.FlowId}}",
+        "influxdb": "TS-MODBUS-INFLUXDB-{{.Params.FlowId}}",
         "precision": "",
         "retentionPolicy": "",
         "name": "",
@@ -109,7 +109,7 @@
         "wires": []
     },
     {
-        "id": "TS-MODBUS-INFLUXDB-{{.FlowId}}",
+        "id": "TS-MODBUS-INFLUXDB-{{.Params.FlowId}}",
         "type": "influxdb",
         "z": "",
         "hostname": "127.0.0.1",
@@ -121,7 +121,7 @@
         "tls": ""
     },
     {
-        "id": "TS-MODBUS-PARSER-DEBUG-{{.FlowId}}",
+        "id": "TS-MODBUS-PARSER-DEBUG-{{.Params.FlowId}}",
         "type": "debug",
         "z": "43cffeef.084d5",
         "name": "",
@@ -135,23 +135,23 @@
         "wires": []
     },
     {
-        "id": "TS-MODBUS-STATE-{{.FlowId}}",
+        "id": "TS-MODBUS-STATE-{{.Params.FlowId}}",
         "type": "status",
         "z": "b8db9bb5.5bd948",
         "name": "",
         "scope": [
-            "TS-MODBUS-GETTER-ID-{{.FlowId}}"
+            "TS-MODBUS-GETTER-ID-{{.Params.FlowId}}"
         ],
         "x": 220,
         "y": 220,
         "wires": [
             [
-                "TS-MODBUS-DEBUG-3-{{.FlowId}}"
+                "TS-MODBUS-DEBUG-3-{{.Params.FlowId}}"
             ]
         ]
     },
     {
-        "id": "TS-MODBUS-DEBUG-3-{{.FlowId}}",
+        "id": "TS-MODBUS-DEBUG-3-{{.Params.FlowId}}",
         "type": "debug",
         "z": "b8db9bb5.5bd948",
         "name": "",
@@ -166,15 +166,15 @@
         "wires": []
     },
     {
-        "id": "TS-MODBUS-SERVER-ID-{{.FlowId}}",
+        "id": "TS-MODBUS-SERVER-ID-{{.Params.FlowId}}",
         "type": "modbus-client",
         "z": "b8db9bb5.5bd948",
         "name": "",
         "clienttype": "tcp",
         "bufferCommands": true,
         "stateLogEnabled": true,
-        "tcpHost": "{{.Host}}",
-        "tcpPort": "{{.Port}}",
+        "tcpHost": "{{.Params.Host}}",
+        "tcpPort": "{{.Params.Port}}",
         "tcpType": "DEFAULT",
         "serialPort": "/dev/ttyUSB",
         "serialType": "RTU-BUFFERD",
@@ -183,10 +183,10 @@
         "serialStopbits": "1",
         "serialParity": "none",
         "serialConnectionDelay": "100",
-        "unit_id": "{{.UnitId}}",
+        "unit_id": "{{.Params.UnitId}}",
         "commandDelay": 1,
-        "clientTimeout": "{{.TimeOut}}",
-        "reconnectTimeout": "{{.ReTimeOut}}"
+        "clientTimeout": "{{.Params.TimeOut}}",
+        "reconnectTimeout": "{{.Params.ReTimeOut}}"
     }
 ]
 }

@@ -18,7 +18,7 @@
 		<div ui-tree="ctrl.options" id="tree2-root" style="background-color:rgba(255,255,255,0.52)">
 			<ol ui-tree-nodes="" ng-model="ctrl.data">
 				<li ng-repeat="node in ctrl.data" ui-tree-node>
-					<div ng-class="{ts_blur: node.hideFromMenu}" ui-tree-handle class="tree-node tree-node-content">
+					<div ng-class="{ts_blur: node.hideFromMenu,ts_clickedMenu: node.id === ctrl.clickedMenu.id}" ui-tree-handle class="tree-node tree-node-content">
 						<a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
 							<span ng-class="{
 								'fa fa-angle-right': collapsed,
@@ -35,6 +35,9 @@
 								<!--
 								<span class="fa fa-toggle-on"></span>
 								-->
+						</a>
+						<a data-nodrag ng-click="ctrl.menuClicked(node)" style="margin-left: 5px;margin-right: 5px">
+							<span class="fa fa-edit"></span>
 						</a>
 						<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
 							<span class="fa fa-trash"></span>
@@ -78,71 +81,36 @@
 		</div>
 					
 	</div>
-	<div ng-if="ctrl.isNew" class="col-sm-4" ng-style="{'margin-left': '40px','background-color':'rgba(255,255,255,0.52)','width':'650px'}">
+	<div ng-if="ctrl.menuInfo" class="col-sm-4" ng-style="{'margin-left': '40px','background-color':'rgba(255,255,255,0.52)','width':'650px'}">
 		<div style="text-align:center;background-color:#f5f5f5;height:32px">
 			<span style="font-size:2em;margin-top:10px;margin-bottom:10px">메뉴 정보</span>		
 		</div>
 		<div class="editor-row">
-			<div class="gf-form">
-					<label class="gf-form-label width-6">종류</label>
-					<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched width-18" ng-model="ctrl.menuInfoType">
-						<option value="dashboard">Dashboard</option>
-						<option value="externalUrl">External URL</option>
-					</select>
-			</div>
-			<div ng-if="ctrl.menuInfoType.length > 0" class="editor-row">
+			<div class="editor-row">
 					<div class="section gf-form-group">
 						<div class="gf-form">
 							<label class="gf-form-label width-6">Icon</label>
-							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.icon"/>
+							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.clickedMenu.icon"/>
 						</div>
 						<div class="gf-form">
 							<label class="gf-form-label width-6">Name</label>
-							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.text"/>
+							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.clickedMenu.text"/>
 						</div>
 						<div class="gf-form">
 							<label class="gf-form-label width-6">URL</label>
-							<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched width-18" ng-model="ctrl.url">
+							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.clickedMenu.url"/>
+							<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched width-12" ng-model="ctrl.url" ng-change="ctrl.changeUrl()">
+								<option disabled selected value="">대시보드를 선택하세요.</option>
 								<option ng-repeat="option in ctrl.dashboardList" value="{{option.url}}">{{option.title}}</option>
 							</select>
 						</div>
 						<div class="gf-form">
 							<label class="gf-form-label width-6">Parameter</label>
-							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.param"/>
+							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.clickedMenu.param"/>
 						</div>
 					</div>
 			</div>
 		</div>
-		<button class="btn width-7" ng-click="ctrl.createNewMenu()" style="background-color:#1e88e5" type="button">등록 하기</button>
-	</div>
-	<div ng-if="ctrl.isModi" class="col-sm-4" ng-style="{'margin-left': '40px','background-color':'rgba(255,255,255,0.52)','width':'650px'}">
-			<div style="text-align:center;background-color:#f5f5f5;height:32px">
-				<span style="font-size:2em;margin-top:10px;margin-bottom:10px">메뉴 정보</span>		
-			</div>
-			<div class="editor-row">
-				<div class="editor-row">
-						<div class="section gf-form-group">
-							<div class="gf-form">
-								<label class="gf-form-label width-6">Icon</label>
-								<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.icon"/>
-							</div>
-							<div class="gf-form">
-								<label class="gf-form-label width-6">Name</label>
-								<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.text"/>
-							</div>
-							<div class="gf-form">
-								<label class="gf-form-label width-6">URL</label>
-								<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched width-18" ng-model="ctrl.url">
-									<option ng-repeat="option in ctrl.dashboardList" value="{{option.url}}">{{option.title}}</option>
-								</select>
-							</div>
-							<div class="gf-form">
-								<label class="gf-form-label width-6">Parameter</label>
-								<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.param"/>
-							</div>
-						</div>
-				</div>
-			</div>
-			<button class="btn width-7" ng-click="ctrl.createNewMenu()" style="background-color:#1e88e5" type="button">등록 하기</button>
+		<button class="btn width-7" ng-click="ctrl.createMenu()" style="background-color:#1e88e5" type="button">등록 하기</button>
 	</div>
 </div>

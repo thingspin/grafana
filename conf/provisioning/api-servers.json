@@ -49,6 +49,13 @@
       "cmd": "manage.py",
       "params": "runserver",
       "options": "0.0.0.0:8000"
+    }, {
+      "name": "ThingSPIN Local Broker",
+      "api": "thingspin-proxy/mqtt",
+      "enable": true,
+      "url": "ws://localhost:1884",
+      "attachURL": true,
+      "run": false
     }
   ]
 }

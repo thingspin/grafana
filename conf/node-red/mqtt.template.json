@@ -1,43 +1,43 @@
 {
     "id": "MQTT Flow Format",
-    "label": "{{.FlowId}}",
+    "label": "{{.Params.FlowId}}",
     "info": "",
     "nodes": [
         {
-            "id": "TS-MQTT-IN-{{.FlowId}}",
+            "id": "TS-MQTT-IN-{{.Params.FlowId}}",
             "type": "mqtt in",
             "name": "",
-            "topic": "{{.MqttTopic}}",
+            "topic": "{{.Params.MqttTopic}}",
             "qos": "0",
             "datatype": "auto",
-            "broker": "TS-MQTT-CONNECT-{{.FlowId}}",
+            "broker": "TS-MQTT-CONNECT-{{.Params.FlowId}}",
             "x": 110,
             "y": 560,
             "wires": [
                 [
-                    "TS-MQTT-PARSE-{{.FlowId}}"
+                    "TS-MQTT-PARSE-{{.Params.FlowId}}"
                 ]
             ]
         },
         {
-            "id": "TS-MQTT-PARSE-{{.FlowId}}",
+            "id": "TS-MQTT-PARSE-{{.Params.FlowId}}",
             "type": "function",
             "name": "",
-            "func": "{{.TopicParse}}",
+            "func": "{{.Params.TopicParse}}",
             "outputs": 1,
             "noerr": 0,
             "x": 290,
             "y": 560,
             "wires": [
                 [
-                    "TS-MQTT-OUTPUT-{{.FlowId}}"
+                    "TS-MQTT-OUTPUT-{{.Params.FlowId}}"
                 ]
             ]
         },
         {
-            "id": "TS-MQTT-OUTPUT-{{.FlowId}}",
+            "id": "TS-MQTT-OUTPUT-{{.Params.FlowId}}",
             "type": "influxdb batch",
-            "influxdb": "TS-MQTT-INFLUXD-{{.FlowId}}",
+            "influxdb": "TS-MQTT-INFLUXD-{{.Params.FlowId}}",
             "precision": "",
             "retentionPolicy": "",
             "name": "",
@@ -46,11 +46,11 @@
             "wires": []
         },
         {
-            "id": "TS-MQTT-CONNECT-{{.FlowId}}",
+            "id": "TS-MQTT-CONNECT-{{.Params.FlowId}}",
             "type": "mqtt-broker",
-            "name": "{{.MqttUrl}}",
-            "broker": "{{.MqttUrl}}",
-            "port": "{{.MqttPort}}",
+            "name": "{{.Params.MqttUrl}}",
+            "broker": "{{.Params.MqttUrl}}",
+            "port": "{{.Params.MqttPort}}",
             "clientid": "",
             "usetls": false,
             "compatmode": true,
@@ -67,7 +67,7 @@
             "willPayload": ""
         },
         {
-            "id": "TS-MQTT-INFLUXD-{{.FlowId}}",
+            "id": "TS-MQTT-INFLUXD-{{.Params.FlowId}}",
             "type": "influxdb",
             "z": "",
             "hostname": "127.0.0.1",
