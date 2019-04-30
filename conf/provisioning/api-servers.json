@@ -11,7 +11,7 @@
       "url": "http://localhost:8080",
       "run": true,
       "shell": "node",
-      "pwd": "C:\\Users\\lonyc\\works\\thingspin\\src\\github.com\\grafana\\grafana\\data\\api-servers\\hello",
+      "pwd": "data/api-servers/hello",
       "cmd": "api.hello.js",
       "params": "-p example 5000"
     },
@@ -21,6 +21,7 @@
       "enable": true,
       "url": "http://localhost:1880",
       "attachURL": true,
+      "run": false,
       "shell": "node",
       "pwd": "C:\\apps\\node-v10.15.3-win-x64\\node_modules\\node-red",
       "cmd": "red.js",
@@ -33,7 +34,7 @@
       "url": "http://localhost:5000",
       "run": true,
       "shell": "node",
-      "pwd": "C:\\Users\\lonyc\\works\\thingspin\\src\\github.com\\grafana\\grafana\\data\\api-servers\\drone",
+      "pwd": "data/api-servers/drone",
       "cmd": "main.js",
       "params": "--port=5000"
     },
@@ -45,11 +46,12 @@
       "attachURL": true,
       "run": true,
       "shell": "python",
-      "pwd": "C:\\Users\\lonyc\\works\\thingspin\\src\\github.com\\grafana\\grafana\\data\\api-servers\\pyserv",
+      "pwd": "data/api-servers/pyserv",
       "cmd": "manage.py",
       "params": "runserver",
       "options": "0.0.0.0:8000"
-    }, {
+    },
+    {
       "name": "ThingSPIN Local Broker",
       "api": "thingspin-proxy/mqtt",
       "enable": true,

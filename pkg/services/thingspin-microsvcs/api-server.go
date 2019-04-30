@@ -43,18 +43,26 @@ type services struct {
 
 type MicroService struct {
 	log        log.Logger
+	root       string
 	Cfg        *setting.Cfg    `inject:""`
 	HttpServer *api.HTTPServer `inject:""`
 }
 
 func init() {
+	root, err := os.Getwd()
+	if err != nil {
+		panic("error getting work directory: " + err.Error())
+	}
+
 	registry.RegisterService(&MicroService{
-		log: log.New("thingspin.microservice"),
+		log:  log.New("thingspin.api-server"),
+		root: root,
 	})
 }
 
 func (s *MicroService) Init() error {
-	s.log = log.New("api.server")
+	//s.log = log.New("api.server")
+	s.log.Debug("API Server", "working directory", s.root)
 	return nil
 }
 
@@ -92,6 +100,10 @@ func (s *MicroService) Run(ctx context.Context) error {
 
 		s.log.Info("API Server Invoke", "Name", item.Name, "URL", item.URL, "API", item.API)
 
+		if !filepath.IsAbs(item.Pwd) {
+			item.Pwd = filepath.Join(s.root, item.Pwd)
+		}
+
 		path := filepath.Join(item.Pwd, item.Cmd)
 		params := item.Params
 		options := item.Options
@@ -100,7 +112,7 @@ func (s *MicroService) Run(ctx context.Context) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
-		s.log.Debug("API Server: full-path : " + path)
+		s.log.Debug("API Server: file-path : " + path)
 		s.log.Debug("API Server: shell : " + item.Shell)
 		s.log.Debug("API Server: Dir : " + cmd.Dir)
 
