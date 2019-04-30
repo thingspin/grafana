@@ -18,14 +18,8 @@
       데이터 연결 목록
     </div>
     <div class="ts-connect-buttons">
-      <button class="ts-btn opcua" ng-click="ctrl.changePage('opcua')">
-        <i class="fa fa-plus"></i>OPC/UA
-      </button>
-      <button class="ts-btn modbus" ng-click="ctrl.changePage('modbus')">
-        <i class="fa fa-plus"></i>Modbus
-      </button>
-      <button class="ts-btn mqtt" ng-click="ctrl.changePage('mqtt')">
-        <i class="fa fa-plus"></i> MQTT
+      <button ng-repeat="connType in ctrl.connectTypeList" class="ts-btn {{connType.id}}" ng-click="ctrl.changePage(connType.id)">
+        <i class="fa fa-plus"></i>{{connType.name}}
       </button>
     </div>
   </div>
