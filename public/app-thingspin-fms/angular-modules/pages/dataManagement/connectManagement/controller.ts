@@ -129,6 +129,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
             index: 'index',
             layout: "fitColumns",      //fit columns to width of table
             resizableRows: true,       //allow row order to be changed
+            pagination: "local",       //paginate the data
+            paginationSize: 10,         //allow 7 rows per page of data
             columns: [                 //define the table columns
                 { title: "No", formatter: indexFormatter, },
                 { title: "연결 타입", formatter: typeFormatter, },
