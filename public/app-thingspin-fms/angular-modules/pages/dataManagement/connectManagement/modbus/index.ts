@@ -37,10 +37,12 @@ export class TsModbusConnectCtrl {
       height: "200px",
       layout: "fitColumns",
       columns: [
-        {title: "ADDRESS",field: "adr"},
-        {title: "Quantity",field: "qty"},
-        {title: "FC",field: "fc"},
-        {title: "Type",field: "type"}
+        {title: "No", field: "idx"},
+        {title: "ADDRESS", field: "address"},
+        {title: "Name", field: "name"},
+        {title: "Quanntity", field: "quantity"},
+        {title: "Function Code", field: "fc"},
+        {title: "Type", field: "type"},
       ],
     };
 
@@ -56,11 +58,12 @@ export class TsModbusConnectCtrl {
   }
   /*
   */
- //
+ //button action
  goPrev() {
  }
  addAddress() {
    console.log("addAddress button");
+   this.orderTable.addRow({});
  }
  editAddress() {
    console.log("edit button");
@@ -68,9 +71,22 @@ export class TsModbusConnectCtrl {
  deleteAddress() {
    console.log("delete button");
  }
-
+ getAddressTableData() {
+  const tableData = this.orderTable.getData();
+  console.log(tableData);
+  //tableData.length -- array count
+  //tableData[0].address
+}
  //--Tabulator 관련
+ initAddressTable2() {
+  const opts = Object.assign({ // deep copy
+    rowClick: (e, row) => { //trigger an alert message when the row is clicke
+    },
+  }, this.defTabulatorOpts);
+  this.orderTable = new Tabulator("#addressTable",opts);
+ }
  initAddressTable() {
+   /*
   const opts = Object.assign({ // deep copy
       rowClick: (e, row) => { //trigger an alert message when the row is clicke
           //intput init
@@ -78,8 +94,25 @@ export class TsModbusConnectCtrl {
           this.showSelectedEdit(row.getData());
       },
   }, this.defTabulatorOpts);
-
-  this.orderTable = new Tabulator("#addressTable",opts);
+*/
+    this.orderTable = new Tabulator("#addressTable", {
+      //height: "311px",
+      //addRowPos: "bottom",
+      pagination: "local",
+      paginationSize: 20,
+      selectable: 1,
+      responsivelayout: true,
+      //height: "200px",
+      layout: "fitColumns",
+      columns: [
+          {title: "ADDRESS", field: "address"},
+          {title: "Name", field: "name"},
+          {title: "Quanntity", field: "quantity"},
+          {title: "Function Code", field: "fc"},
+          {title: "Type", field: "type"},
+        ],
+      });
+  //this.orderTable = new Tabulator("#addressTable",opts);
   }
 
   showEtcMenu(obj) {
@@ -107,18 +140,21 @@ export class TsModbusConnectCtrl {
 
   testCreate() {
     const object = {
-      "FlowId" : "test_modbus1",
-      "DataType": "HoldingRegister",
-      "Addr" : "40031",
-      "Quantity" : "9",
-      "Intervals" : "1",
-      "Host" : "192.168.0.188",
-      "Port" : "502",
-      "UnitId" : 1,
-      "TimeOut" : 1000,
-      "ReTimeOut" : 2000
+      "name": "modbus 수집기1",
+      "params": {
+        "FlowId" : "test_modbus3",
+        "DataType": "HoldingRegister",
+        "Addr" : "40031",
+        "Quantity" : "9",
+        "Intervals" : "1",
+        "Host" : "192.168.0.188",
+        "Port" : "502",
+        "UnitId" : 1,
+        "TimeOut" : 1000,
+        "ReTimeOut" : 2000
+      }
     };
-    console.log(this);
+    console.log(object);
 
     this.backendSrv.post("/thingspin/connect/modbus",object).then((result: any) => {
       console.log(result);

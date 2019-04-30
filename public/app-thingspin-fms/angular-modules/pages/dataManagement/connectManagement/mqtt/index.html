@@ -23,25 +23,25 @@
             수집기 이름
         </span>
         <div class="mqtt-edit-bg" id="mqtt-edit-margin">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-16"  data-placement="auto" ng-model="ctrl.mqtt.collector" placeholder="수집기 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+            <input id="mqtt-edit" type="text" class="gf-form-input width-16"  data-placement="auto" ng-model="ctrl.collector" placeholder="수집기 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
         </div>
         <span class="mqtt-subtitle" id="mqtt-title-url-position">
             HOST
         </span>
         <div class="mqtt-edit-bg" id="mqtt-edit-margin">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-11"  data-placement="auto" ng-model="ctrl.mqtt.url" placeholder="127.0.0.1" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+            <input id="mqtt-edit" type="text" class="gf-form-input width-11"  data-placement="auto" ng-model="ctrl.connection.url" placeholder="127.0.0.1" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
         </div>
         <span class="mqtt-subtitle" id="mqtt-title-port">
             PORT
         </span>
         <div class="mqtt-edit-bg" id="mqtt-edit-margin">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-6"  data-placement="auto" ng-model="ctrl.mqtt.port" placeholder="1884" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+            <input id="mqtt-edit" type="text" class="gf-form-input width-6"  data-placement="auto" ng-model="ctrl.connection.port" placeholder="1884" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
         </div>
         <span class="mqtt-subtitle" id="mqtt-title-alive">
             Keep Alive
         </span>
         <div class="mqtt-edit-bg" id="mqtt-edit-margin">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-4"  data-placement="auto" ng-model="ctrl.mqtt.alive" placeholder="60" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+            <input id="mqtt-edit" type="text" class="gf-form-input width-4"  data-placement="auto" ng-model="ctrl.connection.alive" placeholder="60" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
         </div>        
         <span class="mqtt-subtitle" id="mqtt-title-alive-sec">
             Sec
@@ -49,7 +49,7 @@
         <span class="mqtt-subtitle" id="mqtt-title-session">
             세션 초기화
         </span>
-        <input id="mqtt-session-check" type="checkbox" ng-model="ctrl.mqtt.session">
+        <input id="mqtt-session-check" type="checkbox" ng-model="ctrl.connection.session">
     </div>
 
 
@@ -73,7 +73,7 @@
             <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView()">
                 취소
             </button>
-            <button id="mqtt-topic-add-plus-btn" className="btn" onClick="">
+            <button id="mqtt-topic-add-plus-btn" className="btn" ng-click="ctrl.onTopicListAdd(ctrl.topicItem.name)">
                 + Topic List
             </button>
         </div>
@@ -82,7 +82,7 @@
                 Name
             </span>
             <div class="mqtt-edit-bg" id="mqtt-topic-name-edit">
-                <input id="mqtt-edit" type="text" class="gf-form-input width-16"  data-placement="auto" ng-model="ctrl.mqtt.topic.name" placeholder="Topic 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+                <input id="mqtt-edit" type="text" class="gf-form-input width-16"  data-placement="auto" ng-model="ctrl.topicItem.name" placeholder="Topic 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
             </div>
             <span class="mqtt-subtitle" id="mqtt-topic-subtopic-title">
                 Topic
@@ -90,7 +90,7 @@
             <div class="mqtt-edit-bg" id="mqtt-topic-tags-bg">
                 <bootstrap-tagsinput
                     id="topic-list-input"
-                    ng-model="ctrl.mqtt.values"
+                    ng-model="ctrl.topicItem.topicViewList"
                     tagclass="label label-tag"
                     placeholder="add tags"
                     style="background-color: rgba(0,0,0,0)"
@@ -100,36 +100,31 @@
                 Value Type
             </span>
             <div class="mqtt-edit-bg" id="mqtt-topic-value-bg">
-                <select id="mqtt-topic-value-combobox" ng-model="ctrl.valueSelected" ng-options="opts for opts in ctrl.mqtt.values"></select>
+                <select id="mqtt-topic-value-combobox" ng-model="ctrl.topicItem.value" ng-options="opts for opts in ctrl.defMqtt.values"></select>
             </div>
             <div class="mqtt-topic-contents-creator-view">
                 <span class="mqtt-subtitle" id="mqtt-topic-topictype-title">
                     Topic Type
                 </span>
                 <div class="mqtt-edit-bg" id="mqtt-topic-type-bg">
-                    <select id="mqtt-topic-type-combobox" ng-model="ctrl.typeSelected" ng-options="opts for opts in ctrl.mqtt.types"></select>
+                    <select id="mqtt-topic-type-combobox" ng-model="ctrl.topicItem.selType" ng-options="opts for opts in ctrl.defMqtt.types"></select>
                 </div> 
                 <div class="mqtt-edit-bg" id="mqtt-topic-type-edit">
-                    <input id="mqtt-edit" type="text" class="gf-form-input width-30"  data-placement="auto" ng-model="ctrl.mqtt.topic.item" placeholder="Topic 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+                    <input id="mqtt-edit" type="text" class="gf-form-input width-30"  data-placement="auto" ng-model="ctrl.topicItem.item" placeholder="Topic 이름 입력" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
                 </div>
+                <button id="mqtt-topic-edit-add-plus-btn" className="btn" ng-click="ctrl.onTopicAdd(ctrl.topicItem.item)">
+                    + 추가
+                </button>                
                 <div id="mqtt-title-topic-edit-info">
                     # 과 + 의 경우 해당 부분을 호칭할 Tag 이름을 정의
-                </div>                
-                <div id="mqtt-topic-edit-button-area">
-                    <button id="mqtt-topic-edit-add-cancel-btn" className="btn" onClick="">
-                        취소
-                    </button>
-                    <button id="mqtt-topic-edit-add-plus-btn" className="btn" onClick="">
-                        + 추가
-                    </button>
-                </div>                
+                </div>         
             </div>
         </div>
     </div>
     
     <br></br>
     <div class="gf-form">
-        <button class="btn btn-success width-7" ng-click="ctrl.addMqttCollector(this, ctrl.mqtt.url, ctrl.mqtt.port, ctrl.mqtt.name)">
+        <button class="btn btn-success width-7" ng-click="ctrl.addMqttCollector(this, ctrl.connection.url, ctrl.connection.port, ctrl.connection.name)">
             연결 확인
         </button>
         &nbsp;&nbsp;
