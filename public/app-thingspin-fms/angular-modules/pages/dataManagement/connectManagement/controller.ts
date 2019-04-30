@@ -40,7 +40,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
-    async initMqtt() {
+    async initMqtt(): Promise<void> {
         this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
         try {
             await this.mqttClient.run(this.recvMqttMessage.bind(this));
@@ -66,7 +66,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     initTable(): void {
-        const indexFormatter = (cell: any) => {
+        const indexFormatter: Function = (cell: any): number | string => {
             const data: TsConnect = cell.getData();
             const index: number = this.list.findIndex((value: TsConnect) => {
                 return value.id === data.id;
@@ -74,9 +74,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
             return index + 1;
         };
 
-        const typeFormatter = (cell: any, formatterParams, onRendered: Function) => {
+        const typeFormatter: Function = (cell: any, formatterParams, onRendered: Function) => {
             const data: TsConnect = cell.getData();
-            const $html = this.$compile(/*html*/`
+            const $html: JQLite = this.$compile(/*html*/`
             <div class="ts-connect-type">
                 <div class="${data.type}">${data.type}</div>
             </div>
@@ -87,24 +87,24 @@ export default class TsConnectManagementCtrl implements angular.IController {
             });
         };
 
-        const intervalFormatter = (cell: any) => {
+        const intervalFormatter: Function = (cell: any): string => {
             const data: TsConnect = cell.getData();
             return data.intervals ? `${data.intervals} 초` : "-";
         };
 
-        const updatedFormatter = (cell: any) => {
+        const updatedFormatter: Function = (cell: any): string => {
             const data: TsConnect = cell.getData();
 
             return moment(data.updated).format("YYYY-MM-DD hh:mm:ss");
         };
 
-        const actionFormatter = (cell: any, formatterParams, onRendered: Function) => {
+        const actionFormatter = (cell: any, formatterParams, onRendered: Function): void => {
             const data: TsConnect = cell.getData();
             const index: number = this.list.findIndex((value: TsConnect) => {
                 return value.id === data.id;
             });
 
-            const $html = this.$compile(/*html*/`
+            const $html: JQLite = this.$compile(/*html*/`
                 <button class="btn" ng-if="!ctrl.list[${index}].enable" ng-click="ctrl.asyncRun(${data.id}, true)">
                     <i class="fa fa-play"></i>
                 </button>
@@ -142,7 +142,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         });
     }
 
-    showEdit(type: string, id: number) {
+    showEdit(type: string, id: number): void {
         this.$location.path(`${this.pageBathPath}/${type}/${id}`);
     }
 
@@ -150,7 +150,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.$location.path(`${this.pageBathPath}/${type}`);
     }
 
-    async asyncRun(id: number, enable: boolean) {
+    async asyncRun(id: number, enable: boolean): Promise<void> {
         if (!confirm(`데이터 수집을 ${enable ? '시작' : '중지'}하시겠습니까?`)) {
             return;
         }
@@ -172,7 +172,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     async asyncUpdateTypeList(): Promise<void> {
         try {
-            const list = await this.backendSrv.get("thingspin/type/connect");
+            const list: any = await this.backendSrv.get("thingspin/type/connect");
             this.connectTypeList = list;
 
             this.$scope.$applyAsync();
@@ -183,7 +183,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     async asyncUpdateList(): Promise<void> {
         try {
-            const list = await this.backendSrv.get("thingspin/connect");
+            const list: TsConnect[] = await this.backendSrv.get("thingspin/connect");
             if (list) {
                 this.list = list;
                 this.tableInst.replaceData(list);
