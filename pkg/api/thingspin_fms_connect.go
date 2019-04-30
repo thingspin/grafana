@@ -115,6 +115,8 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 
 	// 새로운 params으로 변경
 	info.Params = req.Params
+	info.Enable = req.Enable
+	info.Intervals = req.Intervals
 
 	// 기존에 동작 중인 Connect에 업데이트를 할 경우
 	if info.Active == true {
@@ -136,10 +138,12 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 
 	paramsStr, _ := json.Marshal(req.Params)
 	q := m.UpdateTsConnectFlowQuery{
-		Id:     connId,
-		Name:   req.Name,
-		FlowId: info.FlowId,
-		Params: string(paramsStr),
+		Id:        connId,
+		Name:      req.Name,
+		FlowId:    info.FlowId,
+		Enable:    info.Enable,
+		Intervals: info.Intervals,
+		Params:    string(paramsStr),
 	}
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Store Error", err)
