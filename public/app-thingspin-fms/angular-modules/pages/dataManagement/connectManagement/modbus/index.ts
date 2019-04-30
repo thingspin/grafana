@@ -11,6 +11,10 @@ export class TsModbusConnectCtrl {
   enEtcMenu: boolean;
   showObj: object;
 
+  modbusParams: any;
+  fcSelected: string;
+  typeSelected: string;
+
   connName: any; // connection name
   modbusHost: any; // modbus Host ip
   modbusPort: any; // modbus Host Port
@@ -23,12 +27,28 @@ export class TsModbusConnectCtrl {
   modbusReTimeOut: any; // re connection time out
   modbusReadIntervals: any; //scan interval
 
+  //edit view
+  editAddress: any;
+  editName: any;
+  editQuantity: any;
+  editFC: any;
+  editType: any;
+
   defTabulatorOpts: object;
   orderTable: any;
 
+  isAddressEditView: boolean;
+  isAddressEditBtn: boolean;
+
+  tableindex: any;
+  tableList: any;
   /** @ngInject */
   constructor(private $scope , private backendSrv: BackendSrv) {
     //for tabulator table
+    this.modbusParams = {
+      functioncodes: ['Coil Status','Input Status','Holding Registers','Input Registers'],
+      datatypes: ['String','Numbers']
+    };
     this.defTabulatorOpts = {
       pagination: "local",
       paginationSize: 20,
@@ -45,7 +65,14 @@ export class TsModbusConnectCtrl {
         {title: "Type", field: "type"},
       ],
     };
+    this.isAddressEditView = false;
+    this.isAddressEditBtn = true;
+    this.fcSelected = this.modbusParams.functioncodes[2];//holding registers
+    this.typeSelected = this.modbusParams.datatypes[0];
 
+    this.tableindex = 1;
+    this.tableList = [];
+    console.log(this.isAddressEditView);
   }
 
   testInit() {
@@ -65,18 +92,95 @@ export class TsModbusConnectCtrl {
    console.log("addAddress button");
    this.orderTable.addRow({});
  }
- editAddress() {
-   console.log("edit button");
- }
  deleteAddress() {
    console.log("delete button");
  }
- getAddressTableData() {
+ getTablelistData() {
   const tableData = this.orderTable.getData();
   console.log(tableData);
   //tableData.length -- array count
   //tableData[0].address
 }
+ resetEditData() {
+   this.editAddress = "";
+   this.editName = "";
+   this.editQuantity = "";
+   this.editFC = "";
+   this.editType = "";
+   this.tableList = [];
+ }
+ addTableData() {
+  //{title: "No", field: "idx"},
+  //{title: "ADDRESS", field: "address"},
+  //{title: "Name", field: "name"},
+  //{title: "Quanntity", field: "quantity"},
+  //{title: "Function Code", field: "fc"},
+  //{title: "Type", field: "type"},
+   //data push
+  console.log("addtabledata");
+  const tableData = {
+    address: this.editAddress,
+    name: this.editName,
+    quantity: this.editQuantity,
+    fc: this.editFC,
+    type: this.editType
+  };
+  this.tableList.push(tableData);
+  this.orderTable.setData(this.tableList);
+
+  //add data and hide add-list-edit
+  this.isAddressEditView = false;
+  this.isAddressEditBtn = true;
+  //reset data
+  this.resetEditData();
+ }
+editAddressList() {
+    //edit view
+    //editAddress: any;
+    //editName: any;
+    //editQuantity: any;
+    //editFC: any;
+    //editType: any;
+    //functioncodes: ['Coil Status','Input Status','Holding Registers','Input Registers'],
+    //datatypes: ['String','Numbers']
+  console.log("+Address List");
+  console.log(this.editAddress+" "+this.editName+" "+this.fcSelected+" "+this.typeSelected);
+
+  //check & convert
+  if (this.fcSelected === 'Holding Registers') {
+    this.editFC = 'HoldingRegister';
+  } else if (this.fcSelected === 'Coil Status') {
+    this.editFC = 'Coil';
+  } else if (this.fcSelected === 'Input Status') {
+    this.editFC = 'Input';
+  } else if (this.fcSelected === 'Input Registers') {
+    this.editFC = 'InputRegister';
+  }
+
+  if (this.typeSelected === 'String') {
+    this.editType = 'string';
+  } else if (this.fcSelected === 'Numbers') {
+    this.editType = 'float32';
+  }
+
+  console.log(this.editFC+' '+this.editType);
+  this.addTableData();
+}
+
+onShowAddressEditView() {
+  console.log("function called");
+  if (this.isAddressEditView) {
+    this.isAddressEditView = false;
+    console.log("value is false");
+    this.isAddressEditBtn = true;
+  }else {
+    this.isAddressEditView = true;
+    console.log("value is true");
+    this.isAddressEditBtn = false;
+    console.log($('gf-form-input width-9'));
+  }
+}
+
  //--Tabulator 관련
  initAddressTable2() {
   const opts = Object.assign({ // deep copy
@@ -85,35 +189,6 @@ export class TsModbusConnectCtrl {
   }, this.defTabulatorOpts);
   this.orderTable = new Tabulator("#addressTable",opts);
  }
- initAddressTable() {
-   /*
-  const opts = Object.assign({ // deep copy
-      rowClick: (e, row) => { //trigger an alert message when the row is clicke
-          //intput init
-          this.showEtcMenu(row.getData());
-          this.showSelectedEdit(row.getData());
-      },
-  }, this.defTabulatorOpts);
-*/
-    this.orderTable = new Tabulator("#addressTable", {
-      //height: "311px",
-      //addRowPos: "bottom",
-      pagination: "local",
-      paginationSize: 20,
-      selectable: 1,
-      responsivelayout: true,
-      //height: "200px",
-      layout: "fitColumns",
-      columns: [
-          {title: "ADDRESS", field: "address"},
-          {title: "Name", field: "name"},
-          {title: "Quanntity", field: "quantity"},
-          {title: "Function Code", field: "fc"},
-          {title: "Type", field: "type"},
-        ],
-      });
-  //this.orderTable = new Tabulator("#addressTable",opts);
-  }
 
   showEtcMenu(obj) {
     this.selectObj = obj;
@@ -142,7 +217,8 @@ export class TsModbusConnectCtrl {
     const object = {
       "name": "modbus 수집기1",
       "params": {
-        "FlowId" : "test_modbus3",
+        "IsEnable": false,
+        "FlowId" : "test_modbus8",
         "DataType": "HoldingRegister",
         "Addr" : "40031",
         "Quantity" : "9",
@@ -152,7 +228,8 @@ export class TsModbusConnectCtrl {
         "UnitId" : 1,
         "TimeOut" : 1000,
         "ReTimeOut" : 2000
-      }
+      },
+      "intervals": 1
     };
     console.log(object);
 
