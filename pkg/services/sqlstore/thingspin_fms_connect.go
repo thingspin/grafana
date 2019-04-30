@@ -64,9 +64,11 @@ func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
 		name='%s', 
 		flow_id='%s', 
 		params='%s', 
+		enable=%t,
+		intervals=%d,
 		updated=datetime('now','localtime')
 	WHERE id=%d`,
-		m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Id)
+		m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Enable, cmd.Intervals, cmd.Id)
 	result, err := x.Exec(sqlQuery)
 
 	cmd.Result = result
@@ -78,7 +80,7 @@ func UpdateActiveConnect(cmd *m.UpdateActiveTsConnectQuery) error {
 	sqlQuery := fmt.Sprintf(`UPDATE '%s'
 	SET 
 		active=%t,
-		enable=%t
+		enable=%t,
 		flow_id='%s', 
 		updated=datetime('now','localtime')
 	WHERE id=%d`,

@@ -1,9 +1,36 @@
-<div ng-class="{open: ctrl.connectMenuOpen}" class="dropdown" ng-mouseleave="ctrl.showConnectMode(false)" >
-  <button class="btn btn-primary" ng-mouseover="ctrl.showConnectMode(true)">추가</button>
-  <ul class="dropdown-menu">
-    <li ng-repeat="t in ctrl.connectTypeList">
-      <a ng-click="ctrl.changePage(t.id)">{{t.name}}</a>
-    </li>
-  </ul>
+<!-- banner -->
+<div class="ts-connect-banner">
+  <div>
+    <div class="ts-connect-banner-title">
+      산업용 프로토콜 및 기타 데이터소스에 대한 연결
+    </div>
+    <div class="ts-connect-banner-desc">
+      <span>산업에서 많이 사용하는 OPC UA, 데이터베이스, 파일을 수집할 수 있습니다. 또한 추가적으로 제공되는 클라이언트 API를 통해 수집할 수 있습니다.</span>
+      <span class="ts-blue">[OPC UA 는 자동으로 연결, 그 외는 프로토콜에 해당하는 콜렉터를 사용]</span>
+    </div>
+  </div>
 </div>
-<div id="ts-tabulator"></div>
+<!-- main -->
+<div class="ts-connect-container">
+  <!-- title -->
+  <div class="ts-connect-title-container">
+    <div class="ts-connect-title">
+      데이터 연결 목록
+    </div>
+    <div class="ts-connect-buttons">
+      <button class="ts-btn opcua" ng-click="ctrl.changePage('opcua')">
+        <i class="fa fa-plus"></i>OPC/UA
+      </button>
+      <button class="ts-btn modbus" ng-click="ctrl.changePage('modbus')">
+        <i class="fa fa-plus"></i>Modbus
+      </button>
+      <button class="ts-btn mqtt" ng-click="ctrl.changePage('mqtt')">
+        <i class="fa fa-plus"></i> MQTT
+      </button>
+    </div>
+  </div>
+  <!-- table -->
+  <div class="ts-connect-table-container">
+    <div id="ts-connect"></div>
+  </div>
+</div>

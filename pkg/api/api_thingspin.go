@@ -44,6 +44,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsFnRoute.Put("/:connId", bind(tsm.TsConnectReq{}), Wrap(updateTsConnect))
 			tsFnRoute.Patch("/:connId", Wrap(activeTsConnect))
 			tsFnRoute.Delete("/:connId", Wrap(deleteTsConnect))
+			tsFnRoute.Patch("/:connId/enable", Wrap(enableTsConnect))
 		})
 
 		tsRoute.Group("/type", func(tsTypeRoute routing.RouteRegister) {

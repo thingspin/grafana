@@ -50,11 +50,13 @@ type AddTsConnectQuery struct {
 }
 
 type UpdateTsConnectFlowQuery struct {
-	Id     int
-	Name   string
-	FlowId string
-	Params string
-	Result sql.Result
+	Id        int
+	Name      string
+	FlowId    string
+	Enable    bool
+	Intervals int64
+	Params    string
+	Result    sql.Result
 }
 
 type UpdateActiveTsConnectQuery struct {
