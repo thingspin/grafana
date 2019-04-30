@@ -2,8 +2,10 @@
 
 //top title
 .modbus-title-top {
-    margin-left:1.54%;
-    margin-top:4.2%;
+    //margin-left:1.54%;
+    //margin-top:4.2%;
+    width: 50px;
+    height: 20px;
     opacity: 0.8;
     font-family: Roboto;
     font-size: 16px;
@@ -14,7 +16,6 @@
     letter-spacing: normal;
     text-align: left;
     color: #1e1e1e;
-    display:inline-block;
 }
 
 //main border line
