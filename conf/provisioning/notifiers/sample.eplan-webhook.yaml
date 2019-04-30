@@ -1,0 +1,14 @@
+# # config file version
+apiVersion: 1
+
+notifiers:
+  - name: alert-hook
+    type: webhook
+    org_name: Main Org.
+    is_default: true
+    uid: alert-hook-1
+    settings:
+      httpMethod: "POST"
+      username: ""
+      password: ""
+      url: http://localhost:3000/api/cep/eplan
