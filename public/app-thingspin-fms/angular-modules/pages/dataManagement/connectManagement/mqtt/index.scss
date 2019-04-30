@@ -215,7 +215,7 @@
 
 /*Color the table rows*/
 #mqtt-topic-list .tabulator-tableHolder .tabulator-table .tabulator-row{
-    color:#fff;
+    color:#000000;
     background-color: #fff;
 }
 
@@ -348,8 +348,8 @@
     background-color: #fafafa;
     margin-left: 23.2%;
     margin-top: 1.53%;
-    width: 46.4%;
-    height: 150px;
+    width: 54%;
+    height: 11%;
 }
 
 #mqtt-topic-topictype-title {
@@ -404,10 +404,12 @@
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
     background-color: #1e88e5;
     color:#ffffff;
+    margin-left: 16px;
 }
 #mqtt-title-topic-edit-info {
-    margin-top:8px;
-    margin-left:103px;
+    margin-top: 8px;
+    margin-left: 103px;
+    margin-bottom: 20px;
     display:block;
     font-family: Roboto;
     font-size: 12px;
