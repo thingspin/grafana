@@ -66,7 +66,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     initTable(): void {
-        const indexFormatter: Function = (cell: any): number | string => {
+        const indexFormatter: Function = (cell: any, formatterParams: any): number | string => {
             const data: TsConnect = cell.getData();
             const index: number = this.list.findIndex((value: TsConnect) => {
                 return value.id === data.id;
@@ -76,15 +76,10 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
         const typeFormatter: Function = (cell: any, formatterParams, onRendered: Function) => {
             const data: TsConnect = cell.getData();
-            const $html: JQLite = this.$compile(/*html*/`
+            return /*html*/`
             <div class="ts-connect-type">
                 <div class="${data.type}">${data.type}</div>
-            </div>
-            `)(this.$scope);
-
-            onRendered((): void => {
-                $(cell.getElement()).append($html);
-            });
+            </div>`;
         };
 
         const intervalFormatter: Function = (cell: any): string => {
@@ -103,7 +98,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
             const index: number = this.list.findIndex((value: TsConnect) => {
                 return value.id === data.id;
             });
-
             const $html: JQLite = this.$compile(/*html*/`
                 <button class="btn" ng-if="!ctrl.list[${index}].enable" ng-click="ctrl.asyncRun(${data.id}, true)">
                     <i class="fa fa-play"></i>
@@ -120,25 +114,30 @@ export default class TsConnectManagementCtrl implements angular.IController {
             `)(this.$scope);
 
             onRendered((): void => {
-                this.$scope.$applyAsync();
                 $(cell.getElement()).append($html);
             });
         };
 
+        const headerClickEvt = (e: any, column: any) => {
+            this.$scope.$applyAsync();
+        };
+
         this.tableInst = new Tabulator("#ts-connect", {
-            index: 'index',
-            layout: "fitColumns",      //fit columns to width of table
-            resizableRows: true,       //allow row order to be changed
-            pagination: "local",       //paginate the data
-            paginationSize: 10,         //allow 7 rows per page of data
+            pagination: "local",
+            paginationSize: 10,
+            responsivelayout: true,
+            layout: "fitColumns",
             columns: [                 //define the table columns
-                { title: "No", formatter: indexFormatter, },
-                { title: "연결 타입", formatter: typeFormatter, },
-                { title: "이름", field: "name", },
-                { title: "수집 주기", formatter: intervalFormatter, },
-                { title: "최근 변경 날짜", formatter: updatedFormatter, },
-                { title: "동작", formatter: actionFormatter, }
+                { title: "No", formatter: indexFormatter, headerClick: headerClickEvt, widthGrow: 1, },
+                { title: "연결 타입", formatter: typeFormatter, headerClick: headerClickEvt, widthGrow: 2, },
+                { title: "이름", field: "name", headerClick: headerClickEvt, widthGrow: 3, },
+                { title: "수집 주기", formatter: intervalFormatter, headerClick: headerClickEvt, widthGrow: 1, },
+                { title: "최근 변경 날짜", formatter: updatedFormatter, headerClick: headerClickEvt, widthGrow: 2, },
+                { title: "동작", formatter: actionFormatter, headerClick: headerClickEvt, widthGrow: 2, }
             ],
+            renderStarted: () => {
+                this.$scope.$applyAsync();
+            },
         });
     }
 
