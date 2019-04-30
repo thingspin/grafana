@@ -10,6 +10,17 @@ ts-connect-management {
 
     font-family: Roboto;
     color: #1e1e1e;
+
+    .tabulator-cell {
+        font-size: 14px;
+        line-height: 1.14;
+    }
+
+    .tabulator-col-title {
+        font-size: 12px;
+        line-height: 1.17;
+        font-weight: bold;
+    }
 }
 
 .ts-blue {
