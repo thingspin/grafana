@@ -22,11 +22,10 @@ export default class TsMqttController {
                 // force disconnect
                 this.client.end(true);
             }
-
             this.client = mqtt.connect(this.url)
                 .subscribe(this.topic)
                 .on("connect", () => resolve(true))
-                .on("message", this.recvMqttMessage)
+                .on("message", this.recvMqttMessage.bind(this))
                 .on("error", (err: any) => reject(err));
         });
     }
