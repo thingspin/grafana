@@ -37,6 +37,7 @@ export class TsMqttConnectCtrl {
   typeSelected: string;
   isTopicEditView: boolean;
   isTopicEditBtn: boolean;
+  isEditMode: boolean;
 
   defTabulatorOpts: object;
   table: any;
@@ -79,6 +80,9 @@ export class TsMqttConnectCtrl {
       if ($routeParams.id) {
         console.log("id : " + $routeParams.id);
         this.asyncDataLoader($routeParams.id);
+        this.isEditMode = true;
+      } else {
+        this.isEditMode = false;
       }
   }
 
@@ -105,7 +109,7 @@ export class TsMqttConnectCtrl {
   save() {
     if (this.collector && this.connection.url && this.connection.port && this.connection.keep_alive) {
       console.log(this.tableList);
-      if (this.tableList.length > 0) {
+      if (this.tableList.size > 0) {
         const object = {
           "name": this.collector,
           "params": {
@@ -114,13 +118,21 @@ export class TsMqttConnectCtrl {
             "Port" : this.connection.port,
             "KeepAlive" : this.connection.keep_alive,
             "Session" : this.connection.session,
-            "TopicList" : this.tableList
+            "TopicList" : Array.from(this.tableList.values())
           }
         };
         console.log(object);
-        this.backendSrv.post("/thingspin/connect/mqtt",object).then((result: any) => {
-          console.log(result);
-        });
+        if (this.isEditMode) {
+          this.backendSrv.put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
+            console.log(result);
+            this.close();
+          });
+        } else {
+          this.backendSrv.post("/thingspin/connect/mqtt",object).then((result: any) => {
+            console.log(result);
+            this.close();
+          });
+        }
       } else  {
         console.log("수집할 Topic List를 만들어주세요.");
       }
