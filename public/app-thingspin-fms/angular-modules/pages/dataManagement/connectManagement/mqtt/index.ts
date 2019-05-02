@@ -19,6 +19,13 @@ interface Topic {
   viewStr: string;
 }
 
+interface MqttTableData {
+  name: string;
+  topic: string;
+  value: string;
+  topicList: Topic[];
+}
+
 export class TsMqttConnectCtrl {
   static template: any = require("./index.html");
 
@@ -40,7 +47,9 @@ export class TsMqttConnectCtrl {
   constructor(
     private $scope: angular.IScope,
     private backendSrv: BackendSrv,
-    private $location: angular.ILocationService, $routeParams) {
+    private $location: angular.ILocationService,
+    private $compile: angular.ICompileService,
+    $routeParams) {
       this.connection = {
         url: DEF_URL,
         port: DEF_PORT,
@@ -61,20 +70,8 @@ export class TsMqttConnectCtrl {
         value: this.defMqtt.values[0],
         selType: this.defMqtt.types[0]
       };
-      this.defTabulatorOpts = {
-        pagination: "local",
-        paginationSize: 20,
-        selectable: 1,
-        responsivelayout: true,
-        layout: "fitColumns",
-        columns: [
-          {title: "이름",field: "name"},
-          {title: "Topic",field: "topic"},
-          {title: "Value Type",field: "value"},
-          {title: "동작", field: ""}
-        ],
-      };
-      this.tableList = [];
+
+      this.tableList = new Map<string, MqttTableData>();
       this.isTopicEditView = false;
       this.isTopicEditBtn = true;
 
@@ -158,34 +155,94 @@ export class TsMqttConnectCtrl {
     });
   }
 
-  onShowTopicEditView() {
-    console.log("function called");
-    if (this.isTopicEditView) {
-      this.isTopicEditView = false;
-      console.log("value is false");
-      this.isTopicEditBtn = true;
-    }else {
+  onShowTopicEditView(value) {
+    if (value) {
       this.isTopicEditView = true;
       console.log("value is true");
       this.isTopicEditBtn = false;
+
+      $('#topic-list-input').on('itemRemoved', (event: any) => {
+        this.delTopicItemList(event.item);
+      });
+    } else {
+      this.isTopicEditView = false;
+      console.log("value is false");
+      this.isTopicEditBtn = true;
     }
-    $('#topic-list-input').on('itemRemoved', (event: any) => {
-      this.delTopicItemList(event.item);
-    });
   }
 
   initAddressTable() {
-    const opts = Object.assign({ // deep copy
-        rowClick: (e, row) => { //trigger an alert message when the row is clicke
-        },
-    }, this.defTabulatorOpts);
-    this.table = new Tabulator("#mqtt-topic-list",opts);
+    const actionFormatter = (cell: any, formatterParams, onRendered: Function) => {
+      const data = cell.getData();
+      const $html = this.$compile(/*html*/`
+          <button class="btn" ng-click="ctrl.loadTopicData('${data.name}')">
+              <i class="fa fa-pencil"></i>
+          </button>
+          <button class="btn" ng-click="ctrl.removeTopic('${data.name}')">
+              <i class="fa fa-trash"></i>
+          </button>
+      `)(this.$scope);
+
+      onRendered((): void => {
+          this.$scope.$applyAsync();
+          $(cell.getElement()).append($html);
+      });
+    };
+    this.defTabulatorOpts = {
+      pagination: "local",
+      paginationSize: 20,
+      selectable: 1,
+      responsivelayout: true,
+      layout: "fitColumns",
+      columns: [
+        {title: "이름",field: "name"},
+        {title: "Topic",field: "topic"},
+        {title: "Value Type",field: "value"},
+        {title: "동작", field: "", formatter: actionFormatter}
+      ],
+    };
+
+
+    // const opts = Object.assign({ // deep copy
+    //     rowClick: (e, row) => { //trigger an alert message when the row is clicke
+    //     },
+    // }, this.defTabulatorOpts);
+    this.table = new Tabulator("#mqtt-topic-list", this.defTabulatorOpts);
   }
 
   delTopicItemList(value) {
     const index = this.topicItem.topicList.findIndex(topic => topic.viewStr === value);
-    this.topicItem.topicList.splice(index, 1);
+    if (index !== -1) {
+      this.topicItem.topicList.splice(index, 1);
+    }
     console.log(this.topicItem.topicList);
+  }
+
+  loadTopicData(value) {
+    this.onDataResetTopic();
+    if (value) {
+      const topicData = this.tableList.get(value);
+      this.topicItem.name = topicData.name;
+      this.topicItem.topicString = "";
+      this.topicItem.value = topicData.value;
+      for (let i = 0; i< topicData.topicList.length; i++) {
+        const topicItem = {} as Topic;
+        topicItem.type = topicData.topicList[i].type;
+        topicItem.value = topicData.topicList[i].value;
+        topicItem.viewStr = topicData.topicList[i].viewStr;
+        this.topicItem.topicList.push(topicItem);
+        this.topicItem.topicViewList.push(topicItem.viewStr);
+      }
+      console.log(this.topicItem);
+      this.onShowTopicEditView(true);
+    }
+  }
+
+  removeTopic(name) {
+    console.log(this.tableList);
+    this.tableList.delete(name);
+    this.table.setData(Array.from(this.tableList.values()));
+    console.log(name);
   }
 
   onLoadData(item) {
@@ -198,15 +255,11 @@ export class TsMqttConnectCtrl {
     this.connection.session = getParams.Session;
     const getTopicList = getParams.TopicList;
     for (let i = 0; i< getTopicList.length; i++) {
-      const tableData = {
-        name : "",
-        topic : "",
-        value : "",
-        topicList: []
-      };
+      const tableData = {} as MqttTableData;
       tableData.name = getTopicList[i].name;
       tableData.topic = getTopicList[i].topic;
       tableData.value = getTopicList[i].value;
+      tableData.topicList = [];
       for (let j = 0; j < getTopicList[i].topicList.length; j++) {
         const itemTopic = {} as Topic;
         itemTopic.type = getTopicList[i].topicList[j].type;
@@ -214,9 +267,9 @@ export class TsMqttConnectCtrl {
         itemTopic.viewStr = getTopicList[i].topicList[j].viewStr;
         tableData.topicList.push(itemTopic);
       }
-      this.tableList.push(tableData);
+      this.tableList.set(tableData.name, tableData);
     }
-    this.table.setData(this.tableList);
+    this.table.setData(Array.from(this.tableList.values()));
   }
 
   onDataResetTopic() {
@@ -224,6 +277,9 @@ export class TsMqttConnectCtrl {
     this.topicItem.topicString = "";
     this.topicItem.topicList = [];
     this.topicItem.topicViewList = [];
+    this.topicItem.item = "";
+    this.topicItem.value = this.defMqtt.values[0];
+    this.topicItem.selType = this.defMqtt.types[0];
   }
 
   onTopicAdd(item) {
@@ -251,13 +307,8 @@ export class TsMqttConnectCtrl {
   onTopicListAdd(name) {
     console.log("onTopicListAdd");
     if (name) {
-      const tableData = {
-        name : name,
-        topic : "",
-        value : this.topicItem.value,
-        topicList: []
-      };
-
+      const tableData = {} as MqttTableData;
+      tableData.topicList = [];
       for (let i = 0; i< this.topicItem.topicList.length; i++) {
         if (i === this.topicItem.topicList.length-1) {
           this.topicItem.topicString += this.topicItem.topicList[i].value;
@@ -266,10 +317,12 @@ export class TsMqttConnectCtrl {
         }
         tableData.topicList.push(this.topicItem.topicList[i]);
       }
+      tableData.name = this.topicItem.name;
+      tableData.value = this.topicItem.value;
       tableData.topic = this.topicItem.topicString;
 
-      this.tableList.push(tableData);
-      this.table.setData(this.tableList);
+      this.tableList.set(tableData.name, tableData);
+      this.table.setData(Array.from(this.tableList.values()));
       this.onDataResetTopic();
     } else {
       console.log("토픽 이름을 입력해주세요.");

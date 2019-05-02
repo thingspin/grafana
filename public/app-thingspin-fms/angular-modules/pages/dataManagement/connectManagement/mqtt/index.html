@@ -56,7 +56,7 @@
     <div class="mqtt-title" id="mqtt-title-topiclist">
         수집 Topic List
     </div>
-    <button id="mqtt-plus-topic-btn" className="btn" ng-click="ctrl.onShowTopicEditView()" ng-show="ctrl.isTopicEditBtn">
+    <button id="mqtt-plus-topic-btn" className="btn" ng-click="ctrl.onShowTopicEditView(true)" ng-show="ctrl.isTopicEditBtn">
         + Topic
     </button>
     <div class="mqtt-content-line"></div>
@@ -70,7 +70,7 @@
             Topic 아이템 구성하기
         </span>
         <div id="mqtt-addview-right-button-area">
-            <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView()">
+            <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView(false)">
                 취소
             </button>
             <button id="mqtt-topic-add-plus-btn" className="btn" ng-click="ctrl.onTopicListAdd(ctrl.topicItem.name)">
