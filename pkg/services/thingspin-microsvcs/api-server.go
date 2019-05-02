@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"strings"
 
 	api "github.com/grafana/grafana/pkg/api"
 	"github.com/grafana/grafana/pkg/log"
@@ -61,7 +62,6 @@ func init() {
 }
 
 func (s *MicroService) Init() error {
-	//s.log = log.New("api.server")
 	s.log.Debug("API Server", "working directory", s.root)
 	return nil
 }
@@ -104,17 +104,36 @@ func (s *MicroService) Run(ctx context.Context) error {
 			item.Pwd = filepath.Join(s.root, item.Pwd)
 		}
 
-		path := filepath.Join(item.Pwd, item.Cmd)
+		//commands := filepath.Join(item.Pwd, item.Cmd)
+		commands := item.Cmd
 		params := item.Params
-		options := item.Options
-		cmd := exec.Command(item.Shell, path, params, options)
+		//options := item.Options
+
+		if item.Cmd == "" {
+			commands = params
+			params = ""
+		}
+
+		s0 := []string{item.Shell}
+		s1 := strings.Fields(commands)
+		s2 := strings.Fields(params)
+
+		var args []string
+		args = append(args, s0...)
+		args = append(args, s1...)
+		args = append(args, s2...)
+
+		//cmd := exec.Command(item.Shell, commands, params, options)
+		cmd := exec.Command(item.Shell)
+		cmd.Args = args
+
 		cmd.Dir = filepath.Join(item.Pwd, "")
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
-		s.log.Debug("API Server: file-path : " + path)
-		s.log.Debug("API Server: shell : " + item.Shell)
-		s.log.Debug("API Server: Dir : " + cmd.Dir)
+		s.log.Info("API Server: shell : " + item.Shell)
+		s.log.Info("API Server: commands : "+commands, "args", cmd.Args)
+		s.log.Info("API Server: Dir : " + cmd.Dir)
 
 		go func(s server, log log.Logger) error {
 			err := cmd.Start()

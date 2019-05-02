@@ -114,7 +114,7 @@ func (w *WebsocketProxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	connBackend, resp, err := dialer.Dial(backendURL.String(), requestHeader)
 	if err != nil {
-		w.log.Error("websocketproxy: couldn't dial to remote backend url %s\n", err)
+		w.log.Error("websocketproxy: couldn't dial to remote backend.", "backend", connBackend, "reason", err)
 		return
 	}
 	defer connBackend.Close()
