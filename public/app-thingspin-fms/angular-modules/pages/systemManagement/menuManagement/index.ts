@@ -285,10 +285,8 @@ export class TsMenuManagementCtrl {
       this.clickedMenu.id = max + 100;
       this.clickedMenu.order = this.data.length;
       this.data.push(this.clickedMenu);
-      const newData = {
-        "menu": this.clickedMenu
-      };
-      this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+      console.log(this.clickedMenu);
+      this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,this.clickedMenu).then((res: any) => {
       });
     } else {
       console.log("modify Menu");

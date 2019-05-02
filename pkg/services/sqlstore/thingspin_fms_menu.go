@@ -196,12 +196,11 @@ func doTransaction(callback dbTransactionFunc) error {
 func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 	err := doTransaction(func(sess *DBSession) error {
 		deletes := []string{
-			`INSERT INTO `+m.TsFmsMenuBaseTbl+` ('id', 'text', 'icon', 'img_path', 'url', 'target', 'hideFromMenu', 
-				'hideFromTabs', 'placeBottom', 'divider', 'canDelete') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			`INSERT INTO `+m.TsFmsMenuBaseTbl+` ('id', 'text', 'icon', 'img_path', 'url', 'hideFromMenu', 
+				'hideFromTabs', 'placeBottom', 'divider', 'canDelete') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			`INSERT INTO `+m.TsFmsMenuTbl+` ('org_id', 'parent_id','name','mbid','order') VALUES (?,?,?,?,?)`,
 		}
-	
-		result, err := sess.Exec(deletes[0], cmd.Id, cmd.Name, cmd.Icon, "NULL", cmd.Url, "NULL", false, false, false, false, true)
+		result, err := sess.Exec(deletes[0], cmd.Id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true)
 		cmd.Result = result
 		if err != nil {
 			return err
