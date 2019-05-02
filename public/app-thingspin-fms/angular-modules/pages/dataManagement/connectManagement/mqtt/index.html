@@ -2,10 +2,10 @@
     MQTT 추가 양식
 </div>
 <div class="mqtt-right-button-area">
-    <button id="mqtt-cancel-btn" className="btn" onClick="">
+    <button id="mqtt-cancel-btn" className="btn" ng-click="ctrl.close()">
         취소
     </button>    
-    <button id="mqtt-plus-btn" className="btn" onClick="">
+    <button id="mqtt-plus-btn" className="btn" ng-click="ctrl.save()">
         + MQTT
     </button>
 </div>
@@ -41,7 +41,7 @@
             Keep Alive
         </span>
         <div class="mqtt-edit-bg" id="mqtt-edit-margin">
-            <input id="mqtt-edit" type="text" class="gf-form-input width-4"  data-placement="auto" ng-model="ctrl.connection.alive" placeholder="60" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+            <input id="mqtt-edit" type="text" class="gf-form-input width-4"  data-placement="auto" ng-model="ctrl.connection.keep_alive" placeholder="60" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
         </div>        
         <span class="mqtt-subtitle" id="mqtt-title-alive-sec">
             Sec
@@ -56,7 +56,7 @@
     <div class="mqtt-title" id="mqtt-title-topiclist">
         수집 Topic List
     </div>
-    <button id="mqtt-plus-topic-btn" className="btn" ng-click="ctrl.onShowTopicEditView()" ng-show="ctrl.isTopicEditBtn">
+    <button id="mqtt-plus-topic-btn" className="btn" ng-click="ctrl.onShowTopicEditView(true)" ng-show="ctrl.isTopicEditBtn">
         + Topic
     </button>
     <div class="mqtt-content-line"></div>
@@ -70,7 +70,7 @@
             Topic 아이템 구성하기
         </span>
         <div id="mqtt-addview-right-button-area">
-            <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView()">
+            <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView(false)">
                 취소
             </button>
             <button id="mqtt-topic-add-plus-btn" className="btn" ng-click="ctrl.onTopicListAdd(ctrl.topicItem.name)">
@@ -126,10 +126,6 @@
     <div class="gf-form">
         <button class="btn btn-success width-7" ng-click="ctrl.addMqttCollector(this, ctrl.connection.url, ctrl.connection.port, ctrl.connection.name)">
             연결 확인
-        </button>
-        &nbsp;&nbsp;
-        <button class="btn btn-success width-6" ng-click="ctrl.close()">
-            창 닫기
         </button>
     </div>
 </div>

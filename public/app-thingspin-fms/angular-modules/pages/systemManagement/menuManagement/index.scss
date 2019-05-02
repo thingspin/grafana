@@ -106,10 +106,112 @@
     height: 2px;
     width: 100%;
     border: solid 1px #ecebeb;
-    //margin-top: 8px;//16.5
+    //margin-top: 16px;//16.5
     //margin-left: 8.2%;
-    margin-bottom: 7px;
+    margin-bottom: 16px;
     align-content: center;
+}
+
+.menu_tree_area {
+    //width: 396px;
+    height: 40px;
+    //margin-top: 12px;
+    //margin-bottom: 11px;
+}
+
+.menu-tree-subarea {
+    //width: 396px;
+    height: 28px;
+    margin-top: 7px;
+    margin-bottom: 6px;
+}
+
+.menu-tree-toggle {
+    display: inline-block;
+    
+    width: 16px;
+    height: 16px;
+    
+    margin-left: 20px;
+}
+
+.menu-tree-icon {
+    display: inline-block;
+
+    width: 20px;
+    height: 20px;
+
+    margin-left: 4px;
+}
+
+.menu-tree-name {
+    display: inline-block;
+
+    height: 17px;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    color: #1e1e1e;
+
+    margin-left: 12px;
+    
+}
+
+.menu-tree-subname {
+    height: 15px;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    color: #1e1e1e;
+    
+}
+
+.menu-tree-hide {
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+}
+.menu-tree-edit {
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+}
+
+.menu-tree-trash {
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+}
+
+.menu-test-area {
+    //display: inline-block;
+}
+
+.menu-tree-left-area {
+    float: left;
+}
+
+.menu-tree-right-area {
+    float: right;
+}
+
+.menu-tree-left-subarea {
+    float: left;
+    margin-left: 72px;
+}
+
+.menu-tree-right-subarea {
+    float: right;
 }
 
  #menu-info-view {

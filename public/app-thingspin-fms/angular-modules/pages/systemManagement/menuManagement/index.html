@@ -16,71 +16,67 @@
 			<span class="fa fa-refresh"></span>
 	</a>
 	<div class="menu-tree-section-line"></div>	
-		
+	
 	<!--tree starting point-->
 	<div ui-tree="ctrl.options" id="tree2-root" style="background-color:rgba(255,255,255,0.52)">
-		<ol ui-tree-nodes="" ng-model="ctrl.data">
-			<li ng-repeat="node in ctrl.data" ui-tree-node>
-				<div ng-class="{ts_blur: node.hideFromMenu,ts_clickedMenu: node.id === ctrl.clickedMenu.id}" ui-tree-handle class="tree-node tree-node-content">
-					<a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
-						<span ng-class="{
-							'fa fa-angle-right': collapsed,
-							'fa fa-angle-down': !collapsed
-							}">
-						</span>
-					</a>
-
-					{{node.text}}
-										
-					<a data-nodrag ng-click="ctrl.blur(this, node)" style="margin-left: 5px;margin-right: 5px">
-						<span ng-if="!node.hideFromMenu" class="fa fa-toggle-on"></span>
-						<span ng-if="node.hideFromMenu" class="fa fa-toggle-off"></span>
-							<!--
-							<span class="fa fa-toggle-on"></span>
-							-->
-					</a>
-					<a data-nodrag ng-click="ctrl.menuClicked(node)" style="margin-left: 5px;margin-right: 5px">
-						<span class="fa fa-edit"></span>
-					</a>
-					<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
-						<span class="fa fa-trash"></span>
-					</a>
-
-				</div>
-
-				<!--children tree starting point-->
-				<ol ng-class="{ts_blur: node.hideFromMenu}" ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
-					<li ng-repeat="node in node.children" ui-tree-node>
-						<div ng-class="{ts_blur: node.hideFromMenu}" ui-tree-handle class="tree-node tree-node-content">
-							<a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
+			<ol ui-tree-nodes="" ng-model="ctrl.data">
+				<li ng-repeat="node in ctrl.data" ui-tree-node>
+					<div ui-tree-handle class="tree-node tree-node-content" ng-class="{ts_blur: node.hideFromMenu,ts_clickedMenu: node.id === ctrl.clickedMenu.id, menu_tree_area: node.children.length === 0 || collapsed}">
+						<div class ="menu-tree-left-area">
+							<a data-nodrag ng-click="ctrl.toggle(this)" class="menu-tree-toggle">
 								<span ng-class="{
-								'fa fa-angle-right': collapsed,
-								'fa fa-angle-down': !collapsed
-								}">
+									'fa fa-angle-right': collapsed,
+									'fa fa-angle-down': !collapsed
+									}">
 								</span>
 							</a>
-									
-							{{node.text}}
-							
-							<a data-nodrag ng-click="ctrl.blur(this,node)" style="margin-left: 5px;margin-right: 5px">
+							<a data-nodrag class="menu-tree-icon">
+								<span ng-class="node.icon"></span>
+							</a>
+							<a class="menu-tree-name">{{node.text}}</a>
+						</div>
+
+						<div class ="menu-tree-right-area">
+							<a data-nodrag ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
+								<span class="fa fa-edit"></span>
+							</a>
+							<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
+								<span class="fa fa-trash"></span>
+							</a>
+							<a data-nodrag ng-click="ctrl.blur(this, node)" class="menu-tree-hide">
 								<span ng-if="!node.hideFromMenu" class="fa fa-toggle-on"></span>
 								<span ng-if="node.hideFromMenu" class="fa fa-toggle-off"></span>
 							</a>
-							<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
-								<span class="fa fa-trash"></span>
-							</a>
-									<!--
-							<a data-nodrag ng-click="ctrl.newSubItem(this)" style="margin-left: 5px;margin-right: 5px">
-									<span class="fa fa-plus-circle"></span>
-							</a>
-							-->
-							
 						</div>
-					</li>
-				</ol>
+					</div>
+
+					<!--children tree starting point-->	
+					<ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed,ts_blur: node.hideFromMenu}">
+						<li ng-repeat="node in node.children" ui-tree-node>
+							<div ui-tree-handle class="tree-node tree-node-content menu-tree-subarea" ng-class="{ts_blur: node.hideFromMenu, ts_clickedMenu: node.id === ctrl.clickedMenu.id}">
+								<div class ="menu-tree-left-subarea">
+									<a class="menu-tree-subname">{{node.text}}</a>
+								</div>
 								
-			</li>
-		</ol>
+								<div class ="menu-tree-right-subarea">
+									<a data-nodrag ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
+											<span class="fa fa-edit"></span>
+									</a>
+									<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
+										<span class="fa fa-trash"></span>
+									</a>
+									<a data-nodrag ng-click="ctrl.blur(this,node)" class="menu-tree-hide">
+										<span ng-if="!node.hideFromMenu" class="fa fa-toggle-on"></span>
+										<span ng-if="node.hideFromMenu" class="fa fa-toggle-off"></span>
+									</a>	
+								</div>	
+							</div>
+						</li>
+					</ol>
+								
+					
+				</li>
+			</ol>
 	</div>
 				
 </div>
