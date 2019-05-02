@@ -265,6 +265,10 @@ export class TsMenuManagementCtrl {
       console.log("toggle!");
       console.log(scope);
       scope.toggle();
+      //scope.$parent.toggle();
+      //scope.$nodeScope.toggle();
+      //scope.$parentNodeScope.toggle();
+      //scope.$treeScope.toggle();
       //scope.toggle();
   }
 
