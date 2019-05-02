@@ -1,26 +1,6 @@
 //import React, { useState } from 'react';
 import React, { PureComponent } from 'react';
 
-export interface Props {
-  section: any;
-}
-
-export interface PropsItems {
-  items: any;
-}
-
-export interface States {}
-
-// function SampleCounter () {
-//   const [count, setCount] = useState(0);
-
-//   return (
-//     <div>
-//       <h1>{count}</h1>
-//       <button onClick={ () => setCount( count + 1) }>Count Up!</button>
-//     </div>
-//   );
-// }
 enum ConfigSectionEnum {
   License = 'license',
   ContentsDirectory = 'contents',
@@ -28,16 +8,32 @@ enum ConfigSectionEnum {
   APIKeys = 'apikeys',
 }
 
+interface Section {
+  key: ConfigSectionEnum;
+  name: string;
+}
+
+interface Item {
+  attribute: string;
+  value: any;
+}
+
+export interface Props {
+  section: any;
+}
+
+export interface PropsItems {
+  item: Item;
+}
+
+export interface States {}
+
 class ConfigItem extends PureComponent<PropsItems, States> {
   render () {
     return (
-      this.props.items.map ( (item: any, index: number) => {
-        return (
           <div className="item">
-            <div>{item.attribute} : {item.value}</div>
+            <div>{this.props.item.attribute} : {this.props.item.value}</div>
           </div>
-        );
-      })
     );
   }
 }
@@ -52,8 +48,8 @@ class ConfigSection extends PureComponent<Props, States> {
     );
   }
 
-  get items(): JSX.Element {
-    const items = [];
+  get items(): JSX.Element[] {
+    const items: Item[] = [];
     const { section } = this.props;
 
     switch ( section.key ) {
@@ -79,8 +75,8 @@ class ConfigSection extends PureComponent<Props, States> {
       break;
     }
 
-    return items.map( (item, index) => {
-       return (<ConfigItem key={index} items={items} />);
+    return items.map( (item: Item) => {
+       return (<ConfigItem item={item} />);
     });
 
   }
@@ -101,18 +97,18 @@ export class TsConfigs extends PureComponent<Props, States> {
         <p>시스템 관리자를 위한 기능입니다.</p>
       </div>,
       <div className="config-sections" key="config-sections-1">
-        { this.items }
+        { this.sections }
       </div>
     ]
     );
   }
 
-  get items(): JSX.Element {
+  get sections(): JSX.Element[] {
     const { sections } = this.states;
 
-    return sections.map( (item: any, index: number) => {
+    return sections.map((section: Section) => {
         return (
-          <ConfigSection key={index} section={item}/>
+          <ConfigSection key={section.key} section={section}/>
         );
     });
   }
