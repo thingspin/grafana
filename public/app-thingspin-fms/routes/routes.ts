@@ -40,5 +40,7 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
     .when('/thingspin/manage/system/user', { template: '<ts-user-management />', })
     .when('/thingspin/manage/system/menu', { template: '<ts-menu-management />', })
 
-    .when('/thingspin/manage/view-edit-management', { template: '<ts-view-edit-management />', });
+    .when('/thingspin/manage/view-edit-management', { template: '<ts-view-edit-management />', })
+
+    .when('/v1.0/sys/config', { template: '<ts-config-view />', });
 }

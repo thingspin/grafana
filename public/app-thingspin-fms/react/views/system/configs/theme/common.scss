@@ -1,0 +1,62 @@
+ts-config-view {
+    width: 100%;
+    height: calc(100% - 36px);
+    margin: 0px;
+    padding: 0px;
+    overflow: auto;
+
+    .grafana-info-box {
+        padding: 4px;
+        margin: 4px 4px 1px 4px;
+    }
+
+    .config-sections {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        overflow: auto;
+        margin: 1px;
+        padding: 1px;
+    
+        .config-section {
+            flex: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: calc(50% - 100px);
+            min-height: 180px;
+            height: 250px;
+            max-height: 350px;
+            overflow: auto;
+            margin: 2px;
+            margin-top: 1px;
+            padding: 0px;
+            padding-bottom: 2px;
+            border: solid;
+            border-width: 1px;
+            border-color: rgba(35, 31, 41, 0.37);
+            margin-bottom: auto;
+    
+            .title {
+                //font-size: 15px;
+                //height: 24px;
+                //font-weight: bolder;
+                flex: none;
+                padding-left: 2px;
+                padding-right: 2px;
+                background: rgba(67, 69, 73, 0.459);
+            }
+    
+            .item {
+                height: 30px;
+                padding-left: 4px;
+                padding-right: 4px;
+                margin-top: 2px;
+                margin-bottom: 2px;
+                //width: 100%;
+                //background: rgba(205, 199, 241, 0.13);
+            }
+        }
+    }
+}
