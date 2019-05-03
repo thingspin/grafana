@@ -22,6 +22,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     /** @ngInject */
     constructor(private $scope: angular.IScope,
+    // private $element: JQLite,
     private $location: angular.ILocationService,
     private $compile: angular.ICompileService, // https://programmingsummaries.tistory.com/132
     private backendSrv: BackendSrv,) { }// Dependency Injection
@@ -40,7 +41,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
-    async initMqtt() {
+    async initMqtt(): Promise<void> {
         this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
         try {
             await this.mqttClient.run(this.recvMqttMessage.bind(this));
@@ -66,45 +67,32 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     initTable(): void {
-        const indexFormatter = (cell: any) => {
+        const typeFormatter: Function = (cell: any, formatterParams, onRendered: Function) => {
             const data: TsConnect = cell.getData();
-            const index: number = this.list.findIndex((value: TsConnect) => {
-                return value.id === data.id;
-            });
-            return index + 1;
-        };
-
-        const typeFormatter = (cell: any, formatterParams, onRendered: Function) => {
-            const data: TsConnect = cell.getData();
-            const $html = this.$compile(/*html*/`
+            return /*html*/`
             <div class="ts-connect-type">
                 <div class="${data.type}">${data.type}</div>
-            </div>
-            `)(this.$scope);
-
-            onRendered((): void => {
-                $(cell.getElement()).append($html);
-            });
+            </div>`;
         };
 
-        const intervalFormatter = (cell: any) => {
+        const intervalFormatter: Function = (cell: any): string => {
             const data: TsConnect = cell.getData();
             return data.intervals ? `${data.intervals} 초` : "-";
         };
 
-        const updatedFormatter = (cell: any) => {
+        const updatedFormatter: Function = (cell: any): string => {
             const data: TsConnect = cell.getData();
 
-            return moment(data.updated).format("YYYY-MM-DD hh:mm:ss");
+            return moment(data.updated)
+                .format("YYYY-MM-DD HH:mm:ss");
         };
 
-        const actionFormatter = (cell: any, formatterParams, onRendered: Function) => {
+        const actionFormatter = (cell: any, formatterParams, onRendered: Function): void => {
             const data: TsConnect = cell.getData();
             const index: number = this.list.findIndex((value: TsConnect) => {
                 return value.id === data.id;
             });
-
-            const $html = this.$compile(/*html*/`
+            const $html: JQLite = this.$compile(/*html*/`
                 <button class="btn" ng-if="!ctrl.list[${index}].enable" ng-click="ctrl.asyncRun(${data.id}, true)">
                     <i class="fa fa-play"></i>
                 </button>
@@ -120,29 +108,39 @@ export default class TsConnectManagementCtrl implements angular.IController {
             `)(this.$scope);
 
             onRendered((): void => {
-                this.$scope.$applyAsync();
                 $(cell.getElement()).append($html);
             });
         };
 
-        this.tableInst = new Tabulator("#ts-connect", {
-            index: 'index',
-            layout: "fitColumns",      //fit columns to width of table
-            resizableRows: true,       //allow row order to be changed
-            pagination: "local",       //paginate the data
-            paginationSize: 10,         //allow 7 rows per page of data
+        const headerClickEvt = (e: any, column: any) => {
+            this.$scope.$applyAsync();
+        };
+
+        const tableOpts: object = {
+            pagination: "local",
+            paginationSize: 10,
+            layout: "fitColumns",
+            // responsiveLayout: true,
             columns: [                 //define the table columns
-                { title: "No", formatter: indexFormatter, },
-                { title: "연결 타입", formatter: typeFormatter, },
-                { title: "이름", field: "name", },
-                { title: "수집 주기", formatter: intervalFormatter, },
-                { title: "최근 변경 날짜", formatter: updatedFormatter, },
-                { title: "동작", formatter: actionFormatter, }
+                { title: "No", formatter: "rownum", headerClick: headerClickEvt, width: 50, },
+                { title: "연결 타입", field: "type", formatter: typeFormatter, headerClick: headerClickEvt,},
+                { title: "이름", field: "name", headerClick: headerClickEvt, },
+                { title: "수집 주기", field: "intervals", formatter: intervalFormatter, headerClick: headerClickEvt, },
+                { title: "최근 변경 날짜", field: "updated", formatter: updatedFormatter, headerClick: headerClickEvt, },
+                { title: "동작", formatter: actionFormatter, headerClick: headerClickEvt, },
             ],
-        });
+            renderStarted: () => {
+                this.$scope.$applyAsync();
+            },
+            renderComplete: () => {
+                // this.tableInst.redraw();
+            }
+        };
+
+        this.tableInst = new Tabulator("#ts-connect", tableOpts);
     }
 
-    showEdit(type: string, id: number) {
+    showEdit(type: string, id: number): void {
         this.$location.path(`${this.pageBathPath}/${type}/${id}`);
     }
 
@@ -150,7 +148,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.$location.path(`${this.pageBathPath}/${type}`);
     }
 
-    async asyncRun(id: number, enable: boolean) {
+    async asyncRun(id: number, enable: boolean): Promise<void> {
         if (!confirm(`데이터 수집을 ${enable ? '시작' : '중지'}하시겠습니까?`)) {
             return;
         }
@@ -172,7 +170,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     async asyncUpdateTypeList(): Promise<void> {
         try {
-            const list = await this.backendSrv.get("thingspin/type/connect");
+            const list: any = await this.backendSrv.get("thingspin/type/connect");
             this.connectTypeList = list;
 
             this.$scope.$applyAsync();
@@ -183,7 +181,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     async asyncUpdateList(): Promise<void> {
         try {
-            const list = await this.backendSrv.get("thingspin/connect");
+            const list: TsConnect[] = await this.backendSrv.get("thingspin/connect");
             if (list) {
                 this.list = list;
                 this.tableInst.replaceData(list);
@@ -207,7 +205,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 const item: TsConnect = list[index];
 
                 if (item.id === id) {
-                    const baseTopic: string = `/thingspin/connect/${item.flow_id}` as string;
+                    const baseTopic: string = `/thingspin/connect/${item.params.FlowId}` as string;
                     this.publishMqtt(`${baseTopic}/status`, '');
                     this.publishMqtt(`${baseTopic}/data`, '');
 

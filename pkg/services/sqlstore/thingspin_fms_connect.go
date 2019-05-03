@@ -18,6 +18,15 @@ func init() {
 	bus.AddHandler("thingspin-sql", GetAllTsConnectType)
 }
 
+type InsertTsConnect struct {
+	Id        int64  `xorm:"'id' pk autoincr"`
+	Name      string `xorm:"'name'"`
+	FlowId    string `xorm:"'flow_id'"`
+	Params    string `xorm:"'params'"`
+	Intervals int64  `xorm:"'intervals'"`
+	Type      string `xorm:"'type'"`
+}
+
 func GetAllTsConnect(cmd *m.GetAllTsConnectQuery) error {
 	var res []m.TsConnectField
 
@@ -46,14 +55,16 @@ func GetTsConnect(cmd *m.GetTsConnectQuery) error {
 }
 
 func AddTsConnect(cmd *m.AddTsConnectQuery) error {
-	sqlQuery := fmt.Sprintf(`INSERT INTO
-	'%s'
-		('flow_id', 'name', 'type', 'params', 'active', 'intervals') 
-	values
-		('%s', '%s', '%s', '%s', true, %d)`, m.TsFmsConnectTbl, cmd.FlowId, cmd.Name, cmd.Type, cmd.Params, cmd.Intervals)
-	result, err := x.Exec(sqlQuery)
+	q := &InsertTsConnect{
+		Name:      cmd.Name,
+		FlowId:    cmd.FlowId,
+		Params:    cmd.Params,
+		Intervals: cmd.Intervals,
+		Type:      cmd.Type,
+	}
 
-	cmd.Result = result
+	_, err := x.Table(m.TsFmsConnectTbl).Insert(q)
+	cmd.Result = q.Id
 
 	return err
 }

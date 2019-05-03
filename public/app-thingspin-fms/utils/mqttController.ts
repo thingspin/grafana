@@ -5,7 +5,7 @@ export type TsMqttRecvMsgCallback = (topic: string, payload: string | object) =>
 export default class TsMqttController {
     readonly pubOpts: mqtt.IClientPublishOptions = {
         retain: true,
-        qos: 0,
+        qos: 2,
         dup: false,
     };
     client: mqtt.Client = null; // mqtt client instance
@@ -22,11 +22,10 @@ export default class TsMqttController {
                 // force disconnect
                 this.client.end(true);
             }
-
             this.client = mqtt.connect(this.url)
                 .subscribe(this.topic)
                 .on("connect", () => resolve(true))
-                .on("message", this.recvMqttMessage)
+                .on("message", this.recvMqttMessage.bind(this))
                 .on("error", (err: any) => reject(err));
         });
     }

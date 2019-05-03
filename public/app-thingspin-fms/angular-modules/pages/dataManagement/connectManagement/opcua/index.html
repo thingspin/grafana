@@ -1,0 +1,38 @@
+<div class="opcua-conn-editor">
+
+    <div class="opcua-edit-banner">
+        <div class="opcua-banner-title">OPC UA 추가 양식</div>
+        <div class="opcua-banner-buttons">
+            <button class="ts-btn ts-btn-cancel" ng-click="ctrl.cancel()">취소</button>
+            <button class="ts-btn ts-btn-save" ng-click="ctrl.save()">저장</button>
+        </div>
+    </div>
+
+    <div class="opcua-edit-root">
+
+        <!-- input directive -->
+        <ts-opc-connect-info input="ctrl.input" connect-status="ctrl.connectStatus" btn-click="ctrl.addConnect()"></ts-opc-connect-info>
+
+        <!-- error message -->
+        <div class="opcua-edit-container" ng-if="ctrl.connectStatus === 'red' && !ctrl.enableNodeSet">
+            <div class="opcua-edit-header">
+                <div class="opcua-edit-title red">
+                    <span><i class="fa fa-exclamation-triangle"></i></span>
+                    <span>다음과 같은 이유로 서버에 접속 할 수 없습니다.</span>
+                </div>
+            </div>
+                    
+            <div class="opcua-edit-body">
+                <div class="opcua-error-comment">
+                    <p ng-repeat="msg in ctrl.errorComment">{{msg}}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- setter opc node directive -->
+        <div ng-if="ctrl.enableNodeSet">
+            <ts-opc-node-set></ts-opc-node-set>
+        </div>
+            
+    </div>
+</div>
