@@ -195,17 +195,28 @@ func doTransaction(callback dbTransactionFunc) error {
 
 func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 	err := doTransaction(func(sess *DBSession) error {
-		deletes := []string{
+		sqlCommands := []string{
+			`SELECT MAX(id) FROM ` + m.TsFmsMenuBaseTbl,
 			`INSERT INTO `+m.TsFmsMenuBaseTbl+` ('id', 'text', 'icon', 'img_path', 'url', 'hideFromMenu', 
 				'hideFromTabs', 'placeBottom', 'divider', 'canDelete') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			`INSERT INTO `+m.TsFmsMenuTbl+` ('org_id', 'parent_id','name','mbid','order') VALUES (?,?,?,?,?)`,
 		}
-		result, err := sess.Exec(deletes[0], cmd.Id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true)
+		var id int
+		has, err := sess.SQL(sqlCommands[0]).Get(&id)
+		if !has {
+			id = 100
+		} else {
+			id = id + 100
+		}
+		if err != nil {
+			return err
+		}
+		result, err := sess.Exec(sqlCommands[1], id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true)
 		cmd.Result = result
 		if err != nil {
 			return err
 		}
-		result, err = sess.Exec(deletes[1], cmd.OrgId, -1, cmd.Name, cmd.Id, cmd.Order)
+		result, err = sess.Exec(sqlCommands[2], cmd.OrgId, -1, cmd.Name, id, cmd.Order)
 		cmd.Result = result
 		if err != nil {
 			return err

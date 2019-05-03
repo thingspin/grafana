@@ -230,6 +230,9 @@ export class TsMenuManagementCtrl {
       console.log(this.dashboardList);
     });
   }
+
+  cloneMenu(node) {
+  }
   menuClicked(node) {
     console.log(node);
     console.log("clicked!");
@@ -275,18 +278,8 @@ export class TsMenuManagementCtrl {
   createMenu() {
     console.log("trying to create a menu!");
     //var nodeData = this.tree2[this.tree2.length - 1];
-    let max = 100;
-    if (this.data.length > 0) {
-      max = this.data[0].id;
-      for ( let _i = 1; _i < this.data.length; _i++) {
-        if (max < this.data[_i].id) {
-          max = this.data[_i].id;
-        }
-      }
-    }
     if (this.clickedMenu.id < 0) {
       console.log("new Menu");
-      this.clickedMenu.id = max + 100;
       this.clickedMenu.order = this.data.length;
       this.data.push(this.clickedMenu);
       console.log(this.clickedMenu);
@@ -310,6 +303,7 @@ export class TsMenuManagementCtrl {
       this.menuInfo = true;
       this.url = "";
       this.clickedMenu = {
+        parent_id: -1,
         id: -100,
         icon: "fa fa-folder-o",
         text: "",
