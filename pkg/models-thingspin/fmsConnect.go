@@ -41,12 +41,12 @@ type GetTsConnectQuery struct {
 }
 
 type AddTsConnectQuery struct {
-	Name      string
-	FlowId    string
-	Params    string
-	Intervals int64
-	Type      string
-	Result    sql.Result
+	Name      string `xorm:"'name'"`
+	FlowId    string `xorm:"'flow_id'"`
+	Params    string `xorm:"'params'"`
+	Intervals int64  `xorm:"'intervals'"`
+	Type      string `xorm:"'type'"`
+	Result    int64
 }
 
 type UpdateTsConnectFlowQuery struct {
