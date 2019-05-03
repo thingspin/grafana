@@ -5,7 +5,7 @@ export type TsMqttRecvMsgCallback = (topic: string, payload: string | object) =>
 export default class TsMqttController {
     readonly pubOpts: mqtt.IClientPublishOptions = {
         retain: true,
-        qos: 0,
+        qos: 2,
         dup: false,
     };
     client: mqtt.Client = null; // mqtt client instance

@@ -10,7 +10,7 @@ import './dataManagement';
 import './dataManagement/connectManagement';
 import './dataManagement/connectManagement/modbus';
 import './dataManagement/connectManagement/mqtt';
-import './dataManagement/connectManagement/mqtt';
+import './dataManagement/connectManagement/opcua';
 
 import './facilityManagement';
 

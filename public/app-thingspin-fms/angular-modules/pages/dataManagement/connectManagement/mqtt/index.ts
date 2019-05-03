@@ -45,12 +45,12 @@ export class TsMqttConnectCtrl {
         {title: "이름",field: "name"},
         {title: "Topic",field: "topic"},
         {title: "Value Type",field: "return"},
-        {title: "동작", field:""}
+        {title: "동작", field: ""}
       ],
      };
-     this.topicList = {
+    this.topicList = {
 
-     }
+    };
      this.valueSelected = this.mqtt.values[0];
      this.typeSelected = this.mqtt.types[0];
      this.isTopicEditView = false;
@@ -106,8 +106,8 @@ export class TsMqttConnectCtrl {
         rowClick: (e, row) => { //trigger an alert message when the row is clicke
         },
     }, this.defTabulatorOpts);
-  
-    this.orderTable = new Tabulator("#mqtt-topic-list",opts);
+
+    this.orderTable = new Tabulator("#mqtt-topic-list", opts);
   }
 }
 export function tsMqttConnectDirective() {

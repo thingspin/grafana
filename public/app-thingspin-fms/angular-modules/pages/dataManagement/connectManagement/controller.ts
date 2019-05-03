@@ -22,6 +22,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     /** @ngInject */
     constructor(private $scope: angular.IScope,
+    // private $element: JQLite,
     private $location: angular.ILocationService,
     private $compile: angular.ICompileService, // https://programmingsummaries.tistory.com/132
     private backendSrv: BackendSrv,) { }// Dependency Injection
@@ -66,14 +67,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     initTable(): void {
-        const indexFormatter: Function = (cell: any, formatterParams: any): number | string => {
-            const data: TsConnect = cell.getData();
-            const index: number = this.list.findIndex((value: TsConnect) => {
-                return value.id === data.id;
-            });
-            return index + 1;
-        };
-
         const typeFormatter: Function = (cell: any, formatterParams, onRendered: Function) => {
             const data: TsConnect = cell.getData();
             return /*html*/`
@@ -90,7 +83,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
         const updatedFormatter: Function = (cell: any): string => {
             const data: TsConnect = cell.getData();
 
-            return moment(data.updated).format("YYYY-MM-DD hh:mm:ss");
+            return moment(data.updated)
+                .format("YYYY-MM-DD HH:mm:ss");
         };
 
         const actionFormatter = (cell: any, formatterParams, onRendered: Function): void => {
@@ -122,23 +116,28 @@ export default class TsConnectManagementCtrl implements angular.IController {
             this.$scope.$applyAsync();
         };
 
-        this.tableInst = new Tabulator("#ts-connect", {
+        const tableOpts: object = {
             pagination: "local",
             paginationSize: 10,
-            responsivelayout: true,
             layout: "fitColumns",
+            // responsiveLayout: true,
             columns: [                 //define the table columns
-                { title: "No", formatter: indexFormatter, headerClick: headerClickEvt, widthGrow: 1, },
-                { title: "연결 타입", formatter: typeFormatter, headerClick: headerClickEvt, widthGrow: 2, },
-                { title: "이름", field: "name", headerClick: headerClickEvt, widthGrow: 3, },
-                { title: "수집 주기", formatter: intervalFormatter, headerClick: headerClickEvt, widthGrow: 1, },
-                { title: "최근 변경 날짜", formatter: updatedFormatter, headerClick: headerClickEvt, widthGrow: 2, },
-                { title: "동작", formatter: actionFormatter, headerClick: headerClickEvt, widthGrow: 2, }
+                { title: "No", formatter: "rownum", headerClick: headerClickEvt, width: 50, },
+                { title: "연결 타입", field: "type", formatter: typeFormatter, headerClick: headerClickEvt,},
+                { title: "이름", field: "name", headerClick: headerClickEvt, },
+                { title: "수집 주기", field: "intervals", formatter: intervalFormatter, headerClick: headerClickEvt, },
+                { title: "최근 변경 날짜", field: "updated", formatter: updatedFormatter, headerClick: headerClickEvt, },
+                { title: "동작", formatter: actionFormatter, headerClick: headerClickEvt, },
             ],
             renderStarted: () => {
                 this.$scope.$applyAsync();
             },
-        });
+            renderComplete: () => {
+                // this.tableInst.redraw();
+            }
+        };
+
+        this.tableInst = new Tabulator("#ts-connect", tableOpts);
     }
 
     showEdit(type: string, id: number): void {
@@ -206,7 +205,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 const item: TsConnect = list[index];
 
                 if (item.id === id) {
-                    const baseTopic: string = `/thingspin/connect/${item.flow_id}` as string;
+                    const baseTopic: string = `/thingspin/connect/${item.params.FlowId}` as string;
                     this.publishMqtt(`${baseTopic}/status`, '');
                     this.publishMqtt(`${baseTopic}/data`, '');
 
