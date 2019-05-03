@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"database/sql"
+	//"database/sql"
 	"fmt"
 
 	"github.com/grafana/grafana/pkg/bus"
@@ -22,6 +22,26 @@ func init() {
 	bus.AddHandler("sql", GetFmsMenuUsersPin)
 	bus.AddHandler("sql", UpdateFmsMenuHideState)
 	bus.AddHandler("sql", UpdateFmsMenuInfo)
+}
+
+// Transaction 
+func doTransaction(callback dbTransactionFunc) error {
+	var err error
+	sess := &DBSession{Session: x.NewSession()}
+	defer sess.Close()
+	if err = sess.Begin(); err != nil {
+		return err
+	}
+	err = callback(sess)
+
+	if err != nil {
+		sess.Rollback()
+		return err
+	} else if err = sess.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // recursive function
@@ -160,37 +180,16 @@ func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
 }
 
 func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
-	result, err := x.Exec(`DELETE FROM '?' WHERE org_id = ?`,
+	_, err := x.Exec(`DELETE FROM '?' WHERE org_id = ?`,
 		m.TsFmsMenuTbl, cmd.OrgId)
-	cmd.Result = result
-
+	//cmd.Result = result
 	return err
 }
 
 func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
-	//result, err := x.Exec(`PRAGMA foreign_keys = ON`)
-	result, err := x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
-	cmd.Result = result
+	_, err := x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
+	//cmd.Result = result
 	return err
-}
-
-func doTransaction(callback dbTransactionFunc) error {
-	var err error
-	sess := &DBSession{Session: x.NewSession()}
-	defer sess.Close()
-	if err = sess.Begin(); err != nil {
-		return err
-	}
-	err = callback(sess)
-
-	if err != nil {
-		sess.Rollback()
-		return err
-	} else if err = sess.Commit(); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
@@ -211,13 +210,13 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 		if err != nil {
 			return err
 		}
-		result, err := sess.Exec(sqlCommands[1], id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true)
-		cmd.Result = result
+		_, err = sess.Exec(sqlCommands[1], id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true)
+		//cmd.Result = result
 		if err != nil {
 			return err
 		}
-		result, err = sess.Exec(sqlCommands[2], cmd.OrgId, -1, cmd.Name, id, cmd.Order)
-		cmd.Result = result
+		_, err = sess.Exec(sqlCommands[2], cmd.OrgId, -1, cmd.Name, id, cmd.Order)
+		//cmd.Result = result
 		if err != nil {
 			return err
 		}
@@ -240,7 +239,7 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuCommand) error {
 func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 	var err error
 	var has bool
-	var result sql.Result
+	//var result sql.Result
 	// L2로 이동할 때 자식이 있는지 검사
 	if cmd.Menu.FmsMenuQueryResult.ParentId != -1 {
 		has, err = x.Table(m.TsFmsMenuTbl).
@@ -255,12 +254,11 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 
 	}
 
-	result, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
+	_, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
 		cmd.Menu.FmsMenuQueryResult.ParentId, cmd.Menu.FmsMenuQueryResult.Order, cmd.OrgId, cmd.Menu.FmsMenuQueryResult.Id)
 
 	//log.Error(3, "error",err)
-	cmd.Result = result
-
+	//cmd.Result = result
 	return err
 }
 func UpdateFmsMenuInfo(cmd *m.UpdateFmsMenuInfoCommand) error {

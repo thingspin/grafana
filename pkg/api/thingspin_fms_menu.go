@@ -38,7 +38,7 @@ func AddTsNewMenuByOrgId(c *gfm.ReqContext, cmd m.AddFmsMenuCommand) Response {
 		return Error(500, "[thingspin] Menu add command failed", err)
 	}
 
-	return JSON(200, cmd.Result)
+	return JSON(200, cmd)
 }
 
 func DeleteTsMenuByOrgId(c *gfm.ReqContext) Response {
@@ -63,7 +63,7 @@ func DeleteTsMenuById(c *gfm.ReqContext) Response {
 		return Error(500, "[thingspin] Menu delete command failed", err)
 	}
 
-	return JSON(200, q.Result)
+	return JSON(200, q)
 }
 
 func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
@@ -74,7 +74,7 @@ func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
 		return Error(500, "[thingspin] Menu update command failed", err)
 	}
 
-	return JSON(200, cmd.Result)
+	return JSON(200, cmd)
 }
 
 func EditTsMenuInfo(c *gfm.ReqContext, cmd m.UpdateFmsMenuInfoCommand) Response {
@@ -130,5 +130,5 @@ func EditTsMenuByOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuOrderCommand) Respo
 		return Error(500, "[thingspin] Menu update command failed", err)
 	}
 
-	return JSON(200, cmd.Result)
+	return JSON(200, cmd)
 }
