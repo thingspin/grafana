@@ -236,27 +236,38 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuCommand) error {
 	return err
 }
 */
+
 func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
-	var err error
-	var has bool
+	//var err error
+	//var has bool
 	//var result sql.Result
-	// L2로 이동할 때 자식이 있는지 검사
-	if cmd.Menu.FmsMenuQueryResult.ParentId != -1 {
-		has, err = x.Table(m.TsFmsMenuTbl).
-			Where(`parent_id IN ( SELECT mbid FROM `+m.TsFmsMenuTbl+` WHERE parent_id = -1 and mbid = ?)`, cmd.Menu.FmsMenuQueryResult.Id).Exist()
-		//log.Error(3, "error",cmd.Menu.FmsMenuQueryResult.Order,cmd.Menu.FmsMenuQueryResult.ParentId,cmd.Menu.FmsMenuQueryResult.Text,cmd.OrgId,cmd.Menu.FmsMenuQueryResult.Id)
-		if err != nil {
-			return err
+	
+	err := doTransaction(func(sess *DBSession) error {
+		for _, pmenu := range cmd.Pmenu {
+			_, err := x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
+				pmenu.ParentId, pmenu.Order, cmd.OrgId, pmenu.Id)
+			if err != nil {
+				return err
+			}
 		}
-		if has {
-			return fmt.Errorf("This menu has childs, can't move to L2")
+		// L2로 이동할 때 자식이 있었는지 검사
+		for _, cmenu := range cmd.Cmenu {
+			has, err := x.Table(m.TsFmsMenuTbl).
+				Where(`parent_id IN ( SELECT mbid FROM `+m.TsFmsMenuTbl+` WHERE parent_id = -1 and mbid = ?)`, cmenu.Id).Exist()
+			if err != nil {
+				return err
+			}
+			if has {
+				return fmt.Errorf("This menu has childs, can't move to L2")
+			}
+			_, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
+				cmenu.ParentId, cmenu.Order, cmd.OrgId, cmenu.Id)
+			if err != nil {
+				return err
+			}
 		}
-
-	}
-
-	_, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
-		cmd.Menu.FmsMenuQueryResult.ParentId, cmd.Menu.FmsMenuQueryResult.Order, cmd.OrgId, cmd.Menu.FmsMenuQueryResult.Id)
-
+		return nil
+	})
 	//log.Error(3, "error",err)
 	//cmd.Result = result
 	return err

@@ -66,9 +66,17 @@ type UpdateFmsMenuCommand struct {
 }
 
 // Update menu ordering
+/*
 type UpdateFmsMenuOrderCommand struct {
 	OrgId  int64   `json:"orgId"`
 	Menu   FmsMenu `json:"menu"`
+	//Result sql.Result
+}
+*/
+type UpdateFmsMenuOrderCommand struct {
+	OrgId   int64     `json:"orgId"`
+	Pmenu   []FmsMenu `json:"parent"`
+	Cmenu   []FmsMenu `json:"child"`
 	//Result sql.Result
 }
 
