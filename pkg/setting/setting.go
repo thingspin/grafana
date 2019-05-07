@@ -93,6 +93,7 @@ var (
 	DisableBruteForceLoginProtection bool
 	CookieSecure                     bool
 	CookieSameSite                   http.SameSite
+	AllowEmbedding                   bool
 
 	// Snapshots
 	ExternalSnapshotUrl   string
@@ -692,6 +693,8 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 		CookieSameSite = http.SameSiteLaxMode
 		cfg.CookieSameSite = CookieSameSite
 	}
+
+	AllowEmbedding = security.Key("allow_embedding").MustBool(false)
 
 	// read snapshots settings
 	snapshots := iniFile.Section("snapshots")
