@@ -82,7 +82,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         const updatedFormatter: Function = (cell: any): string => {
             const data: TsConnect = cell.getData();
 
-            return data.updated.toDateString();
+            return data.updated;
         };
 
         const actionFormatter = (cell: any, formatterParams, onRendered: Function): void => {

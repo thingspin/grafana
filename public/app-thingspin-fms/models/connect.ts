@@ -9,7 +9,7 @@ export interface TsConnect {
     enable: boolean;
     intervals: number;
     creatd: Date;
-    updated: Date;
+    updated: string;
 }
 
 export interface GroupTsConnect {
