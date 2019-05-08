@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/grafana/grafana/pkg/bus"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
@@ -25,6 +26,16 @@ type InsertTsConnect struct {
 	Params    string `xorm:"'params'"`
 	Intervals int64  `xorm:"'intervals'"`
 	Type      string `xorm:"'type'"`
+}
+
+type UpdateTsConnect struct {
+	Id        int64     `xorm:"'id' pk autoincr"`
+	Name      string    `xorm:"'name'"`
+	FlowId    string    `xorm:"'flow_id'"`
+	Params    string    `xorm:"'params'"`
+	Intervals int64     `xorm:"'intervals'"`
+	Enable    bool      `xorm:"'enable'"`
+	Updated   time.Time `xorm:"'updated'"`
 }
 
 func GetAllTsConnect(cmd *m.GetAllTsConnectQuery) error {
@@ -70,19 +81,28 @@ func AddTsConnect(cmd *m.AddTsConnectQuery) error {
 }
 
 func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
-	sqlQuery := fmt.Sprintf(`UPDATE '%s'
-	SET 
-		name='%s', 
-		flow_id='%s', 
-		params='%s', 
-		enable=%t,
-		intervals=%d,
-		updated=datetime('now','localtime')
-	WHERE id=%d`,
-		m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Enable, cmd.Intervals, cmd.Id)
-	result, err := x.Exec(sqlQuery)
-
-	cmd.Result = result
+	q := &UpdateTsConnect{
+		Enable:    cmd.Enable,
+		FlowId:    cmd.FlowId,
+		Intervals: cmd.Intervals,
+		Name:      cmd.Name,
+		Params:    cmd.Params,
+		Updated:   time.Now(),
+	}
+	/*
+		sqlQuery := fmt.Sprintf(`UPDATE '%s'
+		SET
+			name='%s',
+			flow_id='%s',
+			params='%s',
+			enable=%t,
+			intervals=%d,
+			updated=datetime('now','localtime')
+		WHERE id=%d`,
+			m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Enable, cmd.Intervals, cmd.Id)
+	*/
+	_, err := x.Table(m.TsFmsConnectTbl).Update(q)
+	cmd.Result = q.Id
 
 	return err
 }

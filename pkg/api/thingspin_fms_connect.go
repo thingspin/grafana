@@ -243,7 +243,7 @@ func enableTsConnect(c *gfm.ReqContext) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 
-	return JSON(200, q.Result)
+	return JSON(200, enable)
 }
 
 func deleteTsConnect(c *gfm.ReqContext) Response {
