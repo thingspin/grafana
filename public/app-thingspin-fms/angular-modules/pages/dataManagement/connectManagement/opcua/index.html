@@ -11,7 +11,10 @@
     <div class="opcua-edit-root">
 
         <!-- input directive -->
-        <ts-opc-connect-info input="ctrl.input" connect-status="ctrl.connectStatus" btn-click="ctrl.addConnect()"></ts-opc-connect-info>
+        <ts-opc-connect-info input="ctrl.input" 
+            connect-status="ctrl.connectStatus" 
+            btn-click="ctrl.addConnect()">
+        </ts-opc-connect-info>
 
         <!-- error message -->
         <div class="opcua-edit-container" ng-if="ctrl.connectStatus === 'red' && !ctrl.enableNodeSet">
@@ -30,9 +33,10 @@
         </div>
 
         <!-- setter opc node directive -->
-        <div ng-if="ctrl.enableNodeSet">
-            <ts-opc-node-set></ts-opc-node-set>
-        </div>
+        <ts-opc-node-set ng-if="ctrl.enableNodeSet" 
+            flow-id="ctrl.FlowId"
+            nodes="ctrl.nodes">
+        </ts-opc-node-set>
             
     </div>
 </div>

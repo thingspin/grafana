@@ -19,6 +19,25 @@ export interface InputModel {
     auth: string;
 }
 
+export interface OpcConnectModel {
+    active: boolean;
+    created: string;
+    enable: boolean;
+    flow_id: string;
+    id: number;
+    intervals: number;
+    name: string;
+    params: {
+        EndpointUrl: string;
+        FlowId: string;
+        nodes: any[];
+        auth: string;
+        securityPolicy: string;
+        securityMode: string;
+    };
+    updated: string;
+}
+
 export default class TsOpcUaConnectCtrl implements angular.IController {
     // 2-way binding child directive data
     input: InputModel;
@@ -39,17 +58,47 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     ];
     connId: number = null;
     FlowId: string;
+    nodes: any[];
     timer: NodeJS.Timer | null;
-    enableNodeSet: boolean = true as boolean;
+    enableNodeSet: boolean;
 
     /** @ngInject */
     constructor(
+        private $routeParams: any,
         private $scope: angular.IScope,
         private $location: angular.ILocationService,
         private backendSrv: BackendSrv) { }
 
     $onInit(): void {
         this.initMqtt();
+        const { id } = this.$routeParams;
+        if (id) {
+            this.updateData(id);
+        } else {
+            this.nodes = [];
+        }
+    }
+
+    async updateData(connId: number) {
+        try {
+            this.connId = connId;
+            const result: OpcConnectModel = await this.backendSrv.get(`/thingspin/connect/${this.connId}`);
+
+            this.input = {
+                endpointUrl: result.params.EndpointUrl,
+                name: result.name,
+                auth: result.params.auth,
+                securityMode: result.params.securityMode,
+                securityPolicy: result.params.securityPolicy,
+            };
+            this.FlowId = result.params.FlowId;
+            this.nodes = result.params.nodes;
+            this.enableNodeSet = true;
+
+            this.$scope.$applyAsync();
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async initMqtt(): Promise<void> {
@@ -73,27 +122,35 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         }
     }
 
+    genPayload(FlowId: string): BackendConnectPayload {
+        const { name, endpointUrl, auth, securityPolicy, securityMode } = this.input;
+
+        return {
+            name,
+            params: {
+                FlowId,
+                EndpointUrl: endpointUrl,
+                AddressSpaceItems: [],
+                nodes: this.nodes,
+                auth,
+                securityPolicy,
+                securityMode
+            },
+            intervals: 1,
+        };
+    }
+
     async addConnect() {
-        const { name, endpointUrl, } = this.input;
+        this.FlowId = uid.generate();
+        this.setConnectStatus("yellow");
+
+        this.timer = setTimeout(() => {
+            this.setConnectStatus("red");
+        }, this.connectTimeout);
+
+        const payload = this.genPayload(this.FlowId);
 
         try {
-            this.FlowId = uid.generate();
-            this.setConnectStatus("yellow");
-
-            this.timer = setTimeout(() => {
-                this.setConnectStatus("red");
-            }, this.connectTimeout);
-
-            const payload: BackendConnectPayload = {
-                name,
-                params: {
-                    FlowId: this.FlowId,
-                    EndpointUrl: endpointUrl,
-                    AddressSpaceItems: [],
-                },
-                intervals: 1,
-            };
-
             if (!this.connId) {
                 // new
                 this.connId = await this.backendSrv.post("/thingspin/connect/opcua", payload);
@@ -103,8 +160,6 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 await this.backendSrv.put(`/thingspin/connect/${this.connId}`, payload);
                 appEvents.emit('alert-success', ['OPC/UA 연결이 수정되었습니다.']);
             }
-
-
         } catch (e) {
             console.error(e);
             if (this.connId) {
@@ -126,6 +181,16 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         this.$location.path("/thingspin/manage/data/connect");
     }
 
-    save(): void {
+    async save(): Promise<void> {
+        const payload = this.genPayload(this.FlowId);
+        try {
+            await this.backendSrv.put(`/thingspin/connect/${this.connId}`, payload);
+            appEvents.emit('alert-success', ['OPC/UA 연결이 수정되었습니다.']);
+
+            this.cancel();
+            this.$scope.$applyAsync();
+        } catch (e) {
+            console.error(e);
+        }
     }
 }

@@ -1,4 +1,7 @@
 // container common style
+.blue {
+    color: #1e88e5;
+}
 .opcua-edit-container {
     font-size: 14px;
     line-height: 1.14;
@@ -174,6 +177,92 @@ ts-opc-connect-info {
                 &:not(:last-child) {
                     margin-right: 36px;
                 }
+            }
+        }
+    }
+}
+
+ts-opc-node-set {
+    .opcua-tree-title {
+        display: flex;
+
+        padding: 8px 0 7px 0;
+
+        align-items: center;
+        justify-content: center;
+
+        background-color: #f5f5f5;
+        border-bottom: solid 2px #b5b5b5;
+    }
+    .opcua-tree-container {
+        margin: 16px;
+    }
+
+    .opcua-node-tree {
+        width: 33.3%;
+
+        position: relative;
+
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .opcua-node-table {
+        width: 66.6%;
+        margin-left: 36px;
+
+        button {
+            border: 0;
+            background-color: rgba(#000,0);
+        }
+
+        .opc-node-page-rows {
+            display: inline-block;
+
+            .opc-node-table-select {
+                width: 100%;
+
+                border: 0;
+            }
+        }
+
+        .opc-node-table-body {
+            width: 100%;
+            margin: 8px 0; 
+
+            table {
+                width: 100%;
+
+                tr {
+                    border-bottom: solid 1px #dcdbdc;
+
+                    &:first {
+                        margin-left: 16px;
+                    }
+                }
+
+                th {
+                    padding: 7px 0;
+                }
+
+                td {
+                    padding: 12px 0;
+
+                }
+
+                .ts-table-header {
+                    background-color: #ecebeb;
+                }
+            }
+        }
+
+        .opc-node-table-footer {
+            width: 100%;
+            display: inline-flex;
+            color: #1e1e1e;
+
+            .table-paging {
+                margin-left: auto;
+                display: inline-block;
             }
         }
     }

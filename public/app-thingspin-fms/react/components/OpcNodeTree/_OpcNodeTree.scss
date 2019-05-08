@@ -1,0 +1,34 @@
+.rc-opc-node-tree {
+    display: inline-flex;
+    width: 100%;
+    align-items: center;
+}
+
+.rc-opc-node-button {
+    margin-left: auto;
+
+    border: 0;
+    background-color: rgba(0,0,0,0);
+    font-size: 16.7px;
+}
+.rc-opc-node-toggle-icon {
+    margin-left: 4px;
+    width: 16px;
+}
+
+.rc-opc-node-icon {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.rc-opc-tree-search {
+    width: 100%;
+
+    border-radius: 4px;
+    margin-bottom: 20px;
+    padding: 10px 8px 9px 8px;
+    border: none;
+
+    background-color: rgba(#1e1e1e, 0.07);
+
+}
