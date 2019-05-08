@@ -57,7 +57,7 @@ export class TsModbusConnectCtrl {
   FlowId: any;
 
   //editmode
-  indexID: any;
+  indexID: number = null;
 
   /** @ngInject */
   constructor(
@@ -96,6 +96,7 @@ export class TsModbusConnectCtrl {
 
     this.editIdx = 0;
     this.tableList = [];
+    this.initTable();
     if ($routeParams.id) {
       console.log("route id: "+$routeParams.id);
       this.asyncDataLoader($routeParams.id);
@@ -138,7 +139,14 @@ export class TsModbusConnectCtrl {
     this.modbusReTimeOut = getParams.ReTimeOut;
     this.nodeModbusGetteritem = getParams.AddressNode;
     this.nodeInjectWiresList = getParams.InjectWires;
-    this.tableData = getParams.tableData;
+    this.tableData = getParams.Tabledata;
+
+    if (getParams.AddressListCount > 0) {
+      console.log("table upadte");
+      this.editIdx = getParams.AddressListCount;
+      this.tableList = this.tableData;
+      this.orderTable.setData(this.tableList);
+    }
     //
   }
   async asyncDataLoader(id): Promise<void> {
@@ -302,6 +310,7 @@ removeEdit(idx: any): void {
 }
  //--Tabulator 관련
  initTable(): void {
+   console.log("initTable");
         const actionFormatter = (cell: any, formatterParams, onRendered: Function): void => {
           const data = cell.getData();
           //console.log(data);
@@ -381,7 +390,7 @@ addModbusGETTER( address, quantity, functioncode,flowid,posY) {
     "z": "8900476a.91f358",
     "name": "Parser",
     // tslint:disable-next-line:max-line-length
-    "func": "var Total_item = "+quantity+";\n\nvar res = [\n            {\n                measurement:'test_modbus3',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '"+address+"'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+    "func": "var Total_item = "+quantity+";\n\nvar res = [\n            {\n                measurement:'modbus',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '"+address+"'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 510,
@@ -440,7 +449,7 @@ addModbusGETTER( address, quantity, functioncode,flowid,posY) {
         ReTimeOut : this.modbusReTimeOut,
         AddressNode : this.nodeModbusGetteritem,
         InjectWires : this.nodeInjectWiresList,
-        tabledata : this.tableData
+        Tabledata : this.tableData
       },
       intervals: this.modbusReadIntervals
     };
@@ -452,7 +461,7 @@ addModbusGETTER( address, quantity, functioncode,flowid,posY) {
 
     if (this.isEditMode) {
       console.log("EDIT mode SAVE: "+this.indexID);
-      this.backendSrv.put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
+      this.backendSrv.put(`/thingspin/connect/${this.indexID}`,object).then((result: any) => {
         console.log(result);
         this.close();
       });

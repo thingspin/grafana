@@ -149,6 +149,8 @@ export class TsMenuManagementCtrl {
             "parent": plist
           };
           this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+            console.log("after api");
+            console.log(res);
           });
 
         },100);
@@ -252,43 +254,42 @@ export class TsMenuManagementCtrl {
       console.log("remove");
       console.log("Same Parent");
       scope.remove();
+      const nodes = [];
       // 삭제후에 순서 재조정
       if (node.parent_id === -1) {
+        for ( let _i = node.order; _i < this.data.length; _i++) {
+          this.data[_i].order = _i;
+          nodes.push(this.data[_i]);
+        }
         // L1
-        this.backendSrv.delete('/thingspin/menu/'+node.id).then((res: any) => {
-          console.log(res);
-          // 삭제 후 L2 순서 재조정
-          for ( let _i = node.order; _i < this.data.length; _i++) {
-              this.data[_i].order = _i;
-              const newData = {
-                "menu": this.data[_i]
-              };
-              this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-                console.log("Child Update :" +this.data[_i].text+" > new order:",_i);
-              });
-          }
+        const newData = {
+          "menu": nodes
+        };
+        this.backendSrv.delete('/thingspin/menu/'+config.bootData.user.orgId+"/"+node.id,newData).then((res: any) => {
         });
       } else {
         // L2
-        this.backendSrv.delete('/thingspin/menu/'+node.id).then((res: any) => {
-          console.log("res");
-          // 삭제 후 L2 순서 재조정
-          const parent = scope.$parent.$parent.$parentNodeScope.node;
-          for ( let _i = 0; _i < this.data.length; _i++) {
-            if ( parent.id === this.data[_i].id) {
-              console.log("Found parent - ",this.data[_i].text);
-              for ( let _j = node.order; _j < this.data[_i].children.length; _j++) {
-                this.data[_i].children[_j].order = _j;
-                const newData = {
-                  "menu": this.data[_i].children[_j]
-                };
-                this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-                  console.log("Child Update :" +this.data[_i].children[_j].text+" > new order:",_j);
-                });
-              }
-              break;
+        // 삭제 후 L2 순서 재조정
+        const parent = scope.$parent.$parent.$parentNodeScope.node;
+        for ( let _i = 0; _i < this.data.length; _i++) {
+          if ( parent.id === this.data[_i].id) {
+            console.log("Found parent - ",this.data[_i].text);
+            for ( let _j = node.order; _j < this.data[_i].children.length; _j++) {
+              this.data[_i].children[_j].order = _j;
+              nodes.push(this.data[_i].children[_j]);
             }
+            break;
           }
+        }
+        const newData = {
+          "menu": nodes
+        };
+        /*
+        this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
+          console.log("Child Update :" +this.data[_i].children[_j].text+" > new order:",_j);
+        });
+        */
+        this.backendSrv.delete('/thingspin/menu/'+config.bootData.user.orgId+"/"+node.id,newData).then((res: any) => {
         });
       }
       /*

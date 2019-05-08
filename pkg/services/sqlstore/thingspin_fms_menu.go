@@ -187,8 +187,25 @@ func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
 }
 
 func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
-	_, err := x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
-	//cmd.Result = result
+	err := doTransaction(func(sess *DBSession) error {
+		_, err := x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
+		//cmd.Result = result
+		if err != nil {
+			return err
+		}
+
+		// Reordering
+		// L2로 이동할 때 자식이 있었는지 검사
+		for _, menu := range cmd.Menu {
+			_, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET "order" = ? WHERE org_id = ? AND mbid = ?`,
+				menu.Order, cmd.OrgId, menu.Id)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
 	return err
 }
 
