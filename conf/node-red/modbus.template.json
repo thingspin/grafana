@@ -9,13 +9,14 @@
             "z": "8900476a.91f358",
             "name": "",
             "scope": [
-                "7681e0a4.28004"
+                "TS-MODBUS-GETTER-CONN-{{.Params.FlowId}}"
             ],
             "x": 100,
             "y": 120,
             "wires": [
                 [
-                    "TS-MODBUS-DEBUG-3-{{.Params.FlowId}}"
+                    "TS-MODBUS-DEBUG-3-{{.Params.FlowId}}",
+                    "TS-MODBUS-STATUS-FUNC-ID-{{.Params.FlowId}}"
                 ]
             ]
         },
@@ -35,6 +36,56 @@
             "wires": []
         },
         {
+            "id": "TS-MODBUS-STATUS-FUNC-ID-{{.Params.FlowId}}",
+            "type": "function",
+            "z": "128c8c3f.3d9e44",
+            "name": "",
+            "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = status.fill;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 310,
+            "y": 60,
+            "wires": [
+                [
+                    "TS-MODBUS-STATUS-MQTT-OUT-ID-{{.Params.FlowId}}"
+                ]
+            ]
+        },
+        {
+            "id": "TS-MODBUS-STATUS-MQTT-OUT-ID-{{.Params.FlowId}}",
+            "type": "mqtt out",
+            "z": "128c8c3f.3d9e44",
+            "name": "",
+            "topic": "/thingspin/connect/{{.Params.FlowId}}/status",
+            "qos": "2",
+            "retain": "true",
+            "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+            "x": 530,
+            "y": 60,
+            "wires": []
+        },
+        {
+            "id": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+            "type": "mqtt-broker",
+            "z": "128c8c3f.3d9e44",
+            "broker": "thingspin.mqtt",
+            "port": "1883",
+            "clientid": "",
+            "usetls": false,
+            "compatmode": true,
+            "keepalive": "60",
+            "cleansession": true,
+            "birthTopic": "",
+            "birthQos": "0",
+            "birthPayload": "",
+            "closeTopic": "",
+            "closeQos": "0",
+            "closePayload": "",
+            "willTopic": "",
+            "willQos": "0",
+            "willPayload": ""
+        },
+        {
             "id": "TS-MODBUS-INJECT-{{.Params.FlowId}}",
             "type": "inject",
             "z": "8900476a.91f358",
@@ -42,9 +93,9 @@
             "topic": "",
             "payload": "",
             "payloadType": "date",
-            "repeat": "1",
+            "repeat": "{{.Params.Intervals}}",
             "crontab": "",
-            "once": false,
+            "once": true,
             "onceDelay": 0.1,
             "x": 110,
             "y": 160,
@@ -111,7 +162,7 @@
             "type": "function",
             "z": "8900476a.91f358",
             "name": "MODBUS_JOIN_PARSER",
-            "func": "var Total_item = {{.Params.AddressListCount}};\nvar value='';\n\nvar res = [\n            {\n                measurement:{{.Params.FlowId}},\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    value = msg.payload[i][0].fields;\n    for(var key in value){\n        res[0].fields[key]=value[key];\n    }\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+            "func": "var Total_item = {{.Params.AddressListCount}};\nvar value='';\n\nvar res = [\n            {\n                measurement:'MODBUS-{{.Params.FlowId}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    value = msg.payload[i][0].fields;\n    for(var key in value){\n        res[0].fields[key]=value[key];\n    }\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
             "outputs": 1,
             "noerr": 0,
             "x": 1060,
