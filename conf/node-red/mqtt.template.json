@@ -3,37 +3,11 @@
     "label": "{{.Params.FlowId}}",
     "info": "",
     "nodes": [
-        {
-            "id": "TS-MQTT-IN-{{.Params.FlowId}}",
-            "type": "mqtt in",
-            "name": "",
-            "topic": "{{.Params.MqttTopic}}",
-            "qos": "0",
-            "datatype": "auto",
-            "broker": "TS-MQTT-CONNECT-{{.Params.FlowId}}",
-            "x": 110,
-            "y": 560,
-            "wires": [
-                [
-                    "TS-MQTT-PARSE-{{.Params.FlowId}}"
-                ]
-            ]
-        },
-        {
-            "id": "TS-MQTT-PARSE-{{.Params.FlowId}}",
-            "type": "function",
-            "name": "",
-            "func": "{{.Params.TopicParse}}",
-            "outputs": 1,
-            "noerr": 0,
-            "x": 290,
-            "y": 560,
-            "wires": [
-                [
-                    "TS-MQTT-OUTPUT-{{.Params.FlowId}}"
-                ]
-            ]
-        },
+        {{if .Enable}}
+            {{.Params.AddTopicList | convJsonStr}},
+        {{else}}
+            {{.Params.AddDisTopicList | convJsonStr}},
+        {{end}}
         {
             "id": "TS-MQTT-OUTPUT-{{.Params.FlowId}}",
             "type": "influxdb batch",
@@ -41,21 +15,21 @@
             "precision": "",
             "retentionPolicy": "",
             "name": "",
-            "x": 530,
-            "y": 560,
+            "x": 830,
+            "y": 100,
             "wires": []
         },
         {
             "id": "TS-MQTT-CONNECT-{{.Params.FlowId}}",
             "type": "mqtt-broker",
-            "name": "{{.Params.MqttUrl}}",
-            "broker": "{{.Params.MqttUrl}}",
-            "port": "{{.Params.MqttPort}}",
+            "name": "{{.Params.Host}}",
+            "broker": "{{.Params.Host}}",
+            "port": "{{.Params.Port}}",
             "clientid": "",
             "usetls": false,
             "compatmode": true,
-            "keepalive": "60",
-            "cleansession": true,
+            "keepalive": "{{.Params.KeepAlive}}",
+            "cleansession": "{{.Params.Session}}",
             "birthTopic": "",
             "birthQos": "0",
             "birthPayload": "",

@@ -1,0 +1,455 @@
+[
+    {
+        "id": "92726efa.406c",
+        "type": "tcp in",
+        "z": "a3575771.fd62d8",
+        "name": "QUAKE",
+        "server": "server",
+        "host": "",
+        "port": "33001",
+        "datamode": "stream",
+        "datatype": "utf8",
+        "newline": "",
+        "topic": "PACKET",
+        "base64": false,
+        "x": 110,
+        "y": 260,
+        "wires": [
+            [
+                "2ee426d2.9be53a"
+            ]
+        ]
+    },
+    {
+        "id": "a04fb26e.f99b",
+        "type": "csv",
+        "z": "a3575771.fd62d8",
+        "name": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "x": 430,
+        "y": 260,
+        "wires": [
+            [
+                "47eef33f.92930c"
+            ]
+        ]
+    },
+    {
+        "id": "6afef9c7.2fb498",
+        "type": "influxdb batch",
+        "z": "a3575771.fd62d8",
+        "influxdb": "5858f3b3.883cdc",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "QUAKEDB",
+        "x": 650,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "3ec0af1e.ad606",
+        "type": "tcp out",
+        "z": "a3575771.fd62d8",
+        "host": "localhost",
+        "port": "33001",
+        "beserver": "client",
+        "base64": false,
+        "end": false,
+        "name": "SIM",
+        "x": 670,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "1a97d70a.4ce7c9",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "SAMPLES",
+        "func": "msg.payload = \"TEL=01074646222, G2=37.504013, G3=126.885809, PROP01=344543534, PROP02=34345454, PROP03=65645453\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 40,
+        "wires": [
+            [
+                "3ec0af1e.ad606"
+            ]
+        ]
+    },
+    {
+        "id": "ca7802e7.fbbb4",
+        "type": "inject",
+        "z": "a3575771.fd62d8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 150,
+        "y": 40,
+        "wires": [
+            [
+                "1a97d70a.4ce7c9",
+                "b5299264.d31dc",
+                "ca0162d9.e314a"
+            ]
+        ]
+    },
+    {
+        "id": "47eef33f.92930c",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "PARSE",
+        "func": "String.prototype.trim = function() { return this.replace(/^\\s+|\\s+$/g,\"\"); }\n\nlet fields = {};\n\nObject.values(msg.payload).forEach(value => {\n    const v = value.trim();\n    const kv = v.split('=')\n    \n    if( kv[0] === null || kv[0] === '' || kv[1] === null || kv[1] === '') {\n        return;\n    }\n    \n    if ( kv[0] === 'G2') {\n        kv[0] = 'lat';\n        kv[1] = parseFloat(kv[1]);\n    }\n    \n    if ( kv[0] === 'G3') {\n        kv[0] = 'lon';\n        kv[1] = parseFloat(kv[1]);\n    }\n    \n    fields[kv[0]] = kv[1];\n});\n\nfields['raw'] = msg.raw;\ndelete msg.raw;\n\nmsg.payload = fields;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 600,
+        "y": 260,
+        "wires": [
+            [
+                "3ba7de01.d3bd42"
+            ]
+        ]
+    },
+    {
+        "id": "bc6ff5e0.26d698",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "RECORDS",
+        "func": "if ( msg.payload.length === 0 ) {\n    return null;\n}\n\nconst tel = msg.payload['TEL'];\ndelete msg.payload.TEL;\ndelete msg.topic;\n\nmsg.payload = [{\n    measurement:`quake`,\n    tags: {\n        TEL: tel,\n    },\n    fields: msg.payload\n}]\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 410,
+        "y": 340,
+        "wires": [
+            [
+                "eca0f043.a1288",
+                "6afef9c7.2fb498"
+            ]
+        ]
+    },
+    {
+        "id": "eca0f043.a1288",
+        "type": "debug",
+        "z": "a3575771.fd62d8",
+        "name": "RECORDS",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 870,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "35734d9.43dd1b2",
+        "type": "geohash",
+        "z": "a3575771.fd62d8",
+        "name": "GEOHASH",
+        "property": "payload",
+        "x": 230,
+        "y": 340,
+        "wires": [
+            [
+                "bc6ff5e0.26d698"
+            ]
+        ]
+    },
+    {
+        "id": "2ee426d2.9be53a",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "BIN2STR",
+        "func": "msg.raw = msg.payload = msg.payload.toString('UTF-8')\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 280,
+        "y": 260,
+        "wires": [
+            [
+                "a04fb26e.f99b"
+            ]
+        ]
+    },
+    {
+        "id": "3ba7de01.d3bd42",
+        "type": "link out",
+        "z": "a3575771.fd62d8",
+        "name": "LINK-O1",
+        "links": [
+            "95ab2aaf.7cafb8"
+        ],
+        "x": 835,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "95ab2aaf.7cafb8",
+        "type": "link in",
+        "z": "a3575771.fd62d8",
+        "name": "",
+        "links": [
+            "3ba7de01.d3bd42"
+        ],
+        "x": 75,
+        "y": 340,
+        "wires": [
+            [
+                "35734d9.43dd1b2"
+            ]
+        ]
+    },
+    {
+        "id": "b5299264.d31dc",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "SAMPLES",
+        "func": "msg.payload = \"TEL=01074646222, G2=37.508631, G3=127.053995, PROP01=344543534, PROP02=34345454, PROP03=65645453\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 100,
+        "wires": [
+            [
+                "3ec0af1e.ad606"
+            ]
+        ]
+    },
+    {
+        "id": "ca0162d9.e314a",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "SAMPLES",
+        "func": "msg.payload = \"TEL=01074646222, G2=37.446798, G3=127.030933, PROP01=344543534, PROP02=34345454, PROP03=65645453\";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 390,
+        "y": 160,
+        "wires": [
+            [
+                "3ec0af1e.ad606"
+            ]
+        ]
+    },
+    {
+        "id": "932a3c71.30cf",
+        "type": "http in",
+        "z": "a3575771.fd62d8",
+        "name": "api.QUAKE-INSERT",
+        "url": "/quake/vehiclemap",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 520,
+        "wires": [
+            [
+                "3af51f66.606d4",
+                "4503502e.bbcb3"
+            ]
+        ]
+    },
+    {
+        "id": "9a973414.fcbe38",
+        "type": "http response",
+        "z": "a3575771.fd62d8",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 530,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "3af51f66.606d4",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "RESPONSE",
+        "func": "delete msg.payload;\ndelete msg.topic;\n\nmsg.statusCode = 200;\nmsg.headers = {\n    \"contents-Type\": \"application/json\"\n};\n\nmsg.payload = {\n    Result:\"OK\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 520,
+        "wires": [
+            [
+                "9a973414.fcbe38"
+            ]
+        ]
+    },
+    {
+        "id": "4503502e.bbcb3",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "RECORD",
+        "func": "if ( msg.payload.length === 0 ) {\n    return null;\n}\n\nconst tel = msg.payload['tid'];\nconst car = msg.payload['vid'];\n\ndelete msg.payload.tid;\ndelete msg.payload.car;\ndelete msg.topic;\n\nmsg.payload = [{\n    measurement:`quake-ids`,\n    tags: {\n        TEL: tel,\n        CAR: car,\n    },\n    fields: {\n        t: tel,\n        c: car,\n        o: 1\n    }\n}]\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 440,
+        "wires": [
+            [
+                "ed237992.a5d7d8"
+            ]
+        ]
+    },
+    {
+        "id": "ed237992.a5d7d8",
+        "type": "influxdb batch",
+        "z": "a3575771.fd62d8",
+        "influxdb": "5858f3b3.883cdc",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "QUAKEDB-IDS",
+        "x": 560,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "404d9b2b.ca1a24",
+        "type": "status",
+        "z": "a3575771.fd62d8",
+        "name": "STATE-IDS",
+        "scope": [
+            "ed237992.a5d7d8"
+        ],
+        "x": 550,
+        "y": 480,
+        "wires": [
+            [
+                "41fea0ce.a6383"
+            ]
+        ]
+    },
+    {
+        "id": "41fea0ce.a6383",
+        "type": "debug",
+        "z": "a3575771.fd62d8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "x": 810,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "699d5462.960bbc",
+        "type": "http in",
+        "z": "a3575771.fd62d8",
+        "name": "api.QUAKE-DELETE",
+        "url": "/quake/vehiclemap/car/:car/delete",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 620,
+        "wires": [
+            [
+                "3245c960.ac8ab6"
+            ]
+        ]
+    },
+    {
+        "id": "20533a1b.470566",
+        "type": "influxdb in",
+        "z": "a3575771.fd62d8",
+        "influxdb": "5858f3b3.883cdc",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "x": 660,
+        "y": 620,
+        "wires": [
+            [
+                "e649d16f.a05b1",
+                "3a044f66.ccaa9"
+            ]
+        ]
+    },
+    {
+        "id": "e649d16f.a05b1",
+        "type": "debug",
+        "z": "a3575771.fd62d8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "x": 910,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "3245c960.ac8ab6",
+        "type": "function",
+        "z": "a3575771.fd62d8",
+        "name": "DELETE QUERY",
+        "func": "const car = msg.req.params['car'];\n\nmsg.query = `DELETE FROM \"quake-ids\" WHERE \"CAR\" = '` + car + `';`;\n \nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 370,
+        "y": 620,
+        "wires": [
+            [
+                "20533a1b.470566"
+            ]
+        ]
+    },
+    {
+        "id": "3a044f66.ccaa9",
+        "type": "template",
+        "z": "a3575771.fd62d8",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "삭제가 되었습니다.\n이 창을 닫고, 원래 창을 리프레시 해주세요.",
+        "output": "str",
+        "x": 600,
+        "y": 760,
+        "wires": [
+            [
+                "d5b1b899.ee95b8"
+            ]
+        ]
+    },
+    {
+        "id": "d5b1b899.ee95b8",
+        "type": "http response",
+        "z": "a3575771.fd62d8",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 790,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "5858f3b3.883cdc",
+        "type": "influxdb",
+        "z": "",
+        "hostname": "219.251.4.236",
+        "port": "8086",
+        "protocol": "http",
+        "database": "automotive",
+        "name": "219.251.4.236 - Automotive",
+        "usetls": false,
+        "tls": ""
+    }
+]

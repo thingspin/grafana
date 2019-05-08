@@ -3,190 +3,218 @@
     "label": "{{.Params.FlowId}}",
     "info": "",
     "nodes":[
-    {
-        "id": "TS-MODBUS-GETTER-ID-{{.Params.FlowId}}", 
-        "type": "modbus-getter",
-        "z": "b8db9bb5.5bd948",
-        "name": "",
-        "showStatusActivities": false,
-        "showErrors": false,
-        "logIOActivities": false,
-        "unitid": "",
-        "dataType": "{{.Params.DataType}}",
-        "adr": "{{.Params.Addr}}",
-        "quantity": "{{.Params.Quantity}}",
-        "server": "TS-MODBUS-SERVER-ID-{{.Params.FlowId}}",
-        "useIOFile": false,
-        "ioFile": "",
-        "useIOForPayload": false,
-        "x": 440,
-        "y": 140,
-        "wires": [
-            [
-                "TS-MODBUS-DEBUG-1-{{.Params.FlowId}}",
-                "TS-MODBUS-PARSER-{{.Params.FlowId}}"
+        {
+            "id": "TS-MODBUS-STATE-{{.Params.FlowId}}",
+            "type": "status",
+            "z": "8900476a.91f358",
+            "name": "",
+            "scope": [
+                "TS-MODBUS-GETTER-CONN-{{.Params.FlowId}}"
             ],
-            [
-                "TS-MODBUS-DEBUG-2-{{.Params.FlowId}}"
+            "x": 100,
+            "y": 120,
+            "wires": [
+                [
+                    "TS-MODBUS-DEBUG-3-{{.Params.FlowId}}",
+                    "TS-MODBUS-STATUS-FUNC-ID-{{.Params.FlowId}}"
+                ]
             ]
-        ]
-    },
-    {
-        "id": "TS-MODBUS-INJECT-ID-{{.Params.FlowId}}",
-        "type": "inject",
-        "z": "b8db9bb5.5bd948",
-        "name": "",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "repeat": "{{.Params.Intervals}}",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "x": 250,
-        "y": 140,
-        "wires": [
-            [
-                "TS-MODBUS-GETTER-ID-{{.Params.FlowId}}"
+        },
+        {
+            "id": "TS-MODBUS-DEBUG-3-{{.Params.FlowId}}",
+            "type": "debug",
+            "z": "8900476a.91f358",
+            "name": "",
+            "active": false,
+            "tosidebar": true,
+            "console": false,
+            "tostatus": false,
+            "complete": "true",
+            "targetType": "full",
+            "x": 310,
+            "y": 120,
+            "wires": []
+        },
+        {
+            "id": "TS-MODBUS-STATUS-FUNC-ID-{{.Params.FlowId}}",
+            "type": "function",
+            "z": "128c8c3f.3d9e44",
+            "name": "",
+            "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = status.fill;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 310,
+            "y": 60,
+            "wires": [
+                [
+                    "TS-MODBUS-STATUS-MQTT-OUT-ID-{{.Params.FlowId}}"
+                ]
             ]
-        ]
-    },
-    {
-        "id": "TS-MODBUS-DEBUG-1-{{.Params.FlowId}}",
-        "type": "debug",
-        "z": "b8db9bb5.5bd948",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 630,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "TS-MODBUS-DEBUG-2-{{.Params.FlowId}}",
-        "type": "debug",
-        "z": "b8db9bb5.5bd948",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 630,
-        "y": 160,
-        "wires": []
-    },
-    {
-        "id": "TS-MODBUS-PARSER-{{.Params.FlowId}}",
-        "type": "function",
-        "z": "43cffeef.084d5",
-        "name": "Parser",
-        "func": "var Total_item = {{.Params.Quantity}};\n\nvar res = [\n            {\n                measurement:'{{.Params.FlowId}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '40031'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 670,
-        "y": 140,
-        "wires": [
-            [
-                "TS-MODBUS-PARSER-DEBUG-{{.Params.FlowId}}",
-                "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}"
+        },
+        {
+            "id": "TS-MODBUS-STATUS-MQTT-OUT-ID-{{.Params.FlowId}}",
+            "type": "mqtt out",
+            "z": "128c8c3f.3d9e44",
+            "name": "",
+            "topic": "/thingspin/connect/{{.Params.FlowId}}/status",
+            "qos": "2",
+            "retain": "true",
+            "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+            "x": 530,
+            "y": 60,
+            "wires": []
+        },
+        {
+            "id": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+            "type": "mqtt-broker",
+            "z": "128c8c3f.3d9e44",
+            "broker": "thingspin.mqtt",
+            "port": "1883",
+            "clientid": "",
+            "usetls": false,
+            "compatmode": true,
+            "keepalive": "60",
+            "cleansession": true,
+            "birthTopic": "",
+            "birthQos": "0",
+            "birthPayload": "",
+            "closeTopic": "",
+            "closeQos": "0",
+            "closePayload": "",
+            "willTopic": "",
+            "willQos": "0",
+            "willPayload": ""
+        },
+        {
+            "id": "TS-MODBUS-INJECT-{{.Params.FlowId}}",
+            "type": "inject",
+            "z": "8900476a.91f358",
+            "name": "",
+            "topic": "",
+            "payload": "",
+            "payloadType": "date",
+            "repeat": "{{.Params.Intervals}}",
+            "crontab": "",
+            "once": true,
+            "onceDelay": 0.1,
+            "x": 110,
+            "y": 160,
+            "wires": [
+                [
+                    {{.Params.InjectWires}}
+                ]
+            ] 
+        },
+        {
+            "id": "TS-MODBUS-GETTER-CONN-{{.Params.FlowId}}",
+            "type": "modbus-getter",
+            "z": "8900476a.91f358",
+            "name": "CONN_TEST",
+            "showStatusActivities": false,
+            "showErrors": false,
+            "logIOActivities": false,
+            "unitid": "",
+            "dataType": "",
+            "adr": "",
+            "quantity": "",
+            "server": "TS-MODBUS-SERVER-ID-{{.Params.FlowId}}",
+            "useIOFile": false,
+            "ioFile": "",
+            "useIOForPayload": false,
+            "x": 340,
+            "y": 160,
+            "wires": [
+                [],
+                []
             ]
-        ]
-    },
-    {
-        "id": "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}",
-        "type": "influxdb batch",
-        "z": "43cffeef.084d5",
-        "influxdb": "TS-MODBUS-INFLUXDB-{{.Params.FlowId}}",
-        "precision": "",
-        "retentionPolicy": "",
-        "name": "",
-        "x": 870,
-        "y": 180,
-        "wires": []
-    },
-    {
-        "id": "TS-MODBUS-INFLUXDB-{{.Params.FlowId}}",
-        "type": "influxdb",
-        "z": "",
-        "hostname": "127.0.0.1",
-        "port": "8086",
-        "protocol": "http",
-        "database": "thingspin",
-        "name": "",
-        "usetls": false,
-        "tls": ""
-    },
-    {
-        "id": "TS-MODBUS-PARSER-DEBUG-{{.Params.FlowId}}",
-        "type": "debug",
-        "z": "43cffeef.084d5",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "x": 870,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "TS-MODBUS-STATE-{{.Params.FlowId}}",
-        "type": "status",
-        "z": "b8db9bb5.5bd948",
-        "name": "",
-        "scope": [
-            "TS-MODBUS-GETTER-ID-{{.Params.FlowId}}"
-        ],
-        "x": 220,
-        "y": 220,
-        "wires": [
-            [
-                "TS-MODBUS-DEBUG-3-{{.Params.FlowId}}"
+        },      
+        {{.Params.AddressNode | convJsonStr}}
+        {
+            "id": "TS-MODBUS-JOIN-{{.Params.FlowId}}",
+            "type": "join",
+            "z": "8900476a.91f358",
+            "name": "MODBUS_JOIN",
+            "mode": "custom",
+            "build": "array",
+            "property": "payload",
+            "propertyType": "msg",
+            "key": "topic",
+            "joiner": "\\n",
+            "joinerType": "str",
+            "accumulate": false,
+            "timeout": "1",
+            "count": "{{.Params.AddressListCount}}",
+            "reduceRight": false,
+            "reduceExp": "",
+            "reduceInit": "",
+            "reduceInitType": "num",
+            "reduceFixup": "",
+            "x": 760,
+            "y": 220,
+            "wires": [
+                [
+                    "TS-MODBUS-JOIN-PARSER-{{.Params.FlowId}}"
+                ]
             ]
-        ]
-    },
-    {
-        "id": "TS-MODBUS-DEBUG-3-{{.Params.FlowId}}",
-        "type": "debug",
-        "z": "b8db9bb5.5bd948",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "x": 430,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "TS-MODBUS-SERVER-ID-{{.Params.FlowId}}",
-        "type": "modbus-client",
-        "z": "b8db9bb5.5bd948",
-        "name": "",
-        "clienttype": "tcp",
-        "bufferCommands": true,
-        "stateLogEnabled": true,
-        "tcpHost": "{{.Params.Host}}",
-        "tcpPort": "{{.Params.Port}}",
-        "tcpType": "DEFAULT",
-        "serialPort": "/dev/ttyUSB",
-        "serialType": "RTU-BUFFERD",
-        "serialBaudrate": "9600",
-        "serialDatabits": "8",
-        "serialStopbits": "1",
-        "serialParity": "none",
-        "serialConnectionDelay": "100",
-        "unit_id": "{{.Params.UnitId}}",
-        "commandDelay": 1,
-        "clientTimeout": "{{.Params.TimeOut}}",
-        "reconnectTimeout": "{{.Params.ReTimeOut}}"
-    }
-]
+        },
+        {
+            "id": "TS-MODBUS-JOIN-PARSER-{{.Params.FlowId}}",
+            "type": "function",
+            "z": "8900476a.91f358",
+            "name": "MODBUS_JOIN_PARSER",
+            "func": "var Total_item = {{.Params.AddressListCount}};\nvar value='';\n\nvar res = [\n            {\n                measurement:'MODBUS-{{.Params.FlowId}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    value = msg.payload[i][0].fields;\n    for(var key in value){\n        res[0].fields[key]=value[key];\n    }\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 1060,
+            "y": 280,
+            "wires": {{if .Enable}} [["TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}"]] {{else}} [[]] {{end}}
+        },
+        {
+            "id": "TS-MODBUS-SERVER-ID-{{.Params.FlowId}}",
+            "type": "modbus-client",
+            "z": "b8db9bb5.5bd948",
+            "name": "",
+            "clienttype": "tcp",
+            "bufferCommands": true,
+            "stateLogEnabled": true,
+            "tcpHost": "{{.Params.Host}}",
+            "tcpPort": "{{.Params.Port}}",
+            "tcpType": "DEFAULT",
+            "serialPort": "/dev/ttyUSB",
+            "serialType": "RTU-BUFFERD",
+            "serialBaudrate": "9600",
+            "serialDatabits": "8",
+            "serialStopbits": "1",
+            "serialParity": "none",
+            "serialConnectionDelay": "100",
+            "unit_id": "{{.Params.UnitId}}",
+            "commandDelay": 1,
+            "clientTimeout": "{{.Params.TimeOut}}",
+            "reconnectTimeout": "{{.Params.ReTimeOut}}"
+        },
+        {
+            "id": "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}",
+            "type": "influxdb batch",
+            "z": "8204efd4.29a1",
+            "influxdb": "TS-MODBUS-INFLUXDB-{{.Params.FlowId}}",
+            "precision": "",
+            "retentionPolicy": "",
+            "name": "",
+            "x": 1370,
+            "y": 280,
+            "wires": []
+        },
+        {
+            "id": "TS-MODBUS-INFLUXDB-{{.Params.FlowId}}",
+            "type": "influxdb",
+            "z": "8204efd4.29a1",
+            "hostname": "127.0.0.1",
+            "port": "8086",
+            "protocol": "http",
+            "database": "thingspin",
+            "name": "",
+            "usetls": false,
+            "tls": ""
+        }
+    ]
 }

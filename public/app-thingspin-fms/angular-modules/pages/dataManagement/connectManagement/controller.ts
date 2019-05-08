@@ -5,7 +5,6 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 import Tabulator from "tabulator-tables";
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
-import moment from 'moment';
 
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
@@ -83,8 +82,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         const updatedFormatter: Function = (cell: any): string => {
             const data: TsConnect = cell.getData();
 
-            return moment(data.updated)
-                .format("YYYY-MM-DD HH:mm:ss");
+            return data.updated.toDateString();
         };
 
         const actionFormatter = (cell: any, formatterParams, onRendered: Function): void => {

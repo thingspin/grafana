@@ -38,7 +38,7 @@ func AddTsNewMenuByOrgId(c *gfm.ReqContext, cmd m.AddFmsMenuCommand) Response {
 		return Error(500, "[thingspin] Menu add command failed", err)
 	}
 
-	return JSON(200, cmd.Result)
+	return JSON(200, cmd)
 }
 
 func DeleteTsMenuByOrgId(c *gfm.ReqContext) Response {
@@ -54,16 +54,15 @@ func DeleteTsMenuByOrgId(c *gfm.ReqContext) Response {
 	return JSON(200, q.Result)
 }
 
-func DeleteTsMenuById(c *gfm.ReqContext) Response {
-	id := c.ParamsInt64(":id")
-	q := m.DeleteFmsMenuByIdQuery{
-		Id: id,
-	}
-	if err := bus.Dispatch(&q); err != nil {
+func DeleteTsMenuById(c *gfm.ReqContext, cmd m.DeleteFmsMenuByIdQuery) Response {
+	cmd.OrgId = c.ParamsInt64(":orgId") 
+	cmd.Id = c.ParamsInt64(":id")
+	
+	if err := bus.Dispatch(&cmd); err != nil {
 		return Error(500, "[thingspin] Menu delete command failed", err)
 	}
 
-	return JSON(200, q.Result)
+	return JSON(200, cmd)
 }
 
 func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
@@ -74,8 +73,17 @@ func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
 		return Error(500, "[thingspin] Menu update command failed", err)
 	}
 
-	return JSON(200, cmd.Result)
+	return JSON(200, cmd)
 }
+
+func EditTsMenuInfo(c *gfm.ReqContext, cmd m.UpdateFmsMenuInfoCommand) Response {
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[thingspin] Menu update info command failed", err)
+	}
+
+	return JSON(200, cmd)
+}
+
 
 func UpdateFmsMenuHideState(c *gfm.ReqContext, cmd m.UpdateFmsMenuHideStateCommand) Response {
 	cmd.Id = c.ParamsInt(":id")
@@ -114,12 +122,10 @@ func GetFmsMenuPin(c *gfm.ReqContext, cmd m.GetFmsMenuPinCommand) Response {
 }
 
 func EditTsMenuByOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuOrderCommand) Response {
-	orgId := c.ParamsInt64(":orgId")
-	cmd.OrgId = orgId
-
+	cmd.OrgId = c.ParamsInt64(":orgId")
 	if err := bus.Dispatch(&cmd); err != nil {
 		return Error(500, "[thingspin] Menu update command failed", err)
 	}
 
-	return JSON(200, cmd.Result)
+	return JSON(200, cmd)
 }

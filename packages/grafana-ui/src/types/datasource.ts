@@ -1,29 +1,30 @@
 import { ComponentClass } from 'react';
 import { TimeRange } from './time';
-import { PluginMeta } from './plugin';
+import { PluginMeta, GrafanaPlugin } from './plugin';
 import { TableData, TimeSeries, SeriesData, LoadingState } from './data';
 import { PanelData } from './panel';
 
+// NOTE: this seems more general than just DataSource
 export interface DataSourcePluginOptionsEditorProps<TOptions> {
   options: TOptions;
   onOptionsChange: (options: TOptions) => void;
 }
-export class DataSourcePlugin<TOptions = {}, TQuery extends DataQuery = DataQuery> {
-  DataSourceClass: DataSourceConstructor<TQuery>;
-  components: DataSourcePluginComponents<TOptions, TQuery>;
 
-  constructor(DataSourceClass: DataSourceConstructor<TQuery>) {
+export class DataSourcePlugin<
+  TQuery extends DataQuery = DataQuery,
+  TOptions extends DataSourceJsonData = DataSourceJsonData
+> extends GrafanaPlugin<DataSourcePluginMeta> {
+  DataSourceClass: DataSourceConstructor<TQuery, TOptions>;
+  components: DataSourcePluginComponents<TQuery, TOptions>;
+
+  constructor(DataSourceClass: DataSourceConstructor<TQuery, TOptions>) {
+    super();
     this.DataSourceClass = DataSourceClass;
     this.components = {};
   }
 
-  setConfigEditor(editor: React.ComponentType<DataSourcePluginOptionsEditorProps<TOptions>>) {
+  setConfigEditor(editor: React.ComponentType<DataSourcePluginOptionsEditorProps<DataSourceSettings<TOptions>>>) {
     this.components.ConfigEditor = editor;
-    return this;
-  }
-
-  setConfigCtrl(ConfigCtrl: any) {
-    this.components.ConfigCtrl = ConfigCtrl;
     return this;
   }
 
@@ -57,36 +58,63 @@ export class DataSourcePlugin<TOptions = {}, TQuery extends DataQuery = DataQuer
     return this;
   }
 
-  setComponentsFromLegacyExports(exports: any) {
-    this.components.ConfigCtrl = exports.ConfigCtrl;
-    this.components.QueryCtrl = exports.QueryCtrl;
-    this.components.AnnotationsQueryCtrl = exports.AnnotationsQueryCtrl;
-    this.components.ExploreQueryField = exports.ExploreQueryField;
-    this.components.ExploreStartPage = exports.ExploreStartPage;
-    this.components.QueryEditor = exports.QueryEditor;
-    this.components.VariableQueryEditor = exports.VariableQueryEditor;
+  setComponentsFromLegacyExports(pluginExports: any) {
+    this.angularConfigCtrl = pluginExports.ConfigCtrl;
+
+    this.components.QueryCtrl = pluginExports.QueryCtrl;
+    this.components.AnnotationsQueryCtrl = pluginExports.AnnotationsQueryCtrl;
+    this.components.ExploreQueryField = pluginExports.ExploreQueryField;
+    this.components.ExploreStartPage = pluginExports.ExploreStartPage;
+    this.components.QueryEditor = pluginExports.QueryEditor;
+    this.components.VariableQueryEditor = pluginExports.VariableQueryEditor;
   }
 }
 
-export interface DataSourcePluginComponents<TOptions = {}, TQuery extends DataQuery = DataQuery> {
+export interface DataSourcePluginMeta extends PluginMeta {
+  builtIn?: boolean; // Is this for all
+  metrics?: boolean;
+  tables?: boolean;
+  logs?: boolean;
+  explore?: boolean;
+  annotations?: boolean;
+  mixed?: boolean;
+  hasQueryHelp?: boolean;
+  queryOptions?: PluginMetaQueryOptions;
+}
+
+interface PluginMetaQueryOptions {
+  cacheTimeout?: boolean;
+  maxDataPoints?: boolean;
+  minInterval?: boolean;
+}
+
+export interface DataSourcePluginComponents<
+  TQuery extends DataQuery = DataQuery,
+  TOptions extends DataSourceJsonData = DataSourceJsonData
+> {
   QueryCtrl?: any;
-  ConfigCtrl?: any;
   AnnotationsQueryCtrl?: any;
   VariableQueryEditor?: any;
   QueryEditor?: ComponentClass<QueryEditorProps<DataSourceApi, TQuery>>;
   ExploreQueryField?: ComponentClass<ExploreQueryFieldProps<DataSourceApi, TQuery>>;
   ExploreStartPage?: ComponentClass<ExploreStartPageProps>;
-  ConfigEditor?: React.ComponentType<DataSourcePluginOptionsEditorProps<TOptions>>;
+  ConfigEditor?: React.ComponentType<DataSourcePluginOptionsEditorProps<DataSourceSettings<TOptions>>>;
 }
 
-export interface DataSourceConstructor<TQuery extends DataQuery = DataQuery> {
-  new (instanceSettings: DataSourceInstanceSettings, ...args: any[]): DataSourceApi<TQuery>;
+export interface DataSourceConstructor<
+  TQuery extends DataQuery = DataQuery,
+  TOptions extends DataSourceJsonData = DataSourceJsonData
+> {
+  new (instanceSettings: DataSourceInstanceSettings<TOptions>, ...args: any[]): DataSourceApi<TQuery, TOptions>;
 }
 
 /**
  * The main data source abstraction interface, represents an instance of a data source
  */
-export interface DataSourceApi<TQuery extends DataQuery = DataQuery> {
+export interface DataSourceApi<
+  TQuery extends DataQuery = DataQuery,
+  TOptions extends DataSourceJsonData = DataSourceJsonData
+> {
   /**
    *  min interval range
    */
@@ -136,8 +164,12 @@ export interface DataSourceApi<TQuery extends DataQuery = DataQuery> {
    * Set after constructor call, as the data source instance is the most common thing to pass around
    * we attach the components to this instance for easy access
    */
-  components?: DataSourcePluginComponents;
-  meta?: PluginMeta;
+  components?: DataSourcePluginComponents<TQuery, TOptions>;
+
+  /**
+   * static information about the datasource
+   */
+  meta?: DataSourcePluginMeta;
 }
 
 export interface ExploreDataSourceApi<TQuery extends DataQuery = DataQuery> extends DataSourceApi {
@@ -309,10 +341,16 @@ export interface QueryHint {
   fix?: QueryFix;
 }
 
+export interface DataSourceJsonData {
+  authType?: string;
+  defaultRegion?: string;
+}
+
 /**
- * Data Source instance edit model
+ * Data Source instance edit model.  This is returned from:
+ *  /api/datasources
  */
-export interface DataSourceSettings {
+export interface DataSourceSettings<T extends DataSourceJsonData = DataSourceJsonData, S = {}> {
   id: number;
   orgId: number;
   name: string;
@@ -327,22 +365,24 @@ export interface DataSourceSettings {
   basicAuthPassword: string;
   basicAuthUser: string;
   isDefault: boolean;
-  jsonData: { authType: string; defaultRegion: string };
+  jsonData: T;
+  secureJsonData?: S;
   readOnly: boolean;
   withCredentials: boolean;
 }
 
 /**
  * Frontend settings model that is passed to Datasource constructor. This differs a bit from the model above
- * as this data model is available to every user who has access to a data source (Viewers+).
+ * as this data model is available to every user who has access to a data source (Viewers+).  This is loaded
+ * in bootData (on page load), or from: /api/frontend/settings
  */
-export interface DataSourceInstanceSettings {
+export interface DataSourceInstanceSettings<T extends DataSourceJsonData = DataSourceJsonData> {
   id: number;
   type: string;
   name: string;
-  meta: PluginMeta;
+  meta: DataSourcePluginMeta;
   url?: string;
-  jsonData: { [str: string]: any };
+  jsonData: T;
   username?: string;
   password?: string; // when access is direct, for some legacy datasources
 
@@ -359,6 +399,6 @@ export interface DataSourceInstanceSettings {
 export interface DataSourceSelectItem {
   name: string;
   value: string | null;
-  meta: PluginMeta;
+  meta: DataSourcePluginMeta;
   sort: string;
 }

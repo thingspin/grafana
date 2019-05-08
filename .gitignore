@@ -89,3 +89,4 @@ debug.test
 
 # ThingSPIN ADD ignore code
 *DS_Store
+theOutput/

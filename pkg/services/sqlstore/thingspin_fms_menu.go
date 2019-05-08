@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"database/sql"
+	//"database/sql"
 	"fmt"
 
 	"github.com/grafana/grafana/pkg/bus"
@@ -21,6 +21,27 @@ func init() {
 	bus.AddHandler("sql", UpdateFmsMenuPinSate)
 	bus.AddHandler("sql", GetFmsMenuUsersPin)
 	bus.AddHandler("sql", UpdateFmsMenuHideState)
+	bus.AddHandler("sql", UpdateFmsMenuInfo)
+}
+
+// Transaction 
+func doTransaction(callback dbTransactionFunc) error {
+	var err error
+	sess := &DBSession{Session: x.NewSession()}
+	defer sess.Close()
+	if err = sess.Begin(); err != nil {
+		return err
+	}
+	err = callback(sess)
+
+	if err != nil {
+		sess.Rollback()
+		return err
+	} else if err = sess.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // recursive function
@@ -159,54 +180,60 @@ func GetFmsDefaultMenu(cmd *m.GetFmsDefaultMenuQuery) error {
 }
 
 func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
-	result, err := x.Exec(`DELETE FROM '?' WHERE org_id = ?`,
+	_, err := x.Exec(`DELETE FROM '?' WHERE org_id = ?`,
 		m.TsFmsMenuTbl, cmd.OrgId)
-	cmd.Result = result
-
+	//cmd.Result = result
 	return err
 }
 
 func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
-	//result, err := x.Exec(`PRAGMA foreign_keys = ON`)
-	result, err := x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
-	cmd.Result = result
+	err := doTransaction(func(sess *DBSession) error {
+		_, err := x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
+		//cmd.Result = result
+		if err != nil {
+			return err
+		}
+
+		// Reordering
+		// L2로 이동할 때 자식이 있었는지 검사
+		for _, menu := range cmd.Menu {
+			_, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET "order" = ? WHERE org_id = ? AND mbid = ?`,
+				menu.Order, cmd.OrgId, menu.Id)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
 	return err
-}
-
-func doTransaction(callback dbTransactionFunc) error {
-	var err error
-	sess := &DBSession{Session: x.NewSession()}
-	defer sess.Close()
-	if err = sess.Begin(); err != nil {
-		return err
-	}
-	err = callback(sess)
-
-	if err != nil {
-		sess.Rollback()
-		return err
-	} else if err = sess.Commit(); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 	err := doTransaction(func(sess *DBSession) error {
-		deletes := []string{
-			`INSERT INTO `+m.TsFmsMenuBaseTbl+` ('id', 'text', 'icon', 'img_path', 'url', 'target', 'hideFromMenu', 
-				'hideFromTabs', 'placeBottom', 'divider', 'canDelete') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		sqlCommands := []string{
+			`SELECT MAX(id) FROM ` + m.TsFmsMenuBaseTbl,
+			`INSERT INTO `+m.TsFmsMenuBaseTbl+` ('id', 'text', 'icon', 'img_path', 'url', 'hideFromMenu', 
+				'hideFromTabs', 'placeBottom', 'divider', 'canDelete') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			`INSERT INTO `+m.TsFmsMenuTbl+` ('org_id', 'parent_id','name','mbid','order') VALUES (?,?,?,?,?)`,
 		}
-	
-		result, err := sess.Exec(deletes[0], cmd.Id, cmd.Name, cmd.Icon, "NULL", cmd.Url, "NULL", false, false, false, false, true)
-		cmd.Result = result
+		var id int
+		has, err := sess.SQL(sqlCommands[0]).Get(&id)
+		if !has {
+			id = 100
+		} else {
+			id = id + 100
+		}
 		if err != nil {
 			return err
 		}
-		result, err = sess.Exec(deletes[1], cmd.OrgId, -1, cmd.Name, cmd.Id, cmd.Order)
-		cmd.Result = result
+		_, err = sess.Exec(sqlCommands[1], id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true)
+		//cmd.Result = result
+		if err != nil {
+			return err
+		}
+		_, err = sess.Exec(sqlCommands[2], cmd.OrgId, -1, cmd.Name, id, cmd.Order)
+		//cmd.Result = result
 		if err != nil {
 			return err
 		}
@@ -226,33 +253,47 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuCommand) error {
 	return err
 }
 */
+
 func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
-	var err error
-	var has bool
-	var result sql.Result
-	// L2로 이동할 때 자식이 있는지 검사
-	if cmd.Menu.FmsMenuQueryResult.ParentId != -1 {
-		has, err = x.Table(m.TsFmsMenuTbl).
-			Where(`parent_id IN ( SELECT mbid FROM `+m.TsFmsMenuTbl+` WHERE parent_id = -1 and mbid = ?)`, cmd.Menu.FmsMenuQueryResult.Id).Exist()
-		//log.Error(3, "error",cmd.Menu.FmsMenuQueryResult.Order,cmd.Menu.FmsMenuQueryResult.ParentId,cmd.Menu.FmsMenuQueryResult.Text,cmd.OrgId,cmd.Menu.FmsMenuQueryResult.Id)
-		if err != nil {
-			return err
+	//var err error
+	//var has bool
+	//var result sql.Result
+	
+	err := doTransaction(func(sess *DBSession) error {
+		for _, pmenu := range cmd.Pmenu {
+			_, err := x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
+				pmenu.ParentId, pmenu.Order, cmd.OrgId, pmenu.Id)
+			if err != nil {
+				return err
+			}
 		}
-		if has {
-			return fmt.Errorf("This menu has childs, can't move to L2")
+		// L2로 이동할 때 자식이 있었는지 검사
+		for _, cmenu := range cmd.Cmenu {
+			has, err := x.Table(m.TsFmsMenuTbl).
+				Where(`parent_id IN ( SELECT mbid FROM `+m.TsFmsMenuTbl+` WHERE parent_id = -1 and mbid = ?)`, cmenu.Id).Exist()
+			if err != nil {
+				return err
+			}
+			if has {
+				return fmt.Errorf("This menu has childs, can't move to L2")
+			}
+			_, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
+				cmenu.ParentId, cmenu.Order, cmd.OrgId, cmenu.Id)
+			if err != nil {
+				return err
+			}
 		}
-
-	}
-
-	result, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
-		cmd.Menu.FmsMenuQueryResult.ParentId, cmd.Menu.FmsMenuQueryResult.Order, cmd.OrgId, cmd.Menu.FmsMenuQueryResult.Id)
-
+		return nil
+	})
 	//log.Error(3, "error",err)
-	cmd.Result = result
-
+	//cmd.Result = result
 	return err
 }
-
+func UpdateFmsMenuInfo(cmd *m.UpdateFmsMenuInfoCommand) error {
+	_, err := x.Exec(`UPDATE `+m.TsFmsMenuBaseTbl+` SET icon = ?, text = ?, url = ? WHERE id = ?`,
+		cmd.Menu.FmsMenuQueryResult.Icon, cmd.Menu.FmsMenuQueryResult.Text, cmd.Menu.FmsMenuQueryResult.Url, cmd.Menu.FmsMenuQueryResult.Id)
+	return err
+}
 func UpdateFmsMenuPinSate(cmd *m.UpdateFmsMenuPinSateCommand) error {
 	if cmd.Pin == false {
 		_, err := x.Exec(`DELETE FROM`+` `+m.TsFmsMenuPinTbl+` `+`WHERE uid = ? AND mid = ?`, cmd.UserID, cmd.ID)

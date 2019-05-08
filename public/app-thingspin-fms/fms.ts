@@ -4,7 +4,8 @@ import { GrafanaApp } from 'app/app';
 import angular from 'angular';
 import config from 'app/core/config';
 import _ from 'lodash';
-import moment from 'moment';
+
+import { setLocale } from '@grafana/ui/src/utils/moment_wrapper';
 
 import { coreModule, angularModules } from './grafana_custom/core_module';
 import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
@@ -25,7 +26,7 @@ class ThingspinFmsApp extends GrafanaApp {
 
     this.ng1App = angular.module('thingspin', []);
 
-    moment.locale(config.bootData.user.locale);
+    setLocale(config.bootData.user.locale);
 
     this.ngModuleDependencies = [
       'grafana.core',

@@ -6,6 +6,8 @@ import { TsBottombar } from './components/Bottombar';
 import TsToolbarComponent from './components/MainView/Toobar/index';
 import OpcNodeTree from './components/OpcNodeTree';
 
+import { TsConfigs } from './views/system/configs';
+
 export function tsRegisterAngularDirectives() {
   tsReact2AngularDirective('tsNavbar', TsNavbarComponent, []);
   tsReact2AngularDirective('tsLeftSidebar', TsLeftSidebar, []);
@@ -25,4 +27,5 @@ export function tsRegisterAngularDirectives() {
     ["onClickItem", { watchDepth: 'reference', wrapApply: true }],
     ["onClickAdd",  { watchDepth: 'reference', wrapApply: true }],
   ]);
+  tsReact2AngularDirective('tsConfigView', TsConfigs, []);
 }

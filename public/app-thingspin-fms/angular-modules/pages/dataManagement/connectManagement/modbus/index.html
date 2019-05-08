@@ -1,56 +1,109 @@
 
+<div>
+    <div class="modbus-title-top">Modbus 추가 양식</div>
+    <div class="modbus-right-button-area">
+        <button id="modbus-cancel-btn" className="btn" ng-click="ctrl.close()">
+            취소
+        </button>    
+        <button id="modbus-save-btn" className="btn" ng-click="ctrl.testCreate()">
+            저장
+        </button>
+    </div>
+</div>
 
-<div class="editor-row">
-        <div class="page-container">
-            <div class="page-header">
-                <h1>MODBUS Setting</h1>
+<div class="section gf-form-group" id="main-view">
+        <div class="modbus-title-conn">
+            Modbus 접속 정보
+        </div> 
+        <div class="modbus-conn-test-buttons">
+            <button class="ts-btn ts-btn-save {{ctrl.connectStatus}}" ng-click="ctrl.btnClick()"><i class="fa fa-plug"></i></button>
+        </div>
+        <div class="modbus-conn-section-line"></div>
+        <div>
+            <span class="modbus-subtitle" id="modbus-collector">수집기 이름</span>
+            <div class="modbus-edit-bg" id="modbus-collector-name-position">
+                <input id="modbus-edit" type="text" class="gf-form-input" ng-model="ctrl.connName" placeholder="수집기 이름">
             </div>
-            <div class="page-body">
-                <div class="gf-form-group">
-                    <div class="gf-form-inline">                       
-                        <div class="gf-form">
-                            <span class="gf-form-label width-10">1. 연결이름</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.connName" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <span class="gf-form-label width-10">2. HOST</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusHost" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <span class="gf-form-label width-10">3. PORT</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusPort" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <span class="gf-form-label width-10">7. Unit-ID</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusUnitID" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <span class="gf-form-label width-10">8. Time Out(ms)</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusTimeOut" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <span class="gf-form-label width-15">9. Reconnect Time Out(ms)</span>
-                            <input class="gf-form-input width-25" ng-model="ctrl.modbusReTimeOut" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <span class="gf-form-label width-10">10. Read Intervals</span>
-                            <input class="gf-form-input width-30" ng-model="ctrl.modbusReadIntervals" type="text">
-                        </div>
-                        <div class="gf-form">
-                            <input type=button value="add" ng-click="ctrl.addAddress()">
-                            <h1>Address List</h1>
-                            <div id="addressTable" ng-init="ctrl.initAddressTable()"></div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </div>
+
+            <span class="modbus-subtitle" id="modbus-host">Host</span>
+            <div class="modbus-edit-bg" id="modbus-collector-host-position">
+                <input id="modbus-edit" type="text" class="gf-form-input"   ng-model="ctrl.modbusHost" placeholder="127.0.0.1" >
+            </div>
+            
+            <span class="modbus-subtitle" id="modbus-port">Port</span>
+            <div class="modbus-edit-bg" id="modbus-collector-port-position">
+                <input id="modbus-edit" type="text" class="gf-form-input"   ng-model="ctrl.modbusPort" placeholder="502" >
+            </div>
+        </div>   
+    <!--추가정보 -->
+    <div class="modbus-title-conn-add">Modbus 접속 정보</div>
+        <div class="modbus-conn-section-line"></div>
+        <div>
+            <span class="modbus-subtitle" id="modbus-unit-id">Unit-id</span>
+            <div class="modbus-unitid-bg" id="modbus-unit-id-pos">
+                <input id="modbus-edit" type="number" class="gf-form-input"  data-placement="auto" ng-model="ctrl.modbusUnitID" placeholder="1" ng-blur="ctrl.render()" data-min-length=0  ng-model-onblur>
+            </div>
+            <span class="modbus-subtitle" id="modbus-time-out">Time out (ms)</span>
+            <div class="modbus-timeout-bg" id="modbus-time-out-pos">
+                <input id="modbus-edit" type="number" class="gf-form-input"  data-placement="auto" ng-model="ctrl.modbusTimeOut" placeholder="1000" ng-blur="ctrl.render()" data-min-length=0  ng-model-onblur>
+            </div>
+            <span class="modbus-subtitle" id="modbus-Reconnect">Reconnect (ms)</span>
+            <div class="modbus-reconnect-bg" id="modbus-Reconnect-pos">
+                <input id="modbus-edit" type="number" class="gf-form-input"  data-placement="auto" ng-model="ctrl.modbusReTimeOut" placeholder="2000" ng-blur="ctrl.render()" data-min-length=0  ng-model-onblur>
+            </div>
+            <span class="modbus-subtitle" id="modbus-Intervals">Intervals (sec)</span>
+            <div class="modbus-interval-bg" id="modbus-Intervals-pos">
+                <input id="modbus-edit" type="number" class="gf-form-input"  data-placement="auto" ng-model="ctrl.modbusReadIntervals" placeholder="1" ng-blur="ctrl.render()" data-min-length=0  ng-model-onblur>
             </div>
         </div>
-</div>
+    <!-- address list-->    
+    <div class="modbus-title-addr-list">수집 Address list</div>
+    <button id="modbus-addr-add-btn" className="btn" ng-click="ctrl.onShowAddressEditView()" ng-show="ctrl.isAddressEditBtn">+ Address</button>  
+        <div class="modbus-conn-section-line"></div>
+        <div id="addressTable" class = "modbus-table-size"></div>
+    <!-- add view-->
+    <div class = "modbus-address-add-view" ng-show = "ctrl.isAddressEditView">
+        <div class = "modbus-title-address">Address List 추가</div>
+        <button id="modbus-address-cancel-btn" className="btn" ng-click="ctrl.onShowAddressEditView()">
+            취소
+        </button>
+        <button id="modbus-address-add-btn" className="btn" ng-click="ctrl.editAddressList()">
+            + Address List
+        </button>
+        <div class="modbus-address-add-section-line"></div> 
+        <div>
+            <span class="modbus-subtitle" id="modbus-add-edit-name">이름</span>
+            <div class="modbus-edit-bg" id="modbus-add-edit-name-pos">
+                <input id="modbus-edit" type="text" class="gf-form-input"  data-placement="auto" ng-model="ctrl.editName" placeholder="name" ng-blur="ctrl.render()" data-min-length=0 >
+            </div>
+            <span class="modbus-subtitle" id="modbus-add-edit-address">Address</span>
+            <div class="modbus-edit-bg" id="modbu-add-edit-address-pos">
+                <input id="modbus-edit" type="text" class="gf-form-input"  data-placement="auto" ng-model="ctrl.editAddress" placeholder="40001" ng-blur="ctrl.render()" data-min-length=0 >
+            </div>
+            <span class="modbus-subtitle" id="modbus-add-edit-FC">FC</span>
+            <div class="modbus-edit-bg" id="modbu-add-edit-FC-pos">
+                <select id="modbus-FC-combobox" ng-model="ctrl.fcSelected" ng-options="opts for opts in ctrl.modbusParams.functioncodes"></select>
+            </div>
+            <span class="modbus-subtitle" id="modbus-add-edit-quantity">Quantity</span>
+            <div class="modbus-edit-bg" id="modbu-add-edit-quantity-pos">
+                <input id="modbus-edit" type="text" class="gf-form-input"  data-placement="auto"  ng-model="ctrl.editQuantity" placeholder="min:1 max:9" ng-blur="ctrl.render()" data-min-length=0 >
+            </div>
+            <span class="modbus-subtitle" id="modbus-add-edit-datatype">Data Type</span>
+            <div class="modbus-edit-bg" id="modbu-add-edit-datatype-pos">
+                    <select id="modbus-type-combobox" ng-model="ctrl.typeSelected" ng-options="opts for opts in ctrl.modbusParams.datatypes"></select>
+            </div>
+        </div>
+    </div>
+
+</div> <!--main view end-->
 
 
 
 <div class="button-row">
-    <button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">등록</button>
-    <button type="button" class="btn btn-success" ng-click="ctrl.goPrev()">이전</button>
+   <!-- <button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">등록</button> -->
+    <button type="button" class="btn btn-success" ng-click="ctrl.getAddressTableData()">test</button>
+    <button type="button" class="btn btn-success" ng-click="ctrl.getTablelistData()">get-list</button>
+    <button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">node-red1</button>
+    <button type="button" class="btn btn-success" ng-click="ctrl.objectTest()">OBJECT_test</button>
+    <!-- <button type="button" class="btn btn-success" ng-click="ctrl.goPrev()">이전</button> -->
 </div>

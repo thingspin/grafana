@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"strings"
 
 	api "github.com/grafana/grafana/pkg/api"
 	"github.com/grafana/grafana/pkg/log"
@@ -43,18 +44,25 @@ type services struct {
 
 type MicroService struct {
 	log        log.Logger
+	root       string
 	Cfg        *setting.Cfg    `inject:""`
 	HttpServer *api.HTTPServer `inject:""`
 }
 
 func init() {
+	root, err := os.Getwd()
+	if err != nil {
+		panic("error getting work directory: " + err.Error())
+	}
+
 	registry.RegisterService(&MicroService{
-		log: log.New("thingspin.microservice"),
+		log:  log.New("thingspin.api-server"),
+		root: root,
 	})
 }
 
 func (s *MicroService) Init() error {
-	s.log = log.New("api.server")
+	s.log.Debug("API Server", "working directory", s.root)
 	return nil
 }
 
@@ -92,17 +100,40 @@ func (s *MicroService) Run(ctx context.Context) error {
 
 		s.log.Info("API Server Invoke", "Name", item.Name, "URL", item.URL, "API", item.API)
 
-		path := filepath.Join(item.Pwd, item.Cmd)
+		if !filepath.IsAbs(item.Pwd) {
+			item.Pwd = filepath.Join(s.root, item.Pwd)
+		}
+
+		//commands := filepath.Join(item.Pwd, item.Cmd)
+		commands := item.Cmd
 		params := item.Params
-		options := item.Options
-		cmd := exec.Command(item.Shell, path, params, options)
+		//options := item.Options
+
+		if item.Cmd == "" {
+			commands = params
+			params = ""
+		}
+
+		s0 := []string{item.Shell}
+		s1 := strings.Fields(commands)
+		s2 := strings.Fields(params)
+
+		var args []string
+		args = append(args, s0...)
+		args = append(args, s1...)
+		args = append(args, s2...)
+
+		//cmd := exec.Command(item.Shell, commands, params, options)
+		cmd := exec.Command(item.Shell)
+		cmd.Args = args
+
 		cmd.Dir = filepath.Join(item.Pwd, "")
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
-		s.log.Debug("API Server: full-path : " + path)
-		s.log.Debug("API Server: shell : " + item.Shell)
-		s.log.Debug("API Server: Dir : " + cmd.Dir)
+		s.log.Info("API Server: shell : " + item.Shell)
+		s.log.Info("API Server: commands : "+commands, "args", cmd.Args)
+		s.log.Info("API Server: Dir : " + cmd.Dir)
 
 		go func(s server, log log.Logger) error {
 			err := cmd.Start()

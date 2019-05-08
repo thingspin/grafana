@@ -43,11 +43,15 @@ type DeleteFmsMenuByOrgIdQuery struct {
 	Result sql.Result
 }
 
+// Delete menu
 type DeleteFmsMenuByIdQuery struct {
+	OrgId  int64
 	Id     int64
-	Result sql.Result
+	Menu   []FmsMenu `json:"menu"`
+	//Result sql.Result
 }
 
+// Add menu
 type AddFmsMenuCommand struct {
 	OrgId  int64                    `json:"orgId"`
 	Id     int                      `json:"id"`
@@ -55,11 +59,38 @@ type AddFmsMenuCommand struct {
 	Icon   string                   `json:"icon"`
 	Name   string                   `json:"text"`
 	Url    string                   `json:"url"`
-	Result sql.Result
+	//Result sql.Result
 }
 
+// Update menu
 type UpdateFmsMenuCommand struct {
 	AddFmsMenuCommand
+}
+
+// Update menu ordering
+/*
+type UpdateFmsMenuOrderCommand struct {
+	OrgId  int64   `json:"orgId"`
+	Menu   FmsMenu `json:"menu"`
+	//Result sql.Result
+}
+*/
+type UpdateFmsMenuOrderCommand struct {
+	OrgId   int64     `json:"orgId"`
+	Pmenu   []FmsMenu `json:"parent"`
+	Cmenu   []FmsMenu `json:"child"`
+	//Result sql.Result
+}
+
+// Update menu Info
+type UpdateFmsMenuInfoCommand struct {
+	Menu   FmsMenu `json:"menu"`
+}
+
+// Update menu hide
+type UpdateFmsMenuHideStateCommand struct {
+	Id           int      `xorm:"int notnull 'id'" json:"id"`
+	HideFromMenu bool     `xorm:"bool notnull 'hideFromMenu'" json:"hideFromMenu"`
 }
 
 type UpdateFmsMenuPinSateCommand struct {
@@ -71,15 +102,4 @@ type UpdateFmsMenuPinSateCommand struct {
 type GetFmsMenuPinCommand struct {
 	UserID  int64 `xorm:"int notnull 'uid'" json:"uid"`
 	MenuIDs []int
-}
-
-type UpdateFmsMenuOrderCommand struct {
-	OrgId  int64   `json:"orgId"`
-	Menu   FmsMenu `json:"menu"`
-	Result sql.Result
-}
-
-type UpdateFmsMenuHideStateCommand struct {
-	Id           int      `xorm:"int notnull 'id'" json:"id"`
-	HideFromMenu bool     `xorm:"bool notnull 'hideFromMenu'" json:"hideFromMenu"`
 }

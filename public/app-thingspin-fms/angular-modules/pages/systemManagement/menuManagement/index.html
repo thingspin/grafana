@@ -1,148 +1,115 @@
-<div class="row" >
-	<span style="font-size:1.5em;margin-top:20px;margin-left:40px">메뉴 관리</span><br>
-	<span style="font-size:0.5em;margin-top:30px;margin-left:10px">메뉴 리스트의 항목은 사용자 편의에 따라 숨기기가 가능하며, 새로운 메뉴 추가와 삭제 기능을 지원합니다.(단 추가 한 메뉴 리스트만 삭제 가능 합니다.)</span><br>
+<div class="menu-title-top">메뉴 관리</div>
+<div class="menu-description">메뉴 리스트의 항목은 사용자 편의에 따라 숨기기가 가능하며, 새로운 메뉴 추가와 삭제 기능을 지원합니다.(단 추가 한 메뉴 리스트만 삭제 가능 합니다.)</div>
+<div class="menu-top-button-area">
+	<button id="menu-save-btn" className="btn" onclick="location.href='/'" type="button">적용</button>
+</div><br>
 
-	<button style="margin-top:20px;margin-left:150px;background-color:#1e88e5" class="btn width-6" onclick="location.href='http://219.251.4.237:3000'" type="button">적용</button>
-</div>
-<div class="row">
-	<div class="col-sm-4" ng-style="{'margin-left': '40px','width':'650px'}">
-		<div style="text-align:center;margin-top:10px;margin-bottom:10px;background-color:#f5f5f5;height:32px">
-			<span style="font-size:2em">전체 메뉴 리스트</span>
-			
-			<a data-nodrag ng-click="ctrl.newMenu()" style="margin-left: 15px;">
-				<span class="fa fa-plus-circle"></span>
-			</a>
-				
-		</div>
-					
-		<div ui-tree="ctrl.options" id="tree2-root" style="background-color:rgba(255,255,255,0.52)">
+
+
+<div class="section gf-form-group" id="menu-tree-view">
+	<div class="menu-tree-title">전체 메뉴 리스트</div>
+	<!--new menu-->
+	<a class="menu-tree-add" data-nodrag ng-click="ctrl.newMenu()">
+		<span class="fa fa-plus-circle"></span>
+	</a>
+	<a class="menu-tree-clear" data-nodrag ng-click="">
+			<span class="fa fa-refresh"></span>
+	</a>
+	<div class="menu-tree-section-line"></div>	
+	
+	<!--tree starting point-->
+	<div ui-tree="ctrl.options" id="tree2-root" style="background-color:rgba(255,255,255,0.52)">
 			<ol ui-tree-nodes="" ng-model="ctrl.data">
 				<li ng-repeat="node in ctrl.data" ui-tree-node>
-					<div ng-class="{ts_blur: node.hideFromMenu}" ui-tree-handle class="tree-node tree-node-content">
-						<a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
-							<span ng-class="{
-								'fa fa-angle-right': collapsed,
-								'fa fa-angle-down': !collapsed
-								}">
-							</span>
-						</a>
-
-						{{node.text}}
-											
-						<a data-nodrag ng-click="ctrl.blur(this, node)" style="margin-left: 5px;margin-right: 5px">
-							<span ng-if="!node.hideFromMenu" class="fa fa-toggle-on"></span>
-							<span ng-if="node.hideFromMenu" class="fa fa-toggle-off"></span>
-								<!--
-								<span class="fa fa-toggle-on"></span>
-								-->
-						</a>
-						<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
-							<span class="fa fa-trash"></span>
-						</a>
-
-					</div>
-
-						
-					<ol ng-class="{ts_blur: node.hideFromMenu}" ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
-						<li ng-repeat="node in node.children" ui-tree-node>
-							<div ng-class="{ts_blur: node.hideFromMenu}" ui-tree-handle class="tree-node tree-node-content">
-								<a data-nodrag ng-click="ctrl.toggle(this)" style="margin-left: 8px;margin-right: 8px">
-									<span ng-class="{
+					<div ui-tree-handle class="tree-node tree-node-content" ng-class="{ts_blur: node.hideFromMenu,ts_clickedMenu: node.id === ctrl.clickedMenu.id, menu_tree_area: node.children.length === 0 || collapsed}">
+						<div class ="menu-tree-left-area">
+							<a data-nodrag ng-click="ctrl.toggle(this)" class="menu-tree-toggle">
+								<span ng-class="{
 									'fa fa-angle-right': collapsed,
 									'fa fa-angle-down': !collapsed
 									}">
-									</span>
-								</a>
-										
-								{{node.text}}
+								</span>
+							</a>
+							<a data-nodrag class="menu-tree-icon">
+								<span ng-class="node.icon"></span>
+							</a>
+							<a class="menu-tree-name">{{node.text}}</a>
+						</div>
+
+						<div class ="menu-tree-right-area">
+							<a data-nodrag ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
+								<span class="fa fa-edit"></span>
+							</a>
+							<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
+								<span class="fa fa-trash"></span>
+							</a>
+							<a data-nodrag ng-click="ctrl.blur(this, node)" class="menu-tree-hide">
+								<span ng-if="!node.hideFromMenu" class="fa fa-toggle-on"></span>
+								<span ng-if="node.hideFromMenu" class="fa fa-toggle-off"></span>
+							</a>
+						</div>
+					</div>
+
+					<!--children tree starting point-->	
+					<ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed,ts_blur: node.hideFromMenu}">
+						<li ng-repeat="node in node.children" ui-tree-node>
+							<div ui-tree-handle class="tree-node tree-node-content menu-tree-subarea" ng-class="{ts_blur: node.hideFromMenu, ts_clickedMenu: node.id === ctrl.clickedMenu.id}">
+								<div class ="menu-tree-left-subarea">
+									<a class="menu-tree-subname">{{node.text}}</a>
+								</div>
 								
-								<a data-nodrag ng-click="ctrl.blur(this,node)" style="margin-left: 5px;margin-right: 5px">
-									<span ng-if="!node.hideFromMenu" class="fa fa-toggle-on"></span>
-									<span ng-if="node.hideFromMenu" class="fa fa-toggle-off"></span>
-								</a>
-								<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" style="margin-left: 5px;margin-right: 5px">
-									<span class="fa fa-trash"></span>
-								</a>
-										<!--
-								<a data-nodrag ng-click="ctrl.newSubItem(this)" style="margin-left: 5px;margin-right: 5px">
-										<span class="fa fa-plus-circle"></span>
-								</a>
-								-->
-								
+								<div class ="menu-tree-right-subarea">
+									<a data-nodrag ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
+											<span class="fa fa-edit"></span>
+									</a>
+									<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
+										<span class="fa fa-trash"></span>
+									</a>
+									<a data-nodrag ng-click="ctrl.blur(this,node)" class="menu-tree-hide">
+										<span ng-if="!node.hideFromMenu" class="fa fa-toggle-on"></span>
+										<span ng-if="node.hideFromMenu" class="fa fa-toggle-off"></span>
+									</a>	
+								</div>	
 							</div>
 						</li>
 					</ol>
-									
+								
+					
 				</li>
 			</ol>
-		</div>
-					
 	</div>
-	<div ng-if="ctrl.isNew" class="col-sm-4" ng-style="{'margin-left': '40px','background-color':'rgba(255,255,255,0.52)','width':'650px'}">
-		<div style="text-align:center;background-color:#f5f5f5;height:32px">
-			<span style="font-size:2em;margin-top:10px;margin-bottom:10px">메뉴 정보</span>		
+				
+</div>
+
+<!--menu info-->
+<div ng-if="ctrl.menuInfo" class="section gf-form-group" id="menu-info-view">
+	<div class="menu-info-title">메뉴 정보</div>
+	<div class="menu-info-section-line"></div>
+	<div>
+		<span class="menu-info-subtitle" id="menu-info-icon">아이콘</span>
+		<div class="menu-info-icon-bg" id="menu-info-icon-position">
+			<input id="menu-info-edit" type="text" class="gf-form-input" ng-model="ctrl.clickedMenu.icon"/>
+		</div><br>
+		<span class="menu-info-subtitle" id="menu-info-name">이름</span>
+		<div class="menu-info-name-bg" id="menu-info-name-position">
+			<input id="menu-info-edit" type="text" class="gf-form-input" ng-model="ctrl.clickedMenu.text"/>
+		</div><br>
+		<span class="menu-info-subtitle" id="menu-info-url">URL</span>
+		<div class="menu-info-url-bg" id="menu-info-url-position">
+			<input id="menu-info-edit" type="text" class="gf-form-input" ng-model="ctrl.clickedMenu.url"/>
 		</div>
-		<div class="editor-row">
-			<div class="gf-form">
-					<label class="gf-form-label width-6">종류</label>
-					<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched width-18" ng-model="ctrl.menuInfoType">
-						<option value="dashboard">Dashboard</option>
-						<option value="externalUrl">External URL</option>
-					</select>
-			</div>
-			<div ng-if="ctrl.menuInfoType.length > 0" class="editor-row">
-					<div class="section gf-form-group">
-						<div class="gf-form">
-							<label class="gf-form-label width-6">Icon</label>
-							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.icon"/>
-						</div>
-						<div class="gf-form">
-							<label class="gf-form-label width-6">Name</label>
-							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.text"/>
-						</div>
-						<div class="gf-form">
-							<label class="gf-form-label width-6">URL</label>
-							<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched width-18" ng-model="ctrl.url">
-								<option ng-repeat="option in ctrl.dashboardList" value="{{option.url}}">{{option.title}}</option>
-							</select>
-						</div>
-						<div class="gf-form">
-							<label class="gf-form-label width-6">Parameter</label>
-							<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.param"/>
-						</div>
-					</div>
-			</div>
-		</div>
-		<button class="btn width-7" ng-click="ctrl.createNewMenu()" style="background-color:#1e88e5" type="button">등록 하기</button>
+		<div class="menu-info-list-bg" id="menu-info-list-position">
+			<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched" ng-model="ctrl.url" ng-change="ctrl.changeUrl()">
+				<option disabled selected value="">대시보드를 선택하세요.</option>
+				<option ng-repeat="option in ctrl.dashboardList" value="{{option.url}}">{{option.title}}</option>
+			</select>
+		</div><br>
+		<span class="menu-info-subtitle" id="menu-info-parameter">파라미터</span>
+		<div class="menu-info-parameter-bg" id="menu-info-parameter-position">
+			<input id="menu-info-edit" type="text" class="gf-form-input" ng-model="ctrl.clickedMenu.param"/>
+		</div><br>
 	</div>
-	<div ng-if="ctrl.isModi" class="col-sm-4" ng-style="{'margin-left': '40px','background-color':'rgba(255,255,255,0.52)','width':'650px'}">
-			<div style="text-align:center;background-color:#f5f5f5;height:32px">
-				<span style="font-size:2em;margin-top:10px;margin-bottom:10px">메뉴 정보</span>		
-			</div>
-			<div class="editor-row">
-				<div class="editor-row">
-						<div class="section gf-form-group">
-							<div class="gf-form">
-								<label class="gf-form-label width-6">Icon</label>
-								<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.icon"/>
-							</div>
-							<div class="gf-form">
-								<label class="gf-form-label width-6">Name</label>
-								<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.text"/>
-							</div>
-							<div class="gf-form">
-								<label class="gf-form-label width-6">URL</label>
-								<select class="gf-form-input ng-pristine ng-valid ng-not-empty ng-touched width-18" ng-model="ctrl.url">
-									<option ng-repeat="option in ctrl.dashboardList" value="{{option.url}}">{{option.title}}</option>
-								</select>
-							</div>
-							<div class="gf-form">
-								<label class="gf-form-label width-6">Parameter</label>
-								<input type="text" class="input-small gf-form-input width-18" ng-model="ctrl.param"/>
-							</div>
-						</div>
-				</div>
-			</div>
-			<button class="btn width-7" ng-click="ctrl.createNewMenu()" style="background-color:#1e88e5" type="button">등록 하기</button>
+	<div class="menu-info-right-button-area">
+		<button id="menu-info-save-btn" className="btn" ng-click="ctrl.createMenu()">등록 하기</button>
 	</div>
 </div>

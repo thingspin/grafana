@@ -249,7 +249,7 @@
         {
           "text": "데이터 소스",
           "icon": "gicon gicon-shield",
-          "url": "/alerting",
+          "url": "/datasources",
           "canDelete": false
         },
         {
