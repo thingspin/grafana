@@ -7,7 +7,17 @@ services:
         - "1883:1883"
         - "1884:1884"
     volumes:
+        # 자신의 개발 PC에 맞게 수정하세요.
         - /Users/whitesky0109/2019/github/grafana/src/github.com/grafana/grafana/devenv/thingspin/docker/mqtt:/mosquitto/config
+    restart: always
+  thingspin.storage:
+    image: influxdb
+    container_name: thingspin.storage
+    ports:
+        - "8086:8086"
+    volumes:
+        # 자신의 개발 PC에 맞게 수정하세요.
+        - /Users/whitesky0109/2019/github/grafana/src/github.com/grafana/grafana/devenv/thingspin/docker/influxdb:/var/lib/influxdb
     restart: always
   thingspin.node:
     image: nodered/node-red-docker
@@ -16,7 +26,8 @@ services:
         - "1880:1880"
     links:
         - thingspin.mqtt
+        - thingspin.storage
     depends_on:
         - thingspin.mqtt
+        - thingspin.storage
     restart: always
-     
