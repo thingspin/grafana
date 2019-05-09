@@ -142,12 +142,14 @@
       "id": "TS-OPC-UA-READ-PARSER-FUNC-ID-{{.Params.FlowId}}",
       "type": "function",
       "name": "OPC/UA Parser",
-      "func": "const { addressSpaceItems, payload } = msg;\n\nlet obj = {};\n\naddressSpaceItems.forEach((item, index) => {\n    const node = payload[index];\n    obj[node.browseName.name] = node.value;\n});\n\nmsg.payload = obj;\n\nreturn msg;",
+      "func": "const { addressSpaceItems, payload } = msg;\n\nlet obj = {};\n\naddressSpaceItems.forEach((item, index) => {\n    const node = payload[index];\n    obj[node.browseName.name] = node.value;\n});\n\nmsg.payload = obj;\nmsg.id = {{.Id}};\n\n\nreturn msg;",
       "outputs": 1,
       "noerr": 0,
       "x": 480,
       "y": 240,
-      "wires": [[]]
+      "wires": [[
+        {{if .Enable }} "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}" {{end}}
+      ]]
     },
     {
       "id": "TS-OPC-UA-READ-INJECT-ID-{{.Params.FlowId}}",
@@ -165,6 +167,32 @@
       "x": 140,
       "y": 240,
       "wires": [["TS-OPC-UA-READ-ID-{{.Params.FlowId}}"]]
+    },
+    {
+      "id": "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
+      "type": "function",
+      "name": "",
+      "func": "const { payload, id } = msg;\n\nconst result = [];\nif (Array.isArray(payload)) {\n    for(const item of payload) {\n        result.push({\n            measurement: id,\n            fields: {\n                ...item,\n            },\n        });\n    }\n} else {\n    result.push({\n        measurement: id,\n        fields: {\n            ...payload,\n        },\n    });\n}\nmsg.payload = result;\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 690,
+      "y": 240,
+      "wires": [
+          [
+              "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}"
+          ]
+      ]
+    },
+    {
+      "id": "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}",
+      "type": "influxdb batch",
+      "influxdb": "TS-INFLUXDB-NODE-ID-{{.Params.FlowID}}",
+      "precision": "",
+      "retentionPolicy": "",
+      "name": "",
+      "x": 950,
+      "y": 240,
+      "wires": []
     }
   ],
   "configs": [
@@ -215,6 +243,17 @@
       "willTopic": "",
       "willQos": "0",
       "willPayload": ""
+    },
+    {
+      "id": "TS-INFLUXDB-NODE-ID-{{.Params.FlowID}}",
+      "type": "influxdb",
+      "hostname": "thingspin.storage",
+      "port": "8086",
+      "protocol": "http",
+      "database": "thingspin",
+      "name": "",
+      "usetls": false,
+      "tls": ""
     }
   ]
 }
