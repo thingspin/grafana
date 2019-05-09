@@ -251,7 +251,7 @@ func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
 
 func AddDefaultMenuByDefaultOrgId(cmd *m.AddFmsDefaultMenuCommand) error {
 	err := doTransaction(func(sess *DBSession) error {
-		for _, menu := range cmd.DefaultMenu {
+		for pi, menu := range cmd.DefaultMenu {
 			
 			sqlCommands := []string{
 				`SELECT MAX(id) FROM ` + m.TsFmsMenuTbl,
@@ -268,14 +268,14 @@ func AddDefaultMenuByDefaultOrgId(cmd *m.AddFmsDefaultMenuCommand) error {
 				subId := id % 100
 				id = id - subId + 100
 			}
-			_, err = sess.Exec(sqlCommands[1], id, cmd.OrgId, menu.ParentId, menu.Text, menu.Id, menu.Order)
+			_, err = sess.Exec(sqlCommands[1], id, cmd.OrgId, menu.ParentId, menu.Text, menu.Id, pi)
 			//cmd.Result = result
 			if err != nil {
 				return err
 			}
 			
-			for i, cmenu := range menu.Children {
-				_, err = sess.Exec(sqlCommands[1], id+i+1, cmd.OrgId, cmenu.ParentId, cmenu.Text, cmenu.Id, cmenu.Order)
+			for ci, cmenu := range menu.Children {
+				_, err = sess.Exec(sqlCommands[1], id+ci+1, cmd.OrgId, cmenu.ParentId, cmenu.Text, cmenu.Id, ci)
 				//cmd.Result = result
 				if err != nil {
 					return err
