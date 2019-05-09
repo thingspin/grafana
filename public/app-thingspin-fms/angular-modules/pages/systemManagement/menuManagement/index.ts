@@ -5,7 +5,7 @@ import config from 'app/core/config';
 export class TsMenuManagementCtrl {
   static template = require("./index.html");
   data: any;
-  dataTmp: any;
+  //dataTmp: any;
   options: any;
   backendSrv: any;
   evt: any;
@@ -29,12 +29,14 @@ export class TsMenuManagementCtrl {
     };
     this.options = {
       beforeDrop: (event) => {
-        this.dataTmp = [];
-        for ( let _i = 0; _i < this.data.length; _i++) {
-          this.dataTmp.push(this.data[_i]);
+        const fromNode = event.source.nodeScope.node;
+        const toNode = event.dest.nodesScope.$nodeScope;
+        if ( fromNode.parent_id === -1 && toNode != null ) {
+          if ( fromNode.children.length > 0 ) {
+            return false;
+          }
         }
-        console.log("drag Start ===========");
-        console.log(this.dataTmp);
+        return true;
       },
       dropped: (event) => {
         console.log(event);
@@ -160,10 +162,11 @@ export class TsMenuManagementCtrl {
           };
           this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
             console.log("After ordering, ok!");
-            this.dataTmp = null;
+            //this.dataTmp = null;
           }).catch((err: any) => {
             console.log("After ordering, error!");
             console.log(err);
+            /*
             this.data = [];
             for ( let _i = 0; _i < this.dataTmp.length; _i++) {
               this.data.push(this.dataTmp[_i]);
@@ -171,6 +174,7 @@ export class TsMenuManagementCtrl {
             //this.data = this.dataTmp;
             console.log(this.dataTmp);
             this.dataTmp = null;
+            */
           });
         },100);
       }
