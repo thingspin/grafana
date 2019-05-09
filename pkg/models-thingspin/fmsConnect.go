@@ -56,7 +56,7 @@ type UpdateTsConnectFlowQuery struct {
 	Enable    bool
 	Intervals int64
 	Params    string
-	Result    int64
+	Result    int
 }
 
 type UpdateActiveTsConnectQuery struct {
