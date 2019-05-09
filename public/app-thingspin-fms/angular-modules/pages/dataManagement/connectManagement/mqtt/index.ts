@@ -351,7 +351,8 @@ export class TsMqttConnectCtrl {
           "id": "TS-MQTT-PARSE-" + value.name,
           "type": "function",
           "name": value.name + "::" + "Parse",
-          "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
+          // "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
+          "func": this.onJsonParseWithInfluxTagCreate(value.name, value.value, value.topic),
           "outputs": 1,
           "noerr": 0,
           "x": 500,
@@ -366,7 +367,8 @@ export class TsMqttConnectCtrl {
           "id": "TS-MQTT-PARSE-" + value.name,
           "type": "function",
           "name": value.name + "::" + "Parse",
-          "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
+          // "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
+          "func": this.onJsonParseWithInfluxTagCreate(value.name, value.value, value.topic),
           "outputs": 1,
           "noerr": 0,
           "x": 500,
@@ -387,8 +389,6 @@ export class TsMqttConnectCtrl {
           this.topicDisListArrayString += JSON.stringify(topicDisParse) + ",";
         }
       });
-      console.log(this.topicListArrayString);
-      console.log(this.topicDisListArrayString);
       // MQTT Topic array string check
       if (this.topicListArrayString.length !== 0) {
         const object = {
@@ -404,7 +404,6 @@ export class TsMqttConnectCtrl {
             "AddDisTopicList": this.topicDisListArrayString
           }
         };
-        console.log(object);
         if (this.isEditMode) {
           this.backendSrv
           .put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
@@ -430,7 +429,6 @@ export class TsMqttConnectCtrl {
       }
     } else  {
       this.openAlartNotification("수집할 Topic List를 만들어주세요.");
-      // console.log("수집할 Topic List를 만들어주세요.");
     }
   }
 
@@ -449,6 +447,28 @@ export class TsMqttConnectCtrl {
     const returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.collector + "\",\n    \"fields\": {\n        \""
     + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n    }\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
     // console.log(returnValue);
+    return returnValue;
+  }
+
+  onJsonParseWithInfluxTagCreate(value, type, topic) {
+    const index = this.defMqtt.values.findIndex((item, index) => {
+      return item === type;
+    });
+    let returnValue = "";
+    if (type === this.defMqtt.values[0]) {
+      //String
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.collector + "\",\n    \"fields\": {\n        \""
+      + value + "\": msg.payload\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
+    } else if (type === this.defMqtt.values[3]) {
+      //Boolean
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.collector + "\",\n    \"fields\": {\n        \""
+      + value + "\":" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
+      + "msg.payload = influxPayload;\n\nreturn msg;\n";
+    } else {
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.collector + "\",\n    \"fields\": {\n        \""
+      + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
+      + "msg.payload = influxPayload;\n\nreturn msg;\n";
+    }
     return returnValue;
   }
 
