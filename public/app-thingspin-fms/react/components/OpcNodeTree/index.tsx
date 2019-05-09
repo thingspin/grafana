@@ -61,7 +61,10 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
         key: browser.nodeId,
         label: browser.displayName.text,
         nodes: [],
-        item: browser,
+        item: {
+          ...browser,
+          name: browser.displayName.text,
+        },
       });
     }
     return nodes;
