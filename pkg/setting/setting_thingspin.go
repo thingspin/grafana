@@ -15,10 +15,16 @@ var (
 	TsInitPath = "conf/defaults_thingspin.ini"
 )
 
+type MqttSettings struct {
+	Host      string
+	Port      int
+	Websocket int
+}
 type ThingspinSettings struct {
 	Enabled           bool
 	NodeRedHost       string
 	NodeRedModuleList []string
+	Mqtt              MqttSettings
 }
 
 func (cfg *Cfg) loadTsIniFile() error {
@@ -53,6 +59,13 @@ func (cfg *Cfg) readThingspinSettings() {
 
 	nrSec := TsRaw.Section("node-red")
 	Thingspin.NodeRedHost = nrSec.Key("host").String()
+
+	mqttSec := TsRaw.Section("mqtt")
+	Thingspin.Mqtt = MqttSettings{
+		Host:      mqttSec.Key("host").MustString("localhost"),
+		Port:      mqttSec.Key("port").MustInt(1883),
+		Websocket: mqttSec.Key("websocket").MustInt(1884),
+	}
 
 	for _, module := range util.SplitString(nrSec.Key("modules").String()) {
 		Thingspin.NodeRedModuleList = append(Thingspin.NodeRedModuleList, module)

@@ -14,6 +14,7 @@ import (
 
 	// "log"
 
+	"github.com/fatih/structs"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/setting"
 )
@@ -50,8 +51,12 @@ func template2Str(str string, info interface{}) (string, error) {
 		return "", err
 	}
 
+	// add data
+	m := structs.Map(info)
+	m["TsSettings"] = setting.Thingspin
+
 	var tpl bytes.Buffer
-	err = tmpl.Execute(&tpl, info)
+	err = tmpl.Execute(&tpl, m)
 	if err != nil {
 		return "", err
 	}
