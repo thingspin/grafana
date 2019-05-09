@@ -186,7 +186,7 @@
     {
       "id": "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}",
       "type": "influxdb batch",
-      "influxdb": "TS-INFLUXDB-NODE-ID-{{.Params.FlowID}}",
+      "influxdb": "TS-INFLUXDB-NODE-ID-{{.Params.FlowId}}",
       "precision": "",
       "retentionPolicy": "",
       "name": "",
@@ -245,7 +245,7 @@
       "willPayload": ""
     },
     {
-      "id": "TS-INFLUXDB-NODE-ID-{{.Params.FlowID}}",
+      "id": "TS-INFLUXDB-NODE-ID-{{.Params.FlowId}}",
       "type": "influxdb",
       "hostname": "thingspin.storage",
       "port": "8086",
