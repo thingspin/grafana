@@ -22,6 +22,8 @@ func init() {
 	bus.AddHandler("sql", GetFmsMenuUsersPin)
 	bus.AddHandler("sql", UpdateFmsMenuHideState)
 	bus.AddHandler("sql", UpdateFmsMenuInfo)
+	bus.AddHandler("sql", GetDefaultFmsMenuByDefaultOrgId)
+	bus.AddHandler("sql", AddDefaultMenuByDefaultOrgId)
 }
 
 // Transaction 
@@ -123,6 +125,44 @@ func convertFmsMenuTree(menuList []*m.FmsMenuQueryResult) []*m.FmsMenu {
 	return rootNode
 }
 */
+func GetDefaultFmsMenuByDefaultOrgId(cmd *m.GetDefaultFmsMenuByDefaultOrgIdQuery) error {
+	var res []*m.FmsMenuQueryResult
+	selectStr := []string{
+		//m.TsFmsMenuTbl + ".id",
+		m.TsFmsMenuBaseTbl + ".id",
+		m.TsFmsMenuTbl + ".permission",
+		m.TsFmsMenuTbl + ".parent_id",
+		m.TsFmsMenuTbl + ".req_params",
+		m.TsFmsMenuTbl + ".'order'",
+
+		m.TsFmsMenuBaseTbl + ".text",
+		m.TsFmsMenuBaseTbl + ".icon",
+		m.TsFmsMenuBaseTbl + ".img_path",
+		m.TsFmsMenuBaseTbl + ".subtitle",
+		m.TsFmsMenuBaseTbl + ".url",
+		m.TsFmsMenuBaseTbl + ".target",
+		m.TsFmsMenuBaseTbl + ".hideFromMenu",
+		m.TsFmsMenuBaseTbl + ".hideFromTabs",
+		m.TsFmsMenuBaseTbl + ".placeBottom",
+		m.TsFmsMenuBaseTbl + ".canDelete",
+		m.TsFmsMenuBaseTbl + ".divider",
+	}
+	err := x.Table(m.TsFmsMenuTbl).
+		Select(strings.Join(selectStr, ", ")).
+		Join("INNER", m.TsFmsMenuBaseTbl, m.TsFmsMenuTbl+".mbid = "+m.TsFmsMenuBaseTbl+".id").
+		Where(m.TsFmsMenuTbl+".org_id = ?", cmd.OrgId).
+		And(m.TsFmsMenuBaseTbl+".canDelete = ?", 0).
+		Find(&res)
+		
+	if err == nil {
+		result := convertFmsMenuTree(res)
+		sortFmsMenuTree(result)
+		cmd.Result = result
+	}
+
+	return err
+}
+
 func getFmsMenuByOrgId(orgId int64) ([]*m.FmsMenu, error) {
 	var res []*m.FmsMenuQueryResult
 	selectStr := []string{
@@ -209,6 +249,48 @@ func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
 	return err
 }
 
+func AddDefaultMenuByDefaultOrgId(cmd *m.AddFmsDefaultMenuCommand) error {
+	err := doTransaction(func(sess *DBSession) error {
+		for _, menu := range cmd.DefaultMenu {
+			
+			sqlCommands := []string{
+				`SELECT MAX(id) FROM ` + m.TsFmsMenuTbl,
+				`INSERT INTO `+m.TsFmsMenuTbl+` ('id', 'org_id', 'parent_id', 'name', 'mbid', 'order') VALUES (?,?,?,?,?,?)`,
+			}
+			var id int
+			has, err := sess.SQL(sqlCommands[0]).Get(&id)
+			if err != nil {
+				return err
+			}
+			if !has {
+				id = 100
+			} else {
+				subId := id % 100
+				id = id - subId + 100
+			}
+			_, err = sess.Exec(sqlCommands[1], id, cmd.OrgId, menu.ParentId, menu.Text, menu.Id, menu.Order)
+			//cmd.Result = result
+			if err != nil {
+				return err
+			}
+			
+			for i, cmenu := range menu.Children {
+				_, err = sess.Exec(sqlCommands[1], id+i+1, cmd.OrgId, cmenu.ParentId, cmenu.Text, cmenu.Id, cmenu.Order)
+				//cmd.Result = result
+				if err != nil {
+					return err
+				}
+				
+			}
+			
+		}
+
+		return nil
+	})
+
+	return err
+}
+
 func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 	err := doTransaction(func(sess *DBSession) error {
 		sqlCommands := []string{
@@ -219,13 +301,13 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 		}
 		var id int
 		has, err := sess.SQL(sqlCommands[0]).Get(&id)
+		if err != nil {
+			return err
+		}
 		if !has {
 			id = 100
 		} else {
 			id = id + 100
-		}
-		if err != nil {
-			return err
 		}
 		_, err = sess.Exec(sqlCommands[1], id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true)
 		//cmd.Result = result

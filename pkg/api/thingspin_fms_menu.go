@@ -8,6 +8,18 @@ import (
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 )
 
+func GetTsDefaultMenuByDefaultOrgId(c *gfm.ReqContext) Response {
+	q := m.GetDefaultFmsMenuByDefaultOrgIdQuery{
+		OrgId: c.ParamsInt64(":orgId"),
+	}
+
+	if err := bus.Dispatch(&q); err != nil {
+		return Error(500, "Search failed", err)
+	}
+
+	return JSON(200, q.Result)
+}
+
 func GetTsMenuByOrgId(c *gfm.ReqContext) Response {
 	orgId := c.ParamsInt64(":orgId")
 	q := m.GetFmsMenuByOrgIdQuery{
@@ -31,6 +43,16 @@ func GetTsDefaultMenu(c *gfm.ReqContext) Response {
 	return JSON(200, q.Result)
 }
 
+func AddDefaultMenuByDefaultOrgId(c *gfm.ReqContext, cmd m.AddFmsDefaultMenuCommand) Response {
+	orgId := c.ParamsInt64(":orgId")
+	cmd.OrgId = orgId
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[thingspin] Default Menu add command failed", err)
+	}
+
+	return JSON(200, "")
+}
+
 func AddTsNewMenuByOrgId(c *gfm.ReqContext, cmd m.AddFmsMenuCommand) Response {
 	orgId := c.ParamsInt64(":orgId")
 	cmd.OrgId = orgId
@@ -38,7 +60,7 @@ func AddTsNewMenuByOrgId(c *gfm.ReqContext, cmd m.AddFmsMenuCommand) Response {
 		return Error(500, "[thingspin] Menu add command failed", err)
 	}
 
-	return JSON(200, cmd)
+	return JSON(200, "")
 }
 
 func DeleteTsMenuByOrgId(c *gfm.ReqContext) Response {
@@ -59,10 +81,10 @@ func DeleteTsMenuById(c *gfm.ReqContext, cmd m.DeleteFmsMenuByIdQuery) Response 
 	cmd.Id = c.ParamsInt64(":id")
 	
 	if err := bus.Dispatch(&cmd); err != nil {
-		return Error(500, "[thingspin] Menu delete command failed", err)
+		return JSON(500, err.Error())
 	}
 
-	return JSON(200, cmd)
+	return JSON(200, "")
 }
 
 func EditTsMenu8yOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuCommand) Response {
@@ -81,7 +103,7 @@ func EditTsMenuInfo(c *gfm.ReqContext, cmd m.UpdateFmsMenuInfoCommand) Response 
 		return Error(500, "[thingspin] Menu update info command failed", err)
 	}
 
-	return JSON(200, cmd)
+	return JSON(200, "")
 }
 
 
@@ -94,7 +116,7 @@ func UpdateFmsMenuHideState(c *gfm.ReqContext, cmd m.UpdateFmsMenuHideStateComma
 		return Error(500, "[ThingSPIN] 숨김 설정에 실패하였습니다.", err)
 	}
 
-	return JSON(200, cmd)
+	return JSON(200, "")
 }
 
 func UpdateFmsMenuPinSate(c *gfm.ReqContext, cmd m.UpdateFmsMenuPinSateCommand) Response {
@@ -127,5 +149,5 @@ func EditTsMenuByOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuOrderCommand) Respo
 		return Error(500, "[thingspin] Menu update command failed", err)
 	}
 
-	return JSON(200, cmd)
+	return JSON(200, "")
 }

@@ -5,6 +5,7 @@ import config from 'app/core/config';
 export class TsMenuManagementCtrl {
   static template = require("./index.html");
   data: any;
+  dataTmp: any;
   options: any;
   backendSrv: any;
   evt: any;
@@ -27,9 +28,18 @@ export class TsMenuManagementCtrl {
       url: ""
     };
     this.options = {
+      beforeDrop: (event) => {
+        this.dataTmp = [];
+        for ( let _i = 0; _i < this.data.length; _i++) {
+          this.dataTmp.push(this.data[_i]);
+        }
+        console.log("drag Start ===========");
+        console.log(this.dataTmp);
+      },
       dropped: (event) => {
         console.log(event);
         this.evt = event;
+
         setTimeout(() => {
           console.log("timeout");
           const fromNode = this.evt.source.nodeScope.node;
@@ -149,18 +159,29 @@ export class TsMenuManagementCtrl {
             "parent": plist
           };
           this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-            console.log("after api");
-            console.log(res);
+            console.log("After ordering, ok!");
+            this.dataTmp = null;
+          }).catch((err: any) => {
+            console.log("After ordering, error!");
+            console.log(err);
+            this.data = [];
+            for ( let _i = 0; _i < this.dataTmp.length; _i++) {
+              this.data.push(this.dataTmp[_i]);
+            }
+            //this.data = this.dataTmp;
+            console.log(this.dataTmp);
+            this.dataTmp = null;
           });
-
         },100);
       }
     };
+    // load the menu list
     this.backendSrv.get('/thingspin/menu/'+config.bootData.user.orgId).then( data => {
       this.data = data;
       console.log("raw data");
       console.log(this.data);
     });
+    // load dashboard list
     this.backendSrv.get('/api/search').then( data => {
       this.dashboardList = data;
       console.log(this.dashboardList);
@@ -180,9 +201,14 @@ export class TsMenuManagementCtrl {
     console.log("hide!");
     console.log(scope);
     console.log(node);
-    node.hideFromMenu = !node.hideFromMenu;
     this.backendSrv.put('/thingspin/menu/hide/'+node.id+'/'+node.hideFromMenu,{}).then((res: any) => {
+      console.log("After blurring, success!");
+      node.hideFromMenu = !node.hideFromMenu;
       // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
+    }).catch((err: any) => {
+      console.log("After blurring, error!");
+      console.log(err);
+      node.hideFromMenu = !node.hideFromMenu;
     });
   }
 
@@ -206,9 +232,13 @@ export class TsMenuManagementCtrl {
     if (this.clickedMenu.id < 0) {
       console.log("new Menu");
       this.clickedMenu.order = this.data.length;
-      this.data.push(this.clickedMenu);
-      console.log(this.clickedMenu);
       this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,this.clickedMenu).then((res: any) => {
+        console.log("After creating, error!");
+        this.data.push(this.clickedMenu);
+        console.log(this.clickedMenu);
+      }).catch((err: any) => {
+        console.log("After creating, error!");
+        console.log(err);
       });
     } else {
       console.log("modify Menu");
@@ -217,6 +247,10 @@ export class TsMenuManagementCtrl {
         "menu": this.clickedMenu
       };
       this.backendSrv.put('/thingspin/menu/',newData).then((res: any) => {
+        console.log("After modifying, success!");
+      }).catch((err: any) => {
+        console.log("After modifying, error!");
+        console.log(err);
       });
     }
     // init
@@ -235,38 +269,16 @@ export class TsMenuManagementCtrl {
         url: ""
       };
   }
-/*
-  newSubItem(scope) {
-      console.log("new item");
-      console.log(scope);
-      const nodeData = scope.$modelValue;
-      nodeData.nodes.push({
-        id: nodeData.id * 10 + nodeData.nodes.length,
-        title: nodeData.title + '.' + (nodeData.nodes.length + 1),
-        hide: false,
-        nodes: []
-      });
-  }
-*/
+
   remove(scope, node) {
-      console.log(scope);
-      console.log(node);
-      console.log("remove");
-      console.log("Same Parent");
-      scope.remove();
       const nodes = [];
-      // 삭제후에 순서 재조정
       if (node.parent_id === -1) {
+        // L1
+        // 삭제후에 L1 순서 재조정
         for ( let _i = node.order; _i < this.data.length; _i++) {
           this.data[_i].order = _i;
           nodes.push(this.data[_i]);
         }
-        // L1
-        const newData = {
-          "menu": nodes
-        };
-        this.backendSrv.delete('/thingspin/menu/'+config.bootData.user.orgId+"/"+node.id,newData).then((res: any) => {
-        });
       } else {
         // L2
         // 삭제 후 L2 순서 재조정
@@ -281,39 +293,18 @@ export class TsMenuManagementCtrl {
             break;
           }
         }
-        const newData = {
-          "menu": nodes
-        };
-        /*
-        this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-          console.log("Child Update :" +this.data[_i].children[_j].text+" > new order:",_j);
-        });
-        */
-        this.backendSrv.delete('/thingspin/menu/'+config.bootData.user.orgId+"/"+node.id,newData).then((res: any) => {
-        });
       }
-      /*
-      let newData = {
-        "menu": this.data[fromNodeParent.order].children[from.index]
+      const newData = {
+        "menu": nodes
       };
-      this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-        newData = {
-          "menu": this.data[fromNodeParent.order].children[to.index]
-        };
-        this.backendSrv.put('/thingspin/menu/'+config.bootData.user.orgId,newData).then((res: any) => {
-        });
+      this.backendSrv.delete('/thingspin/menu/'+config.bootData.user.orgId+"/"+node.id,newData).then((res: any) => {
+        console.log("After deleting, success!");
+        scope.remove();
+      }).catch((err: any) => {
+        console.log("After deleting, error!");
+        console.log(err);
       });
-      */
   }
-  /*
-  collapseAll() {
-      this.scope.$broadcast('angular-ui-tree:collapse-all');
-  };
-
-  expandAll() {
-      this.scope.$broadcast('angular-ui-tree:expand-all');
-  };
-  */
   link(scope, elem, attrs, ctrl) {
       //ctrl.scope = scope;
   }

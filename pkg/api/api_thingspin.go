@@ -19,6 +19,11 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 		// FMS Front-end Routing Enable
 		tsRoute.Any("/manage/*", reqSignedIn, hs.Index)
 
+		tsRoute.Group("/org", func(tsMenuRoute routing.RouteRegister) {
+			tsMenuRoute.Get("/default/:orgId", Wrap(GetTsDefaultMenuByDefaultOrgId))
+			tsMenuRoute.Post("/new/:orgId", bind(tsm.AddFmsDefaultMenuCommand{}),Wrap(AddDefaultMenuByDefaultOrgId))
+		})
+
 		// left sidebar menu rest api's
 		tsRoute.Group("/menu", func(tsMenuRoute routing.RouteRegister) {
 			tsMenuRoute.Get("/default", Wrap(GetTsDefaultMenu))

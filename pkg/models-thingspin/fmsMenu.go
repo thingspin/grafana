@@ -29,6 +29,11 @@ type FmsMenu struct {
 	Children []*FmsMenu `json:"children"`
 }
 
+type GetDefaultFmsMenuByDefaultOrgIdQuery struct {
+	OrgId  int64
+	Result []*FmsMenu
+}
+
 type GetFmsMenuByOrgIdQuery struct {
 	OrgId  int64
 	Result []*FmsMenu
@@ -60,6 +65,11 @@ type AddFmsMenuCommand struct {
 	Name   string                   `json:"text"`
 	Url    string                   `json:"url"`
 	//Result sql.Result
+}
+
+type AddFmsDefaultMenuCommand struct {
+	OrgId  int64			`json:"orgId"`
+	DefaultMenu []*FmsMenu	`json:"defaultMenu"`
 }
 
 // Update menu

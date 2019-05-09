@@ -12,7 +12,6 @@ func setTsIndexViewData(c *m.ReqContext) (*dtos.TsIndexViewData, error) {
 	viewData := &dtos.TsIndexViewData{
 		IsFms: setting.Thingspin.Enabled,
 	}
-
 	orgId := c.OrgId
 	if orgId != 0 {
 		q := &tsm.GetFmsMenuByOrgIdQuery{
@@ -26,4 +25,9 @@ func setTsIndexViewData(c *m.ReqContext) (*dtos.TsIndexViewData, error) {
 	}
 
 	return viewData, nil
+}
+
+func (hs *HTTPServer) setTsDefaultMenu(c *m.ReqContext) {
+	// Make default Menu info for new org
+
 }
