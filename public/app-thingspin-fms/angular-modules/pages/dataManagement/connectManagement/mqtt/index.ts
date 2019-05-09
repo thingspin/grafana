@@ -3,6 +3,7 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 import Tabulator from 'tabulator-tables';
 import angular from 'angular';
 import { appEvents } from 'app/core/core';
+import uid from "shortid";
 
 const DEF_URL = "localhost";
 const DEF_PORT = "1883";
@@ -34,6 +35,7 @@ export class TsMqttConnectCtrl {
   defMqtt: any;
   topicItem: any;
   collector: string;
+  FlowId: string;
   valueSelected: string;
   typeSelected: string;
   isTopicEditView: boolean;
@@ -83,13 +85,14 @@ export class TsMqttConnectCtrl {
       this.isTopicEditView = false;
       this.isTopicEditBtn = true;
 
-      console.log("/thingspin/connect/" + $routeParams.id);
+      // console.log("/thingspin/connect/" + $routeParams.id);
       if ($routeParams.id) {
         console.log("id : " + $routeParams.id);
         this.asyncDataLoader($routeParams.id);
         this.isEditMode = true;
       } else {
         this.isEditMode = false;
+        this.FlowId = uid.generate();
       }
   }
 
@@ -131,24 +134,6 @@ export class TsMqttConnectCtrl {
         this.openAlartNotification("Keep Alive 초를 입력해주세요.");
       }
     }
-  }
-
-  addMqttCollector(scope: any, url: any, port: any, name: any) {
-    console.log(url);
-    console.log(port);
-    console.log(name);
-    const object = {
-      "FlowId" : "mqtt" + "flow-1",
-      "MqttUrl" : url,
-      "MqttPort" : port,
-      "MqttTopic" : name
-    };
-
-    console.log(object);
-
-    this.backendSrv.post('/thingspin/connect/mqtt', object).then((result: any) => {
-      console.log(result);
-    });
   }
 
   onShowTopicEditView(value) {
@@ -242,9 +227,11 @@ export class TsMqttConnectCtrl {
   }
 
   onLoadData(item) {
+    console.log(item);
     this.indexID = item.id;
     this.collector = item.name;
     const getParams = item.params;
+    this.FlowId = getParams.FlowId;
     this.connection.url = getParams.Host;
     this.connection.port = getParams.Port;
     this.connection.keep_alive = getParams.KeepAlive;
@@ -338,7 +325,7 @@ export class TsMqttConnectCtrl {
           "topic": value.topic,
           "qos": 0,
           "datatype": "auto",
-          "broker": "TS-MQTT-CONNECT-"+this.collector,
+          "broker": "TS-MQTT-CONNECT-" + this.FlowId,
           "x": 200,
           "y": 100 + (this.increaseYPos * count),
           "wires": [
@@ -359,7 +346,7 @@ export class TsMqttConnectCtrl {
           "y": 100 + (this.increaseYPos * count),
           "wires": [
               [
-                  "TS-MQTT-OUTPUT-" + this.collector
+                  "TS-MQTT-OUTPUT-" + this.FlowId
               ]
           ]
         };
@@ -394,7 +381,7 @@ export class TsMqttConnectCtrl {
         const object = {
           "name": this.collector,
           "params": {
-            "FlowId" : this.collector,
+            "FlowId" : this.FlowId,
             "Host" : this.connection.url,
             "Port" : this.connection.port,
             "KeepAlive" : this.connection.keep_alive,
@@ -444,7 +431,7 @@ export class TsMqttConnectCtrl {
     const index = this.defMqtt.values.findIndex((item, index) => {
       return item === type;
     });
-    const returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.collector + "\",\n    \"fields\": {\n        \""
+    const returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.FlowId + "\",\n    \"fields\": {\n        \""
     + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n    }\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
     // console.log(returnValue);
     return returnValue;
@@ -457,15 +444,15 @@ export class TsMqttConnectCtrl {
     let returnValue = "";
     if (type === this.defMqtt.values[0]) {
       //String
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.collector + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.FlowId + "\",\n    \"fields\": {\n        \""
       + value + "\": msg.payload\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
     } else if (type === this.defMqtt.values[3]) {
       //Boolean
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.collector + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.FlowId + "\",\n    \"fields\": {\n        \""
       + value + "\":" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
       + "msg.payload = influxPayload;\n\nreturn msg;\n";
     } else {
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.collector + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.FlowId + "\",\n    \"fields\": {\n        \""
       + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
       + "msg.payload = influxPayload;\n\nreturn msg;\n";
     }
