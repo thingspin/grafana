@@ -29,7 +29,7 @@ type InsertTsConnect struct {
 }
 
 type UpdateTsConnect struct {
-	Id        int64     `xorm:"'id' pk autoincr"`
+	Id        int       `xorm:"'id' pk autoincr"`
 	Name      string    `xorm:"'name'"`
 	FlowId    string    `xorm:"'flow_id'"`
 	Params    string    `xorm:"'params'"`
@@ -82,6 +82,7 @@ func AddTsConnect(cmd *m.AddTsConnectQuery) error {
 
 func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
 	q := &UpdateTsConnect{
+		Id:        cmd.Id,
 		Enable:    cmd.Enable,
 		FlowId:    cmd.FlowId,
 		Intervals: cmd.Intervals,
@@ -101,7 +102,7 @@ func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
 		WHERE id=%d`,
 			m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Enable, cmd.Intervals, cmd.Id)
 	*/
-	_, err := x.Table(m.TsFmsConnectTbl).Update(q)
+	_, err := x.Table(m.TsFmsConnectTbl).Where("id = ?", cmd.Id).Update(q)
 	cmd.Result = q.Id
 
 	return err
