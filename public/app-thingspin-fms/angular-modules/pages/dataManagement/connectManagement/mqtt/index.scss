@@ -128,6 +128,18 @@
     color: #ffffff;
 }
 
+.mqtt-state-conneced {
+    background-color: #1e88e5;
+}
+
+.mqtt-state-retry {
+    background-color: yellow;
+}
+
+.mqtt-state-disconnect {
+    background-color: #d81b60;
+}
+
 // CONTENTS BORDER LINE
 .mqtt-content-line {
     height: 0;

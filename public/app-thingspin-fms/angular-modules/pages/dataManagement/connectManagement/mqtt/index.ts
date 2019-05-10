@@ -5,6 +5,8 @@ import angular from 'angular';
 import { appEvents } from 'app/core/core';
 import uid from "shortid";
 
+import TsMqttController from 'app-thingspin-fms/utils/mqttController';
+
 const DEF_URL = "localhost";
 const DEF_PORT = "1883";
 const DEF_ALIVE = "60";
@@ -41,6 +43,7 @@ export class TsMqttConnectCtrl {
   isTopicEditView: boolean;
   isTopicEditBtn: boolean;
   isEditMode: boolean;
+  connectStatus: string;
 
   defTabulatorOpts: object;
   table: any;
@@ -49,6 +52,13 @@ export class TsMqttConnectCtrl {
   increaseYPos: any;
   topicListArrayString: string;
   topicDisListArrayString: string;
+
+  // MQTT
+  readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
+  readonly listenerTopic: string = "/thingspin/connect/+/status" as string;
+  readonly connectTimeout: number = 15000;
+  mqttClient: TsMqttController; // mqtt client instance
+  timer: NodeJS.Timer | null;
 
   /** @ngInject */
   constructor(
@@ -80,12 +90,13 @@ export class TsMqttConnectCtrl {
       this.topicListArrayString = "";
       this.topicDisListArrayString = "";
       this.increaseYPos = 60;
+      this.indexID = -1;
 
       this.tableList = new Map<string, MqttTableData>();
       this.isTopicEditView = false;
       this.isTopicEditBtn = true;
 
-      // console.log("/thingspin/connect/" + $routeParams.id);
+      this.initMqtt();
       if ($routeParams.id) {
         console.log("id : " + $routeParams.id);
         this.asyncDataLoader($routeParams.id);
@@ -108,17 +119,62 @@ export class TsMqttConnectCtrl {
     }
   }
 
+  async initMqtt(): Promise<void> {
+    console.log(this.mqttUrl);
+    console.log(this.listenerTopic);
+    this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
+
+    try {
+        await this.mqttClient.run(this.recvMqttMessage.bind(this));
+        console.log("MQTT Connected");
+    } catch (e) {
+        console.error(e);
+    }
+  }
+
+  recvMqttMessage(topic: string, payload: string): void {
+      const topics = topic.split("/");
+      const flowId = topics[topics.length - 2];
+      if (flowId === this.FlowId) {
+          clearTimeout(this.timer);
+          this.setConnectStatus(payload);
+      }
+  }
+
   link(scope: any, elem: any, attrs: any, ctrl: { scope: any; }) {
       ctrl.scope = scope;
   }
 
-  close() {
-    this.$location.path(`/thingspin/manage/data/connect/`);
+  close(value) {
+    if (this.indexID !== -1 && !this.isEditMode) {
+      if (!value) {
+        try {
+          this.backendSrv.delete(`thingspin/connect/${this.indexID}`);
+          this.$location.path(`/thingspin/manage/data/connect/`);
+        } catch (e) {
+          console.error(e);
+        }
+      } else {
+        this.$location.path(`/thingspin/manage/data/connect/`);
+      }
+    } else {
+      this.$location.path(`/thingspin/manage/data/connect/`);
+    }
   }
 
-  save() {
+  save(value: boolean) {
     if (this.collector && this.connection.url && this.connection.port && this.connection.keep_alive) {
-      this.onJsonCreatSender();
+      if (value) {
+        this.onJsonCreatSender();
+      } else  {
+        if (!this.isEditMode && this.indexID === -1) {
+          this.createConnectNode();
+          this.methodProcess(this.createHttpObject(), false);
+          // this.methodProcess(this.createHttpObject(value), value);
+        } else {
+          this.openAlartNotification("현재 연결 상태는 " + this.connectStatus + "입니다.");
+        }
+      }
     } else {
       if (!this.collector) {
         // console.log("수집기 이름을 입력해주세요.");
@@ -182,12 +238,6 @@ export class TsMqttConnectCtrl {
         {title: "동작", field: "", formatter: actionFormatter}
       ],
     };
-
-
-    // const opts = Object.assign({ // deep copy
-    //     rowClick: (e, row) => { //trigger an alert message when the row is clicke
-    //     },
-    // }, this.defTabulatorOpts);
     this.table = new Tabulator("#mqtt-topic-list", this.defTabulatorOpts);
   }
 
@@ -317,6 +367,12 @@ export class TsMqttConnectCtrl {
   onJsonCreatSender() {
     let count = 0;
     if (this.tableList.size > 0) {
+      if (this.topicListArrayString.length === 0 &&
+        this.topicDisListArrayString.length === 0) {
+          this.createConnectNode();
+      }
+      this.topicListArrayString += ",";
+      this.topicDisListArrayString += ",";
       this.tableList.forEach((value, key, mapObject) => {
         const topicNode = {
           "id": "TS-MQTT-IN-" + value.name,
@@ -327,7 +383,7 @@ export class TsMqttConnectCtrl {
           "datatype": "auto",
           "broker": "TS-MQTT-CONNECT-" + this.FlowId,
           "x": 200,
-          "y": 100 + (this.increaseYPos * count),
+          "y": 220 + (this.increaseYPos * count),
           "wires": [
               [
                   "TS-MQTT-PARSE-" + value.name
@@ -343,7 +399,7 @@ export class TsMqttConnectCtrl {
           "outputs": 1,
           "noerr": 0,
           "x": 500,
-          "y": 100 + (this.increaseYPos * count),
+          "y": 220 + (this.increaseYPos * count),
           "wires": [
               [
                   "TS-MQTT-OUTPUT-" + this.FlowId
@@ -359,7 +415,7 @@ export class TsMqttConnectCtrl {
           "outputs": 1,
           "noerr": 0,
           "x": 500,
-          "y": 100 + (this.increaseYPos * count++),
+          "y": 220 + (this.increaseYPos * count++),
           "wires": [[]]
         };
         if (count === this.tableList.size) {
@@ -378,41 +434,7 @@ export class TsMqttConnectCtrl {
       });
       // MQTT Topic array string check
       if (this.topicListArrayString.length !== 0) {
-        const object = {
-          "name": this.collector,
-          "params": {
-            "FlowId" : this.FlowId,
-            "Host" : this.connection.url,
-            "Port" : this.connection.port,
-            "KeepAlive" : this.connection.keep_alive,
-            "Session" : this.connection.session,
-            "TopicList" : Array.from(this.tableList.values()),
-            "AddTopicList": this.topicListArrayString,
-            "AddDisTopicList": this.topicDisListArrayString
-          }
-        };
-        if (this.isEditMode) {
-          this.backendSrv
-          .put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
-            console.log(result);
-            this.close();
-          })
-          .catch(err => {
-            if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
-            }
-          });
-        } else {
-          this.backendSrv.post("/thingspin/connect/mqtt",object).then((result: any) => {
-            console.log(result);
-            this.close();
-          })
-          .catch(err => {
-            if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
-            }
-          });
-        }
+        this.methodProcess(this.createHttpObject(), true);
       }
     } else  {
       this.openAlartNotification("수집할 Topic List를 만들어주세요.");
@@ -459,8 +481,108 @@ export class TsMqttConnectCtrl {
     return returnValue;
   }
 
+  createConnectNode() {
+    const connectNode = {
+      "id": "TS-MQTT-CHECKNODE-" + this.FlowId,
+      "type": "mqtt in",
+      "name": "",
+      "topic": "#",
+      "qos": "0",
+      "datatype": "auto",
+      "broker": "TS-MQTT-CONNECT-" + this.FlowId,
+      "x": 190,
+      "y": 100,
+      "wires": [[]]
+    };
+    this.topicListArrayString += JSON.stringify(connectNode);
+    this.topicDisListArrayString += JSON.stringify(connectNode);
+  }
+
+  // Generate OBJECT to send over HTTP Parameter
+  createHttpObject() {
+    const data = {
+      "name": this.collector,
+      "params": {
+        "FlowId" : this.FlowId,
+        "Host" : this.connection.url,
+        "Port" : this.connection.port,
+        "KeepAlive" : this.connection.keep_alive,
+        "Session" : this.connection.session,
+        "TopicList" : Array.from(this.tableList.values()),
+        "AddTopicList" : this.topicListArrayString,
+        "AddDisTopicList" : this.topicDisListArrayString
+      }
+    };
+    return data;
+  }
+
   openAlartNotification(value) {
     appEvents.emit('alert-error', [value]);
+  }
+
+
+  setConnectStatus(color: string): void {
+    this.connectStatus = color;
+    $('#mqtt-connect-state').removeClass('mqtt-state-connect');
+    $('#mqtt-connect-state').removeClass('mqtt-state-disconnect');
+    $('#mqtt-connect-state').removeClass('mqtt-state-retry');
+    if (color === "green") {
+      $('#mqtt-connect-state').addClass('mqtt-state-conneced');
+    } else if (color === "yellow") {
+      $('#mqtt-connect-state').addClass('mqtt-state-retry');
+    } else if (color === "red") {
+      $('#mqtt-connect-state').addClass('mqtt-state-disconnect');
+    }
+    this.$scope.$applyAsync();
+}
+
+  // CASE BY SEND HTTP (PUT, POST)
+  // VALUE IS "TRUE" >> CLOSE FUNCTION
+  methodProcess(object, value) {
+    console.log(object);
+    if (this.isEditMode) {
+      this.backendSrv
+      .put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
+        console.log(result);
+        if (value) {
+          this.close(true);
+        }
+      })
+      .catch(err => {
+        if (err.status === 500) {
+          appEvents.emit('alert-error', [err.statusText]);
+        }
+      });
+    } else {
+      if (this.indexID !== -1) {
+        console.log(object);
+        this.backendSrv
+        .put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
+          console.log(result);
+          if (value) {
+            this.close(true);
+          }
+        })
+        .catch(err => {
+          if (err.status === 500) {
+            appEvents.emit('alert-error', [err.statusText]);
+          }
+        });
+      } else {
+        this.backendSrv.post("/thingspin/connect/mqtt",object).then((result: any) => {
+          console.log(result);
+          this.indexID = result;
+          if (value) {
+            this.close(true);
+          }
+        })
+        .catch(err => {
+          if (err.status === 500) {
+            appEvents.emit('alert-error', [err.statusText]);
+          }
+        });
+      }
+    }
   }
 }
 export function tsMqttConnectDirective() {

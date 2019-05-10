@@ -9,6 +9,59 @@
             {{.Params.AddDisTopicList | convJsonStr}},
         {{end}}
         {
+            "id": "TS-MQTT-STATUS-{{.Params.FlowId}}",
+            "type": "status",
+            "name": "",
+            "scope": ["TS-MQTT-CHECKNODE-{{.Params.FlowId}}"],
+            "x": 200,
+            "y": 60,
+            "wires": [
+                ["TS-MQTT-STATUS-DATA-PROCESS-{{.Params.FlowId}}"]
+            ]
+        }, {
+            "id": "TS-MQTT-STATUS-DATA-PROCESS-{{.Params.FlowId}}",
+            "type": "function",
+            "name": "Data Process",
+            "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = status.fill;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 470,
+            "y": 60,
+            "wires": [
+                ["TS-MQTT-MQTTOUT-{{.Params.FlowId}}"]
+            ]
+        }, {
+            "id": "TS-MQTT-MQTTOUT-{{.Params.FlowId}}",
+            "type": "mqtt out",
+            "name": "",
+            "topic": "/thingspin/connect/{{.Params.FlowId}}/status",
+            "qos": "2",
+            "retain": "true",
+            "broker": "TS-MQTT-TSBROKER-{{.Params.FlowId}}",
+            "x": 880,
+            "y": 60,
+            "wires": []
+        }, {
+            "id": "TS-MQTT-TSBROKER-{{.Params.FlowId}}",
+            "type": "mqtt-broker",
+            "broker": "localhost",
+            "port": "1883",
+            "clientid": "",
+            "usetls": false,
+            "compatmode": true,
+            "keepalive": "60",
+            "cleansession": true,
+            "birthTopic": "",
+            "birthQos": "0",
+            "birthPayload": "",
+            "closeTopic": "",
+            "closeQos": "0",
+            "closePayload": "",
+            "willTopic": "",
+            "willQos": "0",
+            "willPayload": ""
+        },
+        {
             "id": "TS-MQTT-OUTPUT-{{.Params.FlowId}}",
             "type": "influxdb batch",
             "influxdb": "TS-MQTT-INFLUXD-{{.Params.FlowId}}",
@@ -16,7 +69,7 @@
             "retentionPolicy": "",
             "name": "",
             "x": 830,
-            "y": 100,
+            "y": 220,
             "wires": []
         },
         {
