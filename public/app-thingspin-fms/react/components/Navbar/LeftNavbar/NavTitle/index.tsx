@@ -122,8 +122,13 @@ export const mapStateToProps = (state, { $route }) => {
     titleObj = getTitle(undefined);
   } else {
     const { $$route } = $route.current;
+    let originalPath = $$route.originalPath;
+    if ($$route.keys.length > 0) {
+      const loc = new URL(window.location.href);
+      originalPath = loc.pathname;
+    }
     if ($$route) {
-      const list = findPathNavItem($$route.originalPath, config.bootData.thingspin.menu);
+      const list = findPathNavItem(originalPath, config.bootData.thingspin.menu);
       if ( list ) {
         titleObj = getTitle(list);
       }
