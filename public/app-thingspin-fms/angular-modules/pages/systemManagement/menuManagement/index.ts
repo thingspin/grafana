@@ -205,9 +205,9 @@ export class TsMenuManagementCtrl {
     console.log("hide!");
     console.log(scope);
     console.log(node);
+    node.hideFromMenu = !node.hideFromMenu;
     this.backendSrv.put('/thingspin/menu/hide/'+node.id+'/'+node.hideFromMenu,{}).then((res: any) => {
       console.log("After blurring, success!");
-      node.hideFromMenu = !node.hideFromMenu;
       // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
     }).catch((err: any) => {
       console.log("After blurring, error!");
