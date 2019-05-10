@@ -10,6 +10,8 @@ export interface TsConnect {
     intervals: number;
     creatd: Date;
     updated: string;
+
+    [name: string]: any;
 }
 
 export interface GroupTsConnect {
