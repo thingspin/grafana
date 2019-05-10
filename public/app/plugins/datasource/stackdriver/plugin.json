@@ -4,6 +4,8 @@
   "id": "stackdriver",
   "state": "alpha",
   
+  "category": "cloud",
+
   "metrics": true,
   "alerting": true,
   "annotations": true,
@@ -12,8 +14,9 @@
     "maxDataPoints": true,
     "cacheTimeout": true
   },
+
   "info": {
-    "description": "Google Stackdriver Datasource for Grafana",
+    "description": "Data source for Google's monitoring service",
     "version": "1.0.0",
     "logos": {
       "small": "img/stackdriver_logo.svg",

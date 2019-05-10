@@ -4,6 +4,8 @@
   "id": "prometheus",
   "state": "alpha",
   
+  "category": "tsdb",
+
   "includes": [
     {
       "type": "dashboard",
@@ -30,7 +32,7 @@
     "minInterval": true
   },
   "info": {
-    "description": "Prometheus Data Source for Grafana",
+    "description": "Open source time series database & alerting",
     "author": {
       "name": "Grafana Project",
       "url": "https://grafana.com"

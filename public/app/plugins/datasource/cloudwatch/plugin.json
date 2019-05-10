@@ -4,12 +4,14 @@
   "id": "cloudwatch",
   "state": "alpha",
   
+  "category": "cloud",
+
   "metrics": true,
   "alerting": true,
   "annotations": true,
 
   "info": {
-    "description": "Cloudwatch Data Source for Grafana",
+    "description": "Data source for Amazon AWS monitoring service",
     "author": {
       "name": "Grafana Project",
       "url": "https://grafana.com"
