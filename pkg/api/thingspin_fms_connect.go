@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"strconv"
 
 	"github.com/grafana/grafana/pkg/thingspin"
 
@@ -186,6 +185,7 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 		Active: info.Active,
 		Enable: info.Enable,
 		FlowId: info.FlowId,
+		Params: info.Params,
 		Id:     connId,
 	}
 
@@ -196,7 +196,7 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 	return JSON(200, q.Result)
 }
 
-func enableTsConnect(c *gfm.ReqContext) Response {
+func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	connId := c.ParamsInt(":connId")
 
 	// 이전 flow 정보 가져오기
@@ -205,16 +205,8 @@ func enableTsConnect(c *gfm.ReqContext) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 
-	str, err := c.Req.Body().String()
-	if err != nil {
-		return Error(500, "ThingSPIN Convert Error", err)
-	}
-
-	enable, err := strconv.ParseBool(str)
-	if err != nil {
-		return Error(500, "ThingSPIN Convert Error", err)
-	}
-	info.Enable = enable
+	info.Enable = req.Enable
+	info.Params["FlowId"] = req.FlowId
 
 	if info.Active == true {
 		nodeResp, err := thingspin.UpdateFlowNode(info.FlowId, info.Type, info)
@@ -236,6 +228,7 @@ func enableTsConnect(c *gfm.ReqContext) Response {
 		Active: info.Active,
 		Enable: info.Enable,
 		FlowId: info.FlowId,
+		Params: info.Params,
 		Id:     connId,
 	}
 
@@ -243,7 +236,7 @@ func enableTsConnect(c *gfm.ReqContext) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 
-	return JSON(200, enable)
+	return JSON(200, info.Id)
 }
 
 func deleteTsConnect(c *gfm.ReqContext) Response {

@@ -1,5 +1,6 @@
 import _ from "lodash";
 import angular from "angular";
+import uid from "shortid";
 
 import { TsConnect } from "app-thingspin-fms/models/connect";
 import { BackendSrv } from 'app/core/services/backend_srv';
@@ -10,7 +11,7 @@ export interface Banner {
     title: string;
 }
 
-export interface TableData {
+export interface TableModel {
     // table header data
     rowCount: number; // 페이지당 표시할 행(row) 개수
     selectOpts: number[];
@@ -39,7 +40,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     connectTypeList: string[];
     // table
     list: TsConnect[];
-    tData: TableData = {
+    tData: TableModel = {
         rowCount: 16,
         selectOpts: [16, 32, 48],
         currPage: 0,
@@ -50,7 +51,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     /** @ngInject */
     constructor(private $scope: angular.IScope,
-    // private $element: JQLite,
     private $location: angular.ILocationService,
     private backendSrv: BackendSrv,) { }// Dependency Injection
 
@@ -127,7 +127,10 @@ export default class TsConnectManagementCtrl implements angular.IController {
         });
 
         try {
-            await this.backendSrv.patch(`thingspin/connect/${id}/enable`, enable);
+            await this.backendSrv.patch(`thingspin/connect/${id}/enable`, {
+                flowId: uid.generate(),
+                enable,
+            });
             this.list[index].enable = enable;
             this.setPageNodes();
             this.$scope.$applyAsync();
@@ -152,6 +155,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
             const list: TsConnect[] = await this.backendSrv.get("thingspin/connect");
             if (list) {
                 this.list = list;
+                this.$scope.$applyAsync();
                 this.setPageNodes();
             }
         } catch (e) {

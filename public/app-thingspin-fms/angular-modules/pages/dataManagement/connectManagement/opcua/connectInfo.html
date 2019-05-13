@@ -4,7 +4,12 @@
             OPC 접속 정보
         </div>
         <div class="opcua-edit-buttons">
-            <button class="ts-btn ts-btn-save {{ctrl.connectStatus}}" ng-click="ctrl.btnClick()"><i class="fa fa-plug"></i></button>
+            <button class="ts-btn ts-btn-save {{ctrl.connectStatus}}" ng-click="ctrl.btnClick()" ng-switch="ctrl.connectStatus">                
+                <i ng-switch-when="red" class="tsi icon-ts-connection_off"></i>
+                <i ng-switch-when="yellow" class="tsi icon-ts-connection-loding"></i>
+                <i ng-switch-when="green"class="tsi icon-ts-power"></i>
+                <i ng-switch-default class="tsi icon-ts-power"></i>
+            </button>
         </div>
     </div>
 
