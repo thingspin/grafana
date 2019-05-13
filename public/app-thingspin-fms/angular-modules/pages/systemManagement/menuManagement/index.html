@@ -25,8 +25,8 @@
 						<div class ="menu-tree-left-area">
 							<a data-nodrag ng-click="ctrl.toggle(this)" class="menu-tree-toggle" ng-class="{ts_clickedMenuEle: node.id === ctrl.clickedMenu.id}">
 								<span ng-class="{
-									'fa fa-angle-right': collapsed,
-									'fa fa-angle-down': !collapsed
+									'tsi icon-ts-arrow_drop_up': collapsed,
+									'tsi icon-ts-manuarrow-drop-down': !collapsed
 									}">
 								</span>
 							</a>
@@ -60,14 +60,14 @@
 								
 								<div class ="menu-tree-right-subarea">
 									<a data-nodrag ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
-											<span class="fa fa-edit"></span>
+											<span class="tsi icon-ts-create"></span>
 									</a>
 									<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
-										<span class="fa fa-trash"></span>
+										<span class="tsi icon-ts-delete"></span>
 									</a>
 									<a data-nodrag ng-click="ctrl.blur(this,node)" class="menu-tree-hide">
-										<span ng-if="!node.hideFromMenu" class="fa fa-toggle-on"></span>
-										<span ng-if="node.hideFromMenu" class="fa fa-toggle-off"></span>
+										<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_on"></span>
+										<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_off"></span>
 									</a>	
 								</div>	
 							</div>
