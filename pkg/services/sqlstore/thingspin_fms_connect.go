@@ -102,7 +102,7 @@ func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
 		WHERE id=%d`,
 			m.TsFmsConnectTbl, cmd.Name, cmd.FlowId, cmd.Params, cmd.Enable, cmd.Intervals, cmd.Id)
 	*/
-	_, err := x.Table(m.TsFmsConnectTbl).Where("id = ?", cmd.Id).Update(q)
+	_, err := x.Table(m.TsFmsConnectTbl).Where("id = ?", cmd.Id).AllCols().Update(q)
 	cmd.Result = q.Id
 
 	return err
