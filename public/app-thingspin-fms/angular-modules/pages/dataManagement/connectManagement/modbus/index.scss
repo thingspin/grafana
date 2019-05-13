@@ -1,5 +1,11 @@
 @import "../../../../../../../node_modules/tabulator-tables/dist/css/bootstrap/tabulator_bootstrap.min.css";
 
+
+.modbus-conn-editor {
+    //padding: 28px 20px 0 20px;
+    background-color: #ffffff;
+}
+
 //top title
 .modbus-title-top {
     margin-left: 1.54%;
@@ -20,11 +26,11 @@
 //main border line
 #main-view {
     margin-top: 21px; //2%
-    width: 97.4%;
+    //width: 97.4%;
     border: solid 1px #ecebeb;
     background-color: #ffffff;
-    margin-left: 1.47%;
-    margin-right: 1.47%;
+    margin-left: 20px;
+    margin-right: 20px;
     margin-bottom: 28px;
 }
 
@@ -234,7 +240,7 @@
     margin-left:16px;
     width: 17.70%; //233
     height: 3.86%; // 36
-}v
+}
 
 #modbus-host {
     margin-left:4.25%;
@@ -248,33 +254,46 @@
 #modbus-unit-id {
     margin-left:9.95%; //131px
     margin-top:26.5px;
+    //width: 3.64%;
+    width: 48px;
 }
 #modbus-unit-id-pos{
     margin-left:1.21%; //16
+    height: 3.86%; //36
 }
 
 #modbus-time-out {
     margin-left:2.73%; //36
     margin-top:26.5px; 
+    //width: 4.25%;
+    width: 56px;
 }
 #modbus-time-out-pos{
     margin-left:1.21%;
+    height: 3.86%; //36
 }
 
 #modbus-Reconnect {
     margin-left:2.73%;
     margin-top:26.5px;
+    //width: 5.39%;
+    width: 71px;
 }
 #modbus-Reconnect-pos{
     margin-left:1.21%;
+    height: 3.86%; //36
 }
 
 #modbus-Intervals {
     margin-left:2.73%;
     margin-top:26.5px;
+    //width: 6.76%;
+    width: 89px;
 }
 #modbus-Intervals-pos{
     margin-left:1.21%;
+    //margin-right: 10.03%;
+    height: 3.86%; //36
 }
 
 //table
@@ -419,20 +438,31 @@
 
 //conneection test
 .modbus-conn-test-buttons {
-    margin-top:31px;
+    margin-top:20px;
     margin-right: 8.43%;
-   //margin-right: auto;
+    float: right;
     button {
         color: #6a6a6a;
         background-color: #ecebeb;
-
+        width: 28px;
+        height: 28px;   
         &.green {
+            width: 28px;
+            height: 28px;
             color: #ffffff;
             background-color: #1e88e5;
         }
         &.red {
+            width: 28px;
+            height: 28px;
             color: #ffffff;
             background-color: #d81b60;
+        }
+        &.yellow {
+            width: 28px;
+            height: 28px;
+            color: #ffffff;
+            background-color: #f1ee09;
         }
 
         i {
@@ -440,7 +470,10 @@
         }
     }
 }
-
+.modbus-table-edit-button {
+    //background-color: #ecebeb;
+    color:#ffffff;
+}
 .modbus-banner-buttons {
     margin-left: auto;
 
@@ -451,4 +484,9 @@
     .ts-btn-save {
         background-color: #1e88e5;
     }
+}
+
+.modbus-edit-header-banner {
+    margin-right: 8.14%;
+    margin-left: 8.2%;
 }

@@ -68,7 +68,7 @@
             "id": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
             "type": "mqtt-broker",
             "z": "128c8c3f.3d9e44",
-            "broker": "thingspin.mqtt",
+            "broker": "localhost",
             "port": "1883",
             "clientid": "",
             "usetls": false,
@@ -109,7 +109,7 @@
             "id": "TS-MODBUS-GETTER-CONN-{{.Params.FlowId}}",
             "type": "modbus-getter",
             "z": "8900476a.91f358",
-            "name": "CONN_TEST",
+            "name": "CONN_TEST_{{.Params.FlowId}}",
             "showStatusActivities": false,
             "showErrors": false,
             "logIOActivities": false,
@@ -128,7 +128,9 @@
                 []
             ]
         },      
-        {{.Params.AddressNode | convJsonStr}}
+        {{if .Enable}}
+            {{.Params.AddressNode | convJsonStr}}
+        {{end}}
         {
             "id": "TS-MODBUS-JOIN-{{.Params.FlowId}}",
             "type": "join",
@@ -162,7 +164,7 @@
             "type": "function",
             "z": "8900476a.91f358",
             "name": "MODBUS_JOIN_PARSER",
-            "func": "var Total_item = {{.Params.AddressListCount}};\nvar value='';\n\nvar res = [\n            {\n                measurement:'MODBUS-{{.Params.FlowId}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    value = msg.payload[i][0].fields;\n    for(var key in value){\n        res[0].fields[key]=value[key];\n    }\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+            "func": "var Total_item = {{.Params.AddressListCount}};\nvar value='';\n\nvar res = [\n            {\n                measurement:'MODBUS_{{.Params.influxID}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    value = msg.payload[i][0].fields;\n    for(var key in value){\n        res[0].fields[key]=value[key];\n    }\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
             "outputs": 1,
             "noerr": 0,
             "x": 1060,
