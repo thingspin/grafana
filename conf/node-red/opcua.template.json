@@ -247,10 +247,10 @@
     {
       "id": "TS-INFLUXDB-NODE-ID-{{.Params.FlowId}}",
       "type": "influxdb",
-      "hostname": "thingspin.storage",
-      "port": "8086",
+      "hostname": "{{.TsSettings.Influx.Host}}",
+      "port": "{{.TsSettings.Influx.Port}}",
       "protocol": "http",
-      "database": "thingspin",
+      "database": "{{.TsSettings.Influx.Database}}",
       "name": "",
       "usetls": false,
       "tls": ""
