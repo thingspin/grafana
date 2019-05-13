@@ -18,7 +18,8 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
     maxPage: number = 0 as number;
     maxPageLen: number = 10 as number; // paging 최대 표시 개수
 
-    constructor($scope: angular.IScope) {
+   /** @ngInject */
+   constructor($scope: angular.IScope) {
         $scope.$watch("nodes", () => {
             this.setPageNodes();
         });
