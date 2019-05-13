@@ -109,17 +109,8 @@ func UpdateConnectFlow(cmd *m.UpdateTsConnectFlowQuery) error {
 }
 
 func UpdateActiveConnect(cmd *m.UpdateActiveTsConnectQuery) error {
-	sqlQuery := fmt.Sprintf(`UPDATE '%s'
-	SET 
-		active=%t,
-		enable=%t,
-		flow_id='%s', 
-		updated=datetime('now','localtime')
-	WHERE id=%d`,
-		m.TsFmsConnectTbl, cmd.Active, cmd.Enable, cmd.FlowId, cmd.Id)
-	result, err := x.Exec(sqlQuery)
-
-	cmd.Result = result
+	_, err := x.Table(m.TsFmsConnectTbl).Where("id = ?", cmd.Id).AllCols().Omit("result").Update(cmd)
+	cmd.Result = cmd.Id
 
 	return err
 }

@@ -60,11 +60,12 @@ type UpdateTsConnectFlowQuery struct {
 }
 
 type UpdateActiveTsConnectQuery struct {
-	Id     int
-	Active bool
-	Enable bool
-	FlowId string
-	Result sql.Result
+	Id     int                    `xorm:"'id'"`
+	Active bool                   `xorm:"bool 'active'"`
+	Enable bool                   `xorm:"bool"`
+	FlowId string                 `xorm:"'flow_id'"`
+	Params map[string]interface{} `xorm:"'params'"`
+	Result int
 }
 
 type DeleteTsConnectQuery struct {
@@ -74,4 +75,9 @@ type DeleteTsConnectQuery struct {
 
 type GetAllTsConnectTypeQuery struct {
 	Result []TsConnectType
+}
+
+type EnableTsConnectReq struct {
+	FlowId string `json:"flowId"`
+	Enable bool   `json:"enable"`
 }
