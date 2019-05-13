@@ -114,7 +114,6 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 
 	// 새로운 params으로 변경
 	info.Params = req.Params
-	info.Enable = req.Enable
 	info.Intervals = req.Intervals
 
 	// 기존에 동작 중인 Connect에 업데이트를 할 경우
