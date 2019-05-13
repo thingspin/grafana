@@ -127,11 +127,13 @@ export default class TsConnectManagementCtrl implements angular.IController {
         });
 
         try {
+            const flowId = uid.generate();
             await this.backendSrv.patch(`thingspin/connect/${id}/enable`, {
-                flowId: uid.generate(),
+                flowId,
                 enable,
             });
             this.list[index].enable = enable;
+            this.list[index].params.FlowId = flowId;
             this.setPageNodes();
             this.$scope.$applyAsync();
         } catch (e) {
