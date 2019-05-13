@@ -205,7 +205,7 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	}
 
 	info.Enable = req.Enable
-	info.Params["FlowId"] = req.FlowId
+	// info.Params["FlowId"] = req.FlowId
 
 	if info.Active == true {
 		nodeResp, err := thingspin.UpdateFlowNode(info.FlowId, info.Type, info)
