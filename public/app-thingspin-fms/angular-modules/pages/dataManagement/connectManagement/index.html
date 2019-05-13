@@ -3,6 +3,7 @@
   <div class="ts-connect-banner">
     <div>
       <div class="ts-connect-banner-title">
+        {{ctrl.banner.title}}
         산업용 프로토콜 및 기타 데이터소스에 대한 연결
       </div>
       <div class="ts-connect-banner-desc">
@@ -25,8 +26,82 @@
       </div>
     </div>
     <!-- table -->
+
     <div class="ts-connect-table-container">
-      <div id="ts-connect"></div>
+        <div class="connect-table-header">
+            <span>페이지당 행수 : </span>
+            <span class="connect-page-rows">
+                <select class="connect-table-select" ng-model="ctrl.tData.rowCount" 
+                    ng-options="n as n for n in ctrl.tData.selectOpts"
+                    ng-change="ctrl.tOnSelectChange()"
+                >
+                </select>
+            </span>
+        </div>
+
+        <div class="connect-table-body">
+          <table>
+            <thead>
+              <tr class="ts-table-header">
+                  <th>No</th>
+                  <th>연결 타입</th>
+                  <th>이름</th>
+                  <th>최근 변경 날짜</th>
+                  <th>상태 표시</th>
+                  <th>동작</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
+                  <td>{{ (ctrl.tData.currPage * ctrl.tData.rowCount) + $index + 1 }}</td>
+                  <td>
+                    <div class="ts-connect-type">
+                      <div class="{{item.type}}">{{item.type}}</div>
+                    </div>
+                  </td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.updated | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                  <td>
+                    <div ng-switch="item.color" class="connect">
+                        <i ng-switch-when="red" class="connect-red fa fa-stop"></i>
+                        <i ng-switch-when="yellow" class="connect-yellow fa fa-exclamation-triangle"></i>
+                        <i ng-switch-when="green"class="connect-blue fa fa-plug"></i>
+                        <i ng-switch-default class="connect-default fa fa-plug"></i>
+                    </div>
+                  </td>
+                  <td>
+                      <button class="btn" ng-if="!ctrl.list[$index].enable" ng-click="ctrl.asyncRun(item.id, true)">
+                          <i class="fa fa-play"></i>
+                      </button>
+                      <button class="btn" ng-if="ctrl.list[$index].enable" ng-click="ctrl.asyncRun(item.id, false)">
+                          <i class="fa fa-stop"></i>
+                      </button>
+                      <button class="btn" ng-click="ctrl.showEdit(item.type, item.id)">
+                          <i class="fa fa-pencil"></i>
+                      </button>
+                      <button class="btn" ng-click="ctrl.asyncRemoveConnect(item.id)">
+                          <i class="fa fa-trash"></i>
+                      </button>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="connect-table-footer">
+            <div class="table-page-range">
+                <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} - {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
+            </div>
+            <div class="table-paging">
+                <button ng-click="ctrl.tPrevPaging()"><i class="fa fa-chevron-left"></i></button>
+                <button ng-click="ctrl.tSetPaging(page)" 
+                  class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
+                  ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
+                    <span >{{ page + 1}}</span>
+                </button>
+                <button ng-click="ctrl.tNextPaging()"><i class="fa fa-chevron-right"></i></button>
+            </div>
+        </div>
     </div>
   </div>
 </div>

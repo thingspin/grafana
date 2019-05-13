@@ -69,6 +69,8 @@ github.com/facebookgo/inject
 github.com/facebookgo/structtag
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
+# github.com/fatih/structs v1.1.0
+github.com/fatih/structs
 # github.com/go-macaron/binding v0.0.0-20170611065819-ac54ee249c27
 github.com/go-macaron/binding
 # github.com/go-macaron/gzip v0.0.0-20160222043647-cad1c6580a07

@@ -45,6 +45,7 @@ const renderItem: RenderItem = ({
   active,
   key,
   label = 'unknown',
+  item,
 }): JSX.Element => (
     <li aria-pressed={active} key={key} onClick={onClick}
       style={{
@@ -58,13 +59,16 @@ const renderItem: RenderItem = ({
             left: `${level * LEVEL_SPACE}px`,
           }}
         >
-          <ToggleIcon on={isOpen} onClick={onClickOnBtn} />
+          {<ToggleIcon on={isOpen} onClick={onClickOnBtn} /> }
 
           <div className="rc-opc-node-icon"><i className="fa fa-folder"></i></div>
 
           {label}
 
-          <button className="rc-opc-node-button" onClick={onAddBtn}><i className="fa fa-plus-circle"></i></button>
+          {item.nodeClass === "Variable" ?
+            <button className="rc-opc-node-button" onClick={onAddBtn}><i className="fa fa-plus-circle"></i></button>
+            : ""
+          }
         </div>
       )}
     </li>

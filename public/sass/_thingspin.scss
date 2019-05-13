@@ -1,11 +1,19 @@
+// fonts
+@import '../app-thingspin-fms/fonts/ts-fonts/ts_icons';
+
 // Main Layer
+// React Components
+// main layout
 @import '../app-thingspin-fms/base/base';
 @import '../app-thingspin-fms/react/components/Navbar/Navbar';
 @import '../app-thingspin-fms/react/components/LeftSidebar/LeftSidebar';
 @import '../app-thingspin-fms/react/components/RightSidebar/RightSidebar';
 @import '../app-thingspin-fms/react/components/Bottombar/Bottombar';
 @import '../app-thingspin-fms/react/components/MainView/MainView';
+@import '../app-thingspin-fms/react/components/OpcNodeTree/OpcNodeTree';
 
+// AngularJs Directives
 @import '../app-thingspin-fms/angular-modules/pages/dataManagement/connectManagement/index';
 @import '../app-thingspin-fms/angular-modules/pages/dataManagement/connectManagement/opcua/index';
-@import '../app-thingspin-fms/react/components/OpcNodeTree/OpcNodeTree';
+// @import '../app-thingspin-fms/angular-modules/thingspin/directives/TsTable/index';
+

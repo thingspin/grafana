@@ -44,7 +44,7 @@
                         <th>option</th>
                     </tr>
                     <!-- body -->
-                    <tr ng-repeat="item in cm.pageNode track by $index">
+                    <tr class="ts-table-row" ng-repeat="item in cm.pageNode track by $index">
                         <td>{{ (cm.currPage * cm.pagingNumber) + $index + 1 }}</td>
                         <td>{{ item.nodeId }}</td>
                         <td>{{ item.displayName.text }}</td>

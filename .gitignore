@@ -89,4 +89,5 @@ debug.test
 
 # ThingSPIN ADD ignore code
 *DS_Store
+devenv/thingspin/docker/influxdb
 theOutput/

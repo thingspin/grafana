@@ -19,6 +19,7 @@ ThingSPIN Development Docker Compose
 
 1. MQTT Broker(Eclipse Mosquitto)
 2. Node-Red
+3. InfluxDB
 
 사용법
 ---

@@ -76,6 +76,13 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
             this.updateData(id);
         } else {
             this.nodes = [];
+            this.input = {
+                endpointUrl: "",
+                name: "",
+                auth: "",
+                securityMode: "",
+                securityPolicy: "",
+            };
         }
     }
 

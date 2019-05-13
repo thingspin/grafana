@@ -1,36 +1,66 @@
- import angular from "angular";
+import _ from "lodash";
+import angular from "angular";
 
 import { TsConnect } from "app-thingspin-fms/models/connect";
 import { BackendSrv } from 'app/core/services/backend_srv';
-import Tabulator from "tabulator-tables";
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
+
+export interface Banner {
+    title: string;
+}
+
+export interface TableData {
+    // table header data
+    rowCount: number; // 페이지당 표시할 행(row) 개수
+    selectOpts: number[];
+    // table body data
+    pageNode: any[];
+    // table footer data
+    currPage: number;
+    maxPage: number;
+    maxPageLen: number; // paging 최대 표시 개수
+}
 
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
     readonly pageBathPath: string = `/thingspin/manage/data/connect` as string;
 
+    // MQTT
     readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
-    readonly listenerTopic: string = "/thingspin/connect/#" as string;
+    readonly listenerTopic: string = "/thingspin/connect/+/status" as string;
     mqttClient: TsMqttController; // mqtt client instance
 
+    // UI Data
+    // banner
+    banner: Banner = {
+        title: "산업용 프로토콜 및 기타 데이터소스에 대한 연결",
+    };
     connectTypeList: string[];
+    // table
     list: TsConnect[];
-
-    tableInst: any;
+    tData: TableData = {
+        rowCount: 16,
+        selectOpts: [16, 32, 48],
+        currPage: 0,
+        maxPage: 0,
+        maxPageLen: 10,
+        pageNode: [],
+    };
 
     /** @ngInject */
     constructor(private $scope: angular.IScope,
     // private $element: JQLite,
     private $location: angular.ILocationService,
-    private $compile: angular.ICompileService, // https://programmingsummaries.tistory.com/132
     private backendSrv: BackendSrv,) { }// Dependency Injection
 
     $onInit(): void {
-        this.asyncUpdateTypeList();
-        this.asyncUpdateList();
 
-        this.initMqtt();
+        this.asyncUpdateTypeList();
+        this.asyncUpdateList().then(() => {
+            this.initMqtt();
+        });
+
         this.initTable();
     }
 
@@ -51,7 +81,15 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     recvMqttMessage(topic: string, payload: string | object): void {
-        console.log(topic, payload);
+        const topics = topic.split("/");
+        const flowId = topics[topics.length - 2];
+
+        for (const item of this.list) {
+            if (item.params.FlowId === flowId) {
+                item.color = payload;
+                this.$scope.$applyAsync();
+            }
+        }
     }
 
     publishMqtt(topic: string, message: string): Error {
@@ -66,76 +104,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     initTable(): void {
-        const typeFormatter: Function = (cell: any, formatterParams, onRendered: Function) => {
-            const data: TsConnect = cell.getData();
-            return /*html*/`
-            <div class="ts-connect-type">
-                <div class="${data.type}">${data.type}</div>
-            </div>`;
-        };
-
-        const intervalFormatter: Function = (cell: any): string => {
-            const data: TsConnect = cell.getData();
-            return data.intervals ? `${data.intervals} 초` : "-";
-        };
-
-        const updatedFormatter: Function = (cell: any): string => {
-            const data: TsConnect = cell.getData();
-
-            return data.updated;
-        };
-
-        const actionFormatter = (cell: any, formatterParams, onRendered: Function): void => {
-            const data: TsConnect = cell.getData();
-            const index: number = this.list.findIndex((value: TsConnect) => {
-                return value.id === data.id;
-            });
-            const $html: JQLite = this.$compile(/*html*/`
-                <button class="btn" ng-if="!ctrl.list[${index}].enable" ng-click="ctrl.asyncRun(${data.id}, true)">
-                    <i class="fa fa-play"></i>
-                </button>
-                <button class="btn" ng-if="ctrl.list[${index}].enable" ng-click="ctrl.asyncRun(${data.id}, false)">
-                    <i class="fa fa-stop"></i>
-                </button>
-                <button class="btn" ng-click="ctrl.showEdit('${data.type}', ${data.id})">
-                    <i class="fa fa-pencil"></i>
-                </button>
-                <button class="btn" ng-click="ctrl.asyncRemoveConnect(${data.id})">
-                    <i class="fa fa-trash"></i>
-                </button>
-            `)(this.$scope);
-
-            onRendered((): void => {
-                $(cell.getElement()).append($html);
-            });
-        };
-
-        const headerClickEvt = (e: any, column: any) => {
-            this.$scope.$applyAsync();
-        };
-
-        const tableOpts: object = {
-            pagination: "local",
-            paginationSize: 10,
-            layout: "fitColumns",
-            // responsiveLayout: true,
-            columns: [                 //define the table columns
-                { title: "No", formatter: "rownum", headerClick: headerClickEvt, width: 50, },
-                { title: "연결 타입", field: "type", formatter: typeFormatter, headerClick: headerClickEvt,},
-                { title: "이름", field: "name", headerClick: headerClickEvt, },
-                { title: "수집 주기", field: "intervals", formatter: intervalFormatter, headerClick: headerClickEvt, },
-                { title: "최근 변경 날짜", field: "updated", formatter: updatedFormatter, headerClick: headerClickEvt, },
-                { title: "동작", formatter: actionFormatter, headerClick: headerClickEvt, },
-            ],
-            renderStarted: () => {
-                this.$scope.$applyAsync();
-            },
-            renderComplete: () => {
-                // this.tableInst.redraw();
-            }
-        };
-
-        this.tableInst = new Tabulator("#ts-connect", tableOpts);
+        this.$scope.$watch("list", () => {
+            this.setPageNodes();
+        });
     }
 
     showEdit(type: string, id: number): void {
@@ -158,9 +129,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
         try {
             await this.backendSrv.patch(`thingspin/connect/${id}/enable`, enable);
             this.list[index].enable = enable;
+            this.setPageNodes();
             this.$scope.$applyAsync();
-
-            this.tableInst.replaceData(this.list);
         } catch (e) {
             console.error(e);
         }
@@ -182,8 +152,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
             const list: TsConnect[] = await this.backendSrv.get("thingspin/connect");
             if (list) {
                 this.list = list;
-                this.tableInst.replaceData(list);
-                // this.groupList = this.genGroupList(list);
+                this.setPageNodes();
             }
         } catch (e) {
             console.error(e);
@@ -204,6 +173,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
                 if (item.id === id) {
                     const baseTopic: string = `/thingspin/connect/${item.params.FlowId}` as string;
+                    // 싱크 문제 해결이 필요
                     this.publishMqtt(`${baseTopic}/status`, '');
                     this.publishMqtt(`${baseTopic}/data`, '');
 
@@ -211,9 +181,65 @@ export default class TsConnectManagementCtrl implements angular.IController {
                     break;
                 }
             }
-            this.tableInst.setData(list);
+            this.setPageNodes();
+            this.$scope.$applyAsync();
         } catch (e) {
             console.error(e);
         }
+    }
+
+    // table methods
+    setPageNodes() {
+        const { currPage, rowCount, } = this.tData;
+        if (this.list) {
+            this.tData.pageNode = this.list.slice(
+                currPage * rowCount,
+                (currPage * rowCount) + rowCount
+            );
+        }
+    }
+
+    tNextPaging(): void {
+        if (this.tData.currPage < this.tData.maxPage) {
+            this.tData.currPage += 1;
+            this.setPageNodes();
+        }
+    }
+
+    tPrevPaging(): void {
+        if (this.tData.currPage) {
+            this.tData.currPage -= 1;
+            this.setPageNodes();
+        }
+    }
+
+    tSetPaging(index: number) {
+        this.tData.currPage = index;
+        this.tCalcPaging();
+        this.setPageNodes();
+    }
+
+    tCalcPaging() {
+        const { rowCount } = this.tData;
+        const temp: number = (this.list.length && (this.list.length % rowCount) === 0) ? 1 : 0;
+        this.tData.maxPage = Math.floor(this.list.length / (rowCount)) - temp;
+    }
+
+    tGetPagingNumberArray() {
+        const { currPage, maxPageLen, maxPage } = this.tData;
+        const index = Math.floor(currPage / maxPageLen);
+
+        const from = index * maxPageLen;
+        let to = index * maxPageLen + maxPageLen;
+        if (to > maxPage) {
+            to = maxPage + 1;
+        }
+
+        return _.range(from, to);
+    }
+    // table event methods
+    tOnSelectChange() {
+        this.tCalcPaging();
+        this.setPageNodes();
     }
 }
