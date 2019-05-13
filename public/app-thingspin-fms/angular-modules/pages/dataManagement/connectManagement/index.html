@@ -64,24 +64,24 @@
                   <td>{{ item.updated | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                   <td>
                     <div ng-switch="item.color" class="connect">
-                        <i ng-switch-when="red" class="connect-red fa fa-stop"></i>
-                        <i ng-switch-when="yellow" class="connect-yellow fa fa-exclamation-triangle"></i>
-                        <i ng-switch-when="green"class="connect-blue fa fa-plug"></i>
-                        <i ng-switch-default class="connect-default fa fa-plug"></i>
+                        <i ng-switch-when="red" class="connect-red tsi icon-ts-connection_off"></i>
+                        <i ng-switch-when="yellow" class="connect-yellow tsi icon-ts-connection-loding"></i>
+                        <i ng-switch-when="green"class="connect-blue tsi icon-ts-power"></i>
+                        <i ng-switch-default class="connect-default tsi icon-ts-power"></i>
                     </div>
                   </td>
                   <td>
                       <button class="btn" ng-if="!ctrl.list[$index].enable" ng-click="ctrl.asyncRun(item.id, true)">
-                          <i class="fa fa-play"></i>
+                          <i class="tsi icon-ts-play_circle_filled"></i>
                       </button>
                       <button class="btn" ng-if="ctrl.list[$index].enable" ng-click="ctrl.asyncRun(item.id, false)">
-                          <i class="fa fa-stop"></i>
+                          <i class="tsi icon-ts-pause_circle_filled"></i>
                       </button>
                       <button class="btn" ng-click="ctrl.showEdit(item.type, item.id)">
-                          <i class="fa fa-pencil"></i>
+                          <i class="tsi icon-ts-create"></i>
                       </button>
                       <button class="btn" ng-click="ctrl.asyncRemoveConnect(item.id)">
-                          <i class="fa fa-trash"></i>
+                          <i class="tsi icon-ts-delete"></i>
                       </button>
                   </td>
               </tr>
@@ -93,13 +93,13 @@
                 <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} - {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
             </div>
             <div class="table-paging">
-                <button ng-click="ctrl.tPrevPaging()"><i class="fa fa-chevron-left"></i></button>
+                <button ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
                 <button ng-click="ctrl.tSetPaging(page)" 
                   class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
                   ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
                     <span >{{ page + 1}}</span>
                 </button>
-                <button ng-click="ctrl.tNextPaging()"><i class="fa fa-chevron-right"></i></button>
+                <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
             </div>
         </div>
     </div>
