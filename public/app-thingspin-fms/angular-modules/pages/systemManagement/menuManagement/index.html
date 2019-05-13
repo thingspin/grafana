@@ -1,20 +1,23 @@
 <div class="menu-title-top">메뉴 관리</div>
 <div class="menu-description">메뉴 리스트의 항목은 사용자 편의에 따라 숨기기가 가능하며, 새로운 메뉴 추가와 삭제 기능을 지원합니다.(단 추가 한 메뉴 리스트만 삭제 가능 합니다.)</div>
 <div class="menu-top-button-area">
-	<button id="menu-save-btn" className="btn" onclick="location.href='/'" type="button">적용</button>
+	<button id="menu-save-btn" className="btn" onclick="location.href='/'" type="button"><span class="menu-top-button-area-title">저장</span></button>
 </div><br>
 
 
 
 <div class="section gf-form-group" id="menu-tree-view">
-	<div class="menu-tree-title">전체 메뉴 리스트</div>
-	<!--new menu-->
-	<a class="menu-tree-add" data-nodrag ng-click="ctrl.newMenu()">
-		<span class="tsi icon-ts-manucreate_new_folder"></span>
-	</a>
-	<a class="menu-tree-clear" data-nodrag ng-click="">
+	<div class="menu-tree-top">
+		<div class="menu-tree-title">메뉴 리스트</div>
+		<!--new menu-->
+		<div class="menu-tree-add" data-nodrag ng-click="ctrl.newMenu()">
+			<span class="tsi icon-ts-manucreate_new_folder"></span>
+		</div>
+		<div class="menu-tree-clear" data-nodrag ng-click="">
 			<span class="tsi icon-ts-manureplay"></span>
-	</a>
+		</div>
+	</div>
+
 	<div class="menu-tree-section-line"></div>	
 	
 	<!--tree starting point-->
@@ -44,8 +47,8 @@
 								<span class="tsi icon-ts-delete"></span>
 							</a>
 							<a data-nodrag ng-click="ctrl.blur(this, node)" class="menu-tree-hide">
-								<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_on"></span>
-								<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_off"></span>
+								<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_on" style="color: rgb(30,136,229)"></span>
+								<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_off" style="color: rgb(216,27,96)"></span>
 							</a>
 						</div>
 					</div>
@@ -66,8 +69,8 @@
 										<span class="tsi icon-ts-delete"></span>
 									</a>
 									<a data-nodrag ng-click="ctrl.blur(this,node)" class="menu-tree-hide">
-										<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_on"></span>
-										<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_off"></span>
+										<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_on" style="color: rgb(30,136,229)"></span>
+										<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_off" style="color: rgb(216,27,96)"></span>
 									</a>	
 								</div>	
 							</div>
@@ -110,6 +113,6 @@
 		</div><br>
 	</div>
 	<div class="menu-info-right-button-area">
-		<button id="menu-info-save-btn" className="btn" ng-click="ctrl.createMenu()">등록 하기</button>
+		<button id="menu-info-save-btn" className="btn" ng-click="ctrl.createMenu()"><span class="menu-info-right-button-title">등록 하기</span></button>
 	</div>
 </div>
