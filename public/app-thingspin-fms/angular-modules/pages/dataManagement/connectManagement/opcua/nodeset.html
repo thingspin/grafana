@@ -50,7 +50,7 @@
                         <td>{{ item.displayName.text }}</td>
                         <td>
                             <button ng-click="cm.removeNode($index)">
-                                <i class="fa fa-trash"></i>
+                                <i class="tsi icon-ts-delete"></i>
                             </button>
                         </td>
                     </tr>
@@ -63,11 +63,11 @@
                     <span>페이지 범위 : {{ cm.currPage * cm.pagingNumber + 1 }} - {{ (cm.currPage * cm.pagingNumber) + cm.pagingNumber }} / 전체 : {{cm.nodes.length}}</span>
                 </div>
                 <div class="table-paging">
-                    <button ng-click="cm.tPrevPaging()"><i class="fa fa-chevron-left"></i></button>
+                    <button ng-click="cm.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
                     <button ng-click="cm.tSetPaging(page)" ng-repeat="page in cm.tGetPagingNumberArray() track by $index">
                         <span class="{{page === cm.currPage ? 'blue' : ''}}">{{ page + 1}}</span>
                     </button>
-                    <button ng-click="cm.tNextPaging()"><i class="fa fa-chevron-right"></i></button>
+                    <button ng-click="cm.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
                 </div>
             </div>
 
