@@ -2,7 +2,7 @@
     MQTT 추가 양식
 </div>
 <div class="mqtt-right-button-area">
-    <button id="mqtt-cancel-btn" className="btn" ng-click="ctrl.close()">
+    <button id="mqtt-cancel-btn" className="btn" ng-click="ctrl.close(false)">
         취소
     </button>    
     <button id="mqtt-plus-btn" className="btn" ng-click="ctrl.save(true)">
@@ -15,7 +15,7 @@
         MQTT 접속 정보
     </span>
     <button id="mqtt-connect-state" class="mqtt-connect-btn-postion" ng-click="ctrl.save(false)">
-        <i id="mqtt-connect-btn" class="fa fa-plug"></i>
+        <i id="mqtt-connect-btn" class="tsi icon-ts-power"></i>
     </button>
     <div class="mqtt-content-line"></div>
     <div class="mqtt-connect-view">

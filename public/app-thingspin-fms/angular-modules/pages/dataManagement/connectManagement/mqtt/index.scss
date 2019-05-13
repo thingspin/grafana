@@ -116,28 +116,31 @@
     margin-right: 8.18%;
     margin-top: 20px;
     float: right;
-    background-color: rgba(0,0,0,0);
     padding: 0px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
-    background-color: #1e88e5;
+    background-color: #ecebeb;
+    width: 30px;
+    height: 30px;
 }
 #mqtt-connect-btn {
-    font-size: 14px;
+    font-size: 19px;
     margin: 5px;
-    color: #ffffff;
 }
 
-.mqtt-state-conneced {
+.mqtt-state-connected {
     background-color: #1e88e5;
+    color:#ffffff;
 }
 
 .mqtt-state-retry {
-    background-color: yellow;
+    background-color: #ecebeb;
+    color: #6a6a6a;
 }
 
 .mqtt-state-disconnect {
     background-color: #d81b60;
+    color:#ffffff;
 }
 
 // CONTENTS BORDER LINE
@@ -218,17 +221,22 @@
 /*Theme the header*/
 #mqtt-topic-list .tabulator-header {
     background-color: #ecebeb;
-    color:#000000;
-    border: solid 0px rgba(0,0,0,0);
+    color:#1e1e1e;
+    border: solid 0px #dcdbdc;
+}
+
+.tabulator .tabulator-tableHolder {
+    background-color: #FFFFFF;
+    min-height: 0px;
 }
 /*Allow column header names to wrap lines*/
 #mqtt-topic-list .tabulator-header .tabulator-col,
 #mqtt-topic-list .tabulator-header .tabulator-col-row-handle {
-    white-space: normal;
+    background-color: #ecebeb;
 }
 /*Color the table rows*/
 #mqtt-topic-list .tabulator-tableHolder .tabulator-table .tabulator-row{
-    color:#000000;
+    color:#1e1e1e;
     background-color: #fff;
 }
 /*Color even rows*/
@@ -240,6 +248,10 @@
 }
 #mqtt-topic-list .tabulator .tabulator-tableHolder{
     background-color: #fff;
+}
+.tabulator .tabulator-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid #CCCCCC;
 }
 
 //TOPIC ADD VIEW

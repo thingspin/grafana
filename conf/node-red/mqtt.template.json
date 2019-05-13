@@ -9,17 +9,17 @@
             {{.Params.AddDisTopicList | convJsonStr}},
         {{end}}
         {
-            "id": "TS-MQTT-STATUS-{{.Params.FlowId}}",
+            "id": "TS-MQTT-STATUS-{{.Params.UUID}}",
             "type": "status",
             "name": "",
-            "scope": ["TS-MQTT-CHECKNODE-{{.Params.FlowId}}"],
+            "scope": ["TS-MQTT-CHECKNODE-{{.Params.UUID}}"],
             "x": 200,
             "y": 60,
             "wires": [
-                ["TS-MQTT-STATUS-DATA-PROCESS-{{.Params.FlowId}}"]
+                ["TS-MQTT-STATUS-DATA-PROCESS-{{.Params.UUID}}"]
             ]
         }, {
-            "id": "TS-MQTT-STATUS-DATA-PROCESS-{{.Params.FlowId}}",
+            "id": "TS-MQTT-STATUS-DATA-PROCESS-{{.Params.UUID}}",
             "type": "function",
             "name": "Data Process",
             "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = status.fill;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
@@ -28,21 +28,21 @@
             "x": 470,
             "y": 60,
             "wires": [
-                ["TS-MQTT-MQTTOUT-{{.Params.FlowId}}"]
+                ["TS-MQTT-MQTTOUT-{{.Params.UUID}}"]
             ]
         }, {
-            "id": "TS-MQTT-MQTTOUT-{{.Params.FlowId}}",
+            "id": "TS-MQTT-MQTTOUT-{{.Params.UUID}}",
             "type": "mqtt out",
             "name": "",
-            "topic": "/thingspin/connect/{{.Params.FlowId}}/status",
+            "topic": "/thingspin/connect/{{.Params.UUID}}/status",
             "qos": "2",
             "retain": "true",
-            "broker": "TS-MQTT-TSBROKER-{{.Params.FlowId}}",
+            "broker": "TS-MQTT-TSBROKER-{{.Params.UUID}}",
             "x": 880,
             "y": 60,
             "wires": []
         }, {
-            "id": "TS-MQTT-TSBROKER-{{.Params.FlowId}}",
+            "id": "TS-MQTT-TSBROKER-{{.Params.UUID}}",
             "type": "mqtt-broker",
             "broker": "localhost",
             "port": "1883",
@@ -62,9 +62,9 @@
             "willPayload": ""
         },
         {
-            "id": "TS-MQTT-OUTPUT-{{.Params.FlowId}}",
+            "id": "TS-MQTT-OUTPUT-{{.Params.UUID}}",
             "type": "influxdb batch",
-            "influxdb": "TS-MQTT-INFLUXD-{{.Params.FlowId}}",
+            "influxdb": "TS-MQTT-INFLUXD-{{.Params.UUID}}",
             "precision": "",
             "retentionPolicy": "",
             "name": "",
@@ -73,7 +73,7 @@
             "wires": []
         },
         {
-            "id": "TS-MQTT-CONNECT-{{.Params.FlowId}}",
+            "id": "TS-MQTT-CONNECT-{{.Params.UUID}}",
             "type": "mqtt-broker",
             "name": "{{.Params.Host}}",
             "broker": "{{.Params.Host}}",
@@ -94,7 +94,7 @@
             "willPayload": ""
         },
         {
-            "id": "TS-MQTT-INFLUXD-{{.Params.FlowId}}",
+            "id": "TS-MQTT-INFLUXD-{{.Params.UUID}}",
             "type": "influxdb",
             "z": "",
             "hostname": "127.0.0.1",
