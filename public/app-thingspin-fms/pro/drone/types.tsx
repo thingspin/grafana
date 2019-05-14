@@ -13,6 +13,7 @@ export class Project {
     comment?: string;
     begin?: Date;
     end?: Date;
+    folders?: string[];
     created?: Date;
     updated?: Date;
 }

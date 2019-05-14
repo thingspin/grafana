@@ -22,11 +22,7 @@ export class TsDrone extends PureComponent {
         if ( $route.current.params.meta !== undefined ) {
           this.params = $route.current.params;
         }
-      }
-
-    // render() {
-    //     return (<ProjectList store={store} params={this.params}/>);
-    // }
+    }
 
     render() {
         const { params } = this;
