@@ -56,10 +56,10 @@ func init() {
 }
 
 func (s *DroneService) Init() error {
-	s.log.Info("ThingSPIN Drone Service", "working directory", s.root)
+	s.log.Debug("ThingSPIN Drone Service", "working directory", s.root)
 
 	configPath, _ := filepath.Abs(path.Join(s.Cfg.ProvisioningPath, "thingspin-service-drone.json"))
-	s.log.Info("Configurating Drone Service", "Setting file", configPath, "Repo", s.services.RepogitoryFolder)
+	s.log.Debug("Configurating Drone Service", "Setting file", configPath, "Repo", s.services.RepogitoryFolder)
 
 	file, err := ioutil.ReadFile(configPath)
 	if err != nil {
@@ -82,7 +82,7 @@ func (s *DroneService) Init() error {
 
 	s.services = data
 
-	s.log.Info("Configurating Drone Service", "Project", data.Project, "Verion", data.Version)
+	s.log.Debug("Configurating Drone Service", "Project", data.Project, "Verion", data.Version)
 	if data.Ignore {
 		s.log.Debug("Configurating Drone Service", "Setup Ignored.")
 		return nil

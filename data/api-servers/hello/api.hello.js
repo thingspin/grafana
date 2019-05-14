@@ -40,5 +40,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(args.port, () => {
-  console.log('Sample Microservice listening on port ' + args.port);
+  console.log('[MICRO-SERVERS] Example server listening on port ' + args.port);
 });
