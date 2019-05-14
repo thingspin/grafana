@@ -29,7 +29,6 @@ type ThingspinSettings struct {
 	Enabled           bool
 	NodeRedHost       string
 	NodeRedModuleList []string
-	DroneBaseFolder   string
 	Mqtt              MqttSettings
 	Influx            InfluxSettings
 }
@@ -86,9 +85,6 @@ func (cfg *Cfg) readThingspinSettings() {
 		Port:     influxSec.Key("port").MustInt(8086),
 		Database: influxSec.Key("database").MustString("thingspin"),
 	}
-
-	dronSec := TsRaw.Section("drone")
-	Thingspin.DroneBaseFolder = dronSec.Key("base").String()
 
 	cfg.Thingspin = Thingspin
 }

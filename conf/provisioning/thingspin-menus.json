@@ -27,14 +27,14 @@
         {
           "text": "사이트 관리",
           "icon": "fa fa-bar-chart",
-          "url": "/thingspin/manage/data/connect",
+          "url": "",
           "canDelete": true,
           "children": []
         },
         {
           "text": "컨텐츠 관리",
           "icon": "fa fa-bar-chart",
-          "url": "/thingspin/manage/data/connect",
+          "url": "",
           "canDelete": true,
           "children": []
         },
@@ -55,7 +55,7 @@
         {
           "text": "태그 관리",
           "icon": "fa fa-bar-chart",
-          "url": "/thingspin/manage/data/connect",
+          "url": "",
           "canDelete": true,
           "children": []
         }
@@ -216,7 +216,7 @@
       ]
     },
     {
-      "text": "플랫폼 관리",
+      "text": "시스템 관리",
       "icon": "gicon gicon-shield",
       "url": "/thingspin/manage/system",
       "placeBottom": true,
@@ -266,41 +266,8 @@
         {
           "text": "로그",
           "icon": "gicon gicon-shield",
-          "url": "#",
+          "url": "",
           "canDelete": true
-        }
-      ]
-    },
-    {
-      "text": "시스템 관리",
-      "icon": "gicon gicon-shield",
-      "url": "/v1.0/sys/config",
-      "placeBottom": true,
-      "canDelete": false,
-      "children" : [
-        {
-          "text": "콘텐츠 스토리지",
-          "icon": "gicon gicon-cog",
-          "url": "/v1.0/sys/config/contents",
-          "canDelete": false
-        },
-        {
-          "text": "라이센스 관리",
-          "icon": "gicon gicon-cog",
-          "url": "/v1.0/sys/config/license",
-          "canDelete": false
-        },
-        {
-          "text": "확장 데몬 관리",
-          "icon": "gicon gicon-cog",
-          "url": "/v1.0/sys/config/service",
-          "canDelete": false
-        },
-        {
-          "text": "API",
-          "icon": "gicon gicon-cog",
-          "url": "/v1.0/sys/config/api",
-          "canDelete": false
         }
       ]
     }

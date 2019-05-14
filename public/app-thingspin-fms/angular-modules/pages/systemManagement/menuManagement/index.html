@@ -40,13 +40,13 @@
 						</div>
 
 						<div class ="menu-tree-right-area">
-							<a data-nodrag ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
+							<a data-nodrag ng-if="node.canDelete" ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
 								<span class="tsi icon-ts-create"></span>
 							</a>
-							<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
+							<a ng-if="node.children.length == 0 && node.canDelete" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
 								<span class="tsi icon-ts-delete"></span>
 							</a>
-							<a data-nodrag ng-click="ctrl.blur(this, node)" class="menu-tree-hide">
+							<a data-nodrag ng-if="node.canDelete" ng-click="ctrl.blur(this, node)" class="menu-tree-hide">
 								<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_on" style="color: rgb(30,136,229)"></span>
 								<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_off" style="color: rgb(216,27,96)"></span>
 							</a>
@@ -62,13 +62,13 @@
 								</div>
 								
 								<div class ="menu-tree-right-subarea">
-									<a data-nodrag ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
+									<a data-nodrag ng-if="node.canDelete" ng-click="ctrl.menuClicked(node)" class="menu-tree-edit">
 											<span class="tsi icon-ts-create"></span>
 									</a>
-									<a ng-if="node.children.length == 0" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
+									<a ng-if="node.children.length == 0 && node.canDelete" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
 										<span class="tsi icon-ts-delete"></span>
 									</a>
-									<a data-nodrag ng-click="ctrl.blur(this,node)" class="menu-tree-hide">
+									<a data-nodrag ng-if="node.canDelete" ng-click="ctrl.blur(this,node)" class="menu-tree-hide">
 										<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_on" style="color: rgb(30,136,229)"></span>
 										<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_off" style="color: rgb(216,27,96)"></span>
 									</a>	

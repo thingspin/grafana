@@ -7,7 +7,6 @@ import TsToolbarComponent from './components/MainView/Toobar/index';
 import OpcNodeTree from './components/OpcNodeTree';
 
 import { TsConfigs } from './views/system/configs';
-import { TsDrone } from '../pro/drone';
 
 export function tsRegisterAngularDirectives() {
   tsReact2AngularDirective('tsNavbar', TsNavbarComponent, []);
@@ -16,8 +15,6 @@ export function tsRegisterAngularDirectives() {
   tsReact2AngularDirective('tsBottombar', TsBottombar, []);
   tsReact2AngularDirective('tsToolbar', TsToolbarComponent, []);
 
-  tsReact2AngularDirective('tsConfigView', TsConfigs, []);
-  tsReact2AngularDirective('tsDroneView', TsDrone, []);
   tsReact2AngularDirective('rcOpcTree', OpcNodeTree, [
     "flowId",
     "data",
@@ -30,4 +27,5 @@ export function tsRegisterAngularDirectives() {
     ["onClickItem", { watchDepth: 'reference', wrapApply: true }],
     ["onClickAdd",  { watchDepth: 'reference', wrapApply: true }],
   ]);
+  tsReact2AngularDirective('tsConfigView', TsConfigs, []);
 }

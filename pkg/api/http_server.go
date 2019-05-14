@@ -231,10 +231,6 @@ func (hs *HTTPServer) addMiddlewaresAndStaticRoutes() {
 		hs.mapStatic(m, hs.Cfg.ImagesDir, "", "/public/img/attachments")
 	}
 
-	// if setting.Thingspin.DroneBaseFolder != "" {
-	// 	hs.mapStatic(m, setting.Thingspin.DroneBaseFolder, "", "/drone")
-	// }
-
 	m.Use(middleware.AddDefaultResponseHeaders())
 
 	m.Use(macaron.Renderer(macaron.RenderOptions{

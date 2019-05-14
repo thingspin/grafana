@@ -10,11 +10,11 @@ import { DashboardModel } from 'app/features/dashboard/state';
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 
 export interface Props extends TsBaseProps {
-  icon: string;
-  menupath: string[];
-  isFullpathTitle: boolean;
-  initPhase: DashboardInitPhase;
-  dashboard: DashboardModel | null;
+  icon?: string;
+  menupath?: string[];
+  isFullpathTitle?: boolean;
+  initPhase?: DashboardInitPhase;
+  dashboard?: DashboardModel | null;
 }
 
 export interface States extends StoreState {
@@ -128,7 +128,10 @@ export const mapStateToProps = (state, { $route }) => {
       originalPath = loc.pathname;
     }
     if ($$route) {
-      const list = findPathNavItem(originalPath, config.bootData.thingspin.menu);
+      let list = findPathNavItem(originalPath, config.bootData.thingspin.menu);
+      if ( list === null) {
+        list = findPathNavItem(originalPath.substring(0,originalPath.lastIndexOf('/')), config.bootData.thingspin.menu);
+      }
       if ( list ) {
         titleObj = getTitle(list);
       }
