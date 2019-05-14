@@ -98,7 +98,7 @@ func (s *MicroService) Run(ctx context.Context) error {
 			continue
 		}
 
-		s.log.Info("API Server Invoke", "Name", item.Name, "URL", item.URL, "API", item.API)
+		s.log.Debug("API Server Invoke", "Name", item.Name, "URL", item.URL, "API", item.API)
 
 		if !filepath.IsAbs(item.Pwd) {
 			item.Pwd = filepath.Join(s.root, item.Pwd)
@@ -131,9 +131,9 @@ func (s *MicroService) Run(ctx context.Context) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 
-		s.log.Info("API Server: shell : " + item.Shell)
-		s.log.Info("API Server: commands : "+commands, "args", cmd.Args)
-		s.log.Info("API Server: Dir : " + cmd.Dir)
+		s.log.Debug("API Server: shell : " + item.Shell)
+		s.log.Debug("API Server: commands : "+commands, "args", cmd.Args)
+		s.log.Debug("API Server: Dir : " + cmd.Dir)
 
 		go func(s server, log log.Logger) error {
 			err := cmd.Start()
@@ -155,6 +155,6 @@ func (s *MicroService) Run(ctx context.Context) error {
 	h.initAPIServerRoutes(m)
 
 	<-ctx.Done()
-	s.log.Error("Stopped API Servers", "reason", "context canceled")
+	s.log.Info("Stopped API Servers", "reason", "context canceled")
 	return ctx.Err()
 }
