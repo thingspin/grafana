@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	api "github.com/grafana/grafana/pkg/api"
-	"github.com/grafana/grafana/pkg/log"
+	"github.com/grafana/grafana/pkg/infra/log"
 	m "github.com/grafana/grafana/pkg/models"
 	plugins "github.com/grafana/grafana/pkg/plugins"
 	"github.com/grafana/grafana/pkg/registry"
