@@ -197,6 +197,8 @@ func DeleteOrg(cmd *m.DeleteOrgCommand) error {
 			"DELETE FROM org_user WHERE org_id = ?",
 			"DELETE FROM org WHERE id = ?",
 			"DELETE FROM temp_user WHERE org_id = ?",
+			// jds
+			"DELETE FROM TS_FMS_MENU WHERE org_id = ?",
 		}
 
 		for _, sql := range deletes {
