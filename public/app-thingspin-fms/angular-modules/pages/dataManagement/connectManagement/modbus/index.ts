@@ -16,6 +16,7 @@ export class TsModbusConnectCtrl {
   showObj: object;
 
   modbusParams: any;
+  quantitySelected: string;
   fcSelected: string;
   typeSelected: string;
 
@@ -85,6 +86,7 @@ export class TsModbusConnectCtrl {
     private backendSrv: BackendSrv) {
     //for tabulator table
     this.modbusParams = {
+      quantity: ['1','2','3','4','5','6','7','8','9'],
       functioncodes: ['Coil Status','Input Status','Holding Registers','Input Registers'],
       datatypes: ['String','Numbers']
     };
@@ -98,6 +100,7 @@ export class TsModbusConnectCtrl {
     this.isAddressEditView = false;
     this.isAddressEditBtn = true;
     this.isAddressEditmode = false;
+    this.quantitySelected = this.modbusParams.quantity[0]; // default quantity 1
     this.fcSelected = this.modbusParams.functioncodes[2];//holding registers
     this.typeSelected = this.modbusParams.datatypes[0];
 
@@ -192,6 +195,7 @@ export class TsModbusConnectCtrl {
         console.error(e);
     }
   }
+
  //button action
  connTest() {
    this.isConnCheckMode = true;
@@ -291,24 +295,34 @@ updateTableData() {
  }
 
 editAddressList() {
-  //check & convert
-    if (this.fcSelected === 'Holding Registers') {
-      this.editFC = 'HoldingRegister';
-    } else if (this.fcSelected === 'Coil Status') {
-      this.editFC = 'Coil';
-    } else if (this.fcSelected === 'Input Status') {
-      this.editFC = 'Input';
-    } else if (this.fcSelected === 'Input Registers') {
-      this.editFC = 'InputRegister';
-    }
-
-    if (this.typeSelected === 'String') {
-      this.editType = 'string';
-    } else if (this.fcSelected === 'Numbers') {
-      this.editType = 'float32';
-    }
     //console.log(this.editFC+' '+this.editType);
-    this.addTableData();
+    //check_edit param
+    if (this.editAddress) {
+          //check & convert
+        if (this.fcSelected === 'Holding Registers') {
+          this.editFC = 'HoldingRegister';
+        } else if (this.fcSelected === 'Coil Status') {
+          this.editFC = 'Coil';
+        } else if (this.fcSelected === 'Input Status') {
+          this.editFC = 'Input';
+        } else if (this.fcSelected === 'Input Registers') {
+          this.editFC = 'InputRegister';
+        }
+
+        if (this.typeSelected === 'String') {
+          this.editType = 'string';
+        } else if (this.fcSelected === 'Numbers') {
+          this.editType = 'float32';
+        }
+
+        this.editQuantity = this.quantitySelected;
+
+        this.addTableData();
+    } else {
+              if (!this.editAddress) {
+                appEvents.emit('alert-warning', ['MODBUS 수집 Address를 설정 하세요.']);
+              }
+    }
 }
 onShowAddressEditView() {
   //console.log("function called" + " edit-mode: "+this.isAddressEditmode);
@@ -392,7 +406,7 @@ removeEdit(idx: any): void {
             // this.tableInst.redraw();
         }
     };
-    this.orderTable = new Tabulator("#addressTable",tableOpts);
+    this.orderTable = new Tabulator("#modbus-addressTable",tableOpts);
  }
 //-----------------------------
 testAddGetter1(address, quantity, functioncode,flowid,posY) {
@@ -415,7 +429,7 @@ testAddGetter1(address, quantity, functioncode,flowid,posY) {
 }
 
 //template 관련
-addModbusGETTER( address, quantity, functioncode,flowid,posY) {
+addModbusGETTER( address, quantity, functioncode,flowid,posY,interval) {
   //this.nodeModbusGetterList = "";
   const objInjector =      {
     "id": "TS-MODBUS-INJECT-"+address+"-"+flowid,
@@ -425,7 +439,7 @@ addModbusGETTER( address, quantity, functioncode,flowid,posY) {
     "topic": "",
     "payload": "",
     "payloadType": "date",
-    "repeat": "{{.Params.Intervals}}",
+    "repeat": interval,
     "crontab": "",
     "once": true,
     "onceDelay": 0.1,
@@ -529,8 +543,8 @@ testCreate() {
     console.log("list: "+this.tableData.length);
     if (this.tableData.length > 0) {
       for (let i = 0; i < this.tableData.length; i++) {
-        this.addModbusGETTER(this.tableData[i].address,this.tableData[i].quantity,this.tableData[i].fc,this.FlowId,i*20);
-        this.testAddGetter1(this.tableData[i].address,this.tableData[i].quantity,this.tableData[i].fc,this.FlowId,i*20);
+        this.addModbusGETTER(this.tableData[i].address,this.tableData[i].quantity,this.tableData[i].fc,this.FlowId,i*20,this.modbusReadIntervals);
+        //this.testAddGetter1(this.tableData[i].address,this.tableData[i].quantity,this.tableData[i].fc,this.FlowId,i*20);
       }
 
     }
@@ -550,7 +564,6 @@ testCreate() {
         InjectWires : this.nodeInjectWiresList,
         Tabledata : this.tableData,
         influxID : this.modbusinfluxID,
-        AddressNode2: this.getterparserArray,
       },
       intervals: this.modbusReadIntervals
     };

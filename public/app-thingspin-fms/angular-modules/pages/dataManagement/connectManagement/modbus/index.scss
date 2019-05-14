@@ -303,16 +303,57 @@
     margin-top: 1.58%;
     width: 83.13%;
 }
+#modbus-addressTable{
+    background-color:#ccc;
+}
+/*Theme the header*/
+#modbus-addressTable .tabulator-header {
+    background-color: #ecebeb;
+    color:#1e1e1e;
+    border: solid 0px #dcdbdc;
+}
+.tabulator .tabulator-tableHolder {
+    background-color: #FFFFFF;
+    min-height: 0px;
+}
+/*Allow column header names to wrap lines*/
+#modbus-addressTable .tabulator-header .tabulator-col,
+#modbus-addressTable .tabulator-header .tabulator-col-row-handle {
+    background-color: #ecebeb;
+}
+/*Color the table rows*/
+#modbus-addressTable .tabulator-tableHolder .tabulator-table .tabulator-row{
+    color:#1e1e1e;
+    background-color: #fff;
+}
+/*Color even rows*/
+#modbus-addressTable .tabulator-tableHolder .tabulator-table .tabulator-row:nth-child(even) {
+    background-color: #fff;
+}
+#modbus-addressTable .tabulator .tabulator-footer{
+    background-color: #fff;
+}
+#modbus-addressTable .tabulator .tabulator-tableHolder{
+    background-color: #fff;
+}
+.tabulator .tabulator-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid #CCCCCC;
+}
 
 //modbus add edit
 
 .modbus-address-add-view {
     margin-left: 8.43%; //111px
     margin-right: 8.43%;
-    margin-top: 4.72%; //44px
+    margin-top: 1.71%;//16px
+    margin-bottom: 38.66%; //360px
     width: 83.13%; //194
     height: 14.7%; //137
     border: solid 1px #ecebeb;
+}
+.modbus-address-add-edit {
+    margin-bottom: 2.14%;//20px
 }
 .modbus-title-address {
     margin-left: 1.82%; //20

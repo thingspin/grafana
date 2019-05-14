@@ -65,7 +65,7 @@
             <button id="modbus-addr-add-btn" className="btn" ng-click="ctrl.onShowAddressEditView()" ng-show="ctrl.isAddressEditBtn">+ Address</button>
         </div>    
         <div class="modbus-conn-section-line"></div>
-            <div id="addressTable" class = "modbus-table-size"></div>
+            <div id="modbus-addressTable" class = "modbus-table-size"></div>
         <!-- add view-->
         <div class = "modbus-address-add-view" ng-show = "ctrl.isAddressEditView">
             <div class = "modbus-title-address">Address List 추가</div>
@@ -76,7 +76,7 @@
                 + Address List
             </button>
             <div class="modbus-address-add-section-line"></div> 
-            <div>
+            <div class="modbus-address-add-edit">
                 <span class="modbus-subtitle" id="modbus-add-edit-name">이름</span>
                 <div class="modbus-edit-bg" id="modbus-add-edit-name-pos">
                     <input id="modbus-edit" type="text" class="gf-form-input"  data-placement="auto" ng-model="ctrl.editName" placeholder="name" ng-blur="ctrl.render()" data-min-length=0 >
@@ -91,7 +91,7 @@
                 </div>
                 <span class="modbus-subtitle" id="modbus-add-edit-quantity">Quantity</span>
                 <div class="modbus-edit-bg" id="modbu-add-edit-quantity-pos">
-                    <input id="modbus-edit" type="text" class="gf-form-input"  data-placement="auto"  ng-model="ctrl.editQuantity" placeholder="min:1 max:9" ng-blur="ctrl.render()" data-min-length=0 >
+                    <select id="modbus-edit" style="width:50px;height:36px" ng-model="ctrl.quantitySelected" ng-options="opts for opts in ctrl.modbusParams.quantity"></select>
                 </div>
                 <span class="modbus-subtitle" id="modbus-add-edit-datatype">Data Type</span>
                 <div class="modbus-edit-bg" id="modbu-add-edit-datatype-pos">
