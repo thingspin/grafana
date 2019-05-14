@@ -10,11 +10,11 @@ import { DashboardModel } from 'app/features/dashboard/state';
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 
 export interface Props extends TsBaseProps {
-  icon: string;
-  menupath: string[];
-  isFullpathTitle: boolean;
-  initPhase: DashboardInitPhase;
-  dashboard: DashboardModel | null;
+  icon?: string;
+  menupath?: string[];
+  isFullpathTitle?: boolean;
+  initPhase?: DashboardInitPhase;
+  dashboard?: DashboardModel | null;
 }
 
 export interface States extends StoreState {
