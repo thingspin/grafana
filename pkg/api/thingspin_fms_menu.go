@@ -60,7 +60,7 @@ func AddTsNewMenuByOrgId(c *gfm.ReqContext, cmd m.AddFmsMenuCommand) Response {
 		return Error(500, "[thingspin] Menu add command failed", err)
 	}
 
-	return JSON(200, "")
+	return JSON(200, cmd.Result)
 }
 
 func DeleteTsMenuByOrgId(c *gfm.ReqContext) Response {

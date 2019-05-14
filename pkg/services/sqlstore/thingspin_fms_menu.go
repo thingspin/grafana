@@ -319,6 +319,31 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 		if err != nil {
 			return err
 		}
+		// Return new node
+		res := m.FmsMenuQueryResult{
+			Id : id,
+			Permission : "",
+			ParentId : -1,
+			Name : "",
+			ReqParams : nil,
+			Order : cmd.Order,
+			Text : cmd.Name,
+			Icon : cmd.Icon,
+			Img_path : "",
+			Subtitle : "",
+			Url : cmd.Url,
+			Target : "",
+			HideFromMenu : false,
+			HideFromTabs : false,
+			PlaceBottom : false,
+			Divider : false,
+			CanDelete : true,
+		}
+		node := m.FmsMenu{
+			FmsMenuQueryResult: res,
+			Children:           []*m.FmsMenu{},
+		}
+		cmd.Result = node
 		return nil
 	})
 

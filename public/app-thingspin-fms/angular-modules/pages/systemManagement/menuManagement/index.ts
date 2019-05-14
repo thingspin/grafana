@@ -237,9 +237,10 @@ export class TsMenuManagementCtrl {
       console.log("new Menu");
       this.clickedMenu.order = this.data.length;
       this.backendSrv.post('/thingspin/menu/'+config.bootData.user.orgId,this.clickedMenu).then((res: any) => {
-        console.log("After creating, error!");
-        this.data.push(this.clickedMenu);
-        console.log(this.clickedMenu);
+        console.log("After creating, success!");
+        console.log(res);
+        this.data.push(res);
+        this.clickedMenu = res;
       }).catch((err: any) => {
         console.log("After creating, error!");
         console.log(err);

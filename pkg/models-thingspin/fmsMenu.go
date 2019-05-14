@@ -64,7 +64,7 @@ type AddFmsMenuCommand struct {
 	Icon   string                   `json:"icon"`
 	Name   string                   `json:"text"`
 	Url    string                   `json:"url"`
-	//Result sql.Result
+	Result FmsMenu
 }
 
 type AddFmsDefaultMenuCommand struct {
