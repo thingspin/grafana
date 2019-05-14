@@ -1,5 +1,5 @@
 <div class="mqtt-body">
-    <div class="mqtt-main-title" ng-init="ctrl.initAddressTable()">
+    <div class="mqtt-main-title">
         MQTT 추가 양식
     </div>
     <div class="mqtt-right-button-area">
@@ -70,8 +70,63 @@
         <button id="mqtt-plus-topic-btn" className="btn" ng-click="ctrl.onShowTopicEditView(true)" ng-show="ctrl.isTopicEditBtn">
             + Topic
         </button>
-        <div class="mqtt-content-line"></div>
-        <div id="mqtt-topic-list" class="mqtt-table-size"></div>
+        <div class="mqtt-content-line"></div>        
+        <div class="ts-mqtt-table-container mqtt-table-size">
+            <div class="connect-table-header">
+                <span>페이지당 행수 : </span>
+                <span class="connect-page-rows">
+                    <select class="connect-table-select" ng-model="ctrl.tData.rowCount" 
+                        ng-options="n as n for n in ctrl.tData.selectOpts"
+                        ng-change="ctrl.tOnSelectChange()"
+                    >
+                    </select>
+                </span>
+            </div>
+    
+            <div class="connect-table-body">
+                <table>
+                <thead>
+                    <tr class="ts-table-header">
+                        <th>이름</th>
+                        <th>Topic</th>
+                        <th>Value Type</th>
+                        <th>동작</th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    <tr class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.topic }}</td>
+                        <td>{{ item.value }}</td>
+                        <td>
+                            <button class="btn" ng-click="ctrl.loadTopicData(item.name)">
+                                <i class="fa fa-pencil"></i>
+                            </button>
+                            <button class="btn" ng-click="ctrl.removeTopic(item.name)">
+                                <i class="fa fa-trash"></i>
+                            </button>                            
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+            <div class="connect-table-footer">
+                <div class="table-page-range">
+                    <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} - {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
+                </div>
+                <div class="table-paging">
+                    <button ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
+                    <button ng-click="ctrl.tSetPaging(page)" 
+                        class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
+                        ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
+                        <span >{{ page + 1}}</span>
+                    </button>
+                    <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
+                </div>
+            </div>
+        </div>
+        <!-- <div id="mqtt-topic-list" class="mqtt-table-size"></div> -->
         <div class="mqtt-topic-add-view" ng-show="ctrl.isTopicEditView">
             <div class="mqtt-title" id="mqtt-title-topic-add">
                 Topic 추가

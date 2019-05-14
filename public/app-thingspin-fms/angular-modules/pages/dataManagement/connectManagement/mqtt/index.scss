@@ -315,54 +315,125 @@
     margin-left: 111px;
     margin-right: 111px;
     margin-top: 17.5px;
-    width: 85%;
 }
 #mqtt-topic-list{
     background-color:#ccc;
 }
 
+.ts-mqtt-table-container {
+    margin-top: 17.5px;
+    color: #1e1e1e;
+    button {
+        border: 0;
+        background-color: rgba(#000,0);
+    }
+    .connect-table-header {
+        opacity: 0.6;
+    }
+    .connect-page-rows {
+        display: inline-block;
+        .connect-table-select {
+            width: 100%;
+            border: 0;
+        }
+    }
+    .connect-table-body {
+        width: 100%;
+        margin: 8px 0;
+        table {
+            width: 100%;
+            tr {
+                border-bottom: solid 1px #dcdbdc;
+                &:first {
+                    margin-left: 16px;
+                }
+            }
+            th {
+                padding: 7px 0;
+                padding-left: 7px;
+            }
+            td {
+                padding: 12px 0;
+                padding-left: 7px;
+                color: rgba(#1e1e1e, 0.8);
+                button {
+                    font-size: 20px;
+                }
+            }
+            .ts-table-row {
+                &:hover {
+                    background-color: #e3f2fd;
+                }
+                .connect { 
+                    font-size: 20px;
+                }
+            }
+            .ts-table-header {
+                background-color: #ecebeb;
+            }
+        }
+    }
+    .connect-table-footer {
+        width: 100%;
+        display: inline-flex;
+        .table-page-range {
+            opacity: 0.6;
+        }
+        .table-paging {
+            margin-left: auto;
+            display: inline-block;
+        }
+        button {
+            opacity: 0.3;
+            &.blue {
+                opacity: 1;
+            }
+        }
+    }
+}
+
 /*Theme the header*/
-#mqtt-topic-list .tabulator-header {
-    background-color: #ecebeb;
-    color:#1e1e1e;
-    border: solid 0px #dcdbdc;
-}
-.tabulator {
-    position: relative;
-    background-color: #fff;
-    overflow: hidden;
-    font-size: 14px;
-    text-align: left;
-    transform: translatez(0);
-}
-.tabulator .tabulator-tableHolder {
-    background-color: #FFFFFF;
-    min-height: 0px;
-}
-/*Allow column header names to wrap lines*/
-#mqtt-topic-list .tabulator-header .tabulator-col,
-#mqtt-topic-list .tabulator-header .tabulator-col-row-handle {
-    background-color: #ecebeb;
-}
-/*Color the table rows*/
-#mqtt-topic-list .tabulator-tableHolder .tabulator-table .tabulator-row{
-    color:#1e1e1e;
-    background-color: #fff;
-}
-/*Color even rows*/
-#mqtt-topic-list .tabulator-tableHolder .tabulator-table .tabulator-row:nth-child(even) {
-    background-color: #fff;
-}
-#mqtt-topic-list .tabulator .tabulator-footer{
-    background-color: #fff;
-}
-#mqtt-topic-list .tabulator .tabulator-tableHolder{
-    background-color: #fff;
-}
-.tabulator .tabulator-footer {
-    background-color: #FFFFFF;
-    border-top: 1px solid #CCCCCC;
-}
+// #mqtt-topic-list .tabulator-header {
+//     background-color: #ecebeb;
+//     color:#1e1e1e;
+//     border: solid 0px #dcdbdc;
+// }
+// .tabulator {
+//     position: relative;
+//     background-color: #fff;
+//     overflow: hidden;
+//     font-size: 14px;
+//     text-align: left;
+//     transform: translatez(0);
+// }
+// .tabulator .tabulator-tableHolder {
+//     background-color: #FFFFFF;
+//     min-height: 0px;
+// }
+// /*Allow column header names to wrap lines*/
+// #mqtt-topic-list .tabulator-header .tabulator-col,
+// #mqtt-topic-list .tabulator-header .tabulator-col-row-handle {
+//     background-color: #ecebeb;
+// }
+// /*Color the table rows*/
+// #mqtt-topic-list .tabulator-tableHolder .tabulator-table .tabulator-row{
+//     color:#1e1e1e;
+//     background-color: #fff;
+// }
+// /*Color even rows*/
+// #mqtt-topic-list .tabulator-tableHolder .tabulator-table .tabulator-row:nth-child(even) {
+//     background-color: #fff;
+// }
+// #mqtt-topic-list .tabulator .tabulator-footer{
+//     background-color: #fff;
+// }
+// #mqtt-topic-list .tabulator .tabulator-tableHolder{
+//     background-color: #fff;
+// }
+// .tabulator .tabulator-footer {
+//     background-color: #FFFFFF;
+//     border-top: 1px solid #CCCCCC;
+// }
 
 //TOPIC ADD VIEW
 .mqtt-topic-add-view {
