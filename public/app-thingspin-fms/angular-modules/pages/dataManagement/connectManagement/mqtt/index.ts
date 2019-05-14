@@ -238,6 +238,7 @@ export class TsMqttConnectCtrl {
       paginationSize: 10,
       responsivelayout: true,
       layout: "fitColumns",
+      layoutColumnsOnNewData: true,
       columns: [
         {title: "이름",field: "name"},
         {title: "Topic",field: "topic"},

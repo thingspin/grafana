@@ -1,8 +1,14 @@
 @import "../../../../../../../node_modules/tabulator-tables/dist/css/bootstrap/tabulator_bootstrap.min.css";
 
+.mqtt-body {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;    
+}
+
 // TOP TITLE
 .mqtt-main-title {
-    margin-left:21px;
+    margin-left:1px;
     margin-top:44px;
     opacity: 0.8;
     font-family: Roboto;
@@ -21,21 +27,19 @@
 .mqtt-right-button-area {
     display:block;
     float: right;
-    margin-right: 20px;
     margin-top: 28px;
 }
 #mqtt-plus-btn {
-    width: 91.1px;
+    width: 80px;
     height: 36px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
-    background-color: #00897b;
-    color:#ffffff;
+    background-color: #1e88e5;
+    color: #ffffff;
 }
 #mqtt-cancel-btn {
     width: 80px;
     height: 36px;
-    margin-right: 16px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
     background-color: #6a6a6a;
@@ -43,22 +47,19 @@
 }
 
 // MAIN BORDER LINE
-#main-view {
+#mqtt-main-view {
     margin-top: 21px;
-    width: 97.4%;
     border: solid 1px #ecebeb;
     background-color: #ffffff;
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 28px;
 }
 
 // MAIN VIEW CONTENTS COMMON ATTRIBUTE
 .mqtt-connect-view {
     width: 100%;
-    margin-left: 9.6%;
-    margin-right: 9.6%;
+    margin-left: 131px;
+    margin-right: 131px;
 }
+
 .mqtt-title {
     display:inline-block;
     opacity: 0.8;
@@ -105,15 +106,97 @@
     margin-left: 1.17%;
 }
 
+.mqtt-edit-connect {
+    width: 100%;
+}
+
+.ts-input-group {
+    margin-top: 16.5px;
+    display: inline-flex;
+
+    &.collect {
+        width: 30%;
+    }
+    &.url {
+        margin-left: 4.12%;
+        width: 20%;
+    }
+    &.port {
+        margin-left: 4.12%;
+        width: 20%;
+    }
+    &.keep {
+        margin-left: 131px;
+        width: 20%;
+    }
+    .ts-mqtt-collect-label {
+        display: flex;
+        width: 80px;
+        align-items: center;
+    }
+    .ts-mqtt-url-label {
+        display: flex;
+        width: 46px;
+        align-items: center;
+    }
+    .ts-mqtt-port-label {
+        display: flex;
+        width: 33px;
+        align-items: center;
+    }
+    .ts-mqtt-keep-label {
+        display: flex;
+        width: 100px;
+        align-items: center;
+    }
+    .ts-input {
+        margin-left: 16px;
+        display: inline-block;
+        width: 100%;
+        &>:first-child {
+            width: 100%;
+            height: 36px;
+            border-radius: 4px;
+            padding-left: 8px;
+            background-color: rgba(#1e1e1e, 0.07);
+            &:focus + .separator {
+                opacity: 1;
+                height: 2px;
+                background: #1e88e5;
+                transform: scaleX(1) translateY(-2px);   
+            }
+        }
+        .separator {
+            display: block;
+            opacity: 0;
+            width: 100%;
+            background: rgba(#1e1e1e, 0.3);
+            transform: scaleX(0) translateY(-2px);
+            transform-origin: 50%;
+            transition: all .15s linear;
+            &.enable {
+                opacity: 1;
+                height: 1px;
+                transform: scaleX(1) translateY(-2px);   
+            }
+        }
+    }
+}
+
 // CONNECTION INFO
 #mqtt-title-connect {
-    margin-left: 8.18%;
+    margin-left: 111px;
     margin-top: 31px;
+}
+
+#mqtt-title-add-connect {
+    margin-left: 111px;
+    margin-top: 35px;
 }
 
 // CONNECTION BUTTON
 .mqtt-connect-btn-postion {
-    margin-right: 8.18%;
+    margin-right: 111px;
     margin-top: 20px;
     float: right;
     padding: 0px;
@@ -148,15 +231,15 @@
     height: 0;
     border: solid 1px #ecebeb;
     margin-top: 16.5px;
-    margin-left: 8.2%;
-    margin-right: 8.14%;
+    margin-left: 110px;
+    margin-right: 110px;
     align-content: center;
 }
 
 // COLLECTOR EDIT 
 #mqtt-title-collector {
-    // margin-left: 9.6%;
-    margin-top: 2.49%;
+    margin-left: 131px;
+    margin-top: 26.5px;
 }
 
 // URL EDIT
@@ -177,21 +260,41 @@
     margin-top: 43px;
 }
 #mqtt-title-alive-sec {
-    margin-left: 0.8%;
+    margin-left: 8px;
+    opacity: 0.5;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;    
 }
 
 // INIT SESSION 
 #mqtt-title-session {
-    margin-left: 7.22%;
+    margin-left: 36px;
     margin-top: 2.49%;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
 }
 #mqtt-session-check {
-    margin-left: 1.4%;   
+    margin-left: 16px;   
 }
 
 // TOPIC LIST
 #mqtt-title-topiclist {
-    margin-left: 8.18%;
+    margin-left: 111px;
     margin-top: 56px;
     display:inline-block;
 }
@@ -199,7 +302,7 @@
     width: 86.1px;
     height: 28px;
     margin-top: 45px;
-    margin-right: 8.18%;
+    margin-right: 111px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
     background-color: #1e88e5;
@@ -209,10 +312,10 @@
 
 // TOPIC LIST TABLE
 .mqtt-table-size {
-    margin-left: 8.18%;
-    margin-right: 8.18%;
+    margin-left: 111px;
+    margin-right: 111px;
     margin-top: 17.5px;
-    width: 83.67%;
+    width: 85%;
 }
 #mqtt-topic-list{
     background-color:#ccc;
@@ -224,7 +327,14 @@
     color:#1e1e1e;
     border: solid 0px #dcdbdc;
 }
-
+.tabulator {
+    position: absolute;
+    background-color: #fff;
+    overflow: hidden;
+    font-size: 14px;
+    text-align: left;
+    transform: translatez(0);
+}
 .tabulator .tabulator-tableHolder {
     background-color: #FFFFFF;
     min-height: 0px;
