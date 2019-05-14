@@ -1,6 +1,29 @@
 @import 'common';
 
 .ts-drone-view {
+    .project-basic-info {
+        background: #fff;
+    }
+
+    .caption {
+        background: #14229ebe;
+        color: #fff;
+        text-shadow: 1px 1px 1px rgba(245, 242, 242, 0.432);
+     }
+     
+     .header-row {
+        background: #8b8b8b;
+        color: #fff;
+    }
+
+    .cell {
+		border-bottom: 1px solid #e5e5e5;
+        
+        &.title {
+            background-color: #ccc;
+        }
+    }
+    
 }
 
 .config-sections {

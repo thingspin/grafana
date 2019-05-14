@@ -25,7 +25,7 @@ export class ProjectInfoEditor extends PureComponent<PropsAddProject, Project> {
 
   onSave = () => {
     const {onWarnning} = this.props;
-    const {name, site, pilot} = this.state;
+    const {name, site } = this.state;
 
     if ( name === "새 프로젝트") {
       onWarnning(name, `프로젝트 이름을 입력 하세요.`);
@@ -37,11 +37,6 @@ export class ProjectInfoEditor extends PureComponent<PropsAddProject, Project> {
       return;
     }
 
-    if ( pilot === "파일럿") {
-      onWarnning(pilot, `촬영자/담당자 이름을 입력하세요.`);
-      return;
-    }
-
     appEvents.emit('confirm-modal', {
       title: '프로젝트 생성',
       text: '드론으로 촬영한 영상과 문제점 분석을 위해 프로젝트를 생성합니다.',
@@ -50,6 +45,7 @@ export class ProjectInfoEditor extends PureComponent<PropsAddProject, Project> {
       icon: 'fa-superpowers',
       onConfirm: () => {
         getBackendSrv().put(`api/drone/project/`, this.state).then( (result) => {
+          console.log(result);
           this.props.onSave(this.state);
         });
       },
@@ -152,14 +148,14 @@ const ProjectPilotTimeEditor = (props) => {
   return (
     <div className="gf-form">
       <label className="gf-form-label width-7">촬영시간</label>
-      <input type="datetime-local" className="gf-form-input width-10"
+      <input type="datetime-local" className="gf-form-input width-15"
         value={begineDate}
         onChange={e => {
           writeBegineDate(e.target.value);
           onChange(e.target.value, endDate);
         }}>
       </input>
-      <input type="datetime-local" className="gf-form-input width-10"
+      <input type="datetime-local" className="gf-form-input width-15"
         value={endDate}
         onChange={e => {
           writeEndDate(e.target.value);

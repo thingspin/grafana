@@ -35,7 +35,7 @@ type ProjectBook struct {
 	Latitude  float64 `json:"lat,omitempty"`
 
 	Begin time.Time `json:"begin,omitempty"`
-	End    time.Time `json:"end,omitempty"`
+	End   time.Time `json:"end,omitempty"`
 
 	Created time.Time `json:"created,omitempty"`
 	Updated time.Time `json:"updated,omitempty"`
@@ -55,11 +55,15 @@ type ProjectRepository struct {
 // Project Repository
 //==================================================================================
 func (s *ProjectRepository) Save(pro *ProjectBook, base string) error {
-	data, _ := json.MarshalIndent(pro, "", " ")
+	data, err := json.MarshalIndent(pro, "", " ")
+	if err != nil {
+		return err
+	}
+
 	fn := "flight-" + pro.ID + ".json"
 	path := path.Join(base, fn)
 
-	err := u.WriteFile(path, data)
+	err = u.WriteFile(path, data)
 
 	return err
 }
@@ -119,8 +123,14 @@ func (s *DroneService) GetProjects(c *ReqContext) {
 
 func (s *DroneService) CreateProject(c *ReqContext, book ProjectBook) {
 	book.ID = GenerateShortUID()
-	book.Created = time.Now()
-	book.Updated = time.Now()
+
+	if book.Created.IsZero() {
+		book.Created = time.Now()
+		book.Updated = time.Now()
+	}
+	if book.Updated.IsZero() {
+		book.Updated = time.Now()
+	}
 
 	if book.Begin.IsZero() {
 		book.Begin = time.Now()
