@@ -53,6 +53,12 @@
       "canDelete": false,
       "children" : [
         {
+          "text": "조직 관리",
+          "icon": "gicon gicon-team",
+          "url": "/admin/orgs",
+          "canDelete": false
+        },
+        {
           "text": "그룹 관리",
           "icon": "gicon gicon-team",
           "url": "/org",

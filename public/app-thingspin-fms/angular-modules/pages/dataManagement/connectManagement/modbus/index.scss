@@ -5,7 +5,26 @@
     //padding: 28px 20px 0 20px;
     background-color: #ffffff;
 }
-
+.modbus-edit-box1 {
+    margin-left: 8.2%;
+    margin-right: 8.14%;
+    display: inline-flex;
+}
+.modbus-edit-box {
+    margin-left: 8.2%;
+    margin-right: 8.14%;
+}
+.modbus-content-first-box{
+    margin-left: 19.5px;
+}
+.modbus-content-middle-box{
+    margin-left: auto;
+    margin-right: auto;
+}
+.modbus-content-last-box{
+    margin-left: auto;
+    margin-right: 21.5px;
+}
 //top title
 .modbus-title-top {
     margin-left: 1.54%;
@@ -26,7 +45,7 @@
 //main border line
 #main-view {
     margin-top: 21px; //2%
-    //width: 97.4%;
+    width: 97%;
     border: solid 1px #ecebeb;
     background-color: #ffffff;
     margin-left: 20px;
@@ -59,7 +78,9 @@
     color:#ffffff;
 }
 #modbus-addr-add-btn {
-    margin-left: 67.09%; //919
+    //margin-left: 67.09%; //919
+    margin-top: 5%;
+    float: right;
     width: 104.1px;
     height: 28px;
     border-radius: 4px;
@@ -70,7 +91,6 @@
 
 //main view contents attribute
 .modbus-title-conn {
-    margin-left:8.43%;
     margin-top:31px;
     //width: 8.05%; //106
     height: 17px;
@@ -103,8 +123,37 @@
     color: #1e1e1e;
     display:inline-block;
 }
+.modbus-title-error {
+    margin-top:31px;
+    //width: 8.05%; //106
+    height: 17px;
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #d81b60;
+    background-color: #ffffff;
+    display:inline-block;
+
+}
+.modbus-error-comment {
+    margin-top: 16.5px;
+    margin-left: 20px;
+    display: block;
+    color: #1e1e1e;
+}
+#modbus-error-icon-bg {
+    color: #d81b60;
+    background-color: #ffffff;
+    font-size: 19px;
+}
 .modbus-title-addr-list {
-    margin-left:8.43%;
+    //margin-left:8.43%;
     margin-top:6.12%; //57
     //width: 106px;
     height: 17px;
@@ -126,6 +175,14 @@
     margin-top: 1.7%;//16.5
     margin-left: 8.2%;
     margin-right: 8.14%;
+    align-content: center;
+}
+.modbus-conn-section-line2 {
+    height: 0;
+    border: solid 1px #ecebeb;
+    margin-top: 1.7%;//16.5
+    //margin-left: 8.2%;
+    //margin-right: 8.14%;
     align-content: center;
 }
 
@@ -223,23 +280,27 @@
 
 //collector
 #modbus-collector {
-    margin-left:9.95%; //131px
+    margin-left:1.48%; //131px
     margin-top:26.5px;
 }
 #modbus-collector-name-position {
     margin-left:16px;
-    width: 23.4%; //308
+    width:23.4%;//308
+    //width:100%;//308
     height: 3.86%; // 36
+
 }
 #modbus-collector-host-position {
     margin-left:16px;
-    width: 17.55%; //231
+    width: 17.55%;//231
     height: 3.86%; // 36
+  
 }
 #modbus-collector-port-position {
     margin-left:16px;
-    width: 17.70%; //233
+    width:17.7%;//233
     height: 3.86%; // 36
+  
 }
 
 #modbus-host {
@@ -252,10 +313,9 @@
 }
 
 #modbus-unit-id {
-    margin-left:9.95%; //131px
+    margin-left:1.48%; 
     margin-top:26.5px;
-    //width: 3.64%;
-    width: 48px;
+    //width: 48px;
 }
 #modbus-unit-id-pos{
     margin-left:1.21%; //16
@@ -288,7 +348,7 @@
     margin-left:2.73%;
     margin-top:26.5px;
     //width: 6.76%;
-    width: 89px;
+    width: 100px;
 }
 #modbus-Intervals-pos{
     margin-left:1.21%;
@@ -312,6 +372,16 @@
     color:#1e1e1e;
     border: solid 0px #dcdbdc;
 }
+
+.tabulator {
+    position: relative;
+    background-color: #fff;
+    overflow: hidden;
+    font-size: 14px;
+    text-align: left;
+    transform: translatez(0);
+}
+
 .tabulator .tabulator-tableHolder {
     background-color: #FFFFFF;
     min-height: 0px;
@@ -380,9 +450,14 @@
 }
 
 // TOP RIGHT BUTTON
+.modbus-address-btn-pos{
+    margin-right: 19.9px;
+    margin-top: 1.82%;
+    float: right;
+}
 #modbus-address-cancel-btn {
-    margin-left: 65.9%; //721
-    margin-top: 1.82%; //20
+    margin-right: 16px;
+    //margin-left: 65.9%; //721
     width: 80px;
     height: 28px;
     border-radius: 4px;
@@ -391,8 +466,6 @@
     color:#ffffff;
 }
 #modbus-address-add-btn {
-    margin-left: 1.46%; //16
-    margin-top: 1.82%; //20
     width: 130.1px;
     height: 28px;
     border-radius: 4px;
@@ -407,6 +480,7 @@
     margin-top: 1.82%;
 }
 #modbus-add-edit-name-pos {
+    width: 8.35%;
     margin-left:16px;
 }
 
@@ -480,28 +554,28 @@
 //conneection test
 .modbus-conn-test-buttons {
     margin-top:20px;
-    margin-right: 8.43%;
+    //margin-right: 8.43%;
     float: right;
     button {
         color: #6a6a6a;
         background-color: #ecebeb;
-        width: 28px;
-        height: 28px;   
+        //width: 28px;
+        //height: 28px;   
         &.green {
-            width: 28px;
-            height: 28px;
+            //width: 28px;
+            //height: 28px;
             color: #ffffff;
             background-color: #1e88e5;
         }
         &.red {
-            width: 28px;
-            height: 28px;
+            //width: 28px;
+            //height: 28px;
             color: #ffffff;
             background-color: #d81b60;
         }
         &.yellow {
-            width: 28px;
-            height: 28px;
+            //width: 28px;
+            //height: 28px;
             color: #ffffff;
             background-color: #f1ee09;
         }
@@ -511,6 +585,10 @@
         }
     }
 }
+#modbus-conn-btn {
+    font-size: 19px;
+}
+
 .modbus-table-edit-button {
     //background-color: #ecebeb;
     color:#ffffff;

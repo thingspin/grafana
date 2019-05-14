@@ -78,6 +78,13 @@ export class TsModbusConnectCtrl {
 
    connectIcon: any;
 
+   // UI data
+   readonly errorComment: string[] = [
+    `MODBUS 서버가 동작 중이지 않을 수 있습니다.`,
+    `ThingSPIN에서 MODBUS 서버에 접근 할 수 있는 환경이 아닐 수 있습니다.`,
+    `네트워크 상태에 따라 서버에 연결이 지연 될 수 있습니다.`,
+    `자세한 사항은 MODBUS서버 관리자에 문의 바랍니다.`,
+    ];
   /** @ngInject */
   constructor(
     private $scope ,
