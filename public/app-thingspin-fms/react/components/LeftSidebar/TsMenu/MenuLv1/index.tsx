@@ -92,17 +92,17 @@ class TsMenuLv1 extends PureComponent<Props, State> {
   }
 
   get childrenDOM() {
-    const { menu, pinned } = this.props, { maxChild, open } = this.state;
+    const { menu, pinned } = this.props, { /*maxChild,*/ open } = this.state;
 
-    const bodyStyle =
-      menu.children && menu.children.length >= maxChild
-        ? {
-            height: `${maxChild * 28}px`,
-          }
-        : {};
+    // const bodyStyle =
+    //   menu.children && menu.children.length >= maxChild
+    //     ? {
+    //         height: `${maxChild * 28}px`,
+    //       }
+    //     : {};
 
     const DOM = menu.children ? (
-      <div key="menulv2" className="fms-menu-body" style={bodyStyle}>
+      <div key="menulv2" className="fms-menu-body" /*style={bodyStyle}*/>
         {' '}
         {menu.children
           .filter(item => !item.hideFromMenu)
