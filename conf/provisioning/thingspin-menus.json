@@ -27,14 +27,14 @@
         {
           "text": "사이트 관리",
           "icon": "fa fa-bar-chart",
-          "url": "/thingspin/manage/data/connect",
+          "url": "",
           "canDelete": true,
           "children": []
         },
         {
           "text": "컨텐츠 관리",
           "icon": "fa fa-bar-chart",
-          "url": "/thingspin/manage/data/connect",
+          "url": "",
           "canDelete": true,
           "children": []
         },
@@ -55,7 +55,7 @@
         {
           "text": "태그 관리",
           "icon": "fa fa-bar-chart",
-          "url": "/thingspin/manage/data/connect",
+          "url": "",
           "canDelete": true,
           "children": []
         }
