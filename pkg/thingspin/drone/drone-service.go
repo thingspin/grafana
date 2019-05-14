@@ -92,42 +92,6 @@ func (s *DroneService) Init() error {
 }
 
 func (s *DroneService) Run(ctx context.Context) error {
-	// configPath, _ := filepath.Abs(path.Join(s.Cfg.ProvisioningPath, "thingspin-service-drone.json"))
-	// s.log.Info("Configurating Drone Service", "Setting file", configPath, "Repo", s.services.RepogitoryFolder)
-
-	// file, err := ioutil.ReadFile(configPath)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// var data services
-	// err = json.Unmarshal(file, &data)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// data.RepogitoryFolder, _ = filepath.Abs(path.Join(s.Cfg.DataPath, "drone", "repo"))
-	// if _, err := os.Stat(data.RepogitoryFolder); os.IsNotExist(err) {
-	// 	err = os.MkdirAll(data.RepogitoryFolder, 0755)
-	// 	if err != nil {
-	// 		s.log.Error("Configurating Drone Service", "Repogitory creation failed!")
-	// 	}
-	// }
-
-	// s.services = data
-
-	// s.log.Info("Configurating Drone Service", "Project", data.Project, "Verion", data.Version)
-	// if data.Ignore {
-	// 	s.log.Debug("Configurating Drone Service", "Setup Ignored.")
-	// 	return nil
-	// }
-
-	// err = s.initAPI(ctx, data)
-	// s.log.Info("Configurating Drone Service", "API Router", "Finished.")
-	// if err != nil {
-	// 	return err
-	// }
-
 	err := s.initAPI(ctx, s.services)
 	s.log.Info("Configurating Drone Service", "API Router", "Finished.")
 	if err != nil {

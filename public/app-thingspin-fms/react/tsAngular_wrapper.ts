@@ -7,6 +7,7 @@ import TsToolbarComponent from './components/MainView/Toobar/index';
 import OpcNodeTree from './components/OpcNodeTree';
 
 import { TsConfigs } from './views/system/configs';
+import { TsDrone } from 'app-thingspin-fms/pro/drone';
 
 export function tsRegisterAngularDirectives() {
   tsReact2AngularDirective('tsNavbar', TsNavbarComponent, []);
@@ -28,4 +29,5 @@ export function tsRegisterAngularDirectives() {
     ["onClickAdd",  { watchDepth: 'reference', wrapApply: true }],
   ]);
   tsReact2AngularDirective('tsConfigView', TsConfigs, []);
+  tsReact2AngularDirective('tsDroneView', TsDrone, []);
 }
