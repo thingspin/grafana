@@ -161,7 +161,9 @@ export class TsMqttConnectCtrl {
   recvMqttMessage(topic: string, payload: string): void {
       const topics = topic.split("/");
       const flowId = topics[topics.length - 2];
-      if (flowId === this.FlowID) {
+      console.log(topic);
+      console.log(payload);
+      if (flowId === this.uuid) {
           clearTimeout(this.timer);
           this.setConnectStatus(payload);
       }
@@ -176,7 +178,16 @@ export class TsMqttConnectCtrl {
       if (!value) {
         try {
           this.backendSrv.delete(`thingspin/connect/${this.indexID}`);
-          this.$location.path(`/thingspin/manage/data/connect/`);
+          this.backendSrv
+          .delete(`thingspin/connect/${this.indexID}`).then((result: any) => {
+            console.log(result);
+            this.$location.path(`/thingspin/manage/data/connect/`);
+          })
+          .catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+          });
         } catch (e) {
           console.error(e);
         }
@@ -190,6 +201,7 @@ export class TsMqttConnectCtrl {
 
   save(value: boolean) {
     this.isConnectBtn = value;
+    this.setConnectStatus("init");
     if (this.collector && this.connection.url && this.connection.port && this.connection.keep_alive) {
       if (value) {
         this.onJsonCreatSender(value);
@@ -529,13 +541,13 @@ export class TsMqttConnectCtrl {
   createConnectNode() {
     const connectNode = {
       "id": "TS-MQTT-CHECKNODE-" + this.uuid,
-      "type": "mqtt in",
+      "type": "mqtt out",
       "name": this.uuid,
       "topic": "#",
       "qos": "0",
       "datatype": "auto",
       "broker": "TS-MQTT-CONNECT-" + this.uuid,
-      "x": 190,
+      "x": 870,
       "y": 100,
       "wires": [[]]
     };
@@ -571,7 +583,7 @@ export class TsMqttConnectCtrl {
     this.connectStatus = color;
     $('#mqtt-connect-btn').removeClass('icon-ts-connection_off');
     $('#mqtt-connect-btn').removeClass('icon-ts-connection-loding');
-    $('#mqtt-connect-btn').removeClass('tsi icon-ts-power');
+    $('#mqtt-connect-btn').removeClass('icon-ts-power');
     $('#mqtt-connect-state').removeClass('mqtt-state-connected');
     $('#mqtt-connect-state').removeClass('mqtt-state-retry');
     $('#mqtt-connect-state').removeClass('mqtt-state-disconnect');
@@ -584,6 +596,9 @@ export class TsMqttConnectCtrl {
     } else if (color === "red") {
       $('#mqtt-connect-state').addClass('mqtt-state-disconnect');
       $('#mqtt-connect-btn').addClass('icon-ts-connection_off');
+    } else if (color === "init") {
+      $('#mqtt-connect-state').addClass('mqtt-state-retry');
+      $('#mqtt-connect-btn').addClass('icon-ts-power');
     }
     this.$scope.$applyAsync();
   }
@@ -642,7 +657,7 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  // table methods
+  // TABLE Method
   initTable(): void {
     this.$scope.$watch("list", () => {
         this.setPageNodes();
