@@ -129,11 +129,19 @@ export const mapStateToProps = (state, { $route }) => {
     }
     if ($$route) {
       let list = findPathNavItem(originalPath, config.bootData.thingspin.menu);
-      if ( list === null) {
-        list = findPathNavItem(originalPath.substring(0,originalPath.lastIndexOf('/')), config.bootData.thingspin.menu);
+      let subPath = originalPath;
+      while (list===null) {
+        const lastIdx = subPath.lastIndexOf('/');
+        if ( lastIdx <= 0 ) {
+          break;
+        }
+        subPath = subPath.substring(0,lastIdx);
+        list = findPathNavItem(subPath, config.bootData.thingspin.menu);
       }
       if ( list ) {
         titleObj = getTitle(list);
+      } else {
+        titleObj = getTitle(undefined);
       }
     } else {
       titleObj = getTitle(undefined);
