@@ -1,13 +1,33 @@
 import angular from 'angular';
+import _ from "lodash";
 import "./index.scss";
-import { TsConnect } from "app-thingspin-fms/models/connect";
 import { BackendSrv } from 'app/core/services/backend_srv';
-import Tabulator from 'tabulator-tables';
-//import $ from 'jquery';
+//import Tabulator from 'tabulator-tables';
 import { appEvents } from 'app/core/core';
 import uid from "shortid";
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
+
+export interface TableModel {
+  // table header data
+  rowCount: number; // 페이지당 표시할 행(row) 개수
+  selectOpts: number[];
+  // table body data
+  pageNode: any[];
+  // table footer data
+  currPage: number;
+  maxPage: number;
+  maxPageLen: number; // paging 최대 표시 개수
+}
+
+interface ModbusTableData {
+    idx: any;
+    name: any;
+    address: any;
+    functioncode: any;
+    quantity: any;
+    datatype: any;
+}
 
 export class TsModbusConnectCtrl {
   static template = require("./index.html");
@@ -42,7 +62,6 @@ export class TsModbusConnectCtrl {
 
   defTabulatorOpts: object;
   orderTable: any;
-  list: TsConnect[];
 
   isAddressEditView: boolean;
   isAddressEditBtn: boolean;
@@ -78,6 +97,17 @@ export class TsModbusConnectCtrl {
 
    connectIcon: any;
 
+    list: ModbusTableData[];
+    // table
+    tData: TableModel = {
+        rowCount: 16,
+        selectOpts: [16, 32, 48],
+        currPage: 0,
+        maxPage: 0,
+        maxPageLen: 10,
+        pageNode: [],
+    };
+
    // UI data
    readonly errorComment: string[] = [
     `MODBUS 서버가 동작 중이지 않을 수 있습니다.`,
@@ -85,11 +115,12 @@ export class TsModbusConnectCtrl {
     `네트워크 상태에 따라 서버에 연결이 지연 될 수 있습니다.`,
     `자세한 사항은 MODBUS서버 관리자에 문의 바랍니다.`,
     ];
+
   /** @ngInject */
   constructor(
-    private $scope ,
+    private $scope ,$routeParams,
     private $location: angular.ILocationService,
-    private $compile: angular.ICompileService, $routeParams,
+    //private $compile: angular.ICompileService, $routeParams,
     private backendSrv: BackendSrv) {
     //for tabulator table
     this.modbusParams = {
@@ -115,7 +146,7 @@ export class TsModbusConnectCtrl {
     this.tableList = [];
 
     this.connectIcon = 'icon-ts-power';
-    this.initTable();
+    //this.initTable();
     this.initMqtt();
     if ($routeParams.id) {
       console.log("route id: "+$routeParams.id);
@@ -173,7 +204,7 @@ export class TsModbusConnectCtrl {
     this.modbusReadIntervals = item.intervals;
     const getParams = item.params;
     this.FlowId = getParams.FlowId;
-    //this.tableData.length = getParams.AddressListCount;
+
     this.modbusHost = getParams.Host;
     this.modbusPort = getParams.Port;
     this.modbusUnitID = getParams.UnitId;
@@ -181,13 +212,13 @@ export class TsModbusConnectCtrl {
     this.modbusReTimeOut = getParams.ReTimeOut;
     this.nodeModbusGetteritem = getParams.AddressNode;
     this.nodeInjectWiresList = getParams.InjectWires;
-    this.tableData = getParams.Tabledata;
 
+    this.tableList = getParams.Tabledata;
     if (getParams.AddressListCount > 0) {
-      //console.log("table upadte");
       this.editIdx = getParams.AddressListCount;
-      this.tableList = this.tableData;
-      this.orderTable.setData(this.tableList);
+      this.list = (Array.from(this.tableList));
+      this.setPageNodes();
+      this.$scope.$applyAsync();
     }
     //
   }
@@ -238,67 +269,48 @@ resetEditData() {
   this.editFC = "";
   this.editType = "";
   this.isAddressEditmode = false;
-  //this.tableList = [];
 }
- getTablelistData() {
-  this.tableData = [];
-  this.tableData = this.orderTable.getData();
-  this.tableListsize = this.tableData.length;
-  //console.log(this.tableData);
-}
-updateTableData() {
-  this.editIdx = 0;
-  this.tableData = [];
-  this.tableData = this.orderTable.getData();
-  this.tableListsize = this.tableData.length;
-  //console.log(this.tableListsize);
-  //tableData[0].address
-    for (let i = 0; i < this.tableListsize; i++) {
-      this.tableData[i].idx = ++this.editIdx;
-      console.log(this.editIdx);
-    }
-    console.log(this.tableData);
-    this.tableList = this.tableData;
-    this.orderTable.setData(this.tableList);
- }
 
- addTableData() {
-   if (this.isAddressEditmode) {
-      //console.log("edit-tabledata");
-      const tableData = {
-        idx: this.editIdx,
-        address: this.editAddress,
-        name: this.editName,
-        quantity: this.editQuantity,
-        fc: this.editFC,
-        type: this.editType
-      };
-      this.tableList[this.editIdx-1] = tableData;
-      this.orderTable.setData(this.tableList);
-      //add data and hide add-list-edit
-      this.isAddressEditView = false;
-      this.isAddressEditBtn = true;
-      //reset data
-      this.resetEditData();
-   } else {
-      this.editIdx = this.editIdx+1; // index update
-      //console.log("add-tabledata");
-      const tableData = {
-        idx: this.editIdx,
-        address: this.editAddress,
-        name: this.editName,
-        quantity: this.editQuantity,
-        fc: this.editFC,
-        type: this.editType
-      };
-      this.tableList.push(tableData);
-      this.orderTable.setData(this.tableList);
-      //add data and hide add-list-edit
-      this.isAddressEditView = false;
-      this.isAddressEditBtn = true;
-      //reset data
-      this.resetEditData();
-   }
+ addTableData2() {
+   console.log("addTableData2");
+
+        if (this.isAddressEditmode) {
+          console.log("edit-tabledata");
+          this.tableList[this.editIdx-1].name = this.editName;
+          this.tableList[this.editIdx-1].address = this.editAddress;
+          this.tableList[this.editIdx-1].functioncode = this.editFC;
+          this.tableList[this.editIdx-1].quantity = this.editQuantity;
+          this.tableList[this.editIdx-1].datatype = this.editType;
+
+          this.list = Array.from(this.tableList);
+          this.setPageNodes();
+          this.$scope.$applyAsync();
+
+          this.isAddressEditView = false;
+          this.isAddressEditBtn = true;
+          //reset data
+          this.resetEditData();
+      } else {
+          this.editIdx = this.editIdx+1; // index update
+          //console.log("add-tabledata");
+          const tableData = {} as ModbusTableData;
+          tableData.idx = this.editIdx;
+          tableData.name = this.editName;
+          tableData.address = this.editAddress;
+          tableData.functioncode = this.editFC;
+          tableData.quantity = this.editQuantity;
+          tableData.datatype =  this.editType;
+          this.tableList.push(tableData);
+          this.list = Array.from(this.tableList);
+
+          this.setPageNodes();
+          this.$scope.$applyAsync();
+
+          this.isAddressEditView = false;
+          this.isAddressEditBtn = true;
+          //reset data
+          this.resetEditData();
+      }
  }
 
 editAddressList() {
@@ -324,7 +336,8 @@ editAddressList() {
 
         this.editQuantity = this.quantitySelected;
 
-        this.addTableData();
+        //this.addTableData();
+        this.addTableData2();
     } else {
               if (!this.editAddress) {
                 appEvents.emit('alert-warning', ['MODBUS 수집 Address를 설정 하세요.']);
@@ -346,75 +359,26 @@ onShowAddressEditView() {
   }
 }
 
-showEdit(idx: any): void {
-  this.getTablelistData();
-  const preData = this.tableData[idx-1];
-  //set data
-  this.editIdx = preData.idx;
-  this.editAddress = preData.address;
-  this.editName = preData.name;
-  this.editQuantity = preData.quantity;
-  this.editFC = preData.fc;
-  this.editType = preData.type;
+showEdit2(idx: any): void {
+  console.log("showEdit2: "+idx);
+  this.editIdx = idx+1;
+  this.editAddress = this.tableList[idx].address;
+  this.editName = this.tableList[idx].name;
+  this.editQuantity = this.tableList[idx].quantity;
+  this.editFC = this.tableList[idx].functionicode;
+  this.editType = this.tableList[idx].datatype;
 
   this.isAddressEditmode = true;
   this.onShowAddressEditView();
 }
-
-removeEdit(idx: any): void {
-  console.log("removeEdit");
-  this.getTablelistData();
-  delete this.tableList[idx-1];
-  this.orderTable.setData(this.tableList);
-  this.updateTableData();
+removeEdit2(idx: any): void {
+  console.log("removeEdit2: "+idx);
+  this.tableList.splice(idx,1);
+  this.list = (Array.from(this.tableList));
+  this.setPageNodes();
+  this.$scope.$applyAsync();
 }
- //--Tabulator 관련
- initTable(): void {
-   console.log("initTable");
-        const actionFormatter = (cell: any, formatterParams, onRendered: Function): void => {
-          const data = cell.getData();
-          //console.log(data);
-          const $html: JQLite = this.$compile(/*html*/`
-              <button class="btn" ng-click="ctrl.showEdit(${data.idx})">
-                  <i class="tsi icon-ts-create"></i>
-              </button>
-              <button class="btn" ng-click="ctrl.removeEdit(${data.idx})">
-                  <i class="tsi icon-ts-delete"></i>
-              </button>
-          `)(this.$scope);
 
-          onRendered((): void => {
-              $(cell.getElement()).append($html);
-          });
-      };
-      const headerClickEvt = (e: any, column: any) => {
-        console.log("headerClick");
-        this.$scope.$applyAsync();
-    };
-
-    const tableOpts: object = {
-        pagination: "local",
-        paginationSize: 10,
-        responsivelayout: true,
-        layout: "fitColumns",
-        columns: [
-          {title: "No", field: "idx"},
-          {title: "ADDRESS", field: "address"},
-          {title: "Name", field: "name"},
-          {title: "Quanntity", field: "quantity"},
-          {title: "Function Code", field: "fc"},
-          {title: "Type", field: "type"},
-          { title: "동작", formatter: actionFormatter, headerClick: headerClickEvt, },
-        ],
-        renderStarted: () => {
-            this.$scope.$applyAsync();
-        },
-        renderComplete: () => {
-            // this.tableInst.redraw();
-        }
-    };
-    this.orderTable = new Tabulator("#modbus-addressTable",tableOpts);
- }
 //-----------------------------
 testAddGetter1(address, quantity, functioncode,flowid,posY) {
   const addNodeinfo = {
@@ -501,17 +465,10 @@ addModbusGETTER( address, quantity, functioncode,flowid,posY,interval) {
     ]
   };
 
-  /*
-  const strObjGetter = JSON.stringify(objGetter);
-  const strObjParser = JSON.stringify(objParser);
-  this.nodeModbusGetteritem = this.nodeModbusGetteritem+strObjGetter+","+strObjParser+",";
-  this.nodeInjectWiresList = this.nodeInjectWiresList+","+"\""+"TS-MODBUS-GETTER-"+address+"-"+flowid+"\"";
-  */
  const strobjInjector = JSON.stringify(objInjector);
  const strObjGetter = JSON.stringify(objGetter);
  const strObjParser = JSON.stringify(objParser);
  this.nodeModbusGetteritem = this.nodeModbusGetteritem+strobjInjector+","+strObjGetter+","+strObjParser+",";
- //this.nodeInjectWiresList = this.nodeInjectWiresList+","+"\""+"TS-MODBUS-GETTER-"+address+"-"+flowid+"\"";
 }
 
 checkParams() {
@@ -544,23 +501,22 @@ testCreate() {
 
     this.FlowId = uid.generate();
     this.nodeModbusGetteritem = "";
-    //this.nodeInjectWiresList = "\""+"TS-MODBUS-GETTER-CONN-"+this.FlowId+"\"";
     this.nodeInjectWiresList = "";
-    this. getTablelistData();
-    console.log("list: "+this.tableData.length);
-    if (this.tableData.length > 0) {
-      for (let i = 0; i < this.tableData.length; i++) {
-        this.addModbusGETTER(this.tableData[i].address,this.tableData[i].quantity,this.tableData[i].fc,this.FlowId,i*20,this.modbusReadIntervals);
-        //this.testAddGetter1(this.tableData[i].address,this.tableData[i].quantity,this.tableData[i].fc,this.FlowId,i*20);
-      }
 
+   console.log("list: "+this.tableList.length);
+   if (this.tableList.length > 0) {
+    for (let i = 0; i < this.tableList.length; i++) {
+      // tslint:disable-next-line:max-line-length
+      this.addModbusGETTER(this.tableList[i].address,this.tableList[i].quantity,this.tableList[i].functioncode,this.FlowId,i*20,this.modbusReadIntervals);
     }
+
+  }
 
     const object = {
       name : this.connName,
       params: {
         FlowId : this.FlowId,
-        AddressListCount: this.tableData.length,
+        AddressListCount: this.tableList.length,
         Intervals : this.modbusReadIntervals,
         Host : this.modbusHost,
         Port : this.modbusPort,
@@ -569,7 +525,7 @@ testCreate() {
         ReTimeOut : this.modbusReTimeOut,
         AddressNode : this.nodeModbusGetteritem,
         InjectWires : this.nodeInjectWiresList,
-        Tabledata : this.tableData,
+        Tabledata : this.tableList,
         influxID : this.modbusinfluxID,
       },
       intervals: this.modbusReadIntervals
@@ -599,6 +555,62 @@ testCreate() {
         }
       });
     }
+  }
+
+  //table methods
+    // table methods
+    setPageNodes() {
+      const { currPage, rowCount, } = this.tData;
+      if (this.list) {
+          this.tData.pageNode = this.list.slice(
+              currPage * rowCount,
+              (currPage * rowCount) + rowCount
+          );
+      }
+  }
+
+  tNextPaging(): void {
+      if (this.tData.currPage < this.tData.maxPage) {
+          this.tData.currPage += 1;
+          this.setPageNodes();
+      }
+  }
+
+  tPrevPaging(): void {
+      if (this.tData.currPage) {
+          this.tData.currPage -= 1;
+          this.setPageNodes();
+      }
+  }
+
+  tSetPaging(index: number) {
+      this.tData.currPage = index;
+      this.tCalcPaging();
+      this.setPageNodes();
+  }
+
+  tCalcPaging() {
+      const { rowCount } = this.tData;
+      const temp: number = (this.list.length && (this.list.length % rowCount) === 0) ? 1 : 0;
+      this.tData.maxPage = Math.floor(this.list.length / (rowCount)) - temp;
+  }
+
+  tGetPagingNumberArray() {
+      const { currPage, maxPageLen, maxPage } = this.tData;
+      const index = Math.floor(currPage / maxPageLen);
+
+      const from = index * maxPageLen;
+      let to = index * maxPageLen + maxPageLen;
+      if (to > maxPage) {
+          to = maxPage + 1;
+      }
+
+      return _.range(from, to);
+  }
+  // table event methods
+  tOnSelectChange() {
+      this.tCalcPaging();
+      this.setPageNodes();
   }
 }
 

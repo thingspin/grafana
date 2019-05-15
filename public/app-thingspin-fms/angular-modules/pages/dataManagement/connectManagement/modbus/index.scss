@@ -609,3 +609,96 @@
     margin-right: 8.14%;
     margin-left: 8.2%;
 }
+
+.ts-connect-table-container {
+    margin-top: 1.58%;
+    //margin-top: 44.6px;
+    margin-left: 8.2%;
+    margin-right: 8.14%;
+    color: #1e1e1e;
+
+    button {
+        border: 0;
+        background-color: rgba(#000,0);
+    }
+
+    .connect-table-header {
+        opacity: 0.6;
+    }
+
+    .connect-page-rows {
+        display: inline-block;
+
+        .connect-table-select {
+            width: 100%;
+
+            border: 0;
+        }
+    }
+
+    .connect-table-body {
+        width: 100%;
+        margin: 8px 0;
+
+        table {
+            width: 100%;
+
+            tr {
+                border-bottom: solid 1px #dcdbdc;
+
+                &:first {
+                    margin-left: 16px;
+                }
+            }
+
+            th {
+                padding: 7px 0;
+            }
+
+            td {
+                padding: 12px 0;
+
+                color: rgba(#1e1e1e, 0.8);
+                button {
+                    font-size: 20px;
+                }
+            }
+
+            .ts-table-row {
+                &:hover {
+                    background-color: #e3f2fd;
+                }
+
+                .connect { 
+                    font-size: 20px;
+                }
+            }
+
+            .ts-table-header {
+                background-color: #ecebeb;
+            }
+        }
+    }
+
+    .connect-table-footer {
+        width: 100%;
+        display: inline-flex;
+
+        .table-page-range {
+            opacity: 0.6;
+        }
+
+        .table-paging {
+            margin-left: auto;
+            display: inline-block;
+        }
+
+        button {
+            opacity: 0.3;
+
+            &.blue {
+                opacity: 1;
+            }
+        }
+    }
+}
