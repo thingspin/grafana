@@ -81,7 +81,7 @@ export class TsUserSettingButtonComponent extends PureComponent<Props, States> {
     // return virtual DOM
     return (
       <div className="ts-user-setting-menu">
-        {this.systemSettingPage}
+        {true ? null : this.systemSettingPage}
         {this.state.isGrafanaAdmin ? this.userSettingPage : null}
         {this.userLogout}
       </div>

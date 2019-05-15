@@ -1,3 +1,4 @@
 export enum UserSettingInfo {
-   Profile = 'user-profile'
+   Profile = 'user-profile',
+   Alarm = "user-alarm"
 }

@@ -18,7 +18,13 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
     controller: 'LoginCtrl',
     pageClass: 'login-page sidemenu-hidden',
   })
-    .when('/thingspin/manage/alarm', { template: '<ts-alarm-management />', })
+    .when('/thingspin/manage/alarm', {
+      template: '<ts-alarm-management />',
+      routeInfo: {
+        menupath: [UserSettingInfo.Alarm],
+        icon: 'fa fa-bell',
+      },
+    })
 
     .when('/thingspin/manage/analysis', { template: '<ts-analysis-management />', })
     .when('/thingspin/manage/analysis/correlation', { template: '<ts-corr-analysis />', })
