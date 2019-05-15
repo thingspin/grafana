@@ -329,9 +329,9 @@ editAddressList() {
         }
 
         if (this.typeSelected === 'String') {
-          this.editType = 'string';
-        } else if (this.fcSelected === 'Numbers') {
-          this.editType = 'float32';
+          this.editType = 'String';
+        } else if (this.typeSelected === 'Numbers') {
+          this.editType = 'Numbers';
         }
 
         this.editQuantity = this.quantitySelected;
