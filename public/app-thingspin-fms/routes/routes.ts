@@ -6,6 +6,8 @@ import { setupAngularRoutes } from 'app/routes/routes';
 import 'app-thingspin-fms/angular-modules/pages';
 //import TsDrone from 'app-thingspin-fms/pro';
 
+import { UserSettingInfo } from 'app-thingspin-fms/types';
+
 /** @ngInject */
 export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
   setupAngularRoutes($routeProvider, $locationProvider);
@@ -42,6 +44,32 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
     .when('/thingspin/manage/system/menu', { template: '<ts-menu-management />', })
 
     .when('/thingspin/manage/view-edit-management', { template: '<ts-view-edit-management />', })
+    // Right Navbar
+    .when('/thingspin/user/profile', {
+      templateUrl: 'public/app/features/profile/partials/profile.html',
+      routeInfo: {
+        menupath: [UserSettingInfo.Profile],
+        icon: 'gicon gicon-preferences',
+      },
+      controller: 'ProfileCtrl',
+      controllerAs: 'ctrl',
+    })
+    .when('/thingspin/user/profile/password', {
+      templateUrl: 'public/app/features/profile/partials/change_password.html',
+      routeInfo: {
+        menupath: [UserSettingInfo.Profile],
+        icon: 'fa fa-fw fa-lock',
+      },
+      controller: 'ChangePasswordCtrl',
+    })
+    .when('/thingspin/user/profile/select-org', {
+      templateUrl: 'public/app/features/org/partials/select_org.html',
+      routeInfo: {
+        menupath: [UserSettingInfo.Profile],
+        icon: 'tsi icon-ts-settings',
+      },
+      controller: 'SelectOrgCtrl',
+    })
 
     .when('/v1.0/sys/config', { template: '<ts-config-view />', })
     .when('/v1.0/sys/config/:mode', { template: '<ts-config-view />', action: { view: 'solo'}})
