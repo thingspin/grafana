@@ -1,7 +1,6 @@
 # ThingSPIN ADD ignore code
 *DS_Store
 devenv/thingspin/docker/influxdb
-theOutput/
 data/drone/
 data/thingspin.db
 
