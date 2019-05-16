@@ -5,6 +5,7 @@
   "state": "alpha",
 
   "metrics": true,
+  "logs": true,
   "alerting": true,
   "annotations": true,
 
