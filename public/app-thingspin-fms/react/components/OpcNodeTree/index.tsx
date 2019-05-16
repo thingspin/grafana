@@ -51,6 +51,9 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
 
   constructor(props) {
     super(props);
+  }
+
+  componentWillMount() {
     this.updateData();
   }
 
