@@ -8,7 +8,15 @@
         {{else}}
             {{.Params.AddDisTopicList | convJsonStr}},
         {{end}}
-        {
+        {  
+            "id":"TS-MQTT-COMMENT",
+            "type":"comment",
+            "name":"MQTT-{{.Params.Name}}",
+            "info":"",
+            "x":80,
+            "y":20,
+            "wires":[[]]
+        }, {
             "id": "TS-MQTT-STATUS-{{.Params.UUID}}",
             "type": "status",
             "name": "",

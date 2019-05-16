@@ -30,7 +30,7 @@ export class TsUserSettingButtonComponent extends PureComponent<Props, States> {
   get userSettingPage(): JSX.Element {
     // Virtual DOM events Methods
     const onGotoUserSettingPage = () => {
-      this.props.updateLocation({ path: '/profile' });
+      this.props.updateLocation({ path: '/thingspin/user/profile' });
     };
 
     // return virtual DOM
@@ -81,7 +81,7 @@ export class TsUserSettingButtonComponent extends PureComponent<Props, States> {
     // return virtual DOM
     return (
       <div className="ts-user-setting-menu">
-        {this.systemSettingPage}
+        {true ? null : this.systemSettingPage}
         {this.state.isGrafanaAdmin ? this.userSettingPage : null}
         {this.userLogout}
       </div>

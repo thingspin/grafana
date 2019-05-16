@@ -101,7 +101,7 @@
             "y": 160,
             "wires": [
                 [
-                    {{.Params.InjectWires}}
+                    "TS-MODBUS-GETTER-CONN-{{.Params.FlowId}}"
                 ]
             ] 
         },
