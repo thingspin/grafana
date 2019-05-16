@@ -9,7 +9,7 @@
             {{.Params.AddDisTopicList | convJsonStr}},
         {{end}}
         {  
-            "id":"TS-MQTT-COMMENT",
+            "id":"TS-MQTT-COMMENT-{{.Params.UUID}}",
             "type":"comment",
             "name":"MQTT-{{.Params.Name}}",
             "info":"",

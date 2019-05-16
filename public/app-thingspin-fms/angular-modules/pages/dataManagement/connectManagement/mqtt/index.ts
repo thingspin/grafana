@@ -56,7 +56,6 @@ export class TsMqttConnectCtrl {
   isTopicEditView: boolean;
   isTopicEditBtn: boolean;
   isEditMode: boolean;
-  isConnectBtn: boolean;
   connectStatus: string;
 
   defTabulatorOpts: object;
@@ -115,9 +114,6 @@ export class TsMqttConnectCtrl {
       this.topicDisListArrayString = "";
       this.increaseYPos = 60;
       this.indexID = -1;
-
-      this.isConnectBtn = false;
-
       this.tableList = new Map<string, MqttTableData>();
       this.isTopicEditView = false;
       this.isTopicEditBtn = true;
@@ -173,62 +169,33 @@ export class TsMqttConnectCtrl {
       ctrl.scope = scope;
   }
 
-  close(value) {
-    if (this.indexID !== -1 && !this.isEditMode) {
-      if (!value) {
-        try {
-          this.backendSrv.delete(`thingspin/connect/${this.indexID}`);
-          this.backendSrv
-          .delete(`thingspin/connect/${this.indexID}`).then((result: any) => {
-            console.log(result);
-            this.$location.path(`/thingspin/manage/data/connect/`);
-          })
-          .catch(err => {
-            if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
-            }
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      } else {
-        this.$location.path(`/thingspin/manage/data/connect/`);
-      }
-    } else {
-      this.$location.path(`/thingspin/manage/data/connect/`);
-    }
+  close() {
+    this.$location.path(`/thingspin/manage/data/connect/`);
   }
 
   save(value: boolean) {
-    this.isConnectBtn = value;
     this.setConnectStatus("init");
     if (this.collector && this.connection.url && this.connection.port && this.connection.keep_alive) {
       if (value) {
-        this.onJsonCreatSender(value);
+        this.onJsonCreatSender();
       } else  {
-        if ((!this.isEditMode && this.indexID === -1) || this.tableList.size === 0) {
+        if (this.indexID === -1 || this.tableList.size === 0) {
           if (this.topicDisListArrayString.length === 0) {
             this.createConnectNode();
           }
           this.methodProcess(this.createHttpObject(), false);
-          // this.methodProcess(this.createHttpObject(value), value);
         } else {
-            this.onJsonCreatSender(value);
-          // this.openAlartNotification("현재 연결 상태는 " + this.connectStatus + "입니다.");
+            this.onJsonCreatSender();
         }
       }
     } else {
       if (!this.collector) {
-        // console.log("수집기 이름을 입력해주세요.");
         this.openAlartNotification("수집기 이름을 입력해주세요.");
       } else if (!this.connection.url) {
-        // console.log("HOST를 입력해주세요.");
         this.openAlartNotification("HOST를 입력해주세요.");
       } else if (!this.connection.port) {
-        // console.log("PORT를 입력해주세요.");
         this.openAlartNotification("PORT를 입력해주세요.");
       } else if (!this.connection.keep_alive) {
-        // console.log("Keep Alive 초를 입력해주세요.");
         this.openAlartNotification("Keep Alive 초를 입력해주세요.");
       }
     }
@@ -239,7 +206,6 @@ export class TsMqttConnectCtrl {
       this.isTopicEditView = true;
       console.log("value is true");
       this.isTopicEditBtn = false;
-
       $('#topic-list-input').on('itemRemoved', (event: any) => {
         this.delTopicItemList(event.item);
       });
@@ -261,7 +227,6 @@ export class TsMqttConnectCtrl {
               <i class="fa fa-trash"></i>
           </button>
       `)(this.$scope);
-
       onRendered((): void => {
           this.$scope.$applyAsync();
           $(cell.getElement()).append($html);
@@ -384,7 +349,6 @@ export class TsMqttConnectCtrl {
       console.log(this.topicItem);
     } else {
       this.openAlartNotification("토픽 항목을 입력해주세요.");
-      // console.log("토픽 항목을 입력해주세요.");
     }
   }
 
@@ -421,7 +385,7 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  onJsonCreatSender(enableClose) {
+  onJsonCreatSender() {
     let count = 0;
     if (this.tableList.size > 0) {
       if (this.topicListArrayString.length === 0 &&
@@ -491,7 +455,7 @@ export class TsMqttConnectCtrl {
       });
       // MQTT Topic array string check
       if (this.topicListArrayString.length !== 0) {
-        this.methodProcess(this.createHttpObject(), enableClose);
+        this.methodProcess(this.createHttpObject(), true);
       }
     } else  {
       this.openAlartNotification("수집할 Topic List를 만들어주세요.");
@@ -579,7 +543,6 @@ export class TsMqttConnectCtrl {
     appEvents.emit('alert-error', [value]);
   }
 
-
   setConnectStatus(color: string): void {
     this.connectStatus = color;
     $('#mqtt-connect-btn').removeClass('icon-ts-connection_off');
@@ -613,7 +576,7 @@ export class TsMqttConnectCtrl {
       .put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
         console.log(result);
         if (value) {
-          this.close(true);
+          this.close();
         }
       })
       .catch(err => {
@@ -628,7 +591,7 @@ export class TsMqttConnectCtrl {
         .put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
           console.log(result);
           if (value) {
-            this.close(true);
+            this.close();
           }
         })
         .catch(err => {
@@ -641,15 +604,7 @@ export class TsMqttConnectCtrl {
           console.log(result);
           this.indexID = result;
           if (value) {
-            // this.close(true);
-            if (!this.isConnectBtn) {
-              this.onJsonCreatSender(false);
-            } else {
-              this.topicListArrayString = "";
-              this.topicDisListArrayString = "";
-              this.onJsonCreatSender(true);
-              // this.close(true);
-            }
+            this.close();
           }
         })
         .catch(err => {
