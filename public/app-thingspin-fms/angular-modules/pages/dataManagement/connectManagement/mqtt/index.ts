@@ -645,7 +645,10 @@ export class TsMqttConnectCtrl {
             if (!this.isConnectBtn) {
               this.onJsonCreatSender(false);
             } else {
-              this.close(true);
+              this.topicListArrayString = "";
+              this.topicDisListArrayString = "";
+              this.onJsonCreatSender(true);
+              // this.close(true);
             }
           }
         })
