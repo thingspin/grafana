@@ -7,8 +7,8 @@ import uid from "shortid";
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
-const DEF_URL = "192.168.0.3";
-const DEF_PORT = "1883";
+const DEF_URL = "";
+const DEF_PORT = "";
 const DEF_ALIVE = "60";
 // const DEF_TOPIC = "/#";
 const DEF_TOPIC_TYPE_STRING = "String";
@@ -70,6 +70,7 @@ export class TsMqttConnectCtrl {
   readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
   readonly listenerTopic: string = "/thingspin/connect/+/status" as string;
   readonly connectTimeout: number = 15000;
+  private readonly nodeRedHost: string = `/api/cep` as string;
   mqttClient: TsMqttController; // mqtt client instance
   timer: NodeJS.Timer | null;
 
@@ -177,7 +178,7 @@ export class TsMqttConnectCtrl {
     this.setConnectStatus("init");
     if (this.collector && this.connection.url && this.connection.port && this.connection.keep_alive) {
       if (value) {
-        this.onJsonCreatSender();
+        this.onJsonCreatSender(true);
       } else  {
         if (this.indexID === -1 || this.tableList.size === 0) {
           if (this.topicDisListArrayString.length === 0) {
@@ -185,7 +186,11 @@ export class TsMqttConnectCtrl {
           }
           this.methodProcess(this.createHttpObject(), false);
         } else {
-            this.onJsonCreatSender();
+            if (value) {
+              this.onJsonCreatSender(true);
+            } else {
+              this.onJsonCreatSender(false);
+            }
         }
       }
     } else {
@@ -385,7 +390,7 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  onJsonCreatSender() {
+  onJsonCreatSender(withclose) {
     let count = 0;
     if (this.tableList.size > 0) {
       if (this.topicListArrayString.length === 0 &&
@@ -455,7 +460,7 @@ export class TsMqttConnectCtrl {
       });
       // MQTT Topic array string check
       if (this.topicListArrayString.length !== 0) {
-        this.methodProcess(this.createHttpObject(), true);
+        this.methodProcess(this.createHttpObject(), withclose);
       }
     } else  {
       this.openAlartNotification("수집할 Topic List를 만들어주세요.");
@@ -511,7 +516,7 @@ export class TsMqttConnectCtrl {
       "qos": "0",
       "datatype": "auto",
       "broker": "TS-MQTT-CONNECT-" + this.uuid,
-      "x": 870,
+      "x": 810,
       "y": 100,
       "wires": [[]]
     };
@@ -575,9 +580,17 @@ export class TsMqttConnectCtrl {
       this.backendSrv
       .put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
         console.log(result);
-        if (value) {
-          this.close();
-        }
+        this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`).then((result: any) => {
+          console.log(result);
+          if (value) {
+            this.close();
+          }
+        })
+        .catch(err => {
+          if (err.status === 500) {
+            appEvents.emit('alert-error', [err.statusText]);
+          }
+        });
       })
       .catch(err => {
         if (err.status === 500) {
@@ -590,9 +603,17 @@ export class TsMqttConnectCtrl {
         this.backendSrv
         .put("/thingspin/connect/" + this.indexID ,object).then((result: any) => {
           console.log(result);
-          if (value) {
-            this.close();
-          }
+          this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`).then((result: any) => {
+            console.log(result);
+            if (value) {
+              this.close();
+            }
+          })
+          .catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+          });
         })
         .catch(err => {
           if (err.status === 500) {
@@ -603,9 +624,17 @@ export class TsMqttConnectCtrl {
         this.backendSrv.post("/thingspin/connect/mqtt",object).then((result: any) => {
           console.log(result);
           this.indexID = result;
-          if (value) {
-            this.close();
-          }
+          this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`).then((result: any) => {
+            console.log(result);
+            if (value) {
+              this.close();
+            }
+          })
+          .catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+          });
         })
         .catch(err => {
           if (err.status === 500) {

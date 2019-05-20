@@ -8,6 +8,61 @@
         {{else}}
             {{.Params.AddDisTopicList | convJsonStr}},
         {{end}}
+        {
+            "id":"TS-MQTT-HTTPIN-STATUS-{{.Params.UUID}}",
+            "type":"http in",
+            "name":"",
+            "url":"/mqtt/{{.Params.UUID}}/status",
+            "method":"get",
+            "upload":false,
+            "swaggerDoc":"",
+            "x":270,
+            "y":140,
+            "wires":[  
+               [  
+                  "TS-MQTT-HTTPIN-PARSE-{{.Params.UUID}}"
+               ]
+            ]
+        },
+        {  
+            "id":"TS-MQTT-HTTPIN-PARSE-{{.Params.UUID}}",
+            "type":"function",
+            "name":"",
+            "func":"const {url} = msg.req;\nconst list = url.split(\"/\");\nconst id = list[list.length-2];\nconst status = global.get('ts-status');\nmsg.payload = status[id];\nreturn msg;",
+            "outputs":1,
+            "noerr":0,
+            "x":490,
+            "y":140,
+            "wires":[  
+               [  
+                  "TS-MQTT-HTTPIN-MQTT-{{.Params.UUID}}",
+                  "TS-MQTT-HTTPIN-RESPONSE-{{.Params.UUID}}"
+               ]
+            ]
+        },
+        {  
+            "id":"TS-MQTT-HTTPIN-RESPONSE-{{.Params.UUID}}",
+            "type":"http response",
+            "name":"",
+            "statusCode":"",
+            "headers":{
+            },
+            "x":670,
+            "y":160,
+            "wires":[[]]
+        },
+        {  
+            "id":"TS-MQTT-HTTPIN-MQTT-{{.Params.UUID}}",
+            "type":"mqtt out",
+            "name":"",
+            "topic":"/thingspin/connect/{{.Params.UUID}}/status",
+            "qos":"2",
+            "retain":"true",
+            "broker":"TS-MQTT-TSBROKER-{{.Params.UUID}}",
+            "x":950,
+            "y":140,
+            "wires":[[]]
+         },
         {  
             "id":"TS-MQTT-COMMENT-{{.Params.UUID}}",
             "type":"comment",
@@ -33,7 +88,7 @@
             "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = status.fill;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
             "outputs": 1,
             "noerr": 0,
-            "x": 470,
+            "x": 490,
             "y": 60,
             "wires": [
                 ["TS-MQTT-MQTTOUT-{{.Params.UUID}}"]
@@ -46,7 +101,7 @@
             "qos": "2",
             "retain": "true",
             "broker": "TS-MQTT-TSBROKER-{{.Params.UUID}}",
-            "x": 880,
+            "x": 830,
             "y": 60,
             "wires": []
         }, {
@@ -74,7 +129,7 @@
             "func":"",
             "outputs":1,
             "noerr":0,
-            "x":450,
+            "x":490,
             "y":100,
             "wires":[  
                [  
