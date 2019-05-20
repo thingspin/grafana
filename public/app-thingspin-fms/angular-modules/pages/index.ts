@@ -7,6 +7,7 @@ import './analysisManagement/predictionAnalysis';
 import './analysisManagement/scriptAnalysis';
 
 import './dataManagement';
+import './dataManagement/siteManagement';
 import './dataManagement/connectManagement';
 import './dataManagement/connectManagement/modbus';
 import './dataManagement/connectManagement/mqtt';

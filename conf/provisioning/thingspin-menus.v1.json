@@ -27,7 +27,7 @@
         {
           "text": "사이트 관리",
           "icon": "fa fa-bar-chart",
-          "url": "",
+          "url": "/thingspin/manage/data/site",
           "canDelete": true,
           "children": []
         },

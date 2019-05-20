@@ -13,12 +13,19 @@
       "canDelete": false,
       "children": [
         {
+          "text": "사이트 관리",
+          "icon": "fa fa-bar-chart",
+          "url": "/thingspin/manage/data/site",
+          "canDelete": false,
+          "children": []
+        },        
+        {
           "text": "연결 관리",
           "icon": "fa fa-bar-chart",
           "url": "/thingspin/manage/data/connect",
           "canDelete": false,
           "children": []
-        }
+        }       
       ]
     },
     {
