@@ -126,7 +126,7 @@ export class TsModbusConnectCtrl {
     this.modbusParams = {
       quantity: ['1','2','3','4','5','6','7','8','9'],
       functioncodes: ['Coil Status','Input Status','Holding Registers','Input Registers'],
-      datatypes: ['String','Numbers']
+      datatypes: ['decimal','Hex','String']
     };
 
     this.getterparserArray = [];
@@ -149,25 +149,25 @@ export class TsModbusConnectCtrl {
     //this.initTable();
     this.initMqtt();
     if ($routeParams.id) {
-      console.log("route id: "+$routeParams.id);
+      //console.log("route id: "+$routeParams.id);
       this.asyncDataLoader($routeParams.id);
       this.modbusinfluxID = $routeParams.id;
       this.isEditMode = true;
     } else {
-      console.log("nothing");
+      //console.log("nothing");
       this.isEditMode = false;
     }
 
   }
 
   async initMqtt(): Promise<void> {
-    console.log("initmqtt");
-    console.log(this.listenerTopic);
+    //console.log("initmqtt");
+    //console.log(this.listenerTopic);
     this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
 
     try {
         await this.mqttClient.run(this.recvMqttMessage.bind(this));
-        console.log("MQTT Connected");
+        //console.log("MQTT Connected");
     } catch (e) {
         console.error(e);
     }
@@ -183,7 +183,7 @@ export class TsModbusConnectCtrl {
     }
   setConnectStatus(color: string): void {
     this.connectStatus = color;
-    console.log("status color: "+color);
+    //console.log("status color: "+color);
     if (color === "green") {
         this.enableNodeSet = true;
     } else if (color === "yellow") {
@@ -198,7 +198,7 @@ export class TsModbusConnectCtrl {
   }
 
   onLoadData(item) {
-    console.log(item);
+    //console.log(item);
     this.indexID = item.id;
     this.connName = item.name;
     this.modbusReadIntervals = item.intervals;
@@ -272,10 +272,9 @@ resetEditData() {
 }
 
  addTableData2() {
-   console.log("addTableData2");
-
+   //console.log("addTableData2");
         if (this.isAddressEditmode) {
-          console.log("edit-tabledata");
+          //console.log("edit-tabledata");
           this.tableList[this.editIdx-1].name = this.editName;
           this.tableList[this.editIdx-1].address = this.editAddress;
           this.tableList[this.editIdx-1].functioncode = this.editFC;
@@ -314,35 +313,47 @@ resetEditData() {
  }
 
 editAddressList() {
+    let editParamFinish = true;
     //console.log(this.editFC+' '+this.editType);
     //check_edit param
     if (this.editAddress) {
-          //check & convert
-        if (this.fcSelected === 'Holding Registers') {
-          this.editFC = 'HoldingRegister';
-        } else if (this.fcSelected === 'Coil Status') {
-          this.editFC = 'Coil';
-        } else if (this.fcSelected === 'Input Status') {
-          this.editFC = 'Input';
-        } else if (this.fcSelected === 'Input Registers') {
-          this.editFC = 'InputRegister';
+      for ( let i = 0; i < this.tableList.length; i++) {
+        if (this.editAddress === this.tableList[i].address) {
+          appEvents.emit('alert-warning', ['동일한 Address가 존재 합니다.']);
+          editParamFinish = false;
+          break;
         }
-
-        if (this.typeSelected === 'String') {
-          this.editType = 'String';
-        } else if (this.typeSelected === 'Numbers') {
-          this.editType = 'Numbers';
-        }
-
-        this.editQuantity = this.quantitySelected;
-
-        //this.addTableData();
-        this.addTableData2();
+      }
     } else {
-              if (!this.editAddress) {
-                appEvents.emit('alert-warning', ['MODBUS 수집 Address를 설정 하세요.']);
-              }
+        appEvents.emit('alert-warning', ['MODBUS 수집 Address를 설정 하세요.']);
+      }
+
+    //check & convert
+    if (this.fcSelected === 'Holding Registers') {
+      this.editFC = 'HoldingRegister';
+    } else if (this.fcSelected === 'Coil Status') {
+      this.editFC = 'Coil';
+    } else if (this.fcSelected === 'Input Status') {
+      this.editFC = 'Input';
+    } else if (this.fcSelected === 'Input Registers') {
+      this.editFC = 'InputRegister';
     }
+
+    //data type
+    if (this.typeSelected === 'decimal') {
+      this.editType = 'decimal';
+    } else if (this.typeSelected === 'Hex') {
+      this.editType = 'Hex';
+    } else if (this.typeSelected === 'String') {
+      this.editType = 'String';
+    }
+    this.editQuantity = this.quantitySelected;
+
+
+    if (editParamFinish) {
+      this.addTableData2();
+    }
+
 }
 onShowAddressEditView() {
   //console.log("function called" + " edit-mode: "+this.isAddressEditmode);
@@ -360,7 +371,7 @@ onShowAddressEditView() {
 }
 
 showEdit2(idx: any): void {
-  console.log("showEdit2: "+idx);
+  //console.log("showEdit2: "+idx);
   this.editIdx = idx+1;
   this.editAddress = this.tableList[idx].address;
   this.editName = this.tableList[idx].name;
@@ -372,7 +383,7 @@ showEdit2(idx: any): void {
   this.onShowAddressEditView();
 }
 removeEdit2(idx: any): void {
-  console.log("removeEdit2: "+idx);
+  //console.log("removeEdit2: "+idx);
   this.tableList.splice(idx,1);
   this.list = (Array.from(this.tableList));
   this.setPageNodes();
@@ -476,7 +487,7 @@ checkParams() {
   // tslint:disable-next-line:max-line-length
   if (this.connName && this.modbusHost && this.modbusPort && this.modbusUnitID && this.modbusTimeOut && this.modbusReTimeOut && this.modbusReTimeOut && this.modbusReadIntervals) {
     this.isParamsComplete = true;
-    console.log('input check complete');
+    //console.log('input check complete');
     this.testCreate();
   } else {
             if (!this.connName) {
@@ -503,7 +514,7 @@ testCreate() {
     this.nodeModbusGetteritem = "";
     this.nodeInjectWiresList = "";
 
-   console.log("list: "+this.tableList.length);
+   //console.log("list: "+this.tableList.length);
    if (this.tableList.length > 0) {
     for (let i = 0; i < this.tableList.length; i++) {
       // tslint:disable-next-line:max-line-length
@@ -530,14 +541,14 @@ testCreate() {
       },
       intervals: this.modbusReadIntervals
     };
-    console.log(object);
+    //console.log(object);
 
     if (this.isEditMode) {
-      console.log("EDIT mode SAVE: "+this.indexID);
+      //console.log("EDIT mode SAVE: "+this.indexID);
       this.backendSrv.put("/thingspin/connect/"+this.indexID,object).then((result: any) => {
-        console.log(result);
+        //console.log(result);
         if (this.isConnCheckMode) {
-          console.log("redirect");
+          //console.log("redirect");
           this.redirect(this.indexID);
           location.reload();
         }else {
@@ -545,12 +556,22 @@ testCreate() {
         }
       });
     } else {
-      console.log("normal mode SAVE");
+      //console.log("normal mode SAVE");
       this.backendSrv.post("/thingspin/connect/modbus",object).then((result: any) => {
-        console.log(result);
+        //console.log(result);
+        //upadte connection id for nodered-parser measurement name
+        this.modbusinfluxID = result;
+
         if (this.isConnCheckMode) {
-          this.redirect(result);
+          this.redirect(this.modbusinfluxID);
         }else {
+          //console.log("connid: "+this.modbusinfluxID);
+          object.params.influxID = this.modbusinfluxID;
+          //console.log(object);
+          //update DB & nodered flow
+          this.backendSrv.put("/thingspin/connect/"+this.modbusinfluxID,object).then((result: any) => {
+            //console.log("put:"+result);
+          });
           this.close();
         }
       });

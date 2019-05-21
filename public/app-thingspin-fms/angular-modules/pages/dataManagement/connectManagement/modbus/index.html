@@ -78,68 +78,6 @@
         </div>    
         <div class="modbus-conn-section-line"></div>
         <div id="modbus-addressTable" class = "modbus-table-size"></div>
-        <!-- table -->
-        <div class="ts-connect-table-container">
-                <div class="connect-table-header">
-                        <span>페이지당 행수 : </span>
-                        <span class="connect-page-rows">
-                            <select class="connect-table-select" ng-model="ctrl.tData.rowCount" 
-                                ng-options="n as n for n in ctrl.tData.selectOpts"
-                                ng-change="ctrl.tOnSelectChange()"
-                            >
-                            </select>
-                        </span>
-                    </div>
-            
-                    <div class="connect-table-body">
-                      <table>
-                        <thead>
-                          <tr class="ts-table-header">
-                              <th>No</th>
-                              <th>이름</th>
-                              <th>Address</th>
-                              <th>Function Code</th>
-                              <th>Quantity</th>
-                              <th>Data Type</th>
-                              <th>동작</th>
-                          </tr>
-                        </thead>
-            
-                        <tbody>
-                          <tr class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
-                                <td>{{ (ctrl.tData.currPage * ctrl.tData.rowCount) + $index + 1 }}</td>
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.address }}</td>
-                                <td>{{ item.functioncode }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.datatype }}</td>
-                                <td>
-                                    <button class="btn" ng-click="ctrl.showEdit2($index)">
-                                        <i class="tsi icon-ts-create"></i>
-                                    </button>
-                                    <button class="btn" ng-click="ctrl.removeEdit2($index)">
-                                        <i class="tsi icon-ts-delete"></i>
-                                    </button>
-                                </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="connect-table-footer">
-                        <div class="table-page-range">
-                            <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} - {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
-                        </div>
-                        <div class="table-paging">
-                            <button ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
-                            <button ng-click="ctrl.tSetPaging(page)" 
-                              class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
-                              ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
-                                <span >{{ page + 1}}</span>
-                            </button>
-                            <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
-                        </div>
-                    </div>
-        </div>
 
         <!-- add view-->
         <div class = "modbus-address-add-view" ng-show = "ctrl.isAddressEditView">
@@ -175,6 +113,69 @@
                         <select id="modbus-type-combobox" ng-model="ctrl.typeSelected" ng-options="opts for opts in ctrl.modbusParams.datatypes"></select>
                 </div>
             </div>
+        </div>
+
+        <!-- table -->
+        <div class="modbus-ts-connect-table-container">
+                <div class="modbus-connect-table-header">
+                        <span>페이지당 행수 : </span>
+                        <span class="modbus-connect-page-rows">
+                            <select class="modbus-connect-table-select" ng-model="ctrl.tData.rowCount" 
+                                ng-options="n as n for n in ctrl.tData.selectOpts"
+                                ng-change="ctrl.tOnSelectChange()"
+                            >
+                            </select>
+                        </span>
+                    </div>
+            
+                    <div class="modbus-connect-table-body">
+                      <table>
+                        <thead>
+                          <tr class="modbus-ts-table-header">
+                              <th>No</th>
+                              <th>이름</th>
+                              <th>Address</th>
+                              <th>Function Code</th>
+                              <th>Quantity</th>
+                              <th>Data Type</th>
+                              <th>동작</th>
+                          </tr>
+                        </thead>
+            
+                        <tbody>
+                          <tr class="modbus-ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
+                                <td>{{ (ctrl.tData.currPage * ctrl.tData.rowCount) + $index + 1 }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.address }}</td>
+                                <td>{{ item.functioncode }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.datatype }}</td>
+                                <td>
+                                    <button class="btn" ng-click="ctrl.showEdit2($index)">
+                                        <i class="tsi icon-ts-create"></i>
+                                    </button>
+                                    <button class="btn" ng-click="ctrl.removeEdit2($index)">
+                                        <i class="tsi icon-ts-delete"></i>
+                                    </button>
+                                </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="modbus-connect-table-footer">
+                        <div class="modbus-table-page-range">
+                            <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} - {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
+                        </div>
+                        <div class="modbus-table-paging">
+                            <button ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
+                            <button ng-click="ctrl.tSetPaging(page)" 
+                              class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
+                              ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
+                                <span >{{ page + 1}}</span>
+                            </button>
+                            <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
+                        </div>
+                    </div>
         </div>
 
         <!-- error message -->

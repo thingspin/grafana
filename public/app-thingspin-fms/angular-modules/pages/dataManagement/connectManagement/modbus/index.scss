@@ -417,7 +417,8 @@
     margin-left: 8.43%; //111px
     margin-right: 8.43%;
     margin-top: 1.71%;//16px
-    margin-bottom: 38.66%; //360px
+    //margin-bottom: 38.66%; //360px
+    margin-bottom: 16px; //360px
     width: 83.13%; //194
     height: 14.7%; //137
     border: solid 1px #ecebeb;
@@ -610,7 +611,7 @@
     margin-left: 8.2%;
 }
 
-.ts-connect-table-container {
+.modbus-ts-connect-table-container {
     margin-top: 1.58%;
     //margin-top: 44.6px;
     margin-left: 8.2%;
@@ -622,21 +623,21 @@
         background-color: rgba(#000,0);
     }
 
-    .connect-table-header {
+    .modbus-connect-table-header {
         opacity: 0.6;
     }
 
-    .connect-page-rows {
+    .modbus-connect-page-rows {
         display: inline-block;
 
-        .connect-table-select {
+        .modbus-connect-table-select {
             width: 100%;
 
             border: 0;
         }
     }
 
-    .connect-table-body {
+    .modbus-connect-table-body {
         width: 100%;
         margin: 8px 0;
 
@@ -664,7 +665,7 @@
                 }
             }
 
-            .ts-table-row {
+            .modbus-ts-table-row {
                 &:hover {
                     background-color: #e3f2fd;
                 }
@@ -674,21 +675,21 @@
                 }
             }
 
-            .ts-table-header {
+            .modbus-ts-table-header {
                 background-color: #ecebeb;
             }
         }
     }
 
-    .connect-table-footer {
+    .modbus-connect-table-footer {
         width: 100%;
         display: inline-flex;
 
-        .table-page-range {
+        .modbus-table-page-range {
             opacity: 0.6;
         }
 
-        .table-paging {
+        .modbus-table-paging {
             margin-left: auto;
             display: inline-block;
         }
