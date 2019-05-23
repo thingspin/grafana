@@ -7,3 +7,8 @@ export function savePinState(args: any): ThunkResult<void> {
   };
 }
 
+export function getUserPins(): ThunkResult<void> {
+  return async (dispatch, getState) => {
+    return await getBackendSrv().get(`/thingspin/menu/pin`, {});
+  };
+}

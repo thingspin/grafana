@@ -7,10 +7,10 @@ import { contextSrv } from 'app/core/services/context_srv';
 
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import TsMenuLv1 from './MenuLv1';
-import { getUserPins } from './getUserPins';
+//import { getUserPins } from './getUserPins';
 
 export interface Props extends TsBaseProps {
-  getUserPins: typeof getUserPins;
+  //getUserPins: typeof getUserPins;
 }
 
 export interface State {
@@ -28,7 +28,7 @@ export class TsMenu extends PureComponent<Props, State> {
 
   async componentWillMount() {
     if ( this.isSignedIn ) {
-      this.pins = await this.props.getUserPins();
+      //this.pins = await this.props.getUserPins();
       this.setState( {load: true} );
     }
   }
@@ -43,7 +43,7 @@ export class TsMenu extends PureComponent<Props, State> {
       .filter(item => item.icon)
       .filter(item => !item.divider)
     .map((item, idx) => {
-      item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
+      //item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
       return (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned}/>);
     });
   }
@@ -54,7 +54,7 @@ export class TsMenu extends PureComponent<Props, State> {
       .filter(item => item.icon)
       .filter(item => !item.divider)
     .map((item, idx) => {
-      item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
+      //item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
       return (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned}/>);
     });
   }
@@ -73,7 +73,7 @@ export class TsMenu extends PureComponent<Props, State> {
 }
 
 const mapDispatchToProps = {
-  getUserPins,
+  //getUserPins,
 };
 
 const mapStateToProps = () => ({});

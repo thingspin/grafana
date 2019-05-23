@@ -4,7 +4,7 @@ import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 // import { StoreState } from 'app/types';
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 
-import { savePinState } from './pinMenu';
+import { savePinState, getUserPins } from './pinMenu';
 import { notifyApp } from 'app/core/actions';
 import { createSuccessNotification } from 'app/core/copy/appNotification';
 
@@ -14,6 +14,7 @@ export interface Props extends TsBaseProps {
   menu: any;
   pinned: boolean;
   savePinState: typeof savePinState;
+  getUserPins: typeof getUserPins;
   notifyApp: typeof notifyApp;
 }
 
@@ -29,13 +30,19 @@ class TsMenuLv1 extends PureComponent<Props, State> {
     maxChild: 8,
     pin: this.props.pinned,
   };
-
-  componentWillMount() {
-    const { pinned } = this.props;
-    this.setState( {
-      pin: pinned,
-      open: pinned
-    });
+  pins: any;
+  async componentWillMount() {
+    this.pins = await this.props.getUserPins();
+    const { menu } = this.props;
+    for ( let _i = 0; _i < this.pins.length; _i++) {
+      if ( this.pins[_i] === menu.id) {
+        this.setState( {
+          pin: true,
+          open: true
+        });
+        break;
+      }
+    }
   }
   async componentDidMount() {
 
@@ -65,8 +72,8 @@ class TsMenuLv1 extends PureComponent<Props, State> {
 
   get arrowDOM() {
     const { menu } = this.props, { pin, open } = this.state;
-    const { pinned } = this.props;
-    const arrowIcon = (pinned || open) ? 'fa fa-caret-down' : 'fa fa-caret-up';
+    //const { pinned } = this.props;
+    const arrowIcon = (pin || open) ? 'fa fa-caret-down' : 'fa fa-caret-up';
 
     return (
       <div className="fms-menu-header-controls-arrow" onClick={this.arrowClickEvt}>
@@ -79,10 +86,10 @@ class TsMenuLv1 extends PureComponent<Props, State> {
 
   get pinDOM() {
     const { open, pin } = this.state;
-    const { pinned } = this.props;
-    const pinIcon = (pinned || pin) ? 'ts-leftsidebar-icons ts-left-icon-pin-on' : 'ts-leftsidebar-icons ts-left-icon-pin-off';
+    //const { pinned } = this.props;
+    const pinIcon = (pin) ? 'ts-leftsidebar-icons ts-left-icon-pin-on' : 'ts-leftsidebar-icons ts-left-icon-pin-off';
 
-    return (pinned || open) ? (
+    return (pin || open) ? (
       <div className="fms-menu-header-controls-pin" onClick={this.pinClickEvt}>
         <span>
           <i className={pinIcon} />
@@ -92,7 +99,7 @@ class TsMenuLv1 extends PureComponent<Props, State> {
   }
 
   get childrenDOM() {
-    const { menu, pinned } = this.props, { /*maxChild,*/ open } = this.state;
+    const { menu } = this.props, { /*maxChild,*/ open, pin } = this.state;
 
     // const bodyStyle =
     //   menu.children && menu.children.length >= maxChild
@@ -113,7 +120,7 @@ class TsMenuLv1 extends PureComponent<Props, State> {
       </div>
     ) : null;
 
-    return (pinned || open) ? DOM : null;
+    return (pin || open) ? DOM : null;
   }
 
   render() {
@@ -145,6 +152,7 @@ class TsMenuLv1 extends PureComponent<Props, State> {
 
 const mapDispatchToProps = {
   savePinState,
+  getUserPins,
   notifyApp,
 };
 
