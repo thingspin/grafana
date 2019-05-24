@@ -1,16 +1,19 @@
-import angular from 'angular';
-import TsSiteManagementCtrl from './controller';
+import angular from "angular";
+import "./index.scss";
 
-class TsSiteManagementDirective implements angular.IDirective {
-  templateUrl = require('./index.html');
-  restrict = 'E';
-  bindToController = true;
-  controllerAs = 'ctrl';
-  controller = TsSiteManagementCtrl;
+import './tagdefine';
+import './sitetable';
 
-  /** @ngInject */
-  constructor() {
-  }
+export class TsSiteManagementCtrl implements angular.IController {
+    constructor() {}// Dependency Injection
 }
 
-angular.module('thingspin.directives').directive('tsSiteManagement', [() => new TsSiteManagementDirective()]);
+export default class TsSiteManagement implements angular.IDirective {
+    templateUrl = require("./index.html");
+    controller = TsSiteManagementCtrl;
+    controllerAs = "ctrl";
+
+    constructor() {}
+}
+
+angular.module('thingspin.directives').directive('tsSiteManagement', [() => new TsSiteManagement()]);

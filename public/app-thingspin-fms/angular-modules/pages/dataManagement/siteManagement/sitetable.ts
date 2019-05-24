@@ -1,6 +1,5 @@
 import _ from "lodash";
 import angular from "angular";
-import "./index.scss";
 
 interface MqttTableData {
     name: string;
@@ -9,18 +8,19 @@ interface MqttTableData {
 }
 
 export interface TableModel {
-// table header data
-rowCount: number; // 페이지당 표시할 행(row) 개수
-selectOpts: number[];
-// table body data
-pageNode: any[];
-// table footer data
-currPage: number;
-maxPage: number;
-maxPageLen: number; // paging 최대 표시 개수
+    // table header data
+    rowCount: number; // 페이지당 표시할 행(row) 개수
+    selectOpts: number[];
+    // table body data
+    pageNode: any[];
+    // table footer data
+    currPage: number;
+    maxPage: number;
+    maxPageLen: number; // paging 최대 표시 개수
 }
 
-export default class TsSiteManagementCtrl implements angular.IController {
+
+export class TsSiteTableCtrl implements angular.IController {
     list: MqttTableData[];
     tData: TableModel = {
         rowCount: 10,
@@ -102,3 +102,18 @@ export default class TsSiteManagementCtrl implements angular.IController {
         this.setPageNodes();
     }
 }
+
+export class TsSiteTableDirective implements angular.IDirective {
+    templateUrl = require('./sitetable.html');
+    restrict = 'E';
+    bindToController = true;
+    controllerAs = 'tag';
+    controller = TsSiteTableCtrl;
+    replace = true;
+
+    /** @ngInject */
+    constructor() {
+    }
+}
+
+angular.module('thingspin.directives').directive('tsSiteTable', [() => new TsSiteTableDirective()]);
