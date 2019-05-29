@@ -78,7 +78,7 @@ func (fp *FrontendPluginBase) handleModuleDefaults() {
 
 // ThingSPIN add code ------
 func isThingspinPlugin(pluginDir string) bool {
-	return !strings.Contains(pluginDir, setting.StaticRootPath+"/app-thingpsin-fms")
+	return strings.Contains(pluginDir, setting.StaticRootPath+"/app-thingspin-fms")
 }
 
 // ThingSPIN add code ------

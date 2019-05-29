@@ -33,6 +33,9 @@ import * as pieChartPanel from 'app/plugins/panel/piechart/module';
 import * as barGaugePanel from 'app/plugins/panel/bargauge/module';
 
 import * as exampleApp from 'app/plugins/app/example-app/module';
+// thingspin add code ---
+import { thingspinBuiltInPlugins } from './built_in_plugins_thingspin';
+// thingspin add code ---
 
 const builtInPlugins = {
   'app/plugins/datasource/graphite/module': graphitePlugin,
@@ -72,4 +75,6 @@ const builtInPlugins = {
   'app/plugins/app/example-app/module': exampleApp,
 };
 
-export default builtInPlugins;
+// thingspin add code ---
+export default Object.assign(builtInPlugins, thingspinBuiltInPlugins);
+// thingspin add code ---
