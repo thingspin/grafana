@@ -5,6 +5,7 @@ import './tagdefine';
 import './sitetable';
 
 export class TsSiteManagementCtrl implements angular.IController {
+    siteID = "siteID Test";
     constructor() {}// Dependency Injection
 }
 

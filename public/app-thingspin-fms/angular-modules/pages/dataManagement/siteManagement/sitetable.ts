@@ -21,6 +21,7 @@ export interface TableModel {
 
 
 export class TsSiteTableCtrl implements angular.IController {
+    data: any;
     list: MqttTableData[];
     tData: TableModel = {
         rowCount: 10,
@@ -33,14 +34,30 @@ export class TsSiteTableCtrl implements angular.IController {
 
     constructor(
         private $scope: angular.IScope,
-    ) {}// Dependency Injection
+    ) {
+        this.list = [];
+        this.initTable();
+
+        const tableData = {} as MqttTableData;
+        tableData.name = "test";
+        tableData.topic = "test";
+        tableData.value = "test";
+
+        this.list.push(tableData);
+
+    }// Dependency Injection
 
     $onInit(): void {
+        console.log("SiteTable : " + this.data);
     }
 
     $onDestroy(): void {
     }
 
+    siteAdd(): void {
+        console.log("siteAdd click");
+        this.data = "Site id test = 1";
+    }
 
     // TABLE Method
     initTable(): void {
@@ -98,6 +115,7 @@ export class TsSiteTableCtrl implements angular.IController {
     }
         // table event methods
     tOnSelectChange() {
+        console.log("");
         this.tCalcPaging();
         this.setPageNodes();
     }
@@ -107,10 +125,13 @@ export class TsSiteTableDirective implements angular.IDirective {
     templateUrl = require('./sitetable.html');
     restrict = 'E';
     bindToController = true;
-    controllerAs = 'tag';
+    controllerAs = 'ctrl';
     controller = TsSiteTableCtrl;
     replace = true;
 
+    scope = {
+        data: "="
+    };
     /** @ngInject */
     constructor() {
     }
