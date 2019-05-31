@@ -64,6 +64,9 @@ func (pm *PluginManager) Init() error {
 
 	pm.log.Info("Starting plugin search")
 	scan(path.Join(setting.StaticRootPath, "app/plugins"))
+	// ThingSPIN add code ------
+	scan(path.Join(setting.StaticRootPath, "app-thingspin-fms/plugins"))
+	// ThingSPIN add code ------
 
 	// check if plugins dir exists
 	if _, err := os.Stat(setting.PluginsPath); os.IsNotExist(err) {
