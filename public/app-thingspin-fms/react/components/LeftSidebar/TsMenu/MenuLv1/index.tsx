@@ -34,13 +34,15 @@ class TsMenuLv1 extends PureComponent<Props, State> {
   async componentWillMount() {
     this.pins = await this.props.getUserPins();
     const { menu } = this.props;
-    for ( let _i = 0; _i < this.pins.length; _i++) {
-      if ( this.pins[_i] === menu.id) {
-        this.setState( {
-          pin: true,
-          open: true
-        });
-        break;
+    if ( this.pins !== null) {
+      for ( let _i = 0; _i < this.pins.length; _i++) {
+        if ( this.pins[_i] === menu.id) {
+          this.setState( {
+            pin: true,
+            open: true
+          });
+          break;
+        }
       }
     }
   }

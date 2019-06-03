@@ -103,9 +103,6 @@ export const makeExploreItemState = (): ExploreItemState => ({
   graphIsLoading: false,
   logIsLoading: false,
   tableIsLoading: false,
-  supportsGraph: null,
-  supportsLogs: null,
-  supportsTable: null,
   queryKeys: [],
   urlState: null,
   update: makeInitialUpdateState(),
@@ -246,7 +243,6 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
       // Capabilities
       const supportsGraph = datasourceInstance.meta.metrics;
       const supportsLogs = datasourceInstance.meta.logs;
-      const supportsTable = datasourceInstance.meta.tables;
 
       let mode = ExploreMode.Metrics;
       const supportedModes: ExploreMode[] = [];
@@ -274,9 +270,6 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
         graphIsLoading: false,
         logIsLoading: false,
         tableIsLoading: false,
-        supportsGraph,
-        supportsLogs,
-        supportsTable,
         StartPage,
         showingStartPage: Boolean(StartPage),
         queryKeys: getQueryKeys(state.queries, datasourceInstance),
@@ -599,8 +592,9 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
   })
   .addMapper({
     filter: runQueriesAction,
-    mapper: (state): ExploreItemState => {
-      const { range, datasourceInstance, containerWidth } = state;
+    mapper: (state, action): ExploreItemState => {
+      const { range } = action.payload;
+      const { datasourceInstance, containerWidth } = state;
       let interval = '1s';
       if (datasourceInstance && datasourceInstance.interval) {
         interval = datasourceInstance.interval;
@@ -608,6 +602,7 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
       const queryIntervals = getIntervals(range, interval, containerWidth);
       return {
         ...state,
+        range,
         queryIntervals,
         showingStartPage: false,
       };

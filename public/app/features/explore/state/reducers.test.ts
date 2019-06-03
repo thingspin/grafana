@@ -4,6 +4,7 @@ import {
   exploreReducer,
   makeInitialUpdateState,
   initialExploreState,
+  DEFAULT_RANGE,
 } from './reducers';
 import {
   ExploreId,
@@ -31,7 +32,7 @@ import { ActionOf } from 'app/core/redux/actionCreatorFactory';
 import { updateLocation } from 'app/core/actions/location';
 import { serializeStateToUrlParam } from 'app/core/utils/explore';
 import TableModel from 'app/core/table_model';
-import { DataSourceApi, DataQuery, LogsModel, LogsDedupStrategy } from '@grafana/ui';
+import { DataSourceApi, DataQuery, LogsModel, LogsDedupStrategy, dateTime } from '@grafana/ui';
 
 describe('Explore item reducer', () => {
   describe('scanning', () => {
@@ -143,7 +144,6 @@ describe('Explore item reducer', () => {
             meta: {
               metrics: true,
               logs: true,
-              tables: true,
             },
             components: {
               ExploreStartPage: StartPage,
@@ -153,9 +153,6 @@ describe('Explore item reducer', () => {
           const queryKeys: string[] = [];
           const initalState: Partial<ExploreItemState> = {
             datasourceInstance: null,
-            supportsGraph: false,
-            supportsLogs: false,
-            supportsTable: false,
             StartPage: null,
             showingStartPage: false,
             queries,
@@ -163,9 +160,6 @@ describe('Explore item reducer', () => {
           };
           const expectedState = {
             datasourceInstance,
-            supportsGraph: true,
-            supportsLogs: true,
-            supportsTable: true,
             StartPage,
             showingStartPage: true,
             queries,
@@ -193,6 +187,7 @@ describe('Explore item reducer', () => {
       it('then it should set correct state', () => {
         const initalState: Partial<ExploreItemState> = {
           showingStartPage: true,
+          range: null,
         };
         const expectedState = {
           queryIntervals: {
@@ -200,11 +195,16 @@ describe('Explore item reducer', () => {
             intervalMs: 1000,
           },
           showingStartPage: false,
+          range: {
+            from: dateTime(),
+            to: dateTime(),
+            raw: DEFAULT_RANGE,
+          },
         };
 
         reducerTester()
           .givenReducer(itemReducer, initalState)
-          .whenActionIsDispatched(runQueriesAction({ exploreId: ExploreId.left }))
+          .whenActionIsDispatched(runQueriesAction({ exploreId: ExploreId.left, range: expectedState.range }))
           .thenStateShouldEqual(expectedState);
       });
     });

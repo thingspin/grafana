@@ -9,7 +9,6 @@
   "metrics": true,
   "alerting": true,
   "annotations": true,
-  "tables": false,
   "queryOptions": {
     "maxDataPoints": true,
     "cacheTimeout": true
