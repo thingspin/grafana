@@ -131,9 +131,9 @@ func AlertTest(c *m.ReqContext, dto dtos.AlertTestCommand) Response {
 	}
 
 	backendCmd := alerting.AlertTestCommand{
-		OrgID:     c.OrgId,
+		OrgId:     c.OrgId,
 		Dashboard: dto.Dashboard,
-		PanelID:   dto.PanelId,
+		PanelId:   dto.PanelId,
 		User:      c.SignedInUser,
 	}
 
