@@ -64,7 +64,7 @@ type DingDingNotifier struct {
 func (dd *DingDingNotifier) Notify(evalContext *alerting.EvalContext) error {
 	dd.log.Info("Sending dingding")
 
-	messageURL, err := evalContext.GetRuleURL()
+	messageURL, err := evalContext.GetRuleUrl()
 	if err != nil {
 		dd.log.Error("Failed to get messageUrl", "error", err, "dingding", dd.Name)
 		messageURL = ""
@@ -82,7 +82,7 @@ func (dd *DingDingNotifier) Notify(evalContext *alerting.EvalContext) error {
 	dd.log.Info("messageUrl:" + messageURL)
 
 	message := evalContext.Rule.Message
-	picURL := evalContext.ImagePublicURL
+	picURL := evalContext.ImagePublicUrl
 	title := evalContext.GetNotificationTitle()
 	if message == "" {
 		message = title

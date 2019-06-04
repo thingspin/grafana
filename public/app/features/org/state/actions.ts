@@ -1,5 +1,5 @@
 import { Organization, ThunkResult } from 'app/types';
-import { getBackendSrv } from '@grafana/runtime';
+import { getBackendSrv } from 'app/core/services/backend_srv';
 
 export enum ActionTypes {
   LoadOrganization = 'LOAD_ORGANIZATION',

@@ -13,8 +13,8 @@ import (
 // of an alert rule.
 type AlertTestCommand struct {
 	Dashboard *simplejson.Json
-	PanelID   int64
-	OrgID     int64
+	PanelId   int64
+	OrgId     int64
 	User      *models.SignedInUser
 
 	Result *EvalContext
@@ -28,14 +28,14 @@ func handleAlertTestCommand(cmd *AlertTestCommand) error {
 
 	dash := models.NewDashboardFromJson(cmd.Dashboard)
 
-	extractor := NewDashAlertExtractor(dash, cmd.OrgID, cmd.User)
+	extractor := NewDashAlertExtractor(dash, cmd.OrgId, cmd.User)
 	alerts, err := extractor.GetAlerts()
 	if err != nil {
 		return err
 	}
 
 	for _, alert := range alerts {
-		if alert.PanelId == cmd.PanelID {
+		if alert.PanelId == cmd.PanelId {
 			rule, err := NewRuleFromDBAlert(alert)
 			if err != nil {
 				return err
@@ -46,7 +46,7 @@ func handleAlertTestCommand(cmd *AlertTestCommand) error {
 		}
 	}
 
-	return fmt.Errorf("Could not find alert with panel id %d", cmd.PanelID)
+	return fmt.Errorf("Could not find alert with panel id %d", cmd.PanelId)
 }
 
 func testAlertRule(rule *Rule) *EvalContext {

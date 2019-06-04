@@ -76,18 +76,18 @@ func (wn *WebhookNotifier) Notify(evalContext *alerting.EvalContext) error {
 
 	bodyJSON := simplejson.New()
 	bodyJSON.Set("title", evalContext.GetNotificationTitle())
-	bodyJSON.Set("ruleId", evalContext.Rule.ID)
+	bodyJSON.Set("ruleId", evalContext.Rule.Id)
 	bodyJSON.Set("ruleName", evalContext.Rule.Name)
 	bodyJSON.Set("state", evalContext.Rule.State)
 	bodyJSON.Set("evalMatches", evalContext.EvalMatches)
 
-	ruleURL, err := evalContext.GetRuleURL()
+	ruleURL, err := evalContext.GetRuleUrl()
 	if err == nil {
 		bodyJSON.Set("ruleUrl", ruleURL)
 	}
 
-	if evalContext.ImagePublicURL != "" {
-		bodyJSON.Set("imageUrl", evalContext.ImagePublicURL)
+	if evalContext.ImagePublicUrl != "" {
+		bodyJSON.Set("imageUrl", evalContext.ImagePublicUrl)
 	}
 
 	if evalContext.Rule.Message != "" {

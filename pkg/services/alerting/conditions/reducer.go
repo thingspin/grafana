@@ -9,15 +9,15 @@ import (
 	"github.com/grafana/grafana/pkg/tsdb"
 )
 
-// queryReducer reduces an timeserie to a nullable float
-type queryReducer struct {
+type QueryReducer interface {
+	Reduce(timeSeries *tsdb.TimeSeries) null.Float
+}
 
-	// Type is how the timeserie should be reduced.
-	// Ex avg, sum, max, min, count
+type SimpleReducer struct {
 	Type string
 }
 
-func (s *queryReducer) Reduce(series *tsdb.TimeSeries) null.Float {
+func (s *SimpleReducer) Reduce(series *tsdb.TimeSeries) null.Float {
 	if len(series.Points) == 0 {
 		return null.FloatFromPtr(nil)
 	}
@@ -31,7 +31,7 @@ func (s *queryReducer) Reduce(series *tsdb.TimeSeries) null.Float {
 		for _, point := range series.Points {
 			if point[0].Valid {
 				value += point[0].Float64
-				validPointsCount++
+				validPointsCount += 1
 				allNull = false
 			}
 		}
@@ -117,8 +117,8 @@ func (s *queryReducer) Reduce(series *tsdb.TimeSeries) null.Float {
 	return null.FloatFrom(value)
 }
 
-func newSimpleReducer(t string) *queryReducer {
-	return &queryReducer{Type: t}
+func NewSimpleReducer(typ string) *SimpleReducer {
+	return &SimpleReducer{Type: typ}
 }
 
 func calculateDiff(series *tsdb.TimeSeries, allNull bool, value float64, fn func(float64, float64) float64) (bool, float64) {

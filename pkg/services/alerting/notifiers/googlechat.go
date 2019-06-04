@@ -120,7 +120,7 @@ func (gcn *GoogleChatNotifier) Notify(evalContext *alerting.EvalContext) error {
 		"Content-Type": "application/json; charset=UTF-8",
 	}
 
-	ruleURL, err := evalContext.GetRuleURL()
+	ruleURL, err := evalContext.GetRuleUrl()
 	if err != nil {
 		gcn.log.Error("evalContext returned an invalid rule URL")
 	}
@@ -152,10 +152,10 @@ func (gcn *GoogleChatNotifier) Notify(evalContext *alerting.EvalContext) error {
 	widgets = append(widgets, fields)
 
 	// if an image exists, add it as an image widget
-	if evalContext.ImagePublicURL != "" {
+	if evalContext.ImagePublicUrl != "" {
 		widgets = append(widgets, imageWidget{
 			Image: image{
-				ImageURL: evalContext.ImagePublicURL,
+				ImageURL: evalContext.ImagePublicUrl,
 			},
 		})
 	} else {

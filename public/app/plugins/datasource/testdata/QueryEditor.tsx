@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import _ from 'lodash';
 
 // Services & Utils
-import { getBackendSrv } from '@grafana/runtime';
+import { getBackendSrv, BackendSrv } from 'app/core/services/backend_srv';
 
 // Components
 import { FormLabel, Select, SelectOptionItem } from '@grafana/ui';
@@ -21,7 +21,7 @@ interface State {
 type Props = QueryEditorProps<TestDataDatasource, TestDataQuery>;
 
 export class QueryEditor extends PureComponent<Props> {
-  backendSrv = getBackendSrv();
+  backendSrv: BackendSrv = getBackendSrv();
 
   state: State = {
     scenarioList: [],

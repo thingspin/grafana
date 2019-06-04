@@ -21,10 +21,10 @@ var (
 
 // Rule is the in-memory version of an alert rule.
 type Rule struct {
-	ID                  int64
-	OrgID               int64
-	DashboardID         int64
-	PanelID             int64
+	Id                  int64
+	OrgId               int64
+	DashboardId         int64
+	PanelId             int64
 	Frequency           int64
 	Name                string
 	Message             string
@@ -44,23 +44,23 @@ type Rule struct {
 type ValidationError struct {
 	Reason      string
 	Err         error
-	AlertID     int64
-	DashboardID int64
-	PanelID     int64
+	Alertid     int64
+	DashboardId int64
+	PanelId     int64
 }
 
 func (e ValidationError) Error() string {
 	extraInfo := e.Reason
-	if e.AlertID != 0 {
-		extraInfo = fmt.Sprintf("%s AlertId: %v", extraInfo, e.AlertID)
+	if e.Alertid != 0 {
+		extraInfo = fmt.Sprintf("%s AlertId: %v", extraInfo, e.Alertid)
 	}
 
-	if e.PanelID != 0 {
-		extraInfo = fmt.Sprintf("%s PanelId: %v", extraInfo, e.PanelID)
+	if e.PanelId != 0 {
+		extraInfo = fmt.Sprintf("%s PanelId: %v", extraInfo, e.PanelId)
 	}
 
-	if e.DashboardID != 0 {
-		extraInfo = fmt.Sprintf("%s DashboardId: %v", extraInfo, e.DashboardID)
+	if e.DashboardId != 0 {
+		extraInfo = fmt.Sprintf("%s DashboardId: %v", extraInfo, e.DashboardId)
 	}
 
 	if e.Err != nil {
@@ -113,10 +113,10 @@ func getTimeDurationStringToSeconds(str string) (int64, error) {
 // alert to an in-memory version.
 func NewRuleFromDBAlert(ruleDef *models.Alert) (*Rule, error) {
 	model := &Rule{}
-	model.ID = ruleDef.Id
-	model.OrgID = ruleDef.OrgId
-	model.DashboardID = ruleDef.DashboardId
-	model.PanelID = ruleDef.PanelId
+	model.Id = ruleDef.Id
+	model.OrgId = ruleDef.OrgId
+	model.DashboardId = ruleDef.DashboardId
+	model.PanelId = ruleDef.PanelId
 	model.Name = ruleDef.Name
 	model.Message = ruleDef.Message
 	model.State = ruleDef.State
@@ -140,7 +140,7 @@ func NewRuleFromDBAlert(ruleDef *models.Alert) (*Rule, error) {
 		} else {
 			uid, err := jsonModel.Get("uid").String()
 			if err != nil {
-				return nil, ValidationError{Reason: "Neither id nor uid is specified, " + err.Error(), DashboardID: model.DashboardID, AlertID: model.ID, PanelID: model.PanelID}
+				return nil, ValidationError{Reason: "Neither id nor uid is specified, " + err.Error(), DashboardId: model.DashboardId, Alertid: model.Id, PanelId: model.PanelId}
 			}
 			model.Notifications = append(model.Notifications, uid)
 		}
@@ -151,11 +151,11 @@ func NewRuleFromDBAlert(ruleDef *models.Alert) (*Rule, error) {
 		conditionType := conditionModel.Get("type").MustString()
 		factory, exist := conditionFactories[conditionType]
 		if !exist {
-			return nil, ValidationError{Reason: "Unknown alert condition: " + conditionType, DashboardID: model.DashboardID, AlertID: model.ID, PanelID: model.PanelID}
+			return nil, ValidationError{Reason: "Unknown alert condition: " + conditionType, DashboardId: model.DashboardId, Alertid: model.Id, PanelId: model.PanelId}
 		}
 		queryCondition, err := factory(conditionModel, index)
 		if err != nil {
-			return nil, ValidationError{Err: err, DashboardID: model.DashboardID, AlertID: model.ID, PanelID: model.PanelID}
+			return nil, ValidationError{Err: err, DashboardId: model.DashboardId, Alertid: model.Id, PanelId: model.PanelId}
 		}
 		model.Conditions = append(model.Conditions, queryCondition)
 	}

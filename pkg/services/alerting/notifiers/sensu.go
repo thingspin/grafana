@@ -79,7 +79,7 @@ func (sn *SensuNotifier) Notify(evalContext *alerting.EvalContext) error {
 	sn.log.Info("Sending sensu result")
 
 	bodyJSON := simplejson.New()
-	bodyJSON.Set("ruleId", evalContext.Rule.ID)
+	bodyJSON.Set("ruleId", evalContext.Rule.Id)
 	// Sensu alerts cannot have spaces in them
 	bodyJSON.Set("name", strings.Replace(evalContext.Rule.Name, " ", "_", -1))
 	// Sensu alerts require a source. We set it to the user-specified value (optional),
@@ -87,7 +87,7 @@ func (sn *SensuNotifier) Notify(evalContext *alerting.EvalContext) error {
 	if sn.Source != "" {
 		bodyJSON.Set("source", sn.Source)
 	} else {
-		bodyJSON.Set("source", "grafana_rule_"+strconv.FormatInt(evalContext.Rule.ID, 10))
+		bodyJSON.Set("source", "grafana_rule_"+strconv.FormatInt(evalContext.Rule.Id, 10))
 	}
 	// Finally, sensu expects an output
 	// We set it to a default output
@@ -106,13 +106,13 @@ func (sn *SensuNotifier) Notify(evalContext *alerting.EvalContext) error {
 		bodyJSON.Set("handler", sn.Handler)
 	}
 
-	ruleURL, err := evalContext.GetRuleURL()
+	ruleURL, err := evalContext.GetRuleUrl()
 	if err == nil {
 		bodyJSON.Set("ruleUrl", ruleURL)
 	}
 
-	if evalContext.ImagePublicURL != "" {
-		bodyJSON.Set("imageUrl", evalContext.ImagePublicURL)
+	if evalContext.ImagePublicUrl != "" {
+		bodyJSON.Set("imageUrl", evalContext.ImagePublicUrl)
 	}
 
 	if evalContext.Rule.Message != "" {

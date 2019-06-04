@@ -1,3 +1,0 @@
-# Grafana Runtime library
-
-Interfaces that let you use the runtime...

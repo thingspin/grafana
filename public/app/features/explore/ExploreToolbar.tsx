@@ -10,7 +10,6 @@ import {
   TimeZone,
   TimeRange,
   SelectOptionItem,
-  LoadingState,
 } from '@grafana/ui';
 import { DataSourcePicker } from 'app/core/components/Select/DataSourcePicker';
 import { StoreState } from 'app/types/store';
@@ -262,7 +261,9 @@ const mapStateToProps = (state: StoreState, { exploreId }: OwnProps): StateProps
     exploreDatasources,
     range,
     refreshInterval,
-    loadingState,
+    graphIsLoading,
+    logIsLoading,
+    tableIsLoading,
     supportedModes,
     mode,
     isLive,
@@ -270,9 +271,8 @@ const mapStateToProps = (state: StoreState, { exploreId }: OwnProps): StateProps
   const selectedDatasource = datasourceInstance
     ? exploreDatasources.find(datasource => datasource.name === datasourceInstance.name)
     : undefined;
-  const loading = loadingState === LoadingState.Loading || loadingState === LoadingState.Streaming;
-  const hasLiveOption =
-    datasourceInstance && datasourceInstance.meta && datasourceInstance.meta.streaming ? true : false;
+  const loading = graphIsLoading || logIsLoading || tableIsLoading;
+  const hasLiveOption = datasourceInstance && datasourceInstance.convertToStreamTargets ? true : false;
 
   const supportedModeOptions: Array<SelectOptionItem<ExploreMode>> = [];
   let selectedModeOption = null;

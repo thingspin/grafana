@@ -2,7 +2,7 @@
 import React, { PureComponent } from 'react';
 
 // Utils & Services
-import { AngularComponent, getAngularLoader } from '@grafana/runtime';
+import { AngularComponent, getAngularLoader } from 'app/core/services/AngularLoader';
 
 // Types
 import { DashboardModel } from '../../state/DashboardModel';

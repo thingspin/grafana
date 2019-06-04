@@ -67,7 +67,7 @@ func NewEmailNotifier(model *models.AlertNotification) (alerting.Notifier, error
 func (en *EmailNotifier) Notify(evalContext *alerting.EvalContext) error {
 	en.log.Info("Sending alert notification to", "addresses", en.Addresses)
 
-	ruleURL, err := evalContext.GetRuleURL()
+	ruleURL, err := evalContext.GetRuleUrl()
 	if err != nil {
 		en.log.Error("Failed get rule link", "error", err)
 		return err
@@ -100,8 +100,8 @@ func (en *EmailNotifier) Notify(evalContext *alerting.EvalContext) error {
 		},
 	}
 
-	if evalContext.ImagePublicURL != "" {
-		cmd.Data["ImageLink"] = evalContext.ImagePublicURL
+	if evalContext.ImagePublicUrl != "" {
+		cmd.Data["ImageLink"] = evalContext.ImagePublicUrl
 	} else {
 		file, err := os.Stat(evalContext.ImageOnDiskPath)
 		if err == nil {

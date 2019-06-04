@@ -13,7 +13,6 @@ import { OrganizationState } from './organization';
 import { AppNotificationsState } from './appNotifications';
 import { PluginsState } from './plugins';
 import { NavIndex } from '@grafana/ui';
-import { ApplicationState } from './application';
 
 export interface StoreState {
   navIndex: NavIndex;
@@ -30,7 +29,6 @@ export interface StoreState {
   appNotifications: AppNotificationsState;
   user: UserState;
   plugins: PluginsState;
-  application: ApplicationState;
 }
 
 /*

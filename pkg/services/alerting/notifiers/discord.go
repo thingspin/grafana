@@ -21,7 +21,7 @@ func init() {
 		Type:        "discord",
 		Name:        "Discord",
 		Description: "Sends notifications to Discord",
-		Factory:     newDiscordNotifier,
+		Factory:     NewDiscordNotifier,
 		OptionsTemplate: `
       <h3 class="page-heading">Discord settings</h3>
       <div class="gf-form max-width-30">
@@ -43,7 +43,7 @@ func init() {
 	})
 }
 
-func newDiscordNotifier(model *models.AlertNotification) (alerting.Notifier, error) {
+func NewDiscordNotifier(model *models.AlertNotification) (alerting.Notifier, error) {
 	content := model.Settings.Get("content").MustString()
 	url := model.Settings.Get("url").MustString()
 	if url == "" {
@@ -58,8 +58,6 @@ func newDiscordNotifier(model *models.AlertNotification) (alerting.Notifier, err
 	}, nil
 }
 
-// DiscordNotifier is responsible for sending alert
-// notifications to discord.
 type DiscordNotifier struct {
 	NotifierBase
 	Content    string
@@ -67,21 +65,20 @@ type DiscordNotifier struct {
 	log        log.Logger
 }
 
-// Notify send an alert notification to Discord.
-func (dn *DiscordNotifier) Notify(evalContext *alerting.EvalContext) error {
-	dn.log.Info("Sending alert notification to", "webhook_url", dn.WebhookURL)
+func (this *DiscordNotifier) Notify(evalContext *alerting.EvalContext) error {
+	this.log.Info("Sending alert notification to", "webhook_url", this.WebhookURL)
 
-	ruleURL, err := evalContext.GetRuleURL()
+	ruleUrl, err := evalContext.GetRuleUrl()
 	if err != nil {
-		dn.log.Error("Failed get rule link", "error", err)
+		this.log.Error("Failed get rule link", "error", err)
 		return err
 	}
 
 	bodyJSON := simplejson.New()
 	bodyJSON.Set("username", "Grafana")
 
-	if dn.Content != "" {
-		bodyJSON.Set("content", dn.Content)
+	if this.Content != "" {
+		bodyJSON.Set("content", this.Content)
 	}
 
 	fields := make([]map[string]interface{}, 0)
@@ -106,7 +103,7 @@ func (dn *DiscordNotifier) Notify(evalContext *alerting.EvalContext) error {
 	embed.Set("title", evalContext.GetNotificationTitle())
 	//Discord takes integer for color
 	embed.Set("color", color)
-	embed.Set("url", ruleURL)
+	embed.Set("url", ruleUrl)
 	embed.Set("description", evalContext.Rule.Message)
 	embed.Set("type", "rich")
 	embed.Set("fields", fields)
@@ -115,9 +112,9 @@ func (dn *DiscordNotifier) Notify(evalContext *alerting.EvalContext) error {
 	var image map[string]interface{}
 	var embeddedImage = false
 
-	if evalContext.ImagePublicURL != "" {
+	if evalContext.ImagePublicUrl != "" {
 		image = map[string]interface{}{
-			"url": evalContext.ImagePublicURL,
+			"url": evalContext.ImagePublicUrl,
 		}
 		embed.Set("image", image)
 	} else {
@@ -133,7 +130,7 @@ func (dn *DiscordNotifier) Notify(evalContext *alerting.EvalContext) error {
 	json, _ := bodyJSON.MarshalJSON()
 
 	cmd := &models.SendWebhookSync{
-		Url:         dn.WebhookURL,
+		Url:         this.WebhookURL,
 		HttpMethod:  "POST",
 		ContentType: "application/json",
 	}
@@ -141,22 +138,22 @@ func (dn *DiscordNotifier) Notify(evalContext *alerting.EvalContext) error {
 	if !embeddedImage {
 		cmd.Body = string(json)
 	} else {
-		err := dn.embedImage(cmd, evalContext.ImageOnDiskPath, json)
+		err := this.embedImage(cmd, evalContext.ImageOnDiskPath, json)
 		if err != nil {
-			dn.log.Error("failed to embed image", "error", err)
+			this.log.Error("failed to embed image", "error", err)
 			return err
 		}
 	}
 
 	if err := bus.DispatchCtx(evalContext.Ctx, cmd); err != nil {
-		dn.log.Error("Failed to send notification to Discord", "error", err)
+		this.log.Error("Failed to send notification to Discord", "error", err)
 		return err
 	}
 
 	return nil
 }
 
-func (dn *DiscordNotifier) embedImage(cmd *models.SendWebhookSync, imagePath string, existingJSONBody []byte) error {
+func (this *DiscordNotifier) embedImage(cmd *models.SendWebhookSync, imagePath string, existingJSONBody []byte) error {
 	f, err := os.Open(imagePath)
 	defer f.Close()
 	if err != nil {
