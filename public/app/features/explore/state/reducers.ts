@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {
+  calculateResultsFromQueryTransactions,
   getIntervals,
   ensureQueries,
   getQueryKeys,
@@ -9,7 +10,7 @@ import {
   sortLogsResult,
 } from 'app/core/utils/explore';
 import { ExploreItemState, ExploreState, ExploreId, ExploreUpdateState, ExploreMode } from 'app/types/explore';
-import { DataQuery, LoadingState } from '@grafana/ui';
+import { DataQuery, LogsModel } from '@grafana/ui';
 import {
   HigherOrderAction,
   ActionTypes,
@@ -19,17 +20,10 @@ import {
   splitCloseAction,
   SplitCloseActionPayload,
   loadExploreDatasources,
-  historyUpdatedAction,
-  changeModeAction,
-  queryFailureAction,
-  setUrlReplacedAction,
-  querySuccessAction,
-  scanRangeAction,
-  scanStopAction,
-  resetQueryErrorAction,
-  queryStartAction,
   runQueriesAction,
-  changeRangeAction,
+  historyUpdatedAction,
+  resetQueryErrorAction,
+  changeModeAction,
 } from './actionTypes';
 import { reducerFactory } from 'app/core/redux';
 import {
@@ -46,8 +40,13 @@ import {
   loadDatasourcePendingAction,
   loadDatasourceReadyAction,
   modifyQueriesAction,
+  queryFailureAction,
+  queryStartAction,
+  querySuccessAction,
   removeQueryRowAction,
+  scanRangeAction,
   scanStartAction,
+  scanStopAction,
   setQueriesAction,
   toggleTableAction,
   queriesImportedAction,
@@ -58,6 +57,8 @@ import { updateLocation } from 'app/core/actions/location';
 import { LocationUpdate } from 'app/types';
 import TableModel from 'app/core/table_model';
 import { isLive } from '@grafana/ui/src/components/RefreshPicker/RefreshPicker';
+import { subscriptionDataReceivedAction, startSubscriptionAction } from './epics';
+import { seriesDataToLogsModel } from 'app/core/logs_model';
 
 export const DEFAULT_RANGE = {
   from: 'now-6h',
@@ -99,7 +100,9 @@ export const makeExploreItemState = (): ExploreItemState => ({
   scanRange: null,
   showingGraph: true,
   showingTable: true,
-  loadingState: LoadingState.NotStarted,
+  graphIsLoading: false,
+  logIsLoading: false,
+  tableIsLoading: false,
   queryKeys: [],
   urlState: null,
   update: makeInitialUpdateState(),
@@ -108,7 +111,6 @@ export const makeExploreItemState = (): ExploreItemState => ({
   supportedModes: [],
   mode: null,
   isLive: false,
-  urlReplaced: false,
 });
 
 /**
@@ -189,8 +191,10 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
 
       return {
         ...state,
-        refreshInterval,
-        loadingState: live ? LoadingState.Streaming : LoadingState.NotStarted,
+        refreshInterval: refreshInterval,
+        graphIsLoading: live ? true : false,
+        tableIsLoading: live ? true : false,
+        logIsLoading: live ? true : false,
         isLive: live,
         logsResult,
       };
@@ -263,7 +267,9 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
         datasourceInstance,
         queryErrors: [],
         latency: 0,
-        loadingState: LoadingState.NotStarted,
+        graphIsLoading: false,
+        logIsLoading: false,
+        tableIsLoading: false,
         StartPage,
         showingStartPage: Boolean(StartPage),
         queryKeys: getQueryKeys(state.queries, datasourceInstance),
@@ -340,29 +346,35 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
   .addMapper({
     filter: queryFailureAction,
     mapper: (state, action): ExploreItemState => {
-      const { response } = action.payload;
+      const { resultType, response } = action.payload;
       const queryErrors = state.queryErrors.concat(response);
 
       return {
         ...state,
-        graphResult: null,
-        tableResult: null,
-        logsResult: null,
+        graphResult: resultType === 'Graph' ? null : state.graphResult,
+        tableResult: resultType === 'Table' ? null : state.tableResult,
+        logsResult: resultType === 'Logs' ? null : state.logsResult,
         latency: 0,
         queryErrors,
-        loadingState: LoadingState.Error,
+        graphIsLoading: resultType === 'Graph' ? false : state.graphIsLoading,
+        logIsLoading: resultType === 'Logs' ? false : state.logIsLoading,
+        tableIsLoading: resultType === 'Table' ? false : state.tableIsLoading,
         update: makeInitialUpdateState(),
       };
     },
   })
   .addMapper({
     filter: queryStartAction,
-    mapper: (state): ExploreItemState => {
+    mapper: (state, action): ExploreItemState => {
+      const { resultType } = action.payload;
+
       return {
         ...state,
         queryErrors: [],
         latency: 0,
-        loadingState: LoadingState.Loading,
+        graphIsLoading: resultType === 'Graph' ? true : state.graphIsLoading,
+        logIsLoading: resultType === 'Logs' ? true : state.logIsLoading,
+        tableIsLoading: resultType === 'Table' ? true : state.tableIsLoading,
         update: makeInitialUpdateState(),
       };
     },
@@ -370,17 +382,77 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
   .addMapper({
     filter: querySuccessAction,
     mapper: (state, action): ExploreItemState => {
-      const { latency, loadingState, graphResult, tableResult, logsResult } = action.payload;
+      const { queryIntervals, refreshInterval } = state;
+      const { result, resultType, latency } = action.payload;
+      const results = calculateResultsFromQueryTransactions(result, resultType, queryIntervals.intervalMs);
+      const live = isLive(refreshInterval);
+
+      if (live) {
+        return state;
+      }
 
       return {
         ...state,
-        loadingState,
-        graphResult,
-        tableResult,
-        logsResult,
+        graphResult: resultType === 'Graph' ? results.graphResult : state.graphResult,
+        tableResult: resultType === 'Table' ? results.tableResult : state.tableResult,
+        logsResult:
+          resultType === 'Logs'
+            ? sortLogsResult(results.logsResult, refreshInterval)
+            : sortLogsResult(state.logsResult, refreshInterval),
         latency,
+        graphIsLoading: live ? true : false,
+        logIsLoading: live ? true : false,
+        tableIsLoading: live ? true : false,
         showingStartPage: false,
         update: makeInitialUpdateState(),
+      };
+    },
+  })
+  .addMapper({
+    filter: startSubscriptionAction,
+    mapper: (state): ExploreItemState => {
+      const logsResult = sortLogsResult(state.logsResult, state.refreshInterval);
+
+      return {
+        ...state,
+        logsResult,
+        graphIsLoading: true,
+        logIsLoading: true,
+        tableIsLoading: true,
+        showingStartPage: false,
+        update: makeInitialUpdateState(),
+      };
+    },
+  })
+  .addMapper({
+    filter: subscriptionDataReceivedAction,
+    mapper: (state, action): ExploreItemState => {
+      const { queryIntervals, refreshInterval } = state;
+      const { data } = action.payload;
+      const live = isLive(refreshInterval);
+
+      if (!live) {
+        return state;
+      }
+
+      const newResults = seriesDataToLogsModel([data], queryIntervals.intervalMs);
+      const rowsInState = sortLogsResult(state.logsResult, state.refreshInterval).rows;
+
+      const processedRows = [];
+      for (const row of rowsInState) {
+        processedRows.push({ ...row, fresh: false });
+      }
+      for (const row of newResults.rows) {
+        processedRows.push({ ...row, fresh: true });
+      }
+
+      const rows = processedRows.slice(processedRows.length - 1000, 1000);
+
+      const logsResult: LogsModel = state.logsResult ? { ...state.logsResult, rows } : { hasUniqueLabels: false, rows };
+
+      return {
+        ...state,
+        logsResult,
       };
     },
   })
@@ -560,24 +632,6 @@ export const itemReducer = reducerFactory<ExploreItemState>({} as ExploreItemSta
       return {
         ...state,
         queryErrors,
-      };
-    },
-  })
-  .addMapper({
-    filter: setUrlReplacedAction,
-    mapper: (state): ExploreItemState => {
-      return {
-        ...state,
-        urlReplaced: true,
-      };
-    },
-  })
-  .addMapper({
-    filter: changeRangeAction,
-    mapper: (state, action): ExploreItemState => {
-      return {
-        ...state,
-        range: action.payload.range,
       };
     },
   })

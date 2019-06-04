@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { getAngularLoader, AngularComponent } from '@grafana/runtime';
+import { getAngularLoader, AngularComponent } from 'app/core/services/AngularLoader';
 import { EditorTabBody } from './EditorTabBody';
 
 import { PanelModel } from '../state/PanelModel';

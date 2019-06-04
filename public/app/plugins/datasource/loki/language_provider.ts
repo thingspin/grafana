@@ -16,7 +16,6 @@ import {
 } from 'app/types/explore';
 import { LokiQuery } from './types';
 import { dateTime } from '@grafana/ui/src/utils/moment_wrapper';
-import { PromQuery } from '../prometheus/types';
 
 const DEFAULT_KEYS = ['job', 'namespace'];
 const EMPTY_SELECTOR = '{}';
@@ -169,9 +168,8 @@ export default class LokiLanguageProvider extends LanguageProvider {
       return Promise.all(
         queries.map(async query => {
           const expr = await this.importPrometheusQuery(query.expr);
-          const { context, ...rest } = query as PromQuery;
           return {
-            ...rest,
+            ...query,
             expr,
           };
         })

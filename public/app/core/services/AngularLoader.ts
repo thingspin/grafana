@@ -2,9 +2,13 @@ import angular from 'angular';
 import coreModule from 'app/core/core_module';
 import _ from 'lodash';
 
-import { AngularComponent, AngularLoader } from '@grafana/runtime';
+export interface AngularComponent {
+  destroy(): void;
+  digest(): void;
+  getScope(): any;
+}
 
-export class AngularLoaderClass implements AngularLoader {
+export class AngularLoader {
   /** @ngInject */
   constructor(private $compile: any, private $rootScope: any) {}
 
@@ -34,4 +38,15 @@ export class AngularLoaderClass implements AngularLoader {
   }
 }
 
-coreModule.service('angularLoader', AngularLoaderClass);
+coreModule.service('angularLoader', AngularLoader);
+
+let angularLoaderInstance: AngularLoader;
+
+export function setAngularLoader(pl: AngularLoader) {
+  angularLoaderInstance = pl;
+}
+
+// away to access it from react
+export function getAngularLoader(): AngularLoader {
+  return angularLoaderInstance;
+}

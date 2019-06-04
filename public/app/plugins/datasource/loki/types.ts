@@ -2,9 +2,6 @@ import { DataQuery, Labels, DataSourceJsonData } from '@grafana/ui/src/types';
 
 export interface LokiQuery extends DataQuery {
   expr: string;
-  live?: boolean;
-  query?: string;
-  regexp?: string;
 }
 
 export interface LokiOptions extends DataSourceJsonData {

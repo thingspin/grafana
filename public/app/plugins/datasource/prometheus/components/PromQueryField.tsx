@@ -223,7 +223,7 @@ class PromQueryField extends React.PureComponent<PromQueryFieldProps, PromQueryF
     // Send text change to parent
     const { query, onChange, onRunQuery } = this.props;
     if (onChange) {
-      const nextQuery: PromQuery = { ...query, expr: value, context: 'explore' };
+      const nextQuery: PromQuery = { ...query, expr: value };
       onChange(nextQuery);
 
       if (override && onRunQuery) {

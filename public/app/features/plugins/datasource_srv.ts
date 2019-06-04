@@ -5,12 +5,11 @@ import coreModule from 'app/core/core_module';
 // Services & Utils
 import config from 'app/core/config';
 import { importDataSourcePlugin } from './plugin_loader';
-import { DataSourceSrv as DataSourceService, getDataSourceSrv as getDataSourceService } from '@grafana/runtime';
 
 // Types
 import { DataSourceApi, DataSourceSelectItem, ScopedVars } from '@grafana/ui/src/types';
 
-export class DatasourceSrv implements DataSourceService {
+export class DatasourceSrv {
   datasources: { [name: string]: DataSourceApi };
 
   /** @ngInject */
@@ -176,8 +175,14 @@ export class DatasourceSrv implements DataSourceService {
   }
 }
 
+let singleton: DatasourceSrv;
+
+export function setDatasourceSrv(srv: DatasourceSrv) {
+  singleton = srv;
+}
+
 export function getDatasourceSrv(): DatasourceSrv {
-  return getDataSourceService() as DatasourceSrv;
+  return singleton;
 }
 
 coreModule.service('datasourceSrv', DatasourceSrv);

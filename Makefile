@@ -98,7 +98,7 @@ devenv: devenv-down
 	(rm -rf docker-compose.yaml; exit 1)
 
 	@cd devenv; \
-	docker-compose up -d --build
+	docker-compose up -d
 endif
 
 # drop down the envs

@@ -7,9 +7,8 @@ import { DashboardModel } from 'app/features/dashboard/state/DashboardModel';
 import { DashboardSearchHit } from 'app/types/search';
 import { ContextSrv } from './context_srv';
 import { FolderInfo, DashboardDTO } from 'app/types';
-import { BackendSrv as BackendService, getBackendSrv as getBackendService, BackendSrvRequest } from '@grafana/runtime';
 
-export class BackendSrv implements BackendService {
+export class BackendSrv {
   private inFlightRequests: { [key: string]: Array<angular.IDeferred<any>> } = {};
   private HTTP_REQUEST_CANCELED = -1;
   private noBackendCache: boolean;
@@ -84,7 +83,7 @@ export class BackendSrv implements BackendService {
     throw data;
   }
 
-  request(options: BackendSrvRequest) {
+  request(options: any) {
     options.retry = options.retry || 0;
     const requestIsLocal = !options.url.match(/^http/);
     const firstAttempt = options.retry === 0;
@@ -386,7 +385,16 @@ export class BackendSrv implements BackendService {
 
 coreModule.service('backendSrv', BackendSrv);
 
-// Used for testing and things that really need BackendSrv
+//
+// Code below is to expore the service to react components
+//
+
+let singletonInstance: BackendSrv;
+
+export function setBackendSrv(instance: BackendSrv) {
+  singletonInstance = instance;
+}
+
 export function getBackendSrv(): BackendSrv {
-  return getBackendService() as BackendSrv;
+  return singletonInstance;
 }

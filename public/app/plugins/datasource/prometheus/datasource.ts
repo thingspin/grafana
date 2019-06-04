@@ -1,7 +1,6 @@
 // Libraries
 import _ from 'lodash';
 import $ from 'jquery';
-import { from, Observable } from 'rxjs';
 
 // Services & Utils
 import kbn from 'app/core/utils/kbn';
@@ -15,21 +14,18 @@ import { getQueryHints } from './query_hints';
 import { expandRecordingRules } from './language_utils';
 
 // Types
-import { PromQuery, PromOptions, PromQueryRequest } from './types';
+import { PromQuery, PromOptions } from './types';
 import {
   DataQueryRequest,
   DataSourceApi,
   AnnotationEvent,
   DataSourceInstanceSettings,
   DataQueryError,
-  DataStreamObserver,
-  LoadingState,
 } from '@grafana/ui/src/types';
 import { ExploreUrlState } from 'app/types/explore';
 import { safeStringifyValue } from 'app/core/utils/explore';
 import { TemplateSrv } from 'app/features/templating/template_srv';
 import { TimeSrv } from 'app/features/dashboard/services/TimeSrv';
-import { single, map, filter } from 'rxjs/operators';
 
 export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> {
   type: string;
@@ -87,7 +83,7 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
     }
   }
 
-  _request(url: string, data?: any, options?: any) {
+  _request(url, data?, options?: any) {
     options = _.defaults(options || {}, {
       url: this.url + url,
       method: this.httpMethod,
@@ -123,11 +119,11 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
   }
 
   // Use this for tab completion features, wont publish response to other components
-  metadataRequest(url: string) {
+  metadataRequest(url) {
     return this._request(url, null, { method: 'GET', silent: true });
   }
 
-  interpolateQueryExpr(value: any, variable: any, defaultFormatFn: any) {
+  interpolateQueryExpr(value, variable, defaultFormatFn) {
     // if no multi or include all do not regexEscape
     if (!variable.multi && !variable.includeAll) {
       return prometheusRegularEscape(value);
@@ -145,132 +141,34 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
     return this.templateSrv.variableExists(target.expr);
   }
 
-  processResult = (response: any, query: PromQueryRequest, target: PromQuery, responseListLength: number) => {
-    // Keeping original start/end for transformers
-    const transformerOptions = {
-      format: target.format,
-      step: query.step,
-      legendFormat: target.legendFormat,
-      start: query.start,
-      end: query.end,
-      query: query.expr,
-      responseListLength,
-      refId: target.refId,
-      valueWithRefId: target.valueWithRefId,
-    };
-    const series = this.resultTransformer.transform(response, transformerOptions);
+  query(options: DataQueryRequest<PromQuery>): Promise<{ data: any }> {
+    const start = this.getPrometheusTime(options.range.from, false);
+    const end = this.getPrometheusTime(options.range.to, true);
 
-    return series;
-  };
+    const queries = [];
+    const activeTargets = [];
 
-  runObserverQueries = (
-    options: DataQueryRequest<PromQuery>,
-    observer: DataStreamObserver,
-    queries: PromQueryRequest[],
-    activeTargets: PromQuery[],
-    end: number
-  ) => {
-    for (let index = 0; index < queries.length; index++) {
-      const query = queries[index];
-      const target = activeTargets[index];
-      let observable: Observable<any> = null;
-
-      if (query.instant) {
-        observable = from(this.performInstantQuery(query, end));
-      } else {
-        observable = from(this.performTimeSeriesQuery(query, query.start, query.end));
-      }
-
-      observable
-        .pipe(
-          single(), // unsubscribes automatically after first result
-          filter((response: any) => (response.cancelled ? false : true)),
-          map((response: any) => {
-            return this.processResult(response, query, target, queries.length);
-          })
-        )
-        .subscribe({
-          next: series => {
-            if (query.instant) {
-              observer({
-                key: `prometheus-${target.refId}`,
-                state: LoadingState.Loading,
-                request: options,
-                series: null,
-                delta: series,
-                unsubscribe: () => undefined,
-              });
-            } else {
-              observer({
-                key: `prometheus-${target.refId}`,
-                state: LoadingState.Done,
-                request: options,
-                series: null,
-                delta: series,
-                unsubscribe: () => undefined,
-              });
-            }
-          },
-        });
-    }
-  };
-
-  prepareTargets = (options: DataQueryRequest<PromQuery>, start: number, end: number) => {
-    const queries: PromQueryRequest[] = [];
-    const activeTargets: PromQuery[] = [];
+    options = _.clone(options);
 
     for (const target of options.targets) {
       if (!target.expr || target.hide) {
         continue;
       }
 
-      if (target.context === 'explore') {
-        target.format = 'time_series';
-        target.instant = false;
-        const instantTarget: any = _.cloneDeep(target);
-        instantTarget.format = 'table';
-        instantTarget.instant = true;
-        instantTarget.valueWithRefId = true;
-        delete instantTarget.maxDataPoints;
-        instantTarget.requestId += '_instant';
-        instantTarget.refId += '_instant';
-        activeTargets.push(instantTarget);
-        queries.push(this.createQuery(instantTarget, options, start, end));
-      }
-
       activeTargets.push(target);
       queries.push(this.createQuery(target, options, start, end));
     }
-
-    return {
-      queries,
-      activeTargets,
-    };
-  };
-
-  query(options: DataQueryRequest<PromQuery>, observer?: DataStreamObserver): Promise<{ data: any }> {
-    const start = this.getPrometheusTime(options.range.from, false);
-    const end = this.getPrometheusTime(options.range.to, true);
-
-    options = _.clone(options);
-    const { queries, activeTargets } = this.prepareTargets(options, start, end);
 
     // No valid targets, return the empty result to save a round trip.
     if (_.isEmpty(queries)) {
       return this.$q.when({ data: [] }) as Promise<{ data: any }>;
     }
 
-    if (observer && options.targets.filter(target => target.context === 'explore').length === options.targets.length) {
-      // using observer to make the instant query return immediately
-      this.runObserverQueries(options, observer, queries, activeTargets, end);
-      return this.$q.when({ data: [] }) as Promise<{ data: any }>;
-    }
-
     const allQueryPromise = _.map(queries, query => {
-      if (query.instant) {
-        return this.performInstantQuery(query, end);
-      } else {
+      if (!query.instant) {
         return this.performTimeSeriesQuery(query, query.start, query.end);
+      } else {
+        return this.performInstantQuery(query, end);
       }
     });
 
@@ -282,10 +180,19 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
           return;
         }
 
-        const target = activeTargets[index];
-        const query = queries[index];
-        const series = this.processResult(response, query, target, queries.length);
-
+        // Keeping original start/end for transformers
+        const transformerOptions = {
+          format: activeTargets[index].format,
+          step: queries[index].step,
+          legendFormat: activeTargets[index].legendFormat,
+          start: queries[index].start,
+          end: queries[index].end,
+          query: queries[index].expr,
+          responseListLength: responseList.length,
+          refId: activeTargets[index].refId,
+          valueWithRefId: activeTargets[index].valueWithRefId,
+        };
+        const series = this.resultTransformer.transform(response, transformerOptions);
         result = [...result, ...series];
       });
 
@@ -295,16 +202,10 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
     return allPromise as Promise<{ data: any }>;
   }
 
-  createQuery(target: PromQuery, options: DataQueryRequest<PromQuery>, start: number, end: number) {
-    const query: PromQueryRequest = {
+  createQuery(target, options, start, end) {
+    const query: any = {
       hinting: target.hinting,
       instant: target.instant,
-      step: 0,
-      expr: '',
-      requestId: '',
-      refId: '',
-      start: 0,
-      end: 0,
     };
     const range = Math.ceil(end - start);
 
@@ -497,7 +398,7 @@ export class PrometheusDatasource extends DataSourceApi<PromQuery, PromOptions> 
     };
     // Unsetting min interval for accurate event resolution
     const minStep = '1s';
-    const query = this.createQuery({ expr, interval: minStep, refId: 'X' }, queryOptions, start, end);
+    const query = this.createQuery({ expr, interval: minStep }, queryOptions, start, end);
 
     const self = this;
     return this.performTimeSeriesQuery(query, query.start, query.end).then(results => {
