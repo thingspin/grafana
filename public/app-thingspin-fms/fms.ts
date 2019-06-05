@@ -16,6 +16,8 @@ import { fmsSetupAngularRoutes } from './routes/routes';
 import addThingspinReducers from './react/redux/addReducers';
 import 'angular-ui-tree';
 
+import './angular-modules/core';
+
 addThingspinReducers();
 
 class ThingspinFmsApp extends GrafanaApp {
