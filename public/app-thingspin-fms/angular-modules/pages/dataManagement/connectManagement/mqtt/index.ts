@@ -492,15 +492,15 @@ export class TsMqttConnectCtrl {
     let returnValue = "";
     if (type === this.defMqtt.values[0]) {
       //String
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.indexID + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "MQTT_" + this.indexID + "\",\n    \"fields\": {\n        \""
       + value + "\": msg.payload\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
     } else if (type === this.defMqtt.values[3]) {
       //Boolean
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.indexID + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "MQTT_" + this.indexID + "\",\n    \"fields\": {\n        \""
       + value + "\":" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
       + "msg.payload = influxPayload;\n\nreturn msg;\n";
     } else {
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.indexID + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "MQTT_" + this.indexID + "\",\n    \"fields\": {\n        \""
       + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
       + "msg.payload = influxPayload;\n\nreturn msg;\n";
     }
@@ -624,17 +624,9 @@ export class TsMqttConnectCtrl {
         this.backendSrv.post("/thingspin/connect/mqtt",object).then((result: any) => {
           console.log(result);
           this.indexID = result;
-          this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`).then((result: any) => {
-            console.log(result);
-            if (value) {
-              this.close();
-            }
-          })
-          .catch(err => {
-            if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
-            }
-          });
+          this.topicListArrayString = "";
+          this.topicDisListArrayString = "";
+          this.onJsonCreatSender(true);
         })
         .catch(err => {
           if (err.status === 500) {
