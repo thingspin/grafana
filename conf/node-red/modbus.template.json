@@ -164,7 +164,7 @@
             "type": "function",
             "z": "8900476a.91f358",
             "name": "MODBUS_JOIN_PARSER",
-            "func": "var Total_item = {{.Params.AddressListCount}};\nvar value='';\n\nvar res = [\n            {\n                measurement:'MODBUS_{{.Params.influxID}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    value = msg.payload[i][0].fields;\n    for(var key in value){\n        res[0].fields[key]=value[key];\n    }\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+            "func": "var Total_item = {{.Params.AddressListCount}};\nvar value='';\n\nvar res = [\n            {\n                measurement:'modbus_{{.Params.influxID}}',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    value = msg.payload[i][0].fields;\n    for(var key in value){\n        res[0].fields[key]=value[key];\n    }\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
             "outputs": 1,
             "noerr": 0,
             "x": 1060,

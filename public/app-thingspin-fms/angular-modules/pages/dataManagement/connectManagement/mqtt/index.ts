@@ -492,15 +492,15 @@ export class TsMqttConnectCtrl {
     let returnValue = "";
     if (type === this.defMqtt.values[0]) {
       //String
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "MQTT_" + this.indexID + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "mqtt_" + this.indexID + "\",\n    \"fields\": {\n        \""
       + value + "\": msg.payload\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
     } else if (type === this.defMqtt.values[3]) {
       //Boolean
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "MQTT_" + this.indexID + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "mqtt_" + this.indexID + "\",\n    \"fields\": {\n        \""
       + value + "\":" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
       + "msg.payload = influxPayload;\n\nreturn msg;\n";
     } else {
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "MQTT_" + this.indexID + "\",\n    \"fields\": {\n        \""
+      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "mqtt_" + this.indexID + "\",\n    \"fields\": {\n        \""
       + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
       + "msg.payload = influxPayload;\n\nreturn msg;\n";
     }
