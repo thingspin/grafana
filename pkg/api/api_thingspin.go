@@ -52,6 +52,14 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsFnRoute.Patch("/:connId/enable", bind(tsm.EnableTsConnectReq{}), Wrap(enableTsConnect))
 		})
 
+		// 사이트 관리 동작 API
+		tsRoute.Group("/site", func(tsFnRoute routing.RouteRegister) {
+			tsFnRoute.Get("/", Wrap(getAllTsSite))
+			tsFnRoute.Post("/", bind(tsm.AddTsSiteQuery{}), Wrap(addTsSite))
+			tsFnRoute.Put("/", bind(tsm.UpdateTsSiteQuery{}), Wrap(UpdateTsSite))
+			tsFnRoute.Delete("/:siteId", Wrap(deleteTsSite))
+		})
+
 		tsRoute.Group("/type", func(tsTypeRoute routing.RouteRegister) {
 			tsTypeRoute.Get("/connect", Wrap(getTsConnectType))
 		})

@@ -4,10 +4,9 @@ import Drop from 'tether-drop';
 import { GrafanaCtrl, grafanaAppDirective } from 'app/routes/GrafanaCtrl';
 import { KioskUrlValue } from 'app/types';
 import { store } from 'app/store/store';
-import { BackendSrv } from 'app/core/services/backend_srv';
+import { BackendSrv } from '@grafana/runtime';
 import { TimeSrv } from 'app/features/dashboard/services/TimeSrv';
 import { KeybindingSrv, coreModule, appEvents } from 'app/core/core';
-import { AngularLoader } from 'app/core/services/AngularLoader';
 import { BridgeSrv } from 'app/core/services/bridge_srv';
 import { ContextSrv } from 'app/core/services/context_srv';
 import { UtilSrv } from 'app/core/services/util_srv';
@@ -15,6 +14,7 @@ import DatasourceSrv from 'app/features/plugins/datasource_srv';
 
 import { TS_NAV_ACTION_TYPES } from 'app-thingspin-fms/react/redux/reducers/navbar';
 import { PlaylistSrv } from 'app/features/playlist/playlist_srv';
+import { AngularLoader } from 'app/core/services/AngularLoader';
 
 export class ThingspinCtrl extends GrafanaCtrl {
   navbarEnable: boolean;

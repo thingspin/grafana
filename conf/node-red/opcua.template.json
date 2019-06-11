@@ -172,7 +172,7 @@
       "id": "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
       "type": "function",
       "name": "",
-      "func": "const { payload, id } = msg;\n\nconst result = [];\nif (Array.isArray(payload)) {\n    for(const item of payload) {\n        result.push({\n            measurement: id,\n            fields: {\n                ...item,\n            },\n        });\n    }\n} else {\n    result.push({\n        measurement: id,\n        fields: {\n            ...payload,\n        },\n    });\n}\nmsg.payload = result;\n\nreturn msg;",
+      "func": "const { payload, id } = msg;\n\nconst result = [];\nif (Array.isArray(payload)) {\n    for(const item of payload) {\n        result.push({\n            measurement: 'opcua_' + id,\n            fields: {\n                ...item,\n            },\n        });\n    }\n} else {\n    result.push({\n        measurement: 'opcua_' + id,\n        fields: {\n            ...payload,\n        },\n    });\n}\nmsg.payload = result;\n\nreturn msg;",
       "outputs": 1,
       "noerr": 0,
       "x": 690,
