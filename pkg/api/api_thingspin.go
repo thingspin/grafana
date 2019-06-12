@@ -21,7 +21,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 
 		tsRoute.Group("/org", func(tsMenuRoute routing.RouteRegister) {
 			tsMenuRoute.Get("/default/:orgId", Wrap(GetTsDefaultMenuByDefaultOrgId))
-			tsMenuRoute.Post("/new/:orgId", bind(tsm.AddFmsDefaultMenuCommand{}),Wrap(AddDefaultMenuByDefaultOrgId))
+			tsMenuRoute.Post("/new/:orgId", bind(tsm.AddFmsDefaultMenuCommand{}), Wrap(AddDefaultMenuByDefaultOrgId))
 		})
 
 		// left sidebar menu rest api's
@@ -62,6 +62,17 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 
 		tsRoute.Group("/type", func(tsTypeRoute routing.RouteRegister) {
 			tsTypeRoute.Get("/connect", Wrap(getTsConnectType))
+		})
+
+		// Grafana 데이터소스 REST API 커스텀마이징
+		tsRoute.Group(`/datasources`, func(tsDsRoute routing.RouteRegister) {
+			tsDsRoute.Get("/:id", Wrap(GetTsDataSourceById))
+
+			tsDsRoute.Get("/id/:name", Wrap(GetTsDataSourceIdByName))
+			tsDsRoute.Get("/name/:name", Wrap(GetTsDataSourceByName))
+
+			tsDsRoute.Any("/proxy/:id/*", reqSignedIn, hs.ProxyTsDataSourceRequest)
+			tsDsRoute.Any("/proxy/:id", reqSignedIn, hs.ProxyTsDataSourceRequest)
 		})
 	})
 
