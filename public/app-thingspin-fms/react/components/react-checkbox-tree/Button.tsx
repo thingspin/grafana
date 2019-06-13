@@ -11,7 +11,7 @@ export default class Button extends React.PureComponent<Props> {
         title: null,
     };
 
-    render() {
+    render(): React.ReactNode {
         const { children, title, ...props } = this.props;
 
         return (

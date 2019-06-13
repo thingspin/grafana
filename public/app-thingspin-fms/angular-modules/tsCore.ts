@@ -1,4 +1,5 @@
 import './core/directives/thingspinApp';
+import '../pages/FacilityMonitoring';
 
 import { tsRegisterAngularDirectives } from '../react/tsAngular_wrapper';
 
