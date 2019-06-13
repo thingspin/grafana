@@ -53,12 +53,27 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 		})
 
 		// 사이트 관리 동작 API
-		tsRoute.Group("/site", func(tsFnRoute routing.RouteRegister) {
+		tsRoute.Group("/sites", func(tsFnRoute routing.RouteRegister) {
 			tsFnRoute.Get("/", Wrap(getAllTsSite))
 			tsFnRoute.Post("/", bind(tsm.AddTsSiteQuery{}), Wrap(addTsSite))
-			tsFnRoute.Put("/", bind(tsm.UpdateTsSiteQuery{}), Wrap(UpdateTsSite))
+			tsFnRoute.Put("/", bind(tsm.UpdateTsSiteQuery{}), Wrap(updateTsSite))
 			tsFnRoute.Delete("/:siteId", Wrap(deleteTsSite))
+
+			tsFnRoute.Group("/:siteId/facilities", func(tsFaciltesRoute routing.RouteRegister) {
+				tsFaciltesRoute.Get("/", Wrap(getAllTsFacility))
+				tsFaciltesRoute.Post("/", bind(tsm.AddTsFacilityQuery{}), Wrap(addTsFacility))
+				tsFaciltesRoute.Put("/:facilityId", bind(tsm.UpdateTsFacilityQuery{}), Wrap(updateTsFacility))
+				tsFaciltesRoute.Delete("/:facilityId", Wrap(deleteTsFacility))
+	
+				tsFaciltesRoute.Group("/tree", func(tsFaciltytree routing.RouteRegister) {
+					tsFaciltytree.Get("/", Wrap(getAllTsFacilityTree))
+					tsFaciltytree.Post("/", bind(tsm.AddTsFacilityTreeQuery{}), Wrap(addTsFacilityTree))
+					tsFaciltytree.Put("/", bind(tsm.UpdateTsFacilityTreeQuery{}), Wrap(updateTsFacilityTree))
+					tsFaciltytree.Delete("/", Wrap(deleteTsFacilityTree))
+				})
+			})
 		})
+
 
 		tsRoute.Group("/type", func(tsTypeRoute routing.RouteRegister) {
 			tsTypeRoute.Get("/connect", Wrap(getTsConnectType))
