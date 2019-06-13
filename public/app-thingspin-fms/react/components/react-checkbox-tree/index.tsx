@@ -1,18 +1,17 @@
 import classNames from 'classnames';
 import isEqual from 'lodash/isEqual';
 import nanoid from 'nanoid';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import Button from './Button';
-import NodeModel from './NodeModel';
 import TreeNode from './TreeNode';
-import { NodeShape, ListShape, IconsShape, LanguageShape } from './models';
+import NodeModel, { TreeNodeShape, ListShape, IconsShape, LanguageShape } from './models';
 
 // load scss
 import './index.scss';
 
-interface Props {
-    nodes: NodeShape[];
+export interface Props {
+    nodes: TreeNodeShape[];
 
     checked?: ListShape;
     disabled?: boolean;
@@ -38,7 +37,7 @@ interface Props {
 
 interface States {
     id: string;
-    model: any;
+    model: NodeModel;
     prevProps: Props;
 }
 
@@ -81,7 +80,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         onExpand: () => {},
     };
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
 
         const model = new NodeModel(props);
@@ -105,10 +104,10 @@ export default class CheckboxTree extends React.Component<Props, States> {
     }
 
     // eslint-disable-next-line react/sort-comp
-    static getDerivedStateFromProps(newProps, prevState) {
+    static getDerivedStateFromProps(newProps: Props, prevState: States): object {
         const { model, prevProps } = prevState;
         const { disabled, id, nodes } = newProps;
-        let newState = { ...prevState, prevProps: newProps };
+        let newState: object = { ...prevState, prevProps: newProps };
 
         // Apply new properties to model
         model.setProps(newProps);
@@ -129,7 +128,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         return newState;
     }
 
-    onCheck(nodeInfo) {
+    onCheck(nodeInfo): void {
         const { noCascade, onCheck } = this.props;
         const model = this.state.model.clone();
         const node = model.getNode(nodeInfo.value);
@@ -138,7 +137,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         onCheck(model.serializeList('checked'), { ...node, ...nodeInfo });
     }
 
-    onExpand(nodeInfo) {
+    onExpand(nodeInfo: any) {
         const { onExpand } = this.props;
         const model = this.state.model.clone();
         const node = model.getNode(nodeInfo.value);
@@ -147,7 +146,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         onExpand(model.serializeList('expanded'), { ...node, ...nodeInfo });
     }
 
-    onNodeClick(nodeInfo) {
+    onNodeClick(nodeInfo): void {
         const { onClick } = this.props;
         const { model } = this.state;
         const node = model.getNode(nodeInfo.value);
@@ -155,15 +154,15 @@ export default class CheckboxTree extends React.Component<Props, States> {
         onClick({ ...node, ...nodeInfo });
     }
 
-    onExpandAll() {
+    onExpandAll(): void {
         this.expandAllNodes();
     }
 
-    onCollapseAll() {
+    onCollapseAll(): void {
         this.expandAllNodes(false);
     }
 
-    expandAllNodes(expand = true) {
+    expandAllNodes(expand = true): void {
         const { onExpand } = this.props;
 
         onExpand(
@@ -173,7 +172,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         );
     }
 
-    determineShallowCheckState(node, noCascade) {
+    determineShallowCheckState(node: TreeNodeShape, noCascade: boolean): number {
         const flatNode = this.state.model.getNode(node.value);
 
         if (flatNode.isLeaf || noCascade) {
@@ -191,15 +190,15 @@ export default class CheckboxTree extends React.Component<Props, States> {
         return 0;
     }
 
-    isEveryChildChecked(node) {
+    isEveryChildChecked(node: TreeNodeShape): boolean {
         return node.children.every(child => this.state.model.getNode(child.value).checkState === 1);
     }
 
-    isSomeChildChecked(node) {
+    isSomeChildChecked(node: TreeNodeShape): boolean {
         return node.children.some(child => this.state.model.getNode(child.value).checkState > 0);
     }
 
-    renderTreeNodes(nodes, parent: any = {}) {
+    renderTreeNodes(nodes: TreeNodeShape[], parent: any = {}): ReactNode {
         const {
             expandDisabled,
             expandOnClick,
@@ -215,10 +214,10 @@ export default class CheckboxTree extends React.Component<Props, States> {
         const { id, model } = this.state;
         const { icons: defaultIcons } = CheckboxTree.defaultProps;
 
-        const treeNodes = nodes.map((node) => {
+        const treeNodes: ReactNode[] = nodes.map((node: TreeNodeShape): ReactNode => {
             const key = node.value;
             const flatNode = model.getNode(node.value);
-            const children = flatNode.isParent ? this.renderTreeNodes(node.children, node) : null;
+            const children: ReactNode = flatNode.isParent ? this.renderTreeNodes(node.children, node) : null;
 
             // Determine the check state after all children check states have been determined
             // This is done during rendering as to avoid an additional loop during the
@@ -272,7 +271,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         );
     }
 
-    renderExpandAll() {
+    renderExpandAll(): ReactNode {
         const { icons: { expandAll, collapseAll }, lang, showExpandAll } = this.props;
 
         if (!showExpandAll) {
@@ -297,7 +296,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         );
     }
 
-    renderHiddenInput() {
+    renderHiddenInput(): ReactNode {
         const { name, nameAsArray } = this.props;
 
         if (name === undefined) {
@@ -311,24 +310,24 @@ export default class CheckboxTree extends React.Component<Props, States> {
         return this.renderJoinedHiddenInput();
     }
 
-    renderArrayHiddenInput() {
+    renderArrayHiddenInput(): ReactNode[] {
         const { checked, name: inputName } = this.props;
 
-        return checked.map((value) => {
+        return checked.map((value: any): ReactNode => {
             const name = `${inputName}[]`;
 
             return <input key={value} name={name} type="hidden" value={value} />;
         });
     }
 
-    renderJoinedHiddenInput() {
+    renderJoinedHiddenInput(): ReactNode {
         const { checked, name } = this.props;
         const inputValue = checked.join(',');
 
         return <input name={name} type="hidden" value={inputValue} />;
     }
 
-    render() {
+    render(): ReactNode {
         const { disabled, nodes, nativeCheckboxes } = this.props;
         const treeNodes = this.renderTreeNodes(nodes);
 

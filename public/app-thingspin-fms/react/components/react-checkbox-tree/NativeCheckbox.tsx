@@ -21,7 +21,7 @@ export default class NativeCheckbox extends React.PureComponent<Props> {
         this.updateDeterminateProperty();
     }
 
-    updateDeterminateProperty() {
+    updateDeterminateProperty(): void {
         const { indeterminate } = this.props;
 
         this.checkbox.indeterminate = indeterminate;

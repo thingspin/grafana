@@ -50,13 +50,13 @@ class TreeNode extends React.Component<Props> {
         this.onExpand = this.onExpand.bind(this);
     }
 
-    onCheck() {
+    onCheck(): void {
         const { value, onCheck } = this.props;
 
         onCheck({ value, checked: this.getCheckState({ toggle: true }) });
     }
 
-    onClick() {
+    onClick(): void {
         const {
             expandOnClick,
             isParent,
@@ -72,13 +72,13 @@ class TreeNode extends React.Component<Props> {
         onClick({ value, checked: this.getCheckState({ toggle: false }) });
     }
 
-    onExpand() {
+    onExpand(): void {
         const { expanded, value, onExpand } = this.props;
 
         onExpand({ value, expanded: !expanded });
     }
 
-    getCheckState({ toggle }) {
+    getCheckState({ toggle }): boolean {
         const { checked, optimisticToggle } = this.props;
 
         // Toggle off state to checked
@@ -99,7 +99,7 @@ class TreeNode extends React.Component<Props> {
         return false;
     }
 
-    renderCollapseButton() {
+    renderCollapseButton(): ReactNode {
         const { expandDisabled, isLeaf, lang } = this.props;
 
         if (isLeaf) {
@@ -122,7 +122,7 @@ class TreeNode extends React.Component<Props> {
         );
     }
 
-    renderCollapseIcon() {
+    renderCollapseIcon(): ReactNode {
         const { expanded, icons: { expandClose, expandOpen } } = this.props;
 
         if (!expanded) {
@@ -132,7 +132,7 @@ class TreeNode extends React.Component<Props> {
         return expandOpen;
     }
 
-    renderCheckboxIcon() {
+    renderCheckboxIcon(): ReactNode {
         const { checked, icons: { uncheck, check, halfCheck } } = this.props;
 
         if (checked === 0) {
@@ -146,7 +146,7 @@ class TreeNode extends React.Component<Props> {
         return halfCheck;
     }
 
-    renderNodeIcon() {
+    renderNodeIcon(): ReactNode {
         const {
             expanded,
             icon,
@@ -169,7 +169,7 @@ class TreeNode extends React.Component<Props> {
         return parentOpen;
     }
 
-    renderBareLabel(children) {
+    renderBareLabel(children: ReactNode): ReactNode {
         const { onClick, title } = this.props;
         const clickable = onClick !== null;
 
@@ -190,7 +190,7 @@ class TreeNode extends React.Component<Props> {
         );
     }
 
-    renderCheckboxLabel(children) {
+    renderCheckboxLabel(children: ReactNode): ReactNode[] {
         const {
             checked,
             disabled,
@@ -237,7 +237,7 @@ class TreeNode extends React.Component<Props> {
         return render;
     }
 
-    renderLabel() {
+    renderLabel(): ReactNode {
         const { label, showCheckbox, showNodeIcon } = this.props;
         const labelChildren = [
             showNodeIcon ? (
@@ -257,7 +257,7 @@ class TreeNode extends React.Component<Props> {
         return this.renderCheckboxLabel(labelChildren);
     }
 
-    renderChildren() {
+    renderChildren(): ReactNode {
         if (!this.props.expanded) {
             return null;
         }
@@ -265,13 +265,8 @@ class TreeNode extends React.Component<Props> {
         return this.props.children;
     }
 
-    render() {
-        const {
-            className,
-            disabled,
-            expanded,
-            isLeaf,
-        } = this.props;
+    render(): ReactNode {
+        const { className, disabled, expanded, isLeaf, } = this.props;
         const nodeClass = classNames({
             'rct-node': true,
             'rct-node-leaf': isLeaf,
