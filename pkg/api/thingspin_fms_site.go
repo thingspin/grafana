@@ -7,11 +7,36 @@ import (
 )
 
 func getAllTsSite(c *gfm.ReqContext) Response {
+	/* Database Query
 	q := m.GetAllTsSiteQuery{}
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Server Error", err)
 	}
-	return JSON(200, q.Result)
+	*/
+	result := []m.TsSiteField {
+		{
+			Id: 1,
+			Name: "Seoul Factory",
+			Description: "서울 공장",
+			Location_lat: 37.5599782,
+			Location_lon: 126.9795979,
+		},
+		{
+			Id: 2,
+			Name: "Busan Factory",
+			Description: "부산 공장",
+			Location_lat: 35.1485845,
+			Location_lon: 128.9981016,
+		},
+		{
+			Id: 3,
+			Name: "Daegu Factory",
+			Description: "대구 공장",
+			Location_lat: 35.8693295,
+			Location_lon: 128.5387992,
+		},
+	}
+	return JSON(200, result)
 }
 
 func addTsSite(c *gfm.ReqContext, req m.AddTsSiteQuery) Response {	
@@ -28,7 +53,7 @@ func addTsSite(c *gfm.ReqContext, req m.AddTsSiteQuery) Response {
 	return JSON(200, q.Result)
 }
 
-func UpdateTsSite(c *gfm.ReqContext, req m.UpdateTsSiteQuery) Response {
+func updateTsSite(c *gfm.ReqContext, req m.UpdateTsSiteQuery) Response {
 	q := m.UpdateTsSiteQuery{
 		Id:        req.Id,
 		Name:      req.Name,

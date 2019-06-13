@@ -38,6 +38,9 @@ func AddThingspinMigrations(mg *Migrator) {
 	addFmsEquipMigrations(mg)
 	addFmsEquipEdgeMigrations(mg)
 	addFmsSiteMigrations(mg)
+	addFmsFacilityMigrations(mg)
+	addFmsFacilityTreeMigrations(mg)
+	addFmsTagsMigrations(mg)
 
 	// FMS Analysis Management
 	addFmsAnlyCodeMigrations(mg)
