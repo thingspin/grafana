@@ -86,6 +86,7 @@ export default class NodeModel {
                 disabled: this.getDisabledState(node, parent, disabled, noCascade),
                 treeDepth: depth,
                 index,
+                origin: node,
             };
             this.flattenNodes(node.children, node, depth + 1);
         });
