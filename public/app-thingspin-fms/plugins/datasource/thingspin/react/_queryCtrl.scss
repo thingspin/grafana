@@ -1,0 +1,13 @@
+
+.fms-form-grid {
+    display: grid;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+}
+
+// .fms-grid1 ~ .fms-grid10
+@for $i from 1 to 10 {
+    .fms-grid#{$i} {
+        grid-template-columns: repeat($i, 1fr);
+    }
+}
