@@ -3,6 +3,7 @@ package plugins
 import (
 	"net/url"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/grafana/grafana/pkg/setting"
@@ -78,7 +79,8 @@ func (fp *FrontendPluginBase) handleModuleDefaults() {
 
 // ThingSPIN add code ------
 func isThingspinPlugin(pluginDir string) bool {
-	return strings.Contains(pluginDir, setting.StaticRootPath+"/app-thingspin-fms")
+	path := filepath.Join(setting.StaticRootPath,"app-thingspin-fms")
+	return strings.Contains(pluginDir, path)
 }
 
 // ThingSPIN add code ------
