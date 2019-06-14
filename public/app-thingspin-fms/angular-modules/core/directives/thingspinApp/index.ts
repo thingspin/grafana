@@ -1,4 +1,4 @@
-import { ILocationService, IController, IScope, ITimeoutService, IRootScopeService } from 'angular';
+import { ILocationService, IScope, ITimeoutService, IRootScopeService, IControllerService } from 'angular';
 import Drop from 'tether-drop';
 
 import { GrafanaCtrl, grafanaAppDirective } from 'app/routes/GrafanaCtrl';
@@ -23,7 +23,7 @@ export class ThingspinCtrl extends GrafanaCtrl {
     $scope: IScope,
     utilSrv: UtilSrv,
     $rootScope: IRootScopeService,
-    $controller: IController,
+    $controller: IControllerService,
     contextSrv: ContextSrv,
     bridgeSrv: BridgeSrv,
     backendSrv: BackendSrv,
