@@ -127,14 +127,23 @@ export class FMDashboardPage extends DashboardPage {
         // Only trigger render when the scroll has moved by 25
         const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
 
-        const rcDGNode = (<div className={gridWrapperClasses}>
-            {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}
-            <FMDashboardGrid
-                dashboard={dashboard}
-                isEditing={false}
-                isFullscreen={isFullscreen}
-                scrollTop={approximateScrollTop}
-            />
+
+
+        const mainClassName = classNames({
+            'ts-fm-dg': !dashboard.meta.isEditing,
+            'ts-fm-edit': !!dashboard.meta.isEditing,
+        });
+        const rcDGNode = (<div className={mainClassName}>
+            {!dashboard.meta.isEditing ? <div></div> : ''}
+            <div className={gridWrapperClasses}>
+                {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}
+                <FMDashboardGrid
+                    dashboard={dashboard}
+                    isEditing={false}
+                    isFullscreen={isFullscreen}
+                    scrollTop={approximateScrollTop}
+                />
+            </div>
         </div>);
 
         return (
@@ -159,13 +168,7 @@ export class FMDashboardPage extends DashboardPage {
 
                         {initError && this.renderInitFailedState()}
 
-                        {!dashboard.meta.isEditing ?
-                            <div className='ts-fm-dg'>
-                                <div></div> {/* 여기에 ThingSPIN Tree를 추가하면 됨 */}
-                                { rcDGNode }
-                            </div>
-                            : rcDGNode
-                        }
+                        {rcDGNode}
                     </CustomScrollbar>
                 </div>
             </div>
