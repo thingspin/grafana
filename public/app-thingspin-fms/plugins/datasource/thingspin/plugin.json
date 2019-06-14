@@ -1,0 +1,23 @@
+{
+  "type": "datasource",
+  "name": "사이트 태그",
+  "id": "thingspin",
+
+  "builtIn": true,
+
+  "metrics": true,
+  "alerting": false,
+  "annotations": false,
+
+  "info": {
+    "description": "ThingSPIN에서 제공하는 디바이스(Edge)를 수집 하는 수단을 제공",
+    "author": {
+      "name": "Hancom MDS ThingSPIN Project",
+      "url": "https://thingspin.io"
+    },
+    "logos": {
+      "small": "img/fms.png",
+      "large": "img/fms.png"
+    }
+  }
+}

@@ -34,7 +34,7 @@ import * as barGaugePanel from 'app/plugins/panel/bargauge/module';
 
 import * as exampleApp from 'app/plugins/app/example-app/module';
 // thingspin add code ---
-import { thingspinBuiltInPlugins } from './built_in_plugins_thingspin';
+import { thingspinBuiltInPlugins } from 'app-thingspin-fms/plugins/built_in_plugins_thingspin';
 // thingspin add code ---
 
 const builtInPlugins = {

@@ -30,7 +30,8 @@ export interface Props {
     showExpandAll?: boolean;
     showNodeIcon?: boolean;
     showNodeTitle?: boolean;
-    onCheck?: Function;
+
+    onCheck?: (value: string[], clickNode: object, origin: any) => void;
     onClick?: Function;
     onExpand?: Function;
 }
@@ -134,13 +135,16 @@ export default class CheckboxTree extends React.Component<Props, States> {
         const node = model.getNode(nodeInfo.value);
 
         model.toggleChecked(nodeInfo, nodeInfo.checked, noCascade);
+
+        // thingspin add code ---
         const checked: any[] = model.serializeList('checked');
         const data: any[] = [];
-        for (const check of checked) {
-            data.push(model.getNode(check).origin);
+        for (const value of checked) {
+            data.push(model.getNode(value).origin);
         }
+        // thingspin add code ---
 
-        onCheck(model.serializeList('checked'), { ...node, ...nodeInfo }, data);
+        onCheck(checked, { ...node, ...nodeInfo }, data);
     }
 
     onExpand(nodeInfo: any) {
