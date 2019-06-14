@@ -19,6 +19,8 @@ export interface facilityItem {
 
     sitesListinfo: [];
     siteOptions: siteData[];
+
+    filterPlaceholder: any;
 }
 
 
@@ -51,6 +53,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
             selectedOption: null,
             sitesListinfo: [],
             siteOptions: [],
+            filterPlaceholder: " 태그 검색 ..."
         };
         this.getSiteList();
         //this.getTreeinfo(1);
@@ -103,7 +106,8 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
     //site select function
     handleChange = selectedOption => {
         this.setState({selectedOption});
-        //console.log('option selected: ',selectedOption);
+        console.log('option selected: ',selectedOption);
+        //this.setState({filterPlaceholder: selectedOption.label+" 의 태그 조회"});
         this.getTreeinfo(selectedOption.value);
     };
 
@@ -154,20 +158,23 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                     value = {selectedOption}
                     onChange = {this.handleChange}
                     options = {this.state.siteOptions}
-                    placeholder = "Select Site"
+                    placeholder = "사이트 선택"
                     className = "facility-select"
                     ></Select>
                 </div>
-
-                <div className="facility-filter-pos">
-                    <input
-                        className="filter-text"
-                        placeholder="  Tag Search..."
-                        type="text"
-                        value={this.state.filterText}
-                        onChange={this.onFilterChange}
-                    />
-                </div>
+                <div className = "facility-section-line"/>
+                {selectedOption ?
+                    <div className="facility-filter-pos">
+                        <input
+                            className="filter-text"
+                            placeholder={this.state.filterPlaceholder}
+                            type="text"
+                            value={this.state.filterText}
+                            onChange={this.onFilterChange}
+                            />
+                        </div>
+                  : null
+                }
                 <div className="facility-tree-pos">
                         <CheckboxTree
                             nodes={this.state.nodesFiltered}

@@ -7,6 +7,7 @@
     margin-left: 16px;
     margin-right: 16px;
     margin-bottom: 16px;
+    margin-top: 16px;
 }
 .facility-filter-pos {
     margin-left: 17px;
@@ -56,4 +57,14 @@
             transform: scaleX(1) translateY(-2px);   
         }
     }
+}
+
+.facility-section-line {
+    height: 0;
+    border: solid 0.5px #ecebeb;
+    margin-top: 9px;//16.5
+    margin-left: 16px;
+    margin-right: 16px;
+    margin-bottom: 9px;
+    align-content: center;
 }
