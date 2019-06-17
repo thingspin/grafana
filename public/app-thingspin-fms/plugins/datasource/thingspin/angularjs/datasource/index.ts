@@ -49,7 +49,11 @@ export class FmsDatasource extends DataSourceApi<TsDsTarget> {
       let obj: InfluxQuery = measurementGroup[measurement];
 
       if (!obj) {
-        obj = { refId, measurement, select: [], };
+        obj = {
+          refId, measurement, select: [],
+          // force setting property
+          alias: '$col',
+        } as any;
         measurementGroup[measurement] = obj;
       }
 

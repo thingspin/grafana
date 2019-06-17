@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -21,20 +21,30 @@ import { FMDashboardGrid } from './FMDashboardGrid';
 // ThingSPIN Utils
 import { tsInitDashboard } from './initDashboard';
 
+interface FmPanelFilter {
+    removes: any;
+    adds: any;
+}
+
 // Facility Monitoring Component
 // (Customized grafana react component: iiHOC)
 export class FMDashboardPage extends DashboardPage {
-    oldPanel = {};
+    oldPanel = {}; // panel cache data
     constructor(props) {
         super(props);
     }
 
     // add thingspin method
-    updateFmPanel(newPanel, { removes, adds }) {
+    updateFmPanel(newPanel, { removes, adds }: FmPanelFilter) {
         const { dashboard } = this.props;
 
         for (const remove of removes) {
-            dashboard.removePanel(this.oldPanel[remove]);
+            const { id } = this.oldPanel[remove]; // auto generated in dashboardModel class
+
+            // find PanelModel Object
+            const p = dashboard.getPanelById(id);
+            dashboard.removePanel(p);
+
             delete this.oldPanel[remove];
         }
 
@@ -45,32 +55,35 @@ export class FMDashboardPage extends DashboardPage {
     }
 
     // add thingspin method
-    onCheckedChange(siteId, tags, checked) {
+    onCheckedChange(siteId, tags) {
+        // local method
         const getPanelType = (dataType: string): string => {
-            switch (dataType) {
-                case 'Integer':
-                case 'Float':
+            switch (dataType.toLowerCase()) {
+                case 'integer':
+                case 'float':
                     return 'graph';
                 default:
                     return 'table';
             }
         };
 
-        const generatePanelData = (title: string, type: string, target: any) => ({
+        // local method
+        const generatePanelData = (title: string, type: string, target: any, y = 0): object => ({
             // require panel data
             type,
             title,
-            gridPos: { x: 0, y: 0, w: 24, h: 5 },
+            gridPos: { x: 0, y, w: 24, h: 5 },
+
             // require datasource data
             datasource: "사이트 태그",
             targets: [{
                 ...target,
                 siteId,
-                checked,
             }],
         });
 
-        const getDiffPanel = (aPanel, bPanel) => {
+        // local method
+        const getDiffPanel = (aPanel: object, bPanel: object): FmPanelFilter => {
             // local method
             const diffKeys = (A: any[], B: any[]) => (A.filter(x => !B.includes(x)));
 
@@ -90,22 +103,58 @@ export class FMDashboardPage extends DashboardPage {
         const newPanel = {};
         if (Array.isArray(tags)) {
             for (const tag of tags) {
-                const panelType = getPanelType(tag.type);
+                const panelType = getPanelType(tag.tag_column_type);
 
-                const panelData = generatePanelData(tag.Name, panelType, {
+                const panelData = generatePanelData(tag.tag_name, panelType, {
                     tagNodes: [tag],
+                    checked: [tag.value],
                 });
-                newPanel[tag.Id] = panelData;
+                newPanel[tag.tag_id] = panelData;
             }
         }
 
         this.updateFmPanel(newPanel, getDiffPanel(this.oldPanel, newPanel));
     }
 
+    // add thingspin method
+    renderGridNode(): ReactNode {
+        const { dashboard } = this.props;
+        const { isFullscreen, scrollTop } = this.state;
+
+        const gridClassName = classNames({
+            'ts-fm-dg': !dashboard.meta.isEditing,
+            'ts-fm-edit': !!dashboard.meta.isEditing,
+        });
+
+        const gridWrapperClasses: string = classNames({
+            'dashboard-container': true,
+            'dashboard-container--has-submenu': dashboard.meta.submenuEnabled,
+        });
+
+        // Only trigger render when the scroll has moved by 25
+        const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
+
+        return (<div className={gridClassName}>
+
+            {!dashboard.meta.isEditing ? <div></div> : ''}
+
+            <div className={gridWrapperClasses}>
+                {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}
+
+                <FMDashboardGrid
+                    dashboard={dashboard}
+                    isEditing={false}
+                    isFullscreen={isFullscreen}
+                    scrollTop={approximateScrollTop}
+                />
+            </div>
+        </div>);
+    }
+
     // Override
     render(): JSX.Element {
         const { dashboard, editview, $injector, isInitSlow, initError } = this.props;
-        const { isSettingsOpening, isEditing, isFullscreen, scrollTop, updateScrollTop } = this.state;
+        const { isSettingsOpening, isEditing, isFullscreen, updateScrollTop } = this.state;
 
         if (!dashboard) {
             if (isInitSlow) {
@@ -119,24 +168,6 @@ export class FMDashboardPage extends DashboardPage {
             'dashboard-page--settings-open': !isSettingsOpening && editview,
         });
 
-        const gridWrapperClasses: string = classNames({
-            'dashboard-container': true,
-            'dashboard-container--has-submenu': dashboard.meta.submenuEnabled,
-        });
-
-        // Only trigger render when the scroll has moved by 25
-        const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
-
-        const rcDGNode = (<div className={gridWrapperClasses}>
-            {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}
-            <FMDashboardGrid
-                dashboard={dashboard}
-                isEditing={false}
-                isFullscreen={isFullscreen}
-                scrollTop={approximateScrollTop}
-            />
-        </div>);
-
         return (
             <div className={classes}>
                 <FMNav
@@ -147,6 +178,7 @@ export class FMDashboardPage extends DashboardPage {
                     $injector={$injector}
                     onAddPanel={this.onAddPanel}
                 />
+
                 <div className="scroll-canvas scroll-canvas--dashboard">
                     <CustomScrollbar
                         autoHeightMin="100%"
@@ -159,13 +191,7 @@ export class FMDashboardPage extends DashboardPage {
 
                         {initError && this.renderInitFailedState()}
 
-                        {!dashboard.meta.isEditing ?
-                            <div className='ts-fm-dg'>
-                                <div></div> {/* 여기에 ThingSPIN Tree를 추가하면 됨 */}
-                                { rcDGNode }
-                            </div>
-                            : rcDGNode
-                        }
+                        {this.renderGridNode()}
                     </CustomScrollbar>
                 </div>
             </div>

@@ -1,3 +1,7 @@
+// 3rd party libs
+import { ILocationService } from 'angular';
+
+// grafana libs
 import { DashboardSrv } from 'app/features/dashboard/services/DashboardSrv';
 import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
@@ -16,7 +20,7 @@ export interface TsDashboardSrv extends DashboardSrv {
 
 // Override serivce class in AnularJs (DashboardSrv)
 coreModule.decorator('dashboardSrv', ($delegate: DashboardSrv, $rootScope,
-  backendSrv: BackendSrv, $location: angular.ILocationService): TsDashboardSrv => {
+  backendSrv: BackendSrv, $location: ILocationService): TsDashboardSrv => {
   const self: TsDashboardSrv = $delegate as TsDashboardSrv; //force type assertion
 
   // Add class method

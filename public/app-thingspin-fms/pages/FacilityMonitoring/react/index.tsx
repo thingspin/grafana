@@ -10,7 +10,7 @@ import {
 } from 'app/features/dashboard/containers/DashboardPage';
 
 // thingspin react components
-import FMDabhaordPage from './FMDabhaordPage';
+import FMDashboardPage from './FMDashboardPage';
 
 // styler(scss, css)
 import './_index.scss';
@@ -29,10 +29,8 @@ export class FMComponent extends PureComponent<Props, State> {
     }
 
     render(): ReactNode {
-        return (<FMDabhaordPage {...this.props}></FMDabhaordPage>);
+        return (<FMDashboardPage {...this.props}></FMDashboardPage>);
     }
 }
 
-export default hot(module)(connect(
-    mapStateToProps,
-)(FMComponent));
+export default hot(module)(connect( mapStateToProps, )(FMComponent));

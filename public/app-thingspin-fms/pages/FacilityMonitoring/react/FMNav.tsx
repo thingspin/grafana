@@ -1,3 +1,4 @@
+import { auto } from 'angular';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -18,7 +19,7 @@ import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/
 export class FMNavComp extends DashNav {
     // Override
     onSave = (): void => {
-        const { $injector }: { $injector: angular.auto.IInjectorService } = this.props;
+        const { $injector }: { $injector: auto.IInjectorService } = this.props;
         const dashboardSrv: TsDashboardSrv = $injector.get('dashboardSrv');
         dashboardSrv.fmSaveFM();
     };
