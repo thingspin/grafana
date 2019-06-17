@@ -5,7 +5,9 @@ export interface TsTimeSrv extends TimeSrv {
 
 }
 
-coreModule.decorator('timeSrv', ($delegate: TimeSrv, ) => {
+coreModule.decorator('timeSrv',
+/** @ngInject */
+($delegate: TimeSrv, ) => {
     const self = $delegate as TsTimeSrv;
 
     // Override service class method

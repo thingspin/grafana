@@ -19,7 +19,9 @@ export interface TsDashboardSrv extends DashboardSrv {
 }
 
 // Override serivce class in AnularJs (DashboardSrv)
-coreModule.decorator('dashboardSrv', ($delegate: DashboardSrv, $rootScope,
+coreModule.decorator('dashboardSrv',
+/** @ngInject */
+($delegate: DashboardSrv, $rootScope,
   backendSrv: BackendSrv, $location: ILocationService): TsDashboardSrv => {
   const self: TsDashboardSrv = $delegate as TsDashboardSrv; //force type assertion
 

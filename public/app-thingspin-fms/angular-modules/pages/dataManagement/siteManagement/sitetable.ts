@@ -1,5 +1,6 @@
 import _ from "lodash";
 import angular from "angular";
+import { coreModule } from 'app/core/core';
 
 interface MqttTableData {
     name: string;
@@ -32,6 +33,7 @@ export class TsSiteTableCtrl implements angular.IController {
         pageNode: [],
     };
 
+    /** @ngInject */
     constructor(
         private $scope: angular.IScope,
     ) {
@@ -137,4 +139,4 @@ export class TsSiteTableDirective implements angular.IDirective {
     }
 }
 
-angular.module('thingspin.directives').directive('tsSiteTable', [() => new TsSiteTableDirective()]);
+coreModule.directive('tsSiteTable', [() => new TsSiteTableDirective()]);
