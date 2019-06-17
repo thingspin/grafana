@@ -60,6 +60,8 @@ export class QueryCtrl extends Component<RcQueryCtrlProps, RcQueryCtrlStates> {
     onSiteChange(item: SelectOptionItem<any>): void {
         this.props.onChange({
             siteId: item.value,
+            checked: [],
+            tagNodes: [],
         });
     }
 

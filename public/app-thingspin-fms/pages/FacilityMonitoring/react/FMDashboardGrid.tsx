@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { DashboardGrid } from 'app/features/dashboard/dashgrid/DashboardGrid';
 
 // ThingSPIN Components
-import { FMDashboardPanel } from './FMDahboardPanel';
+import { FMDashboardPanel } from './FMDashboardPanel';
 
 // (Customized grafana react component: iiHOC)
 export class FMDashboardGrid extends DashboardGrid {
