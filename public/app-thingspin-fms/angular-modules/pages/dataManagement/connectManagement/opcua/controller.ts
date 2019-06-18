@@ -196,6 +196,10 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         }
     }
 
+    timeout(ms: number) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
     async sendBackend(isNew: boolean): Promise<any> {
         const payload = this.genPayload(this.FlowId);
 
@@ -203,6 +207,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         if (isNew) {
             // new
             connId = await this.backendSrv.post(`${baseApi}/opcua`, payload);
+            await this.timeout(3000);
             await this.backendSrv.put(`${baseApi}/${connId}`, payload);
 
             appEvents.emit('alert-success', ['신규 OPC/UA 연결이 추가되었습니다.']);
