@@ -38,6 +38,10 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsMenuRoute.Put("/hide/:id/:hide", bind(tsm.UpdateFmsMenuHideStateCommand{}), Wrap(UpdateFmsMenuHideState))
 			tsMenuRoute.Get("/pin", bind(tsm.GetFmsMenuPinCommand{}), Wrap(GetFmsMenuPin))
 			tsMenuRoute.Post("/pin/:menuId/:pin", bind(tsm.UpdateFmsMenuPinSateCommand{}), Wrap(UpdateFmsMenuPinSate))
+
+			// 부모 tree에 신규 하위(child) 노드 추가 api
+			tsMenuRoute.Post("/:orgId/:parentId", bind(tsm.AddFmsMenuByParentIdCmd{}), Wrap(AddTsChildMenuByParentId))
+			tsMenuRoute.Get("/:orgId/name/:name", Wrap(FindMenuByName))
 		})
 
 		// 연결 관리 기본 동작 API
@@ -64,7 +68,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 				tsFaciltesRoute.Post("/", bind(tsm.AddTsFacilityQuery{}), Wrap(addTsFacility))
 				tsFaciltesRoute.Put("/:facilityId", bind(tsm.UpdateTsFacilityQuery{}), Wrap(updateTsFacility))
 				tsFaciltesRoute.Delete("/:facilityId", Wrap(deleteTsFacility))
-	
+
 				tsFaciltesRoute.Group("/tree", func(tsFaciltytree routing.RouteRegister) {
 					tsFaciltytree.Get("/", Wrap(getAllTsFacilityTree))
 					tsFaciltytree.Post("/", bind(tsm.AddTsFacilityTreeQuery{}), Wrap(addTsFacilityTree))

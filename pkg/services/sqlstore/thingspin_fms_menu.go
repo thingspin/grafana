@@ -4,9 +4,9 @@ import (
 	"sort"
 	"strings"
 
-	//"database/sql"
 	"fmt"
 
+	"github.com/go-xorm/xorm"
 	"github.com/grafana/grafana/pkg/bus"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 )
@@ -17,6 +17,7 @@ func init() {
 	//bus.AddHandler("sql", DeleteFmsMenuByOrgId)
 	bus.AddHandler("sql", DeleteFmsMenuById)
 	bus.AddHandler("sql", AddFmsMenu)
+	bus.AddHandler("thingspin-sql", AddFmsMenuByParentId)
 	bus.AddHandler("sql", UpdateFmsMenu)
 	bus.AddHandler("sql", UpdateFmsMenuPinSate)
 	bus.AddHandler("sql", GetFmsMenuUsersPin)
@@ -24,9 +25,10 @@ func init() {
 	bus.AddHandler("sql", UpdateFmsMenuInfo)
 	bus.AddHandler("sql", GetDefaultFmsMenuByDefaultOrgId)
 	bus.AddHandler("sql", AddDefaultMenuByDefaultOrgId)
+	bus.AddHandler("thingspin-sql", FindFmsMenuByName)
 }
 
-// Transaction 
+// Transaction
 func doTransaction(callback dbTransactionFunc) error {
 	var err error
 	sess := &DBSession{Session: x.NewSession()}
@@ -153,7 +155,7 @@ func GetDefaultFmsMenuByDefaultOrgId(cmd *m.GetDefaultFmsMenuByDefaultOrgIdQuery
 		Where(m.TsFmsMenuTbl+".org_id = ?", cmd.OrgId).
 		And(m.TsFmsMenuBaseTbl+".canDelete = ?", 0).
 		Find(&res)
-		
+
 	if err == nil {
 		result := convertFmsMenuTree(res)
 		sortFmsMenuTree(result)
@@ -252,10 +254,10 @@ func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
 func AddDefaultMenuByDefaultOrgId(cmd *m.AddFmsDefaultMenuCommand) error {
 	err := doTransaction(func(sess *DBSession) error {
 		for pi, menu := range cmd.DefaultMenu {
-			
+
 			sqlCommands := []string{
 				`SELECT MAX(id) FROM ` + m.TsFmsMenuTbl,
-				`INSERT INTO `+m.TsFmsMenuTbl+` ('id', 'org_id', 'parent_id', 'name', 'mbid', 'order') VALUES (?,?,?,?,?,?)`,
+				`INSERT INTO ` + m.TsFmsMenuTbl + ` ('id', 'org_id', 'parent_id', 'name', 'mbid', 'order') VALUES (?,?,?,?,?,?)`,
 			}
 			var id int
 			has, err := sess.SQL(sqlCommands[0]).Get(&id)
@@ -273,16 +275,16 @@ func AddDefaultMenuByDefaultOrgId(cmd *m.AddFmsDefaultMenuCommand) error {
 			if err != nil {
 				return err
 			}
-			
+
 			for ci, cmenu := range menu.Children {
 				_, err = sess.Exec(sqlCommands[1], id+ci+1, cmd.OrgId, cmenu.ParentId, cmenu.Text, cmenu.Id, ci)
 				//cmd.Result = result
 				if err != nil {
 					return err
 				}
-				
+
 			}
-			
+
 		}
 
 		return nil
@@ -295,9 +297,9 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 	err := doTransaction(func(sess *DBSession) error {
 		sqlCommands := []string{
 			`SELECT MAX(id) FROM ` + m.TsFmsMenuBaseTbl,
-			`INSERT INTO `+m.TsFmsMenuBaseTbl+` ('id', 'text', 'icon', 'img_path', 'url', 'hideFromMenu', 
+			`INSERT INTO ` + m.TsFmsMenuBaseTbl + ` ('id', 'text', 'icon', 'img_path', 'url', 'hideFromMenu', 
 				'hideFromTabs', 'placeBottom', 'divider', 'canDelete') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-			`INSERT INTO `+m.TsFmsMenuTbl+` ('org_id', 'parent_id','name','mbid','order') VALUES (?,?,?,?,?)`,
+			`INSERT INTO ` + m.TsFmsMenuTbl + ` ('org_id', 'parent_id','name','mbid','order') VALUES (?,?,?,?,?)`,
 		}
 		var id int
 		has, err := sess.SQL(sqlCommands[0]).Get(&id)
@@ -321,23 +323,23 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 		}
 		// Return new node
 		res := m.FmsMenuQueryResult{
-			Id : id,
-			Permission : "",
-			ParentId : -1,
-			Name : "",
-			ReqParams : nil,
-			Order : cmd.Order,
-			Text : cmd.Name,
-			Icon : cmd.Icon,
-			Img_path : "",
-			Subtitle : "",
-			Url : cmd.Url,
-			Target : "",
-			HideFromMenu : false,
-			HideFromTabs : false,
-			PlaceBottom : false,
-			Divider : false,
-			CanDelete : true,
+			Id:           id,
+			Permission:   "",
+			ParentId:     -1,
+			Name:         "",
+			ReqParams:    nil,
+			Order:        cmd.Order,
+			Text:         cmd.Name,
+			Icon:         cmd.Icon,
+			Img_path:     "",
+			Subtitle:     "",
+			Url:          cmd.Url,
+			Target:       "",
+			HideFromMenu: false,
+			HideFromTabs: false,
+			PlaceBottom:  false,
+			Divider:      false,
+			CanDelete:    true,
 		}
 		node := m.FmsMenu{
 			FmsMenuQueryResult: res,
@@ -346,6 +348,51 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 		cmd.Result = node
 		return nil
 	})
+
+	return err
+}
+
+func AddFmsMenuByParentId(cmd *m.AddFmsMenuByParentIdCmd) error {
+	var err error
+
+	result, err := x.Transaction(func(xsess *xorm.Session) (interface{}, error) {
+		// generate menubase id
+		var menuBaseData m.FmsMenuBaseTblField
+		if _, err = xsess.Table(m.TsFmsMenuBaseTbl).Desc("id").Cols("id").Get(&menuBaseData); err != nil {
+			return nil, err
+		}
+		baseId := menuBaseData.Id + 1
+
+		// insert menubase table
+		if _, err = xsess.Table(m.TsFmsMenuBaseTbl).Insert(m.FmsMenuBaseTblField{
+			Id:        baseId,
+			Text:      cmd.Name,
+			Icon:      cmd.Icon,
+			Url:       cmd.Url,
+			CanDelete: true,
+		}); err != nil {
+			return nil, err
+		}
+
+		// generate menu last order
+		var order int64
+		if order, err = xsess.Table(m.TsFmsMenuTbl).Where("parent_id = ?", cmd.ParentId).Count(); err != nil {
+			return nil, err
+		}
+
+		// insert menu table
+		_, err = xsess.Table(m.TsFmsMenuTbl).Insert(m.FmsMenuTblField{
+			Mbid:     baseId,
+			Name:     cmd.Name,
+			ParentId: cmd.ParentId,
+			OrgId:    cmd.OrgId,
+			Order:    order,
+		})
+
+		return baseId, err
+	})
+
+	cmd.Result = result
 
 	return err
 }
@@ -365,7 +412,7 @@ func UpdateFmsMenu(cmd *m.UpdateFmsMenuOrderCommand) error {
 	//var err error
 	//var has bool
 	//var result sql.Result
-	
+
 	err := doTransaction(func(sess *DBSession) error {
 		for _, pmenu := range cmd.Pmenu {
 			_, err := x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET parent_id = ?, "order" = ? WHERE org_id = ? AND mbid = ?`,
@@ -423,8 +470,17 @@ func GetFmsMenuUsersPin(cmd *m.GetFmsMenuPinCommand) error {
 	return err
 }
 
-
 func UpdateFmsMenuHideState(cmd *m.UpdateFmsMenuHideStateCommand) error {
 	_, err := x.Exec(`UPDATE `+m.TsFmsMenuBaseTbl+` SET hideFromMenu = ? WHERE id = ?`, cmd.HideFromMenu, cmd.Id)
+	return err
+}
+
+func FindFmsMenuByName(cmd *m.FindFmsMenuByNameCmd) error {
+	var tableData []m.FmsMenuTblField
+
+	err := x.Table(m.TsFmsMenuTbl).Where("org_id = ?", cmd.OrgId).And("name = ?", cmd.Name).Find(&tableData)
+
+	cmd.Result = tableData
+
 	return err
 }
