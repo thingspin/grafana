@@ -2,7 +2,7 @@ package api
 
 import (
 	"strconv"
-	//"fmt"
+
 	"github.com/grafana/grafana/pkg/bus"
 	gfm "github.com/grafana/grafana/pkg/models"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
@@ -63,6 +63,19 @@ func AddTsNewMenuByOrgId(c *gfm.ReqContext, cmd m.AddFmsMenuCommand) Response {
 	return JSON(200, cmd.Result)
 }
 
+func AddTsChildMenuByParentId(c *gfm.ReqContext, cmd m.AddFmsMenuByParentIdCmd) Response {
+	orgId := c.ParamsInt64(":orgId")
+	parentId := c.ParamsInt64(":parentId")
+	cmd.OrgId = orgId
+	cmd.ParentId = parentId
+
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[thingspin] Menu add command failed", err)
+	}
+
+	return JSON(200, cmd.Result)
+}
+
 func DeleteTsMenuByOrgId(c *gfm.ReqContext) Response {
 	orgId := c.ParamsInt64(":orgId")
 	q := m.DeleteFmsMenuByOrgIdQuery{
@@ -77,9 +90,9 @@ func DeleteTsMenuByOrgId(c *gfm.ReqContext) Response {
 }
 
 func DeleteTsMenuById(c *gfm.ReqContext, cmd m.DeleteFmsMenuByIdQuery) Response {
-	cmd.OrgId = c.ParamsInt64(":orgId") 
+	cmd.OrgId = c.ParamsInt64(":orgId")
 	cmd.Id = c.ParamsInt64(":id")
-	
+
 	if err := bus.Dispatch(&cmd); err != nil {
 		return JSON(500, err.Error())
 	}
@@ -105,7 +118,6 @@ func EditTsMenuInfo(c *gfm.ReqContext, cmd m.UpdateFmsMenuInfoCommand) Response 
 
 	return JSON(200, "")
 }
-
 
 func UpdateFmsMenuHideState(c *gfm.ReqContext, cmd m.UpdateFmsMenuHideStateCommand) Response {
 	cmd.Id = c.ParamsInt(":id")
