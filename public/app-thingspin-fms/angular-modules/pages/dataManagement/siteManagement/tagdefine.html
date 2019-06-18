@@ -1,3 +1,114 @@
-<div>
-<h1>TEST-TAG-DEFINE</h1>
-<div>
+<br><br>
+<div class="section gf-form-group">
+        <!--Level 1 starting point-->
+        <div ui-tree="ctrl.options" data-clone-enabled="true" data-nodrop-enabled="true" id="tree1-root">
+                <ol ui-tree-nodes="" ng-model="ctrl.source">
+                    <li ng-repeat="pnode in ctrl.source" ui-tree-node>
+                        <div ui-tree-handle class="tree-node tree-node-content">
+                            <div>
+                                <a>{{pnode.label}}</a>
+                            </div>
+                        </div>
+    
+                        <!--Level 2 starting point-->
+                        <ol ui-tree-nodes="" ng-model="pnode.children" ng-class="{hidden: collapsed}">
+                            <li ng-repeat="pnode2 in pnode.children" ui-tree-node>
+                                <div ui-tree-handle class="tree-node tree-node-content">
+                                    <div>
+                                        <a>{{pnode2.facility_name}}</a>
+                                    </div>
+                                </div>
+                                <!--Level 3 starting point-->
+                                <ol ui-tree-nodes="" ng-model="pnode2.children" ng-class="{hidden: collapsed}">
+                                    <li ng-repeat="pnode3 in pnode2.children" ui-tree-node>
+                                        <div ui-tree-handle class="tree-node tree-node-content">
+                                            <div>
+                                                <a>{{pnode3.tag_name}}</a>
+                                            </div>
+                                        </div>
+                                        <!--
+                                        <ol ui-tree-nodes="" ng-model="pnode3.children" ng-class="{hidden: collapsed}">
+                                            <li ng-repeat="pnode4 in pnode3.children" ui-tree-node>
+                                                <div ui-tree-handle class="tree-node tree-node-content">
+                                                    <div>
+                                                        <a>{{pnode4.text}}</a>
+                                                    </div>
+                                                </div>
+                                               
+                                                <ol ui-tree-nodes="" ng-model="pnode4.children" ng-class="{hidden: collapsed}">
+                                                    <li ng-repeat="pnode5 in pnode4.children" ui-tree-node>
+                                                        <div ui-tree-handle class="tree-node tree-node-content">
+                                                            <div>
+                                                                <a>{{pnode5.text}}</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ol>
+                                            </li>
+                                        </ol>
+                                        -->
+                                    </li>
+                                </ol>
+                            </li>
+                        </ol>
+                    </li>
+                </ol>
+        </div>                        
+</div>
+
+<div class="section gf-form-group">
+    <!--Level 1 starting point-->
+    <div ui-tree="ctrl.options" id="tree2-root" data-clone-enabled="true">
+            <ol ui-tree-nodes="" ng-model="ctrl.data">
+                <li ng-repeat="node in ctrl.data" ui-tree-node>
+                    <div ui-tree-handle class="tree-node tree-node-content">
+                        <div>
+                            <a>{{node.text}}</a>
+                        </div>
+                    </div>
+
+                    <!--Level 2 starting point-->
+                    <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                        <li ng-repeat="node2 in node.children" ui-tree-node>
+                            <div ui-tree-handle class="tree-node tree-node-content">
+                                <div>
+                                    <a>{{node2.text}}</a>
+                                </div>
+                            </div>
+                            <!--Level 3 starting point-->
+                            <ol ui-tree-nodes="" ng-model="node2.children" ng-class="{hidden: collapsed}">
+                                <li ng-repeat="node3 in node2.children" ui-tree-node>
+                                    <div ui-tree-handle class="tree-node tree-node-content">
+                                        <div>
+                                            <a>{{node3.text}}</a>
+                                        </div>
+                                    </div>
+                                    <!--Level 4 starting point-->
+                                    <ol ui-tree-nodes="" ng-model="node3.children" ng-class="{hidden: collapsed}">
+                                        <li ng-repeat="node4 in node3.children" ui-tree-node>
+                                            <div ui-tree-handle class="tree-node tree-node-content">
+                                                <div>
+                                                    <a>{{node4.text}}</a>
+                                                </div>
+                                            </div>
+                                            <!--Level 5 starting point-->
+                                            <ol ui-tree-nodes="" ng-model="node4.children" ng-class="{hidden: collapsed}">
+                                                <li ng-repeat="node5 in node4.children" ui-tree-node>
+                                                    <div ui-tree-handle class="tree-node tree-node-content">
+                                                        <div>
+                                                            <a>{{node5.text}}</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+            </ol>
+    </div>
+                    
+ </div>
