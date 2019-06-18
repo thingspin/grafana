@@ -41,6 +41,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 
 			// 부모 tree에 신규 하위(child) 노드 추가 api
 			tsMenuRoute.Post("/:orgId/:parentId", bind(tsm.AddFmsMenuByParentIdCmd{}), Wrap(AddTsChildMenuByParentId))
+			tsMenuRoute.Get("/:orgId/name/:name", Wrap(FindMenuByName))
 		})
 
 		// 연결 관리 기본 동작 API

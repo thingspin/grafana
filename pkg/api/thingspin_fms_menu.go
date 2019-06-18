@@ -163,3 +163,16 @@ func EditTsMenuByOrgId(c *gfm.ReqContext, cmd m.UpdateFmsMenuOrderCommand) Respo
 
 	return JSON(200, "")
 }
+
+func FindMenuByName(c *gfm.ReqContext) Response {
+	cmd := m.FindFmsMenuByNameCmd{
+		OrgId: c.ParamsInt64(":orgId"),
+		Name:  c.Params("name"),
+	}
+
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[ThingSPIN] 사용자의 핀 메뉴를 가져올 수 없습니다.", err)
+	}
+
+	return JSON(200, cmd.Result)
+}

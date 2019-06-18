@@ -43,13 +43,13 @@ type FmsMenuBaseTblField struct {
 
 type FmsMenuTblField struct {
 	// Id         int64                    `xorm:"int 'id'"`
-	Permission string                   `xorm:"text 'permission'"`
-	OrgId      int64                    `xorm:"int 'org_id'"`
-	ParentId   int64                    `xorm:"int 'parent_id'"`
-	Name       string                   `xorm:"text 'name'"`
-	Mbid       int64                    `xorm:"int 'mbid'"`
-	ReqParams  []map[string]interface{} `xorm:"jsonb 'req_params'"`
-	Order      int64                    `xorm:"int 'order'"`
+	Permission string                   `xorm:"text 'permission'" json:"permission"`
+	OrgId      int64                    `xorm:"int 'org_id'" json:"orgId"`
+	ParentId   int64                    `xorm:"int 'parent_id'" json:"parentId"`
+	Name       string                   `xorm:"text 'name'" json:"name"`
+	Mbid       int64                    `xorm:"int 'mbid'" json:"mbid"`
+	ReqParams  []map[string]interface{} `xorm:"jsonb 'req_params'" json:"reqParams"`
+	Order      int64                    `xorm:"int 'order'" json:"order"`
 }
 
 type FmsMenu struct {
@@ -148,4 +148,12 @@ type UpdateFmsMenuPinSateCommand struct {
 type GetFmsMenuPinCommand struct {
 	UserID  int64 `xorm:"int notnull 'uid'" json:"uid"`
 	MenuIDs []int
+}
+
+// Search menu
+type FindFmsMenuByNameCmd struct {
+	OrgId int64
+	Name  string
+
+	Result []FmsMenuTblField
 }

@@ -25,6 +25,7 @@ func init() {
 	bus.AddHandler("sql", UpdateFmsMenuInfo)
 	bus.AddHandler("sql", GetDefaultFmsMenuByDefaultOrgId)
 	bus.AddHandler("sql", AddDefaultMenuByDefaultOrgId)
+	bus.AddHandler("thingspin-sql", FindFmsMenuByName)
 }
 
 // Transaction
@@ -471,5 +472,15 @@ func GetFmsMenuUsersPin(cmd *m.GetFmsMenuPinCommand) error {
 
 func UpdateFmsMenuHideState(cmd *m.UpdateFmsMenuHideStateCommand) error {
 	_, err := x.Exec(`UPDATE `+m.TsFmsMenuBaseTbl+` SET hideFromMenu = ? WHERE id = ?`, cmd.HideFromMenu, cmd.Id)
+	return err
+}
+
+func FindFmsMenuByName(cmd *m.FindFmsMenuByNameCmd) error {
+	var tableData []m.FmsMenuTblField
+
+	err := x.Table(m.TsFmsMenuTbl).Where("org_id = ?", cmd.OrgId).And("name = ?", cmd.Name).Find(&tableData)
+
+	cmd.Result = tableData
+
 	return err
 }
