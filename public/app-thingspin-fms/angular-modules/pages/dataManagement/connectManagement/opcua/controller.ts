@@ -5,6 +5,7 @@ import { appEvents } from 'app/core/core';
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
+const baseApi = `/thingspin/connect`;
 export interface BackendConnectPayload {
     name: string;
     params: any;
@@ -44,8 +45,8 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     connectStatus: string;
 
     // MQTT
-    readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
-    readonly listenerTopic: string = "/thingspin/connect/+/status" as string;
+    readonly mqttUrl = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt`;
+    readonly listenerTopic = `${baseApi}/+/status`;
     readonly connectTimeout: number = 15000;
     mqttClient: TsMqttController; // mqtt client instance
 
@@ -89,7 +90,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     async updateData(connId: number) {
         try {
             this.connId = connId;
-            const result: OpcConnectModel = await this.backendSrv.get(`/thingspin/connect/${this.connId}`);
+            const result: OpcConnectModel = await this.backendSrv.get(`${baseApi}/${this.connId}`);
 
             this.input = {
                 endpointUrl: result.params.EndpointUrl,
@@ -155,18 +156,9 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
             this.setConnectStatus("red");
         }, this.connectTimeout);
 
-        const payload = this.genPayload(this.FlowId);
-
         try {
-            if (!this.connId) {
-                // new
-                this.connId = await this.backendSrv.post("/thingspin/connect/opcua", payload);
-                appEvents.emit('alert-success', ['신규 OPC/UA 연결이 추가되었습니다.']);
-            } else {
-                // edit
-                await this.backendSrv.put(`/thingspin/connect/${this.connId}`, payload);
-                appEvents.emit('alert-success', ['OPC/UA 연결이 수정되었습니다.']);
-            }
+            const connId = await this.sendBackend(!this.connId);
+            this.connId = connId;
         } catch (e) {
             console.error(e);
             if (this.connId) {
@@ -189,15 +181,37 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     }
 
     async save(): Promise<void> {
-        const payload = this.genPayload(this.FlowId);
+        if (!this.FlowId) {
+            this.FlowId = uid.generate();
+        }
+
         try {
-            await this.backendSrv.put(`/thingspin/connect/${this.connId}`, payload);
-            appEvents.emit('alert-success', ['OPC/UA 연결이 수정되었습니다.']);
+            const connId = await this.sendBackend(!this.connId);
+            this.connId = connId;
 
             this.cancel();
             this.$scope.$applyAsync();
         } catch (e) {
             console.error(e);
         }
+    }
+
+    async sendBackend(isNew: boolean): Promise<any> {
+        const payload = this.genPayload(this.FlowId);
+
+        let connId;
+        if (isNew) {
+            // new
+            connId = await this.backendSrv.post(`${baseApi}/opcua`, payload);
+            await this.backendSrv.put(`${baseApi}/${connId}`, payload);
+
+            appEvents.emit('alert-success', ['신규 OPC/UA 연결이 추가되었습니다.']);
+        } else {
+            await this.backendSrv.put(`${baseApi}/${this.connId}`, payload);
+
+            appEvents.emit('alert-success', ['OPC/UA 연결이 수정되었습니다.']);
+            connId = this.connId;
+        }
+        return connId;
     }
 }
