@@ -29,6 +29,13 @@
       ]
     },
     {
+      "text": "설비 모니터링",
+      "icon": "fa fa-bar-chart",
+      "url": "/thingspin/manage/monitoring",
+      "canDelete": false,
+      "children": []
+    },    
+    {
       "text": "대시보드",
       "icon": "fa fa-fw fa-home",
       "url": "/",
