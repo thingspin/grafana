@@ -44,14 +44,6 @@ export class FMNavComp extends DashNav {
         const snapshotUrl = snapshot && snapshot.originalUrl;
 
         return (<>
-            {canSave && (<div className="navbar">
-                <div className="navbar__spacer" />
-                <div className="navbar-buttons navbar-buttons--actions">
-                    <FMNavButton tooltip="Save dashboard" classSuffix="save" onClick={this.onSave} >
-                        메뉴에 저장
-                    </FMNavButton>
-                </div>
-            </div>)}
             <div className="navbar">
                 {this.isInFullscreenOrSettings && this.renderBackButton()}
                 {this.renderDashboardTitleSearchButton()}
@@ -108,6 +100,12 @@ export class FMNavComp extends DashNav {
                         />
                     )}
 
+                    {canSave && (
+                        <FMNavButton tooltip="Save dashboard" classSuffix="save" onClick={this.onSave} >
+                            메뉴에 저장
+                        </FMNavButton>
+                    )}
+
                     {showSettings && (
                         <DashNavButton
                             tooltip="Dashboard settings"
@@ -117,6 +115,7 @@ export class FMNavComp extends DashNav {
                         />
                     )}
                 </div>
+
 
                 {!dashboard.timepicker.hidden && (
                     <div className="navbar-buttons">
