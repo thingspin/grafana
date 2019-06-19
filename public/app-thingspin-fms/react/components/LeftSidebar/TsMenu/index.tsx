@@ -1,16 +1,17 @@
+// 3rd party libs
 import React, { PureComponent } from 'react';
 
-import cloneDeep from 'lodash/cloneDeep';
-import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
-import config from 'app/core/config';
+// grafana libs
 import { contextSrv } from 'app/core/services/context_srv';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
-import { TsBaseProps } from 'app-thingspin-fms/models/common';
+// thingspin libs
 import TsMenuLv1 from './MenuLv1';
-//import { getUserPins } from './getUserPins';
+import { TsBaseProps } from 'app-thingspin-fms/models/common';
 
 export interface Props extends TsBaseProps {
   //getUserPins: typeof getUserPins;
+  menu: any[];
 }
 
 export interface State {
@@ -23,7 +24,7 @@ export class TsMenu extends PureComponent<Props, State> {
   };
   isSignedIn = contextSrv.isSignedIn;
 
-  navTree = cloneDeep(config.bootData.thingspin.menu);
+  // navTree = cloneDeep(config.bootData.thingspin.menu);
   pins: any;
 
   async componentWillMount() {
@@ -37,7 +38,7 @@ export class TsMenu extends PureComponent<Props, State> {
   componentDidUpdate(prevProps: Props) {}
 
   get top() {
-    return this.navTree
+    return this.props.menu
       .filter(item => !item.hideFromMenu)
       .filter(item => !item.placeBottom)
       .filter(item => item.icon)
@@ -48,7 +49,7 @@ export class TsMenu extends PureComponent<Props, State> {
     });
   }
   get bottom() {
-    return this.navTree
+    return this.props.menu
       .filter(item => !item.hideFromMenu)
       .filter(item => item.placeBottom)
       .filter(item => item.icon)
@@ -76,6 +77,8 @@ const mapDispatchToProps = {
   //getUserPins,
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+  menu: state.thingspinMenu.menu
+});
 
 export default connectWithStore(TsMenu, mapStateToProps, mapDispatchToProps);

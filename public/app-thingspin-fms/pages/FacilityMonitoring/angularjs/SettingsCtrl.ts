@@ -39,7 +39,7 @@ export class TsSettingsCtrl extends SettingsCtrl {
 
 export class TsDashboardSettings implements angular.IDirective {
   restrict = 'E';
-  templateUrl = 'public/app/features/dashboard/components/DashboardSettings/template.html';
+  templateUrl = require('./Settings.html');
   controller = TsSettingsCtrl;
   bindToController = true;
   controllerAs = 'ctrl';
