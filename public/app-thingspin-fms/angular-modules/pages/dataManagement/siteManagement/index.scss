@@ -5,6 +5,33 @@ ts-site-management {
     font-family: Roboto;
     color: #1e1e1e;
 
+    .ts-input-group {
+        margin-top: 16.5px;
+        display: inline-flex;
+    
+        &.name {
+            width: 35%;
+        }
+        &.desc {
+            width: 55%;
+        }
+        &.lat {
+            width: 30%;
+        }
+        &.lon {
+            width: 30%;
+        }
+    }
+
+    #site-add-plus-btn {
+        width: 80px;
+        height: 28px;
+        border-radius: 4px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+        background-color: #1e88e5;
+        color:#ffffff;
+    }
+
     .ts-site-content-view {
         margin-left: 20px;
         margin-right: 20px;
@@ -49,6 +76,12 @@ ts-site-management {
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
         background-color: #1e88e5;
         color: #ffffff;
+    }
+
+    .tree-view-area {
+        display: inline-flex;
+        width: 100%;
+        margin-top: 21px;
     }
 
     .ts-site-table-container {

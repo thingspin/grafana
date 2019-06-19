@@ -2,10 +2,47 @@
     <div class="ts-site-main-title">
         목록
     </div>
-    <button id="site-add-btn" className="btn" ng-click="ctrl.siteAdd()">
+    <button id="site-add-btn" className="btn" ng-click="ctrl.onShowEditView(true)" ng-show="ctrl.isEditBtn">
         사이트에 추가
     </button>
-    <div class="ts-border-line"></div>
+    <div class="" ng-show="ctrl.isEditView">
+        <div class="ts-input-group name">
+            <div class="ts-mqtt-collect-label">사이트 이름</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.name"/>
+                <span ng-class="{separator: true, enable: ctrl.name}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group desc">
+            <div class="ts-mqtt-url-label">설명</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.desc"/>
+                <span ng-class="{separator: true, enable: ctrl.desc}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group lat">
+            <div class="ts-mqtt-collect-label">위도</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.lat"/>
+                <span ng-class="{separator: true, enable: ctrl.lat}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group lon">
+            <div class="ts-mqtt-url-label">경도</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.lon"/>
+                <span ng-class="{separator: true, enable: ctrl.lon}"></span>
+            </div>
+        </div>
+        <div id="mqtt-addview-right-button-area">
+            <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowEditView(false)">
+                취소
+            </button>
+            <button id="site-add-plus-btn" className="btn" ng-click="ctrl.onSiteAdd()">
+                저장
+            </button>
+        </div>
+    </div>
     <div class="ts-site-table-container site-table-size">
         <div class="connect-table-header">
             <span>페이지당 행수 : </span>
@@ -22,18 +59,22 @@
             <table>
             <thead>
                 <tr class="ts-table-header">
-                    <th>사이트ID</th>
+                    <th>Id</th>
                     <th>사이트 명</th>
                     <th>설명</th>
+                    <th>위도</th>
+                    <th>경도</th>
                     <th>동작</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
+                <tr class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index" ng-click="ctrl.tableClick(item.id)">
+                    <td>{{ item.id }}</td>
                     <td>{{ item.name }}</td>
-                    <td>{{ item.topic }}</td>
-                    <td>{{ item.value }}</td>
+                    <td>{{ item.desc }}</td>
+                    <td>{{ item.lat }}</td>
+                    <td>{{ item.lon }}</td>
                     <td>
                         <button class="btn" ng-click="ctrl.loadTopicData(item.name)">
                             <i class="fa fa-pencil"></i>

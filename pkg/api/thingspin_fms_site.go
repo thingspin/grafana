@@ -7,12 +7,11 @@ import (
 )
 
 func getAllTsSite(c *gfm.ReqContext) Response {
-	/* Database Query
 	q := m.GetAllTsSiteQuery{}
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Server Error", err)
 	}
-	*/
+	/* Database Query
 	result := []m.TsSiteField {
 		{
 			Id: 1,
@@ -36,7 +35,8 @@ func getAllTsSite(c *gfm.ReqContext) Response {
 			Location_lon: 128.5387992,
 		},
 	}
-	return JSON(200, result)
+	*/
+	return JSON(200, q.Result)
 }
 
 func addTsSite(c *gfm.ReqContext, req m.AddTsSiteQuery) Response {	
@@ -50,7 +50,11 @@ func addTsSite(c *gfm.ReqContext, req m.AddTsSiteQuery) Response {
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
-	return JSON(200, q.Result)
+	result := m.GetAllTsSiteQuery{}
+	if err := bus.Dispatch(&result); err != nil {
+		return Error(500, "ThingSPIN Server Error", err)
+	}
+	return JSON(200, result.Result)
 }
 
 func updateTsSite(c *gfm.ReqContext, req m.UpdateTsSiteQuery) Response {

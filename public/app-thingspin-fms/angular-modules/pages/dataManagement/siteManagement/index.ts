@@ -1,11 +1,10 @@
 import angular from "angular";
 import "./index.scss";
-
 import './tagdefine';
 import './sitetable';
 
 export class TsSiteManagementCtrl implements angular.IController {
-    siteID = "siteID Test";
+    siteID = 0;
     /** @ngInject */
     constructor() {}// Dependency Injection
 }

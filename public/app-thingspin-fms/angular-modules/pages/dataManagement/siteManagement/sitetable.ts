@@ -1,11 +1,15 @@
 import _ from "lodash";
 import angular from "angular";
 import { coreModule } from 'app/core/core';
+import { BackendSrv } from 'app/core/services/backend_srv';
+import { appEvents } from 'app/core/core';
 
-interface MqttTableData {
+interface SiteTableData {
+    id: string;
     name: string;
-    topic: string;
-    value: string;
+    desc: string;
+    lat: string;
+    lon: string;
 }
 
 export interface TableModel {
@@ -23,7 +27,7 @@ export interface TableModel {
 
 export class TsSiteTableCtrl implements angular.IController {
     data: any;
-    list: MqttTableData[];
+    list: SiteTableData[];
     tData: TableModel = {
         rowCount: 10,
         selectOpts: [10, 20, 30],
@@ -33,20 +37,22 @@ export class TsSiteTableCtrl implements angular.IController {
         pageNode: [],
     };
 
+    isEditView: boolean;
+    isEditBtn: boolean;
+    name: string;
+    desc: string;
+    lat: string;
+    lon: string;
+
     /** @ngInject */
     constructor(
         private $scope: angular.IScope,
+        private backendSrv: BackendSrv,
     ) {
+        this.isEditView = false;
+        this.isEditBtn = true;
         this.list = [];
-        this.initTable();
-
-        const tableData = {} as MqttTableData;
-        tableData.name = "test";
-        tableData.topic = "test";
-        tableData.value = "test";
-
-        this.list.push(tableData);
-
+        this.asyncDataLoader();
     }// Dependency Injection
 
     $onInit(): void {
@@ -56,12 +62,68 @@ export class TsSiteTableCtrl implements angular.IController {
     $onDestroy(): void {
     }
 
+    onShowEditView(value) {
+        if (value) {
+            this.isEditView = true;
+            this.isEditBtn = false;
+        } else {
+            this.isEditView = false;
+            this.isEditBtn = true;
+        }
+    }
+    onSiteAdd(): void {
+        this.backendSrv.post("/thingspin/sites",
+        {
+            "Name": this.name,
+            "Desc": this.desc,
+            "Lat": parseFloat(this.lat),
+            "Lon": parseFloat(this.lon),
+        }).then((result) => {
+            this.onLoadData(result);
+        }).catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+        });
+    }
+
     siteAdd(): void {
         console.log("siteAdd click");
         this.data = "Site id test = 1";
     }
 
+    async asyncDataLoader(): Promise<void> {
+        console.log("asyncDataLoader");
+        try {
+            const list = await this.backendSrv.get("/thingspin/sites");
+            console.log(list);
+            this.onLoadData(list);
+            this.$scope.$applyAsync();
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    onLoadData(item) {
+        this.list = [];
+        console.log(item);
+        for (let i = 0; i< item.length; i++) {
+            const siteItem = {} as SiteTableData;
+            siteItem.id = item[i].id;
+            siteItem.name = item[i].name;
+            siteItem.desc = item[i].desc;
+            siteItem.lat = item[i].lat;
+            siteItem.lon = item[i].lon;
+            this.list.push(siteItem);
+        }
+        this.initTable();
+    }
+
     // TABLE Method
+    tableClick(value) {
+        console.log(value);
+        this.data = value;
+    }
     initTable(): void {
         this.$scope.$watch("list", () => {
             this.setPageNodes();
@@ -117,7 +179,7 @@ export class TsSiteTableCtrl implements angular.IController {
     }
         // table event methods
     tOnSelectChange() {
-        console.log("");
+        console.log("click");
         this.tCalcPaging();
         this.setPageNodes();
     }

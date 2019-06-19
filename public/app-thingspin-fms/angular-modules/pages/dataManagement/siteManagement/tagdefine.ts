@@ -1,16 +1,49 @@
 import angular from "angular";
+import { BackendSrv } from 'app/core/services/backend_srv';
+import { appEvents } from 'app/core/core';
 //import appEvents from 'app/core/app_events';
 
 export class TsSiteTableCtrl {
   static template = require("./tagdefine.html");
   source: any;
   data: any;
+  dataList: any;
   options: any;
+
+  isEditView: boolean;
+  isEditBtn: boolean;
+  facility: any;
   /** @ngInject */
-  constructor(backendSrv) {
+  constructor(
+    private backendSrv: BackendSrv,
+    private $scope: angular.IScope
+  ) {
+    this.isEditView = false;
+    this.isEditBtn = true;
+
+    this.facility = {
+        name: "",
+        desc: "",
+        lat: "",
+        lon: "",
+        img_path: ""
+    };
+
+    this.$scope.$watch('ctrl.data', (newValue: any, oldValue: any) => {
+        console.log(newValue);
+        console.log(oldValue);
+        this.backendSrv.get(`/thingspin/sites/${newValue}/facilities/tree`,{}).then((result) => {
+            console.log(result);
+        }).catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+        });
+    });
+
     //appEvents.on('ts-site-change', this.test.bind(this));\
-    console.log(backendSrv);
-    backendSrv.get('/thingspin/tagdefine').then((res: any) => {
+    console.log(this.backendSrv);
+    this.backendSrv.get('/thingspin/tagdefine').then((res: any) => {
         console.log("connect data");
         console.log(res);
         this.source = res.Result;
@@ -38,7 +71,7 @@ export class TsSiteTableCtrl {
         }
       };
 
-    this.data = [{
+    this.dataList = [{
         text: "OPC-UA",
         children: [{
             text: "OPC-UA level - 1",
@@ -135,6 +168,40 @@ export class TsSiteTableCtrl {
   link(scope, elem, attrs, ctrl) {
       //ctrl.scope = scope;
   }
+
+    $onInit(): void {
+        console.log("SiteTable : " + this.data);
+    }
+
+    onShowEditView(value) {
+      if (value) {
+          this.isEditView = true;
+          this.isEditBtn = false;
+        } else {
+            this.isEditView = false;
+            this.isEditBtn = true;
+        }
+    }
+
+    deleteTreeItem() {
+        console.log("deleteTreeItem");
+    }
+
+    onFacilityAdd() {
+        this.backendSrv.post(`thingspin/sites/${this.data}/facilities`,
+        {
+            "Name": this.facility.name,
+            "Desc": this.facility.desc,
+            "Lat": parseFloat(this.facility.lat),
+            "Lon": parseFloat(this.facility.lon),
+        }).then((result) => {
+            // this.onLoadData(result);
+        }).catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+        });
+    }
 }
 
 /** @ngInject */
@@ -145,7 +212,9 @@ export function TsTagDefineDirective() {
       controller: TsSiteTableCtrl,
       bindToController: true,
       controllerAs: 'ctrl',
-      scope: {},
+      scope: {
+        data: "="
+      },
     };
   }
 
