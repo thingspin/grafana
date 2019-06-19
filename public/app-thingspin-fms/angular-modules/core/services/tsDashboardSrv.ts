@@ -124,7 +124,7 @@ coreModule.decorator('dashboardSrv', ($delegate: DashboardSrv, $rootScope,
 
     store.dispatch(updateTsMenu(orgId));
 
-    return self.dashboard;
+    return data;
   };
 
   // Add class method
