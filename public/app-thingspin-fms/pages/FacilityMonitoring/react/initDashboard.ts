@@ -21,11 +21,11 @@ import {
 
 // Types
 import { DashboardRouteInfo, StoreState, ThunkDispatch, ThunkResult, DashboardDTO } from 'app/types';
-import { DashboardModel } from 'app/features/dashboard/state/DashboardModel';
 import { InitDashboardArgs } from 'app/features/dashboard/state/initDashboard';
 
 // ThingSPIN
 import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
+import { FMDashboardModel } from '../models/index';
 
 async function redirectToNewUrl(slug: string, dispatch: ThunkDispatch, currentPath: string) {
   const res = await getBackendSrv().getDashboardBySlug(slug);
@@ -138,9 +138,9 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
     dispatch(dashboardInitServices());
 
     // create model
-    let dashboard: DashboardModel;
+    let dashboard: FMDashboardModel;
     try {
-      dashboard = new DashboardModel(dashDTO.dashboard, dashDTO.meta);
+      dashboard = new FMDashboardModel(dashDTO.dashboard, dashDTO.meta);
     } catch (err) {
       dispatch(dashboardInitFailed({ message: 'Failed create dashboard model', error: err }));
       console.log(err);

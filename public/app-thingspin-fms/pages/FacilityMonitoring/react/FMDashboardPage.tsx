@@ -20,6 +20,7 @@ import { FMDashboardGrid } from './FMDashboardGrid';
 
 // ThingSPIN Utils
 import { tsInitDashboard } from './initDashboard';
+import { FMDashboardModel } from '../models';
 
 interface FmPanelFilter {
     removes: any;
@@ -38,6 +39,7 @@ export class FMDashboardPage extends DashboardPage {
     updateFmPanel(newPanel, { removes, adds }: FmPanelFilter) {
         const { dashboard } = this.props;
 
+        // remove panels
         for (const remove of removes) {
             const { id } = this.oldPanel[remove]; // auto generated in dashboardModel class
 
@@ -48,6 +50,7 @@ export class FMDashboardPage extends DashboardPage {
             delete this.oldPanel[remove];
         }
 
+        // add panels
         for (const add of adds) {
             dashboard.addPanel(newPanel[add]);
             this.oldPanel[add] = newPanel[add];
@@ -118,7 +121,7 @@ export class FMDashboardPage extends DashboardPage {
 
     // add thingspin method
     renderGridNode(): ReactNode {
-        const { dashboard } = this.props;
+        const dashboard = this.props.dashboard as FMDashboardModel;
         const { isFullscreen, scrollTop } = this.state;
 
         const gridClassName = classNames({
@@ -149,6 +152,16 @@ export class FMDashboardPage extends DashboardPage {
                 />
             </div>
         </div>);
+    }
+
+    setFacilityInfo(site, facilityTags) {
+        const dashboard = this.props.dashboard as FMDashboardModel;
+        if (!dashboard) {
+            return;
+        }
+
+        dashboard.site = site;
+        dashboard.facilityTags = facilityTags;
     }
 
     // Override
