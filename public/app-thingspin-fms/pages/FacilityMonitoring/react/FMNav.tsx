@@ -14,6 +14,9 @@ import { updateLocation } from 'app/core/actions';
 // ThingSPIN Angular Services
 import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
 
+// Thingspin component libs
+import { FMNavButton } from './FMNavButton';
+
 // Facaility Monitoring Navigation Component
 // (Customized grafana react component: iiHOC)
 export class FMNavComp extends DashNav {
@@ -37,11 +40,18 @@ export class FMNavComp extends DashNav {
     // Override
     render(): JSX.Element {
         const { dashboard, location } = this.props;
-        const { canStar, canSave, canShare, showSettings, isStarred } = dashboard.meta;
-        const { snapshot } = dashboard;
+        const { snapshot, meta: { canStar, canSave, canShare, showSettings, isStarred } } = dashboard;
         const snapshotUrl = snapshot && snapshot.originalUrl;
 
-        return (
+        return (<>
+            {canSave && (<div className="navbar">
+                <div className="navbar__spacer" />
+                <div className="navbar-buttons navbar-buttons--actions">
+                    <FMNavButton tooltip="Save dashboard" classSuffix="save" onClick={this.onSave} >
+                        메뉴에 저장
+                    </FMNavButton>
+                </div>
+            </div>)}
             <div className="navbar">
                 {this.isInFullscreenOrSettings && this.renderBackButton()}
                 {this.renderDashboardTitleSearchButton()}
@@ -88,9 +98,6 @@ export class FMNavComp extends DashNav {
                         />
                     )}
 
-                    {canSave && (
-                        <DashNavButton tooltip="Save dashboard" classSuffix="save" icon="fa fa-save" onClick={this.onSave} />
-                    )}
 
                     {snapshotUrl && (
                         <DashNavButton
@@ -118,13 +125,13 @@ export class FMNavComp extends DashNav {
                     </div>
                 )}
             </div>
-        );
+        </>);
     }
 
 }
 
-const mapStateToProps = (state: StoreState) => ({
-    location: state.location,
+const mapStateToProps = ({location}: StoreState) => ({
+    location,
 });
 
 const mapDispatchToProps = {

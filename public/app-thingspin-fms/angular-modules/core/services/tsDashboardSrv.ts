@@ -5,14 +5,18 @@ import { ILocationService } from 'angular';
 import { DashboardSrv } from 'app/features/dashboard/services/DashboardSrv';
 import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
+import config from 'app/core/config';
+import { store } from 'app/store/store';
+import { updateTsMenu } from 'app-thingspin-fms/react/redux/dispayches/tsMenu';
 // import location_util from 'app/core/utils/location_util';
 
 // Define Thingspin DashboardService interface
 export interface TsDashboardSrv extends DashboardSrv {
   // [ 설비 모니터링 ] customize methods
   fmSaveFM(options?, clone?);// customized 'saveDashboard' method
-  fmSave(clone, options); // customized 'save' method
+  fmSave(clone, options, menuName?: string); // customized 'save' method
   fmPostSave(clone, data); // customized 'postSave' method
+  fmSaveMenu(clone, data, menuName?: string);
   fmShowSaveAsModal(); // customized 'showSaveAsModal' method
   fmShowSaveModal(); // customized 'showSaveModal' method
   fmHandleSaveDashboardError(clone, options, err); // customized 'handleSaveDashboardError' method
@@ -66,18 +70,24 @@ coreModule.decorator('dashboardSrv',
   };
 
   // Add class method
-  self.fmSave = (clone, options) => {
+  self.fmSave = async (clone, options, menuName) => {
     options = options || {};
     options.folderId = options.folderId >= 0 ? options.folderId : self.dashboard.meta.folderId || clone.folderId;
 
-    return backendSrv
-      .saveDashboard(clone, options)
-      .then(self.fmPostSave.bind(self, clone))
-      .catch(self.fmHandleSaveDashboardError.bind(self, clone, options));
+    let data: any;
+    try {
+      data = await backendSrv.saveDashboard(clone, options);
+      data = await self.fmSaveMenu(clone, data, menuName);
+      data = await self.fmPostSave(clone, data);
+    } catch (e) {
+      self.fmHandleSaveDashboardError(clone, options, e);
+    }
+
+    return data;
   };
 
   // Add class method
-  self.fmPostSave = (clone, data) => {
+  self.fmPostSave = async (clone, data) => {
     self.dashboard.version = data.version;
 
     $rootScope.appEvent('dashboard-saved', self.dashboard);
@@ -89,9 +99,34 @@ coreModule.decorator('dashboardSrv',
 
     if (newUrl !== currentPath) {
       $location.url(newUrl).replace();
+      $rootScope.$apply();
     }
 
     return self.dashboard;
+  };
+
+  // Add class method
+  self.fmSaveMenu = async (clone, data, menuName = '설비 모니터링') => {
+    const baseApi = `/thingspin/menu/`;
+    const { orgId } = config.bootData.user;
+
+    const parentMenu: any[] = await backendSrv.get(`${baseApi}/${orgId}/name/${menuName}`);
+    if (!parentMenu.length) {
+      // not found menu
+      return self.dashboard;
+    } else if (parentMenu.length !== 1) {
+      // found menus
+    }
+
+    const [, , uid, slug] = data.url.split("/");
+    await backendSrv.post(`${baseApi}/${orgId}/${parentMenu[0].mbid}`, {
+      text: clone.title,
+      url: `/thingspin/manage/monitoring/${uid}/${slug}`,
+    });
+
+    store.dispatch(updateTsMenu(orgId));
+
+    return data;
   };
 
   // Add class method
