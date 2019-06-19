@@ -1,20 +1,23 @@
 import React from 'react';
 import './_index.scss';
-import CheckboxTree from '../react-checkbox-tree/index';
+//import CheckboxTree from '../react-checkbox-tree/index';
 import { Select } from '@grafana/ui';
 import { getBackendSrv } from '@grafana/runtime';
+import { auto, ILocationService } from 'angular';
+import FilterTree from './filterTree';
 
 export type facilityTreeProps = {
     click?: Function;
+    inject: auto.IInjectorService; // for route
 };
 
 //tslint:disable-next-line:class-name
 export interface facilityItem {
     checked: [];
     expanded: [];
-    filterText: any;
-    nodesFiltered: any;
+
     nodes: any;
+    nodesCount: any;
     selectedOption: any;
 
     sitesListinfo: [];
@@ -22,8 +25,6 @@ export interface facilityItem {
 
     filterPlaceholder: any;
 }
-
-
 
 //for select--------
 // tslint:disable-next-line:class-name
@@ -33,51 +34,56 @@ interface siteData {
 }
 //-----------------select
 
-
 class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
+    $location: ILocationService; // for route
+
     constructor(props) {
         super(props);
 
-        this.onFilterChange = this.onFilterChange.bind(this);
-        this.filterTree = this.filterTree.bind(this);
-        this.filterNodes = this.filterNodes.bind(this);
         this.handleChange = this.handleChange.bind(this);
-        this.onCkeck = this.onCkeck.bind(this);
+        this.onCheck2 = this.onCheck2.bind(this);
+
+        this.onFacilityTagButton = this.onFacilityTagButton.bind(this);
+        this.onAllTagButton = this.onAllTagButton.bind(this);
+
+        this.$location = this.props.inject.get('$location') as any; // for route
+        this.connManagePage = this.connManagePage.bind(this);
+        this.siteManagePage = this.siteManagePage.bind(this);
 
         this.state = {
             checked: [],
             expanded: [],
-            filterText: '',
-            nodesFiltered: [],
+
             nodes: [],
+            nodesCount: null,
             selectedOption: null,
             sitesListinfo: [],
             siteOptions: [],
             filterPlaceholder: " 태그 검색 ..."
         };
         this.getSiteList();
-        //this.getTreeinfo(1);
-        console.log('constructor');
     }
 
-    //backend-----
+    //BACKEND SRV
     getSiteList() {
         getBackendSrv().get("/thingspin/sites").then((result: any) => {
             //console.log(result);
             const elements = [];
             if (result.length > 0) {
-              //console.log("react sites list count: ",result.length);
               this.setState({sitesListinfo: []}); // initialize
               this.setState({sitesListinfo: result});
-              //console.log('react/site: ',this.state.sitesListinfo);
 
               for (let i = 0; i < result.length; i++) {
                   elements.push({value: result[i].id,label: result[i].name});
               }
 
-              //console.log("react/elements:",elements);
+              //copy elemenets to select options
+              //init set first index
               this.setState({siteOptions: elements });
-              //this.getTreeinfo();
+              this.setState({selectedOption: elements[0]});
+              //console.log("react/facility/options: ",this.state.siteOptions);
+              //console.log("react/facility/selected: ",this.state.selectedOption);
+              this.getTreeinfo(this.state.selectedOption.value);
             } else {
               console.log("** sites list empty **");
             }
@@ -85,25 +91,61 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
     }
     getTreeinfo(siteid) {
         const url = "/thingspin/sites/"+siteid+"/facilities/tree";
-        console.log('url',url);
+        //console.log('url',url);
         getBackendSrv().get(url).then((result: any) => {
-            console.log("react/treeinfo ",siteid,": ",result);
-            this.setState({nodesFiltered: result});
+
             this.setState({nodes: result});
+            this.setState({nodesCount: result.length});
+            //console.log("getTreeinfo: ",this.state.nodes);
           });
     }
 
-    //check tree
-    onCkeck = (checked,a,Taginfo) => {
-        //console.log(Taginfo);
-        //console.log(this.state.selectedOption);
+    //page move
+    connManagePage() {
+        console.log('react/go Connection Manage page');
+        this.$location.path(`/thingspin/manage/data/connect/`);
+    }
+    siteManagePage() {
+        console.log('react/go Site Manage Page');
+        this.$location.path(`/thingspin/manage/data/site`);
+    }
 
+    //BUTTON ACTION
+    onFacilityTagButton() {
+        console.log("onTagButton: ",this.state.selectedOption.value);
+        this.getTreeinfo(this.state.selectedOption.value);
+    }
+    onAllTagButton() {
+        getBackendSrv().get('/thingspin/tagdefine').then((result: any) => {
+            console.log("tagdefine: ",result);
+
+            //this.setState({nodesFiltered: result});
+            //this.setState({nodes: result});
+            //this.setState({nodesCount: result.length});
+
+          }).catch((err: any) => {
+            console.log("After ordering, error!");
+            console.log(err);
+        });
+    }
+
+    //CHECK TREE
+    /*
+    onCheck = (checked,a,Taginfo) => {
+        console.log(Taginfo);
+        console.log(this.state.selectedOption);
         this.setState({ checked });
         const siteData = this.state.selectedOption;
         this.props.click({ Taginfo,siteData});
     };
-
-    //site select function
+    */
+    onCheck2(Taginfo) {
+        console.log("react/test:",Taginfo);
+        this.setState({checked: Taginfo});
+        const siteData = this.state.selectedOption;
+        this.props.click({ Taginfo,siteData});
+    }
+    //SITE SELECTION
     handleChange = selectedOption => {
         this.setState({selectedOption});
         console.log('option selected: ',selectedOption);
@@ -111,78 +153,42 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         this.getTreeinfo(selectedOption.value);
     };
 
-    //search filter-------------
-    onFilterChange(e) {
-        this.setState({ filterText: e.target.value }, this.filterTree);
-    }
-
-    filterTree() {
-        //reset nodes back to un filtered state
-        if (!this.state.filterText) {
-            this.setState(prevState =>({
-                nodesFiltered: prevState.nodes,
-            }));
-            return;
-        }
-
-        const nodesFiltered = prevState => (
-            {nodesFiltered: prevState.nodes.reduce(this.filterNodes,[])}
-        );
-
-        this.setState(nodesFiltered);
-    }
-
-    filterNodes(filtered, node) {
-        //console.log(this.state);
-        const { filterText } = this.state;
-        const children = (node.children || []).reduce(this.filterNodes,[]);
-        if (
-            // Node's label matches the search string
-            node.label.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1 ||
-            // Or a children has a matching node
-            children.length
-        ) {
-            filtered.push({ ...node, children });
-        }
-
-        return filtered;
-    }
-    //------------------------------search filter
-
     render() {
         const {selectedOption} = this.state;
+        const {siteOptions} = this.state;
+        const {nodesCount} = this.state;
+        let isdataEmpty = false;
+
+        console.log("render siteoptions: ",siteOptions);
+        console.log("render nodesCount: ",nodesCount);
+
+
+        if (nodesCount === null || siteOptions.length === 0) {
+            console.log("render nodesCount NULL");
+            isdataEmpty = true;
+        }
+
         return (
-            <div>
+            <div className = "facility-tree-container">
                 <div className="facility-site-pos">
                 <Select
                     value = {selectedOption}
                     onChange = {this.handleChange}
-                    options = {this.state.siteOptions}
+                    options = {siteOptions}
                     placeholder = "사이트 선택"
                     className = "facility-select"
                     ></Select>
                 </div>
+
                 <div className = "facility-section-line"/>
-                {selectedOption ?
-                    <div className="facility-filter-pos">
-                        <input
-                            className="filter-text"
-                            placeholder={this.state.filterPlaceholder}
-                            type="text"
-                            value={this.state.filterText}
-                            onChange={this.onFilterChange}
-                            />
+                  <FilterTree nodes = {this.state.nodes} click={(item) => this.onCheck2(item.Taginfo)}></FilterTree>
+                <div>
+                    { isdataEmpty?
+                        <div>
+                            <button onClick = {this.siteManagePage}>사이트 관리</button>
                         </div>
-                  : null
-                }
-                <div className="facility-tree-pos">
-                        <CheckboxTree
-                            nodes={this.state.nodesFiltered}
-                            checked = {this.state.checked}
-                            expanded = {this.state.expanded}
-                            onCheck = {this.onCkeck}
-                            onExpand = {expanded => this.setState({ expanded })}
-                        ></CheckboxTree>
+                        : null
+                    }
                 </div>
            </div>
         );

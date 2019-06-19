@@ -1,3 +1,43 @@
+.facility-tree-container {
+    //margin: 16px;
+    //margin-top: 84px;
+    //margin-left: 16px;
+    //margin-bottom: 28px;
+    //width: 31.56%; //428
+    //height: 89.2%;
+    //border: solid 1px #ecebeb;
+    //background-color: #ffffff;
+}
+.facility-connManage-page-btn {
+    margin-left: 16px;
+    button {
+        border-radius: 4px;
+        color: #6a6a6a;
+        //background-color: #ecebeb;
+        i {
+            font-size: 14px;
+        }
+    }
+}
+.facility-siteManage-page-btn {
+    margin-left: 16px;
+    button {
+        border-radius: 4px;
+        color: #6a6a6a;
+        //background-color: #ecebeb;
+        i {
+            font-size: 14px;
+        }
+    }
+}
+.facility-warning-facility-empty{
+    color: #d81b60;
+    font-family: Roboto;
+    font-size: 14px;
+    //font-weight: bold;
+    font-style: normal;
+    margin-left: 16px;
+}
 .facility-tree-pos {
     margin-top: 9px;//16.5
     margin-left: 16px;
