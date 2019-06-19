@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import config from 'app/core/config';
 import { NavModelSrv } from 'app/core/core';
 import { StoreState, DashboardInitPhase } from 'app/types';
-import { NavModelItem } from '@grafana/ui';
 import { DashboardModel } from 'app/features/dashboard/state';
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
+import { NavModelItem } from '@grafana/data';
 
 export interface Props extends TsBaseProps {
   icon?: string;
