@@ -11,6 +11,7 @@ import (
 
 func init() {
 	bus.AddHandler("thingspin-sql", GetTsFacilityList)
+	bus.AddHandler("thingspin-sql", GetTsFacilityItem)
 	bus.AddHandler("thingspin-sql", AddTsFacility)
 	bus.AddHandler("thingspin-sql", UpdateTsFacility)
 	bus.AddHandler("thingspin-sql", DelelteTsFacility)
@@ -18,7 +19,7 @@ func init() {
 
 type InsertTsFacilityStruct struct {
 	Site_id       int    `xorm:"'site_id'`
-	Id            int64  `xorm:"'id' pk autoincr"`
+	Id            int    `xorm:"'id' pk autoincr"`
 	Name          string `xorm:"'name'"`
 	Description   string `xorm:"'description'"`
 	Location_lat  float32 `xorm:"'location_lat'`
@@ -39,8 +40,15 @@ type UpdateTsFacilityStruct struct {
 
 func GetTsFacilityList(cmd *m.GetAllTsFacilityQuery) error {
 	var res []m.TsFacilityField
+	err := x.Table(m.TsFmsFacilityTbl).Where("site_id = ?", cmd.SiteId).Find(&res)
+	cmd.Result = res
 
-	err := x.Table(m.TsFmsFacilityTbl).Find(&res)
+	return err
+}
+
+func GetTsFacilityItem(cmd *m.GetTsFacilityItemQuery) error {
+	var res []m.TsFacilityField
+	err := x.Table(m.TsFmsFacilityTbl).Where("site_id = ? and id = ?", cmd.SiteId, cmd.FacilityId).Find(&res)
 	cmd.Result = res
 
 	return err

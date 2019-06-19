@@ -13,6 +13,13 @@ type TsFacilityField struct {
 }
 
 type GetAllTsFacilityQuery struct {
+	SiteId int
+	Result []TsFacilityField
+}
+
+type GetTsFacilityItemQuery struct {
+	SiteId int
+	FacilityId int
 	Result []TsFacilityField
 }
 
@@ -23,7 +30,7 @@ type AddTsFacilityQuery struct {
 	Lat     float32 `xorm:"'lat'"`
 	Lon     float32 `xorm:"'lon'"`
 	ImgPath string  `xorm:"'img_path'"`
-	Result  int64
+	Result  int
 }
 
 type UpdateTsFacilityQuery struct {
