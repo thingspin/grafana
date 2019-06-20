@@ -20,7 +20,10 @@ export class TsSaveDashboardAsModalCtrl extends SaveDashboardAsModalCtrl {
     if (!this.copyTags) {
       this.clone.tags = [];
     }
-    return this.tsDbSrv.fmSave(this.clone, { folderId: this.folderId }).then(this.dismiss);
+    return this.tsDbSrv.fmSave(this.clone,
+      { folderId: this.folderId },
+      true,
+      '설비 모니터링').then(this.dismiss);
   }
 }
 
