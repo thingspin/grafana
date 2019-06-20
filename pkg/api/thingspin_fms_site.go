@@ -39,6 +39,33 @@ func getAllTsSite(c *gfm.ReqContext) Response {
 	return JSON(200, q.Result)
 }
 
+func getSampleTsSite(c *gfm.ReqContext) Response {
+	result := []m.TsSiteField {
+		{
+			Id: 1,
+			Name: "Seoul Factory",
+			Description: "서울 공장",
+			Location_lat: 37.5599782,
+			Location_lon: 126.9795979,
+		},
+		{
+			Id: 2,
+			Name: "Busan Factory",
+			Description: "부산 공장",
+			Location_lat: 35.1485845,
+			Location_lon: 128.9981016,
+		},
+		{
+			Id: 3,
+			Name: "Daegu Factory",
+			Description: "대구 공장",
+			Location_lat: 35.8693295,
+			Location_lon: 128.5387992,
+		},
+	}
+	return JSON(200, result)	
+}
+
 func addTsSite(c *gfm.ReqContext, req m.AddTsSiteQuery) Response {	
 	q := m.AddTsSiteQuery{
 		Name:   req.Name,

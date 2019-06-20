@@ -593,6 +593,11 @@ func deleteTsFacilityTree(c *gfm.ReqContext, req m.DeleteTsFacilityTreePathQuery
 	return JSON(200, "updateTsFacilityTree")
 }
 
+
+func getSampleTsFacilityTree(c *gfm.ReqContext) Response {
+	target := c.Params(":siteId")
+	return JSON(200, getAllTsFacilityTreeSample(target))
+}
 //---------------------------------------------------------------------------------------------------------------
 //	Facility Sample Data Creator
 //---------------------------------------------------------------------------------------------------------------

@@ -59,6 +59,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 		// 사이트 관리 동작 API
 		tsRoute.Group("/sites", func(tsFnRoute routing.RouteRegister) {
 			tsFnRoute.Get("/", Wrap(getAllTsSite))
+			tsFnRoute.Get("/sample", Wrap(getSampleTsSite))
 			tsFnRoute.Post("/", bind(tsm.AddTsSiteQuery{}), Wrap(addTsSite))
 			tsFnRoute.Put("/", bind(tsm.UpdateTsSiteQuery{}), Wrap(updateTsSite))
 			tsFnRoute.Delete("/:siteId", Wrap(deleteTsSite))
@@ -71,6 +72,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 	
 				tsFaciltesRoute.Group("/tree", func(tsFaciltytree routing.RouteRegister) {
 					tsFaciltytree.Get("/", Wrap(getAllTsFacilityTree))
+					tsFaciltytree.Get("/sample", Wrap(getSampleTsFacilityTree))
 					tsFaciltytree.Post("/", bind(tsm.AddTsFacilityTreePathQuery{}), Wrap(addTsFacilityTree))
 					tsFaciltytree.Put("/", bind(tsm.UpdateTsFacilityTreePathQuery{}), Wrap(updateTsFacilityTree))
 					tsFaciltytree.Delete("/", bind(tsm.DeleteTsFacilityTreePathQuery{}), Wrap(deleteTsFacilityTree))
