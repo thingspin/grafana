@@ -29,11 +29,11 @@ export class TsSiteTableCtrl implements angular.IController {
     data: any;
     list: SiteTableData[];
     tData: TableModel = {
-        rowCount: 10,
-        selectOpts: [10, 20, 30],
+        rowCount: 3,
+        selectOpts: [3, 6, 9],
         currPage: 0,
         maxPage: 0,
-        maxPageLen: 10,
+        maxPageLen: 3,
         pageNode: [],
     };
 
@@ -43,6 +43,7 @@ export class TsSiteTableCtrl implements angular.IController {
     desc: string;
     lat: string;
     lon: string;
+    selIdx: any;
 
     /** @ngInject */
     constructor(
@@ -53,6 +54,8 @@ export class TsSiteTableCtrl implements angular.IController {
         this.isEditBtn = true;
         this.list = [];
         this.asyncDataLoader();
+
+        this.selIdx = -1;
     }// Dependency Injection
 
     $onInit(): void {
@@ -120,14 +123,30 @@ export class TsSiteTableCtrl implements angular.IController {
             this.initTable();
         }
     }
-
     // TABLE Method
-    tableClick(value) {
-        console.log(value);
+    tableClick(value, idx) {
+        console.log(idx);
         this.data = value;
+        this.selIdx = idx;
+        this.tableSelect(idx);
     }
+
+    tableSelect(idx) {
+        //maxPageLen
+        for (let i = 0; i< this.tData.maxPageLen; i++) {
+            if (i === idx) {
+                $('#table-tr-' + i).removeClass('ts-table-row');
+                $('#table-tr-' + i).addClass('selected');
+            } else {
+                $('#table-tr-' + i).removeClass('selected');
+                $('#table-tr-' + i).addClass('ts-table-row');
+            }
+        }
+    }
+
     initTable(): void {
         this.$scope.$watch("list", () => {
+            this.tCalcPaging();
             this.setPageNodes();
         });
     }

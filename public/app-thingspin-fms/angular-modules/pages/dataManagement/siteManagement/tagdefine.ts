@@ -13,6 +13,7 @@ export class TsTagDefineCtrl {
   prevMap: any;
   // facility
   data: any;
+  isShow: boolean;
   isEditView: boolean;
   isEditBtn: boolean;
   facility: any;
@@ -21,6 +22,7 @@ export class TsTagDefineCtrl {
     private backendSrv: BackendSrv,
     private $scope: angular.IScope
   ) {
+    this.isShow = false;
     this.isEditView = false;
     this.isEditBtn = true;
 
@@ -35,6 +37,11 @@ export class TsTagDefineCtrl {
     this.$scope.$watch('ctrl.data', (newValue: any, oldValue: any) => {
         console.log(newValue);
         console.log(oldValue);
+        if (newValue === undefined && oldValue === undefined) {
+          this.isShow = false;
+        } else {
+          this.isShow = true;
+        }
         this.backendSrv.get(`/thingspin/sites/${newValue}/facilities/tree`,{}).then((result) => {
           if (result !== null || result !== undefined) {
             this.dataList = [];
@@ -173,6 +180,7 @@ export class TsTagDefineCtrl {
 
     $onInit(): void {
         console.log("SiteTable : " + this.data);
+        this.isShow = false;
     }
 
     onShowEditView(value) {

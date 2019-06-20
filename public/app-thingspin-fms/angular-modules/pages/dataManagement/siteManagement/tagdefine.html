@@ -1,167 +1,169 @@
-<div class="ts-site-main-title">
-    목록
-</div>
-<div id="mqtt-addview-right-button-area" ng-show="ctrl.isEditBtn">
-    <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.deleteTreeItem()">
-        삭제
-    </button>
-    <button id="site-add-plus-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
-        설비추가
-    </button>
-</div>
-<div class="" ng-show="ctrl.isEditView">
-    <div class="ts-input-group name">
-        <div class="ts-mqtt-collect-label">설비 이름</div>
-        <div class="ts-input">
-            <input type="text" ng-model="ctrl.facility.name"/>
-            <span ng-class="{separator: true, enable: ctrl.facility.name}"></span>
-        </div>
+<div ng-show="ctrl.isShow">
+    <div class="ts-site-main-title">
+        목록
     </div>
-    <div class="ts-input-group desc">
-        <div class="ts-mqtt-url-label">설명</div>
-        <div class="ts-input">
-            <input type="text" ng-model="ctrl.facility.desc"/>
-            <span ng-class="{separator: true, enable: ctrl.facility.desc}"></span>
-        </div>
-    </div>
-    <div class="ts-input-group lat">
-        <div class="ts-mqtt-collect-label">위도</div>
-        <div class="ts-input">
-            <input type="text" ng-model="ctrl.facility.lat"/>
-            <span ng-class="{separator: true, enable: ctrl.facility.lat}"></span>
-        </div>
-    </div>
-    <div class="ts-input-group lon">
-        <div class="ts-mqtt-url-label">경도</div>
-        <div class="ts-input">
-            <input type="text" ng-model="ctrl.facility.lon"/>
-            <span ng-class="{separator: true, enable: ctrl.facility.lon}"></span>
-        </div>
-    </div>
-    <div class="ts-input-group img-path">
-        <div class="ts-mqtt-url-label">이미지</div>
-        <div class="ts-input">
-            <input type="text" ng-model="ctrl.facility.imgpath"/>
-            <span ng-class="{separator: true, enable: ctrl.facility.imgpath}"></span>
-        </div>
-    </div>
-    
-    <div id="mqtt-addview-right-button-area">
-        <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowEditView(false)">
-            취소
+    <div id="mqtt-addview-right-button-area" ng-show="ctrl.isEditBtn">
+        <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.deleteTreeItem()">
+            삭제
         </button>
-        <button id="site-add-plus-btn" className="btn" ng-click="ctrl.onFacilityAdd()">
-            저장
+        <button id="site-add-plus-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
+            설비추가
         </button>
     </div>
-</div>
-<div class="tree-view-area">
-    <div class="section gf-form-group">
-            <!--Level 1 starting point-->
-            <div ui-tree="ctrl.options" data-clone-enabled="true" data-nodrop-enabled="true" id="tree1-root">
-                    <ol ui-tree-nodes="" ng-model="ctrl.source">
-                        <li ng-repeat="pnode in ctrl.source" ui-tree-node>
-                            <div>
-                                <div>
-                                    <a>{{pnode.label}}</a>
-                                </div>
-                            </div>
+    <div class="" ng-show="ctrl.isEditView">
+        <div class="ts-input-group name">
+            <div class="ts-mqtt-collect-label">설비 이름</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.facility.name"/>
+                <span ng-class="{separator: true, enable: ctrl.facility.name}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group desc">
+            <div class="ts-mqtt-url-label">설명</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.facility.desc"/>
+                <span ng-class="{separator: true, enable: ctrl.facility.desc}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group lat">
+            <div class="ts-mqtt-collect-label">위도</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.facility.lat"/>
+                <span ng-class="{separator: true, enable: ctrl.facility.lat}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group lon">
+            <div class="ts-mqtt-url-label">경도</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.facility.lon"/>
+                <span ng-class="{separator: true, enable: ctrl.facility.lon}"></span>
+            </div>
+        </div>
+        <div class="ts-input-group img-path">
+            <div class="ts-mqtt-url-label">이미지</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.facility.imgpath"/>
+                <span ng-class="{separator: true, enable: ctrl.facility.imgpath}"></span>
+            </div>
+        </div>
         
-                            <!--Level 2 starting point-->
-                            <ol ui-tree-nodes="" ng-model="pnode.children" ng-class="{hidden: collapsed}">
-                                <li ng-repeat="pnode2 in pnode.children" ui-tree-node>    
-                                    <div>
-                                        <input type="checkbox" ng-click="ctrl.checked(pnode2)" ng-checked="pnode2.ischecked" />
-                                        <a>{{pnode2.facility_name}}</a>
-                                    </div>
-                                    
-                                    <!--Level 3 starting point-->
-                                    <ol ui-tree-nodes="" ng-model="pnode2.children" ng-class="{hidden: collapsed}">
-                                        <li ng-repeat="pnode3 in pnode2.children" ui-tree-node>
-                                                <div>
-                                                <input data-drag-enabled type="checkbox" ng-click="ctrl.checked(pnode3)" ng-checked="pnode3.ischecked" />
-                                                    <a ui-tree-handle class="tree-node tree-node-content">{{pnode3.tag_name}}</a>
-                                                </div>
-                                        
-                                            <!--
-                                            <ol ui-tree-nodes="" ng-model="pnode3.children" ng-class="{hidden: collapsed}">
-                                                <li ng-repeat="pnode4 in pnode3.children" ui-tree-node>
-                                                    <div ui-tree-handle class="tree-node tree-node-content">
-                                                        <div>
-                                                            <a>{{pnode4.text}}</a>
-                                                        </div>
-                                                    </div>
-                                                
-                                                    <ol ui-tree-nodes="" ng-model="pnode4.children" ng-class="{hidden: collapsed}">
-                                                        <li ng-repeat="pnode5 in pnode4.children" ui-tree-node>
-                                                            <div ui-tree-handle class="tree-node tree-node-content">
-                                                                <div>
-                                                                    <a>{{pnode5.text}}</a>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ol>
-                                                </li>
-                                            </ol>
-                                            -->
-                                        </li>
-                                    </ol>
-                                </li>
-                            </ol>
-                        </li>
-                    </ol>
-            </div>                        
+        <div id="mqtt-addview-right-button-area">
+            <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowEditView(false)">
+                취소
+            </button>
+            <button id="site-add-plus-btn" className="btn" ng-click="ctrl.onFacilityAdd()">
+                저장
+            </button>
+        </div>
     </div>
-
-    <div class="section gf-form-group">
-        <!--Level 1 starting point-->
-        <div ui-tree="ctrl.options" id="tree2-root">
-                <ol ui-tree-nodes="" ng-model="ctrl.dataList">
-                    <li ng-repeat="node in ctrl.dataList" ui-tree-node>
-                        <div ui-tree-handle class="tree-node tree-node-content">
-                                <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
-                                <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
-                        </div>
-
-                        <!--Level 2 starting point-->
-                        <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
-                            <li ng-repeat="node2 in node.children" ui-tree-node>
-                                <div ui-tree-handle class="tree-node tree-node-content">
-                                        <a ng-if="node2.tag_name !== ''">{{node2.tag_name}}</a>
-                                        <a ng-if="node2.tag_name === ''">{{node2.facility_name}}</a>
+    <div class="tree-view-area">
+        <div class="section gf-form-group">
+                <!--Level 1 starting point-->
+                <div ui-tree="ctrl.options" data-clone-enabled="true" data-nodrop-enabled="true" id="tree1-root">
+                        <ol ui-tree-nodes="" ng-model="ctrl.source">
+                            <li ng-repeat="pnode in ctrl.source" ui-tree-node>
+                                <div>
+                                    <div>
+                                        <a>{{pnode.label}}</a>
+                                    </div>
                                 </div>
-                                <!--Level 3 starting point-->
-                                <ol ui-tree-nodes="" ng-model="node2.children" ng-class="{hidden: collapsed}">
-                                    <li ng-repeat="node3 in node2.children" ui-tree-node>
-                                        <div ui-tree-handle class="tree-node tree-node-content">
-                                                <a ng-if="node3.tag_name !== ''">{{node3.tag_name}}</a>
-                                                <a ng-if="node3.tag_name === ''">{{node3.facility_name}}</a>
+            
+                                <!--Level 2 starting point-->
+                                <ol ui-tree-nodes="" ng-model="pnode.children" ng-class="{hidden: collapsed}">
+                                    <li ng-repeat="pnode2 in pnode.children" ui-tree-node>    
+                                        <div>
+                                            <input type="checkbox" ng-click="ctrl.checked(pnode2)" ng-checked="pnode2.ischecked" />
+                                            <a>{{pnode2.facility_name}}</a>
                                         </div>
-                                        <!--Level 4 starting point-->
-                                        <ol ui-tree-nodes="" ng-model="node3.children" ng-class="{hidden: collapsed}">
-                                            <li ng-repeat="node4 in node3.children" ui-tree-node>
-                                                <div ui-tree-handle class="tree-node tree-node-content">
-                                                        <a ng-if="node4.tag_name !== ''">{{node4.tag_name}}</a>
-                                                        <a ng-if="node4.tag_name === ''">{{node4.facility_name}}</a>
-                                                </div>
-                                                <!--Level 5 starting point-->
-                                                <ol ui-tree-nodes="" ng-model="node4.children" ng-class="{hidden: collapsed}">
-                                                    <li ng-repeat="node5 in node4.children" ui-tree-node>
+                                        
+                                        <!--Level 3 starting point-->
+                                        <ol ui-tree-nodes="" ng-model="pnode2.children" ng-class="{hidden: collapsed}">
+                                            <li ng-repeat="pnode3 in pnode2.children" ui-tree-node>
+                                                    <div>
+                                                    <input data-drag-enabled type="checkbox" ng-click="ctrl.checked(pnode3)" ng-checked="pnode3.ischecked" />
+                                                        <a ui-tree-handle class="tree-node tree-node-content">{{pnode3.tag_name}}</a>
+                                                    </div>
+                                            
+                                                <!--
+                                                <ol ui-tree-nodes="" ng-model="pnode3.children" ng-class="{hidden: collapsed}">
+                                                    <li ng-repeat="pnode4 in pnode3.children" ui-tree-node>
                                                         <div ui-tree-handle class="tree-node tree-node-content">
-                                                                <a ng-if="node5.tag_name !== ''">{{node5.tag_name}}</a>
-                                                                <a ng-if="node5.tag_name === ''">{{node5.facility_name}}</a>
+                                                            <div>
+                                                                <a>{{pnode4.text}}</a>
+                                                            </div>
                                                         </div>
+                                                    
+                                                        <ol ui-tree-nodes="" ng-model="pnode4.children" ng-class="{hidden: collapsed}">
+                                                            <li ng-repeat="pnode5 in pnode4.children" ui-tree-node>
+                                                                <div ui-tree-handle class="tree-node tree-node-content">
+                                                                    <div>
+                                                                        <a>{{pnode5.text}}</a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ol>
                                                     </li>
                                                 </ol>
+                                                -->
                                             </li>
                                         </ol>
                                     </li>
                                 </ol>
                             </li>
                         </ol>
-                    </li>
-                </ol>
+                </div>                        
         </div>
-                        
+
+        <div class="section gf-form-group">
+            <!--Level 1 starting point-->
+            <div ui-tree="ctrl.options" id="tree2-root">
+                    <ol ui-tree-nodes="" ng-model="ctrl.dataList">
+                        <li ng-repeat="node in ctrl.dataList" ui-tree-node>
+                            <div ui-tree-handle class="tree-node tree-node-content">
+                                    <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
+                                    <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
+                            </div>
+
+                            <!--Level 2 starting point-->
+                            <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                                <li ng-repeat="node2 in node.children" ui-tree-node>
+                                    <div ui-tree-handle class="tree-node tree-node-content">
+                                            <a ng-if="node2.tag_name !== ''">{{node2.tag_name}}</a>
+                                            <a ng-if="node2.tag_name === ''">{{node2.facility_name}}</a>
+                                    </div>
+                                    <!--Level 3 starting point-->
+                                    <ol ui-tree-nodes="" ng-model="node2.children" ng-class="{hidden: collapsed}">
+                                        <li ng-repeat="node3 in node2.children" ui-tree-node>
+                                            <div ui-tree-handle class="tree-node tree-node-content">
+                                                    <a ng-if="node3.tag_name !== ''">{{node3.tag_name}}</a>
+                                                    <a ng-if="node3.tag_name === ''">{{node3.facility_name}}</a>
+                                            </div>
+                                            <!--Level 4 starting point-->
+                                            <ol ui-tree-nodes="" ng-model="node3.children" ng-class="{hidden: collapsed}">
+                                                <li ng-repeat="node4 in node3.children" ui-tree-node>
+                                                    <div ui-tree-handle class="tree-node tree-node-content">
+                                                            <a ng-if="node4.tag_name !== ''">{{node4.tag_name}}</a>
+                                                            <a ng-if="node4.tag_name === ''">{{node4.facility_name}}</a>
+                                                    </div>
+                                                    <!--Level 5 starting point-->
+                                                    <ol ui-tree-nodes="" ng-model="node4.children" ng-class="{hidden: collapsed}">
+                                                        <li ng-repeat="node5 in node4.children" ui-tree-node>
+                                                            <div ui-tree-handle class="tree-node tree-node-content">
+                                                                    <a ng-if="node5.tag_name !== ''">{{node5.tag_name}}</a>
+                                                                    <a ng-if="node5.tag_name === ''">{{node5.facility_name}}</a>
+                                                            </div>
+                                                        </li>
+                                                    </ol>
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+            </div>
+                            
+        </div>
     </div>
 </div>
