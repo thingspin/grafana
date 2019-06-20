@@ -55,6 +55,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         this.connManagePage = this.connManagePage.bind(this);
         this.siteManagePage = this.siteManagePage.bind(this);
 
+        this.restoreFacilityData = this.restoreFacilityData.bind(this);
         //test
         this.testChecked = this.testChecked.bind(this);
         this.testSave = this.testSave.bind(this);
@@ -75,19 +76,61 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
             filterPlaceholder: " 태그 검색 ...",
 
         };
-        //this.getSiteList();
-        this.testGetList();
+        this.getSiteList();
+        //this.testGetList();
     }
 
     //props check
     componentWillReceiveProps(nextProps) {
+        //test.
+        console.log("props-tag: ",nextProps.taginfo);
+        console.log("props-site: ",nextProps.siteinfo);
         if (this.props.taginfo !== nextProps.taginfo || this.props.siteinfo !== nextProps.siteinfo) {
             console.log("props change");
+            //site selected
+            /*
+            const selectedOption = nextProps.siteinfo;
+            const taginfo = nextProps.taginfo;
+            this.setState({selectedOption});
+            this.getTreeinfo(selectedOption.value);
+            // tag selected
+            const elements = [];
+            if (taginfo.length > 0) {
+                for (let i = 0; i < taginfo.length; i++) {
+                    const data = taginfo[i].value;
+                    elements.push(data);
+                }
+                console.log("props-test elements: ",elements);
+                //this.setState({checkedSave: elements});
+            }*/
+            this.restoreFacilityData(nextProps);
         }else {
             console.log("props same");
         }
     }
 
+
+    //
+    restoreFacilityData(item) {
+           //site selected
+           const selectedOption = item.siteinfo;
+           const taginfo = item.taginfo;
+           this.setState({selectedOption});
+           this.getTreeinfo(selectedOption.value);
+           // tag selected
+           const elements = [];
+           if (taginfo.length > 0) {
+               for (let i = 0; i < taginfo.length; i++) {
+                   const data = taginfo[i].value;
+                   elements.push(data);
+               }
+               console.log("props-test elements: ",elements);
+               this.setState({checkedSave: elements as any});
+           }else {
+                console.log("props-test elements: ",elements);
+                this.setState({checkedSave: []});
+           }
+    }
     //TEST SAMPLE
     testGetList() {
         getBackendSrv().get("/thingspin/sites/sample").then((result: any) => {
@@ -188,7 +231,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         console.log("check: ",this.state.checked);
         console.log("saved: ",this.state.testChecked);
         //this.getTreeinfo(1);
-        this.setState({checkedSave: this.state.testChecked});
+        //this.setState({checkedSave: this.state.testChecked});
         //send checked save
     }
     testSave() {
@@ -202,6 +245,8 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         const {nodesCount} = this.state;
         const {checkedSave} = this.state;
         let isdataEmpty = false;
+
+        console.log("render:",checkedSave);
 
         if (nodesCount === 0 || siteOptions.length === 0) {
             //console.log("render nodesCount NULL");
@@ -233,6 +278,9 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                         </div>
                         : null
                     }
+                </div>
+                <div>
+                    <button onClick={this.testChecked}>TEST</button>
                 </div>
            </div>
         );
