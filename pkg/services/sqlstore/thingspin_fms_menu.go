@@ -148,6 +148,9 @@ func GetDefaultFmsMenuByDefaultOrgId(cmd *m.GetDefaultFmsMenuByDefaultOrgIdQuery
 		m.TsFmsMenuBaseTbl + ".placeBottom",
 		m.TsFmsMenuBaseTbl + ".canDelete",
 		m.TsFmsMenuBaseTbl + ".divider",
+		// dashboard
+		m.TsFmsMenuBaseTbl + ".dashboard_id",
+		m.TsFmsMenuBaseTbl + ".dashboard_uid",
 	}
 	err := x.Table(m.TsFmsMenuTbl).
 		Select(strings.Join(selectStr, ", ")).
@@ -186,6 +189,9 @@ func getFmsMenuByOrgId(orgId int64) ([]*m.FmsMenu, error) {
 		m.TsFmsMenuBaseTbl + ".placeBottom",
 		m.TsFmsMenuBaseTbl + ".canDelete",
 		m.TsFmsMenuBaseTbl + ".divider",
+		// dashboard
+		m.TsFmsMenuBaseTbl + ".dashboard_id",
+		m.TsFmsMenuBaseTbl + ".dashboard_uid",
 	}
 	err := x.Table(m.TsFmsMenuTbl).
 		Select(strings.Join(selectStr, ", ")).
@@ -229,11 +235,21 @@ func DeleteFmsMenuByOrgId(cmd *m.DeleteFmsMenuByOrgIdQuery) error {
 }
 
 func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
-	err := doTransaction(func(sess *DBSession) error {
-		_, err := x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
-		//cmd.Result = result
+	_, err := x.Transaction(func(xsess *xorm.Session) (interface{}, error) {
+		var data m.FmsMenuBaseTblField
+		_, err := x.Table(m.TsFmsMenuBaseTbl).Where("id = ?", cmd.Id).Get(&data)
 		if err != nil {
-			return err
+			return nil, err
+		}
+
+		if data.DashboardId != 0 {
+			_, err = x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM dashboard WHERE id = ?;PRAGMA foreign_keys = OFF;`, data.DashboardId)
+		} else {
+			_, err = x.Exec(`PRAGMA foreign_keys = ON;DELETE FROM `+m.TsFmsMenuBaseTbl+` WHERE id = ?;PRAGMA foreign_keys = OFF;`, cmd.Id)
+		}
+
+		if err != nil {
+			return nil, err
 		}
 
 		// Reordering
@@ -242,10 +258,10 @@ func DeleteFmsMenuById(cmd *m.DeleteFmsMenuByIdQuery) error {
 			_, err = x.Exec(`UPDATE `+m.TsFmsMenuTbl+` SET "order" = ? WHERE org_id = ? AND mbid = ?`,
 				menu.Order, cmd.OrgId, menu.Id)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		}
-		return nil
+		return nil, nil
 	})
 
 	return err
@@ -298,7 +314,7 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 		sqlCommands := []string{
 			`SELECT MAX(id) FROM ` + m.TsFmsMenuBaseTbl,
 			`INSERT INTO ` + m.TsFmsMenuBaseTbl + ` ('id', 'text', 'icon', 'img_path', 'url', 'hideFromMenu', 
-				'hideFromTabs', 'placeBottom', 'divider', 'canDelete') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+				'hideFromTabs', 'placeBottom', 'divider', 'canDelete', 'dashboard_id', 'dashboard_uid') VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 			`INSERT INTO ` + m.TsFmsMenuTbl + ` ('org_id', 'parent_id','name','mbid','order') VALUES (?,?,?,?,?)`,
 		}
 		var id int
@@ -311,7 +327,8 @@ func AddFmsMenu(cmd *m.AddFmsMenuCommand) error {
 		} else {
 			id = id + 100
 		}
-		_, err = sess.Exec(sqlCommands[1], id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true)
+
+		_, err = sess.Exec(sqlCommands[1], id, cmd.Name, cmd.Icon, "NULL", cmd.Url, false, false, false, false, true, cmd.DashboardId, cmd.DashboardUid)
 		//cmd.Result = result
 		if err != nil {
 			return err
@@ -365,11 +382,13 @@ func AddFmsMenuByParentId(cmd *m.AddFmsMenuByParentIdCmd) error {
 
 		// insert menubase table
 		if _, err = xsess.Table(m.TsFmsMenuBaseTbl).Insert(m.FmsMenuBaseTblField{
-			Id:        baseId,
-			Text:      cmd.Name,
-			Icon:      cmd.Icon,
-			Url:       cmd.Url,
-			CanDelete: true,
+			Id:           baseId,
+			Text:         cmd.Name,
+			Icon:         cmd.Icon,
+			Url:          cmd.Url,
+			CanDelete:    true,
+			DashboardId:  cmd.DashboardId,
+			DashboardUid: cmd.DashboardUid,
 		}); err != nil {
 			return nil, err
 		}

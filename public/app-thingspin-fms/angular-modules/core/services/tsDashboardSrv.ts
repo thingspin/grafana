@@ -14,12 +14,13 @@ import { updateTsMenu } from 'app-thingspin-fms/react/redux/dispayches/tsMenu';
 export interface TsDashboardSrv extends DashboardSrv {
   // [ 설비 모니터링 ] customize methods
   fmSaveFM(options?, clone?);// customized 'saveDashboard' method
-  fmSave(clone, options, menuName?: string); // customized 'save' method
+  fmSave(clone, options, isMenuSave?: boolean, parentMenuName?: string, ); // customized 'save' method
   fmPostSave(clone, data); // customized 'postSave' method
-  fmSaveMenu(clone, data, menuName?: string);
+  fmSaveMenu(clone, data, parentMenuName?: string);
   fmShowSaveAsModal(); // customized 'showSaveAsModal' method
   fmShowSaveModal(); // customized 'showSaveModal' method
   fmHandleSaveDashboardError(clone, options, err); // customized 'handleSaveDashboardError' method
+  saveJSONFmDashboard(json);// customized 'saveJSONDashboard' method
 }
 
 // Override serivce class in AnularJs (DashboardSrv)
@@ -70,14 +71,17 @@ coreModule.decorator('dashboardSrv',
   };
 
   // Add class method
-  self.fmSave = async (clone, options, menuName) => {
+  self.fmSave = async (clone, options, isMenuSave = false, parentMenuName) => {
     options = options || {};
     options.folderId = options.folderId >= 0 ? options.folderId : self.dashboard.meta.folderId || clone.folderId;
 
     let data: any;
     try {
       data = await backendSrv.saveDashboard(clone, options);
-      data = await self.fmSaveMenu(clone, data, menuName);
+      console.log(data);
+      if (isMenuSave) {
+        data = await self.fmSaveMenu(clone, data, parentMenuName);
+      }
       data = await self.fmPostSave(clone, data);
     } catch (e) {
       self.fmHandleSaveDashboardError(clone, options, e);
@@ -91,7 +95,7 @@ coreModule.decorator('dashboardSrv',
     self.dashboard.version = data.version;
 
     $rootScope.appEvent('dashboard-saved', self.dashboard);
-    $rootScope.appEvent('alert-success', ['신규 설비모니터링이 추가되었습니다.']);
+    $rootScope.appEvent('alert-success', ['설비모니터링이 저장되었습니다.']);
 
     const [, , uid, slug] = data.url.split("/");
     const newUrl = `/thingspin/manage/monitoring/${uid}/${slug}`;
@@ -106,11 +110,11 @@ coreModule.decorator('dashboardSrv',
   };
 
   // Add class method
-  self.fmSaveMenu = async (clone, data, menuName = '설비 모니터링') => {
-    const baseApi = `/thingspin/menu/`;
+  self.fmSaveMenu = async (clone, data, parentMenuName = '설비 모니터링') => {
+    const baseApi = `/thingspin/menu`;
     const { orgId } = config.bootData.user;
 
-    const parentMenu: any[] = await backendSrv.get(`${baseApi}/${orgId}/name/${menuName}`);
+    const parentMenu: any[] = await backendSrv.get(`${baseApi}/${orgId}/name/${parentMenuName}`);
     if (!parentMenu.length) {
       // not found menu
       return self.dashboard;
@@ -122,6 +126,8 @@ coreModule.decorator('dashboardSrv',
     await backendSrv.post(`${baseApi}/${orgId}/${parentMenu[0].mbid}`, {
       text: clone.title,
       url: `/thingspin/manage/monitoring/${uid}/${slug}`,
+      dashboardId: data.id,
+      dashboardUid: uid,
     });
 
     store.dispatch(updateTsMenu(orgId));
@@ -182,6 +188,11 @@ coreModule.decorator('dashboardSrv',
         },
       });
     }
+  };
+
+  // Add class method
+  self.saveJSONFmDashboard = (json) => {
+      return self.fmSave(JSON.parse(json), {});
   };
 
   return self;
