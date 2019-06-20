@@ -26,7 +26,7 @@ export class TsSiteTableCtrl {
         desc: "",
         lat: "",
         lon: "",
-        img_path: ""
+        imgpath: ""
     };
 
     this.$scope.$watch('ctrl.data', (newValue: any, oldValue: any) => {
@@ -71,49 +71,49 @@ export class TsSiteTableCtrl {
         }
       };
 
-    this.dataList = [{
-        text: "OPC-UA",
-        children: [{
-            text: "OPC-UA level - 1",
-            children: [{
-                text: "OPC-UA level - 2",
-                children: [{
-                    text: "OPC-UA level - 3",
-                    children: [{
-                        text: "OPC-UA level - 4"
-                    }]
-                }]
-            }]
-        }]
-    },{
-        text: "MQTT",
-        children: [{
-            text: "MQTT level - 1",
-            children: [{
-                text: "MQTT level - 2",
-                children: [{
-                    text: "MQTT level - 3",
-                    children: [{
-                        text: "MQTT level - 4"
-                    }]
-                }]
-            }]
-        }]
-    },{
-        text: "Modbus",
-        children: [{
-            text: "Modbus level - 1",
-            children: [{
-                text: "Modbus level - 2",
-                children: [{
-                    text: "Modbus level - 3",
-                    children: [{
-                        text: "Modbus level - 4"
-                    }]
-                }]
-            }]
-        }]
-    }];
+    // this.dataList = [{
+    //     text: "OPC-UA",
+    //     children: [{
+    //         text: "OPC-UA level - 1",
+    //         children: [{
+    //             text: "OPC-UA level - 2",
+    //             children: [{
+    //                 text: "OPC-UA level - 3",
+    //                 children: [{
+    //                     text: "OPC-UA level - 4"
+    //                 }]
+    //             }]
+    //         }]
+    //     }]
+    // },{
+    //     text: "MQTT",
+    //     children: [{
+    //         text: "MQTT level - 1",
+    //         children: [{
+    //             text: "MQTT level - 2",
+    //             children: [{
+    //                 text: "MQTT level - 3",
+    //                 children: [{
+    //                     text: "MQTT level - 4"
+    //                 }]
+    //             }]
+    //         }]
+    //     }]
+    // },{
+    //     text: "Modbus",
+    //     children: [{
+    //         text: "Modbus level - 1",
+    //         children: [{
+    //             text: "Modbus level - 2",
+    //             children: [{
+    //                 text: "Modbus level - 3",
+    //                 children: [{
+    //                     text: "Modbus level - 4"
+    //                 }]
+    //             }]
+    //         }]
+    //     }]
+    // }];
 /*
     this.source = [{
         text: "OPC-UA",
@@ -190,12 +190,16 @@ export class TsSiteTableCtrl {
     onFacilityAdd() {
         this.backendSrv.post(`thingspin/sites/${this.data}/facilities`,
         {
+            "SiteId": this.data,
             "Name": this.facility.name,
             "Desc": this.facility.desc,
             "Lat": parseFloat(this.facility.lat),
             "Lon": parseFloat(this.facility.lon),
+            "Imgpath": this.facility.imgpath
         }).then((result) => {
             // this.onLoadData(result);
+            console.log(result);
+            this.dataList = result;
         }).catch(err => {
             if (err.status === 500) {
               appEvents.emit('alert-error', [err.statusText]);

@@ -74,7 +74,102 @@ func addTsFacility(c *gfm.ReqContext, req m.AddTsFacilityQuery) Response {
 		return Error(500, "ThingSPIN Store Error", resultErr)
 	}
 
-	return JSON(200, q.Result)
+	returnList := []m.TsFacilityTreeItem{}
+	siteId := c.ParamsInt(":siteId")
+	facilityList := m.GetAllTsFacilityQuery{
+		SiteId: siteId,
+	}
+
+	if err := bus.Dispatch(&facilityList); err != nil {
+		return Error(500, "ThingSPIN Server Error", err)
+	}
+
+	for _, facility := range facilityList.Result {
+		tagsList := []m.TsFacilityTreeItem{}
+		tags := m.GetAllTsFacilityTagQuery{
+			SiteId: siteId,
+			FacilityId: facility.Id,
+		}
+		if err := bus.Dispatch(&tags); err != nil {
+			return Error(500, "ThingSPIN Server Error", err)
+		}
+		for _, tag := range tags.Result {
+			treeItem := m.GetTsFacilityTreeTagItemQuery {
+				SiteId: siteId,
+				TagId: tag.Id,
+			}
+			if err := bus.Dispatch(&treeItem); err != nil {
+				return Error(500, "ThingSPIN Server Error", err)
+			}
+			tagItem := m.TsFacilityTreeItem {
+				SiteId: siteId,
+				Label: facility.Name,
+				Value: treeItem.Result[0].Path,
+				IsChecked: false,
+				IsEditing: false,
+				FacilityId: facility.Id,
+				FacilityName: facility.Name,
+				FacilityDesc: facility.Description,
+				FacilityLat: facility.Location_lat,
+				FacilityLon: facility.Location_lon,
+				FacilityPath: facility.Image_path,
+				TagId: tag.Id,
+				TagDatasource: tag.DatasourceId,
+				TagTableName: tag.Table_name,
+				TagColumnName: tag.Column_name,
+				TagColumnType: tag.Column_type,
+				TagName: tag.Name,
+				FacilityTreePath: treeItem.Result[0].Path,
+				FacilityTreeOrder: treeItem.Result[0].Order,
+				Children: []m.TsFacilityTreeItem{},
+			}
+			tagsList = append(tagsList, tagItem)
+		}
+		sort.Slice(tagsList, func(i, j int) bool {
+			return tagsList[i].FacilityTreeOrder < tagsList[j].FacilityTreeOrder
+		})
+
+		treeItem := m.GetTsFacilityTreeFacilityItemQuery {
+			SiteId: siteId,
+			FacilityId: facility.Id,
+		}
+		if err := bus.Dispatch(&treeItem); err != nil {
+			return Error(500, "ThingSPIN Server Error", err)
+		}
+
+		facilityItem := m.TsFacilityTreeItem {
+			SiteId: siteId,
+			Label: facility.Name,
+			Value: treeItem.Result[0].Path,
+			IsChecked: false,
+			IsEditing: false,
+			FacilityId: facility.Id,
+			FacilityName: facility.Name,
+			FacilityDesc: facility.Description,
+			FacilityLat: facility.Location_lat,
+			FacilityLon: facility.Location_lon,
+			FacilityPath: facility.Image_path,
+			TagId: 0,
+			TagDatasource: 0,
+			TagTableName: "",
+			TagColumnName: "",
+			TagColumnType: "",
+			TagName: "",
+			FacilityTreePath: treeItem.Result[0].Path,
+			FacilityTreeOrder: treeItem.Result[0].Order,
+			Children: tagsList,
+		}
+
+		if false == Find(returnList, facilityItem) {
+			returnList = append(returnList, facilityItem)
+		}
+	}
+
+	sort.Slice(returnList, func(i, j int) bool {
+        return returnList[i].FacilityTreeOrder < returnList[j].FacilityTreeOrder
+	})	
+
+	return JSON(200, returnList)
 }
 
 func updateTsFacility(c *gfm.ReqContext, req m.UpdateTsFacilityQuery) Response {
