@@ -20,6 +20,7 @@ export interface TsDashboardSrv extends DashboardSrv {
   fmShowSaveAsModal(); // customized 'showSaveAsModal' method
   fmShowSaveModal(); // customized 'showSaveModal' method
   fmHandleSaveDashboardError(clone, options, err); // customized 'handleSaveDashboardError' method
+  saveJSONFmDashboard(json);// customized 'saveJSONDashboard' method
 }
 
 // Override serivce class in AnularJs (DashboardSrv)
@@ -185,6 +186,11 @@ coreModule.decorator('dashboardSrv', ($delegate: DashboardSrv, $rootScope,
         },
       });
     }
+  };
+
+  // Add class method
+  self.saveJSONFmDashboard = (json) => {
+      return self.fmSave(JSON.parse(json), {});
   };
 
   return self;

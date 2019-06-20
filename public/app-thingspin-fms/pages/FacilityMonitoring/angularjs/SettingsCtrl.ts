@@ -8,10 +8,12 @@ import { SettingsCtrl } from 'app/features/dashboard/components/DashboardSetting
 // ThingSPIN Modules
 import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
 import { BackendSrv } from 'app/core/services/backend_srv';
+import { route } from 'angular';
 
 // customize Grafana SettingsCtrl angular controller
 export class TsSettingsCtrl extends SettingsCtrl {
   dbSrv: TsDashboardSrv;
+  ngRoute: route.IRouteService;
 
   /** @ngInject */
   constructor(
@@ -24,11 +26,19 @@ export class TsSettingsCtrl extends SettingsCtrl {
     super($scope, $route, $location, $rootScope, backendSrv, dashboardSrv);
 
     this.dbSrv = dashboardSrv;
+    this.ngRoute = $route;
   }
 
   // Override
   saveDashboard(): void {
     this.dbSrv.fmSaveFM();
+  }
+
+  // Override
+  saveDashboardJson() {
+    this.dbSrv.saveJSONFmDashboard(this.json).then(() => {
+      this.ngRoute.reload();
+    });
   }
 
   // Override
