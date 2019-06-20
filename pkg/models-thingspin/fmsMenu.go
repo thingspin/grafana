@@ -22,6 +22,9 @@ type FmsMenuQueryResult struct {
 	PlaceBottom  bool                     `xorm:"bool notnull 'placeBottom'" json:"placeBottom"`
 	Divider      bool                     `xorm:"bool notnull 'divider'" json:"divider"`
 	CanDelete    bool                     `xorm:"bool notnull 'canDelete'" json:"canDelete"`
+	// dashboard Info
+	DashboardId  int    `xorm:"int 'dashboard_id'" json:"dashboardId,omitempty"`
+	DashboardUid string `xorm:"text 'dashboard_uid'" json:"dashboardUid,omitempty"`
 }
 
 type FmsMenuBaseTblField struct {
@@ -39,6 +42,9 @@ type FmsMenuBaseTblField struct {
 	Divider      bool   `xorm:"bool 'divider'"`
 	CanDelete    bool   `xorm:"bool 'canDelete'"`
 	Description  string `xorm:"text 'description'"`
+	// dashboard Info
+	DashboardId  int    `xorm:"int 'dashboard_id'"`
+	DashboardUid string `xorm:"text 'dashboard_uid'"`
 }
 
 type FmsMenuTblField struct {
@@ -86,12 +92,17 @@ type DeleteFmsMenuByIdQuery struct {
 
 // Add menu
 type AddFmsMenuCommand struct {
-	OrgId  int64  `json:"orgId"`
-	Id     int    `json:"id"`
-	Order  int    `json:"order"`
-	Icon   string `json:"icon"`
-	Name   string `json:"text"`
-	Url    string `json:"url"`
+	OrgId int64  `json:"orgId"`
+	Id    int    `json:"id"`
+	Order int    `json:"order"`
+	Icon  string `json:"icon"`
+	Name  string `json:"text"`
+	Url   string `json:"url"`
+
+	// dashboardData
+	DashboardId  int    `json:"dashboardId,omitempty"`
+	DashboardUid string `json:"dashboardUid,omitempty"`
+
 	Result FmsMenu
 }
 

@@ -41,6 +41,10 @@ func addFmsMenuBaseMigrations(mg *Migrator) {
 		'divider' bool default FALSE,
 		'canDelete' bool default FALSE,
 		'description' text,
+
+		'dashboard_id' int default null references dashboard(id) on delete cascade ,
+		'dashboard_uid' text default null,
+
 		'created' datetime default (datetime('now', 'localtime')),
 		'updated' datetime default (datetime('now', 'localtime'))
 	)`, m.TsFmsMenuBaseTbl, m.TsFmsExtLinkTbl)
