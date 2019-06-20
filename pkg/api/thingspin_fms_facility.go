@@ -342,7 +342,15 @@ func addTsFacilityTreePathItem(list *m.TsFacilityTreeItem) m.TsFacilityField {
 		}
 		return facilityItem
 	}
-	return facility.Result[0]
+	if len(facility.Result) == 0 {
+		facilityItem := m.TsFacilityField {
+			Id: 0,
+		}
+		return facilityItem
+	} else {
+		return facility.Result[0]
+	}
+	
 }
 
 func addTsFacilityTree(c *gfm.ReqContext, req m.AddTsFacilityTreePathQuery) Response {

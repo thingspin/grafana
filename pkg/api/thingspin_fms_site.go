@@ -95,8 +95,11 @@ func updateTsSite(c *gfm.ReqContext, req m.UpdateTsSiteQuery) Response {
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
-
-	return JSON(200, q.Result)
+	result := m.GetAllTsSiteQuery{}
+	if err := bus.Dispatch(&result); err != nil {
+		return Error(500, "ThingSPIN Server Error", err)
+	}
+	return JSON(200, result.Result)
 }
 
 func deleteTsSite(c *gfm.ReqContext) Response {
@@ -109,6 +112,9 @@ func deleteTsSite(c *gfm.ReqContext) Response {
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
-
-	return JSON(200, q.Result)
+	result := m.GetAllTsSiteQuery{}
+	if err := bus.Dispatch(&result); err != nil {
+		return Error(500, "ThingSPIN Server Error", err)
+	}
+	return JSON(200, result.Result)
 }
