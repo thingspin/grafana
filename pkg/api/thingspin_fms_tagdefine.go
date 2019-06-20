@@ -59,7 +59,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 		}
 		
 	}
-
+	order := 0
 	// level2 with level3
 	for _, ms := range conInfo {
 		msName := ms.Type + "_" + strconv.Itoa(ms.Id)
@@ -72,6 +72,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 			for _, v := range values {
 				// tag name
 				fmt.Println(v)
+				order = order + 1
 				if _, ok := lev2Map[ms.Name]; ok {
 			
 					lv2 := lev2Map[ms.Name]
@@ -80,6 +81,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 						TagColumnName : v[0].(string),
 						TagColumnType : v[1].(string),
 						TagName : v[0].(string),
+						FacilityTreeOrder : order,
 					})
 
 					lev2Map[ms.Name] = lv2
@@ -91,6 +93,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 						TagColumnName : v[0].(string),
 						TagColumnType : v[1].(string),
 						TagName : v[0].(string),
+						FacilityTreeOrder : order,
 					})
 
 					lev2Map[ms.Name] = m.TsFacilityTreeItem{
