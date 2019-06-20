@@ -36,8 +36,10 @@ export class TsTagDefineCtrl {
         console.log(newValue);
         console.log(oldValue);
         this.backendSrv.get(`/thingspin/sites/${newValue}/facilities/tree`,{}).then((result) => {
+          if (result !== null || result !== undefined) {
             this.dataList = [];
             this.dataList = result;
+          }
         }).catch(err => {
             if (err.status === 500) {
               appEvents.emit('alert-error', [err.statusText]);

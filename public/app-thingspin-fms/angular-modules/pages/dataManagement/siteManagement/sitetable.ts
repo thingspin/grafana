@@ -107,16 +107,18 @@ export class TsSiteTableCtrl implements angular.IController {
     onLoadData(item) {
         this.list = [];
         console.log(item);
-        for (let i = 0; i< item.length; i++) {
-            const siteItem = {} as SiteTableData;
-            siteItem.id = item[i].id;
-            siteItem.name = item[i].name;
-            siteItem.desc = item[i].desc;
-            siteItem.lat = item[i].lat;
-            siteItem.lon = item[i].lon;
-            this.list.push(siteItem);
+        if (item !== null || item !== undefined) {
+            for (let i = 0; i< item.length; i++) {
+                const siteItem = {} as SiteTableData;
+                siteItem.id = item[i].id;
+                siteItem.name = item[i].name;
+                siteItem.desc = item[i].desc;
+                siteItem.lat = item[i].lat;
+                siteItem.lon = item[i].lon;
+                this.list.push(siteItem);
+            }
+            this.initTable();
         }
-        this.initTable();
     }
 
     // TABLE Method
