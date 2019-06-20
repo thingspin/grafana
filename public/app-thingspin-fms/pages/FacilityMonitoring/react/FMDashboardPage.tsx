@@ -17,6 +17,7 @@ import { notifyApp } from 'app/core/actions';
 import FMNav from './FMNav';
 import FMSettings from './FMSettings';
 import { FMDashboardGrid } from './FMDashboardGrid';
+import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
 
 // ThingSPIN Utils
 import { tsInitDashboard } from './initDashboard';
@@ -119,8 +120,15 @@ export class FMDashboardPage extends DashboardPage {
         this.updateFmPanel(newPanel, getDiffPanel(this.oldPanel, newPanel));
     }
 
+    onClickFacilityTree(data: any) {
+        const {Taginfo: tags, siteData: site} = data;
+        this.setFacilityInfo(site, tags);
+        this.onCheckedChange(site.value, tags);
+    }
+
     // add thingspin method
     renderGridNode(): ReactNode {
+        const { $injector } = this.props;
         const dashboard = this.props.dashboard as FMDashboardModel;
         const { isFullscreen, scrollTop } = this.state;
 
@@ -136,10 +144,9 @@ export class FMDashboardPage extends DashboardPage {
 
         // Only trigger render when the scroll has moved by 25
         const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
-
         return (<div className={gridClassName}>
 
-            {!dashboard.meta.isEditing ? <div></div> : ''}
+            {!dashboard.meta.isEditing ? <FacilityTree inject={$injector} click={this.onClickFacilityTree.bind(this)}/> : ''}
 
             <div className={gridWrapperClasses}>
                 {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}
