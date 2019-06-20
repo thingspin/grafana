@@ -3,10 +3,12 @@ import CheckboxTree from '../react-checkbox-tree/index';
 
 export interface Props {
     nodes: [];
+    nodesChecked: [];
     click?: Function;
 }
 interface State {
     checked: [];
+    prevChecked: [];
     expanded: [];
     filterText: any;
     nodesFiltered: any;
@@ -27,6 +29,7 @@ class FilterTree extends Component<Props,State> {
 
         this.state = {
             checked: [],
+            prevChecked: [],
             expanded: [],
             filterText: '',
             nodesFiltered: this.props.nodes,
@@ -35,21 +38,38 @@ class FilterTree extends Component<Props,State> {
             filterPlaceholder: " 태그 검색 ..."
         };
 
-        console.log("react/filter: ",this.props.nodes);
+        //console.log("react/filter: ",this.props.nodes);
     }
+
     componentWillReceiveProps(nextProps) {
         // this.props 는 아직 바뀌지 않은 상태
-        //console.log("props change");
-        this.setState({nodesFiltered: this.props.nodes});
-        this.setState({nodes: this.props.nodes});
-        this.setState({nodesCount: this.props.nodes.length});
+        //console.log("prev -node: ",this.props.nodes);
+        //console.log("prev: ",this.props.nodesChecked);
+        //console.log("next: ",nextProps.nodesChecked);
+        if (this.props.nodes !== nextProps.nodes || this.props.nodesChecked !== nextProps.nodesChecked) {
+            this.setState({nodesFiltered: nextProps.nodes});
+            this.setState({nodes: nextProps.nodes});
+            this.setState({nodesCount: nextProps.nodes.length});
+            let nChecked = 0;
+            nChecked = nextProps.nodesChecked.length;
+
+            //console.log("props change: ",nChecked);
+
+           if ( nChecked > 0 ) {
+                console.log("props Checked change: ",nChecked,nextProps.nodesChecked);
+                this.setState({checked: nextProps.nodesChecked});
+            }
+        }else {
+            //console.log("props same");
+        }
     }
 
     //CHECK TREE
     onCkeck = (checked,a,Taginfo) => {
-        console.log("filterTree: ",Taginfo);
+        //console.log("FT-oncheck tag: ",Taginfo);
+        //console.log("FT-oncheck checked: ",checked);
         this.setState({ checked });
-        this.props.click({Taginfo}); //sending to parent component
+        this.props.click({checked,Taginfo}); //sending to parent component
     };
 
      //TAG FILTER
@@ -89,7 +109,8 @@ class FilterTree extends Component<Props,State> {
 
   render() {
       const {nodesCount} = this.state;
-
+      //console.log("render-filterTree: ",nodesCount);
+      //console.log("fiterTree: ",this.state.checked);
     return (
         <div>
             { nodesCount?
