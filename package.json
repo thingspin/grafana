@@ -19,7 +19,6 @@
     "@emotion/core": "10.0.10",
     "@rtsao/plugin-proposal-class-properties": "7.0.1-patch.1",
     "@types/angular": "1.6.54",
-    "@types/angular-route": "^1.7.0",
     "@types/chalk": "2.2.0",
     "@types/classnames": "2.2.7",
     "@types/clipboard": "2.0.1",
