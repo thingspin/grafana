@@ -17,12 +17,11 @@ import { notifyApp } from 'app/core/actions';
 import FMNav from './FMNav';
 import FMSettings from './FMSettings';
 import { FMDashboardGrid } from './FMDashboardGrid';
-import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
-import { FMVizTypeSelector } from './FMVIzTypeSelector';
 
 // ThingSPIN Utils
 import { tsInitDashboard } from './initDashboard';
 import { FMDashboardModel } from '../models';
+import { FMLeftTree } from './FMLeftTree';
 
 interface FmPanelFilter {
     removes: any;
@@ -34,6 +33,8 @@ interface FmPanelFilter {
 export class FMDashboardPage extends DashboardPage {
     panelType = 'graph';
     oldPanel = {}; // panel cache data
+    viewTree = true;
+
     constructor(props) {
         super(props);
     }
@@ -111,8 +112,7 @@ export class FMDashboardPage extends DashboardPage {
         this.updateFmPanel(newPanel, getDiffPanel(this.oldPanel, newPanel));
     }
 
-    onClickFacilityTree(data: any) {
-        const {Taginfo: tags, siteData: site} = data;
+    onClickFacilityTree(site, tags) {
         this.setFacilityInfo(site, tags);
         this.onCheckedChange(site.value, tags);
     }
@@ -121,16 +121,22 @@ export class FMDashboardPage extends DashboardPage {
         this.panelType = item.value;
     }
 
+
     renderFacilityTree(): ReactNode {
         const dashboard = this.props.dashboard as FMDashboardModel;
         const { $injector } = this.props;
-        return (<div className="fm-left-tree">
-            <div className="fm-left-type-selector">
-                <FMVizTypeSelector onChange={this.onPanelTypeChange.bind(this)} />
-            </div>
-            <FacilityTree taginfo={dashboard.facilityTags} siteinfo={dashboard.site}
-                inject={$injector} click={this.onClickFacilityTree.bind(this)} />
-        </div>);
+
+        return (
+            <FMLeftTree $injector={$injector} dashboard={dashboard}
+                onChangeFacilityTree={this.onClickFacilityTree.bind(this)}
+                onPanelTypeChange={this.onPanelTypeChange.bind(this)}
+            />
+        );
+    }
+
+    toggleViewTree() {
+        this.viewTree = !this.viewTree;
+        this.forceUpdate();
     }
 
     // add thingspin method
@@ -153,7 +159,7 @@ export class FMDashboardPage extends DashboardPage {
         const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
         return (<div className={gridClassName}>
 
-            {!dashboard.meta.isEditing && !editview ? this.renderFacilityTree() : ''}
+            {!dashboard.meta.isEditing && !editview && this.viewTree ? this.renderFacilityTree() : ''}
 
             <div className={gridWrapperClasses}>
                 {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}
