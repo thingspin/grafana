@@ -128,7 +128,7 @@ export class FMDashboardPage extends DashboardPage {
 
     // add thingspin method
     renderGridNode(): ReactNode {
-        const { $injector } = this.props;
+        const { $injector, editview } = this.props;
         const dashboard = this.props.dashboard as FMDashboardModel;
         const { isFullscreen, scrollTop } = this.state;
 
@@ -146,7 +146,9 @@ export class FMDashboardPage extends DashboardPage {
         const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
         return (<div className={gridClassName}>
 
-            {!dashboard.meta.isEditing ? <FacilityTree inject={$injector} click={this.onClickFacilityTree.bind(this)}/> : ''}
+            {!dashboard.meta.isEditing && !editview
+                ? <FacilityTree taginfo={dashboard.facilityTags} siteinfo={dashboard.site}
+                    inject={$injector} click={this.onClickFacilityTree.bind(this)}/> : ''}
 
             <div className={gridWrapperClasses}>
                 {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}
