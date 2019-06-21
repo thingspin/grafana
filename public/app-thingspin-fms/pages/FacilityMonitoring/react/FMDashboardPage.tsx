@@ -6,7 +6,7 @@ import classNames from 'classnames';
 // Grafana React Components
 import { DashboardPage, mapStateToProps } from 'app/features/dashboard/containers/DashboardPage';
 import { SubMenu } from 'app/features/dashboard/components/SubMenu';
-import { CustomScrollbar } from '@grafana/ui';
+import { CustomScrollbar, SelectOptionItem } from '@grafana/ui';
 
 // Grafana Redux
 import { cleanUpDashboard } from 'app/features/dashboard/state/actions';
@@ -18,6 +18,7 @@ import FMNav from './FMNav';
 import FMSettings from './FMSettings';
 import { FMDashboardGrid } from './FMDashboardGrid';
 import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
+import { FMVizTypeSelector } from './FMVIzTypeSelector';
 
 // ThingSPIN Utils
 import { tsInitDashboard } from './initDashboard';
@@ -31,6 +32,7 @@ interface FmPanelFilter {
 // Facility Monitoring Component
 // (Customized grafana react component: iiHOC)
 export class FMDashboardPage extends DashboardPage {
+    panelType = 'graph';
     oldPanel = {}; // panel cache data
     constructor(props) {
         super(props);
@@ -60,17 +62,6 @@ export class FMDashboardPage extends DashboardPage {
 
     // add thingspin method
     onCheckedChange(siteId, tags) {
-        // local method
-        const getPanelType = (dataType: string): string => {
-            switch (dataType.toLowerCase()) {
-                case 'integer':
-                case 'float':
-                    return 'graph';
-                default:
-                    return 'table';
-            }
-        };
-
         // local method
         const generatePanelData = (title: string, type: string, target: any, y = 0): object => ({
             // require panel data
@@ -107,7 +98,7 @@ export class FMDashboardPage extends DashboardPage {
         const newPanel = {};
         if (Array.isArray(tags)) {
             for (const tag of tags) {
-                const panelType = getPanelType(tag.tag_column_type);
+                const panelType = this.panelType || 'graph';
 
                 const panelData = generatePanelData(tag.tag_name, panelType, {
                     tagNodes: [tag],
@@ -126,9 +117,25 @@ export class FMDashboardPage extends DashboardPage {
         this.onCheckedChange(site.value, tags);
     }
 
+    onPanelTypeChange(item: SelectOptionItem<string>) {
+        this.panelType = item.value;
+    }
+
+    renderFacilityTree(): ReactNode {
+        const dashboard = this.props.dashboard as FMDashboardModel;
+        const { $injector } = this.props;
+        return (<div className="fm-left-tree">
+            <div className="fm-left-type-selector">
+                <FMVizTypeSelector onChange={this.onPanelTypeChange.bind(this)} />
+            </div>
+            <FacilityTree taginfo={dashboard.facilityTags} siteinfo={dashboard.site}
+                inject={$injector} click={this.onClickFacilityTree.bind(this)} />
+        </div>);
+    }
+
     // add thingspin method
     renderGridNode(): ReactNode {
-        const { $injector, editview } = this.props;
+        const { editview } = this.props;
         const dashboard = this.props.dashboard as FMDashboardModel;
         const { isFullscreen, scrollTop } = this.state;
 
@@ -146,9 +153,7 @@ export class FMDashboardPage extends DashboardPage {
         const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
         return (<div className={gridClassName}>
 
-            {!dashboard.meta.isEditing && !editview
-                ? <FacilityTree taginfo={dashboard.facilityTags} siteinfo={dashboard.site}
-                    inject={$injector} click={this.onClickFacilityTree.bind(this)}/> : ''}
+            {!dashboard.meta.isEditing && !editview ? this.renderFacilityTree() : ''}
 
             <div className={gridWrapperClasses}>
                 {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}

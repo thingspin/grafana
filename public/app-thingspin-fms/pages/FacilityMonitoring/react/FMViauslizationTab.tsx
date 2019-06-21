@@ -36,9 +36,7 @@ export class FMVisualizationTab extends VisualizationTab {
         scrollTop={scrollTop}
         setScrollTop={this.setScrollTop}
       >
-        <>
-          {this.renderPanelOptions()}
-        </>
+        {this.renderPanelOptions()}
       </EditorTabBody>
     );
   }
