@@ -36,7 +36,7 @@ export class FMDashboardPage extends DashboardPage {
     }
 
     // add thingspin method
-    updateFmPanel(newPanel, { removes, adds }: FmPanelFilter) {
+    updateFmPanel(newPanel, { removes, adds }: FmPanelFilter): void {
         const { dashboard } = this.props;
 
         // remove panels
@@ -45,8 +45,9 @@ export class FMDashboardPage extends DashboardPage {
 
             // find PanelModel Object
             const p = dashboard.getPanelById(id);
-            dashboard.removePanel(p);
 
+            // remove phase
+            dashboard.removePanel(p);
             delete this.oldPanel[remove];
         }
 

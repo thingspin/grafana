@@ -7,7 +7,7 @@ import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/
 
 // customize Grafana SaveDashboardAsModalCtrl angular controller
 export class TsSaveDashboardAsModalCtrl extends SaveDashboardAsModalCtrl {
-  tsDbSrv: TsDashboardSrv;
+  protected tsDbSrv: TsDashboardSrv;
 
   /** @ngInject */
   constructor(dashboardSrv: TsDashboardSrv) {
@@ -20,6 +20,7 @@ export class TsSaveDashboardAsModalCtrl extends SaveDashboardAsModalCtrl {
     if (!this.copyTags) {
       this.clone.tags = [];
     }
+
     return this.tsDbSrv.fmSave(this.clone,
       { folderId: this.folderId },
       true,
