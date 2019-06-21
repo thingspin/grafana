@@ -8,7 +8,7 @@ export class FMDashboardModel extends DashboardModel {
 
     constructor(data: any, meta?: DashboardMeta) {
         super(data, meta);
-        this.facilityTags = data.facilityTags;
-        this.site = data.site;
+        this.facilityTags = data.facilityTags || [];
+        this.site = data.site || {};
     }
 }
