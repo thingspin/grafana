@@ -76,8 +76,16 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
             filterPlaceholder: " 태그 검색 ...",
 
         };
-        this.getSiteList();
+        console.log("constructor");
+        //this.getSiteList();
+        //console.log(this.props);
         //this.testGetList();
+    }
+
+    componentWillMount() {
+        console.log("componentWillMount");
+        this.getSiteList();
+        this.restoreFacilityData(this.props);
     }
 
     //props check
@@ -90,29 +98,13 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
 
         if (this.props.taginfo !== nextProps.taginfo || this.props.siteinfo !== nextProps.siteinfo) {
             console.log("props change");
-            //site selected
-            /*
-            const selectedOption = nextProps.siteinfo;
-            const taginfo = nextProps.taginfo;
-            this.setState({selectedOption});
-            this.getTreeinfo(selectedOption.value);
-            // tag selected
-            const elements = [];
-            if (taginfo.length > 0) {
-                for (let i = 0; i < taginfo.length; i++) {
-                    const data = taginfo[i].value;
-                    elements.push(data);
-                }
-                console.log("props-test elements: ",elements);
-                //this.setState({checkedSave: elements});
-            }*/
         }else {
             console.log("props same");
         }
     }
 
 
-    //
+    //restore checked item
     restoreFacilityData(item) {
            //site selected
            const selectedOption = item.siteinfo;
@@ -133,6 +125,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                 this.setState({checkedSave: []});
            }
     }
+
     //TEST SAMPLE
     testGetList() {
         getBackendSrv().get("/thingspin/sites/sample").then((result: any) => {
@@ -187,6 +180,9 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
             } else {
               console.log("** sites list empty **");
             }
+          }).catch((err: any) => {
+            console.log("get Sites, error!");
+            console.log(err);
           });
     }
     getTreeinfo(siteid) {
@@ -197,6 +193,9 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
             this.setState({nodes: result});
             this.setState({nodesCount: result.length});
             //console.log("getTreeinfo: ",this.state.nodes);
+          }).catch((err: any) => {
+            console.log("get Treeinfo, error!");
+            console.log(err);
           });
     }
 
