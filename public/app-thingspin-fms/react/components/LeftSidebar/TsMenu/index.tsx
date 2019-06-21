@@ -38,26 +38,34 @@ export class TsMenu extends PureComponent<Props, State> {
   componentDidUpdate(prevProps: Props) {}
 
   get top() {
-    return this.props.menu
-      .filter(item => !item.hideFromMenu)
-      .filter(item => !item.placeBottom)
-      .filter(item => item.icon)
-      .filter(item => !item.divider)
-    .map((item, idx) => {
-      //item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
-      return (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned}/>);
-    });
+    const { menu } = this.props;
+    if (menu) {
+      return this.props.menu
+        .filter(item => !item.hideFromMenu)
+        .filter(item => !item.placeBottom)
+        .filter(item => item.icon)
+        .filter(item => !item.divider)
+        .map((item, idx) => {
+          //item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
+          return (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned} />);
+        });
+    }
+    return '';
   }
   get bottom() {
-    return this.props.menu
-      .filter(item => !item.hideFromMenu)
-      .filter(item => item.placeBottom)
-      .filter(item => item.icon)
-      .filter(item => !item.divider)
-    .map((item, idx) => {
-      //item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
-      return (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned}/>);
-    });
+    const { menu } = this.props;
+    if (menu) {
+      return this.props.menu
+        .filter(item => !item.hideFromMenu)
+        .filter(item => item.placeBottom)
+        .filter(item => item.icon)
+        .filter(item => !item.divider)
+        .map((item, idx) => {
+          //item.pinned = (this.pins === undefined || this.pins === null) ? false : ((this.pins.filter(p => ( item.id === p)).length > 0));
+          return (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned} />);
+        });
+    }
+    return '';
   }
 
   render() {
