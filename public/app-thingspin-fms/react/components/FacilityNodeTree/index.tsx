@@ -85,6 +85,9 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         //test.
         console.log("props-tag: ",nextProps.taginfo);
         console.log("props-site: ",nextProps.siteinfo);
+
+        this.restoreFacilityData(nextProps);
+
         if (this.props.taginfo !== nextProps.taginfo || this.props.siteinfo !== nextProps.siteinfo) {
             console.log("props change");
             //site selected
@@ -103,7 +106,6 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                 console.log("props-test elements: ",elements);
                 //this.setState({checkedSave: elements});
             }*/
-            this.restoreFacilityData(nextProps);
         }else {
             console.log("props same");
         }
@@ -278,9 +280,6 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                         </div>
                         : null
                     }
-                </div>
-                <div>
-                    <button onClick={this.testChecked}>TEST</button>
                 </div>
            </div>
         );
