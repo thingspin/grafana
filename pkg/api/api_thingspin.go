@@ -64,24 +64,26 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsFnRoute.Put("/", bind(tsm.UpdateTsSiteQuery{}), Wrap(updateTsSite))
 			tsFnRoute.Delete("/:siteId", Wrap(deleteTsSite))
 
-			tsFnRoute.Group("/:siteId/facilities", func(tsFaciltesRoute routing.RouteRegister) {
-				tsFaciltesRoute.Get("/", Wrap(getAllTsFacility))
-				tsFaciltesRoute.Post("/", bind(tsm.AddTsFacilityQuery{}), Wrap(addTsFacility))
-				tsFaciltesRoute.Put("/", bind(tsm.UpdateTsFacilityQuery{}), Wrap(updateTsFacility))
-				tsFaciltesRoute.Delete("/:facilityId", Wrap(deleteTsFacility))
+			tsFnRoute.Group("/:siteId/facilities", func(tsFacilitesRoute routing.RouteRegister) {
+				tsFacilitesRoute.Get("/", Wrap(getAllTsFacility))
+				tsFacilitesRoute.Get("/:facilityId", Wrap(getTsFacility))
+				tsFacilitesRoute.Post("/:facilityId", bind(tsm.AddTsFacilityTreePathOneQuery{}), Wrap(addTsFacilityTreePath))
+				tsFacilitesRoute.Post("/", bind(tsm.AddTsFacilityQuery{}), Wrap(addTsFacility))
+				tsFacilitesRoute.Put("/", bind(tsm.UpdateTsFacilityQuery{}), Wrap(updateTsFacility))
+				tsFacilitesRoute.Delete("/:facilityId", Wrap(deleteTsFacility))
 	
-				tsFaciltesRoute.Group("/tree", func(tsFaciltytree routing.RouteRegister) {
-					tsFaciltytree.Get("/", Wrap(getAllTsFacilityTree))
-					tsFaciltytree.Get("/sample", Wrap(getSampleTsFacilityTree))
-					tsFaciltytree.Post("/", bind(tsm.AddTsFacilityTreePathQuery{}), Wrap(addTsFacilityTree))
-					tsFaciltytree.Put("/", bind(tsm.UpdateTsFacilityTreePathQuery{}), Wrap(updateTsFacilityTree))
-					tsFaciltytree.Delete("/", bind(tsm.DeleteTsFacilityTreePathQuery{}), Wrap(deleteTsFacilityTree))
+				tsFacilitesRoute.Group("/tree", func(tsFacilitytree routing.RouteRegister) {
+					tsFacilitytree.Get("/", Wrap(getAllTsFacilityTree))
+					tsFacilitytree.Get("/sample", Wrap(getSampleTsFacilityTree))
+					tsFacilitytree.Post("/", bind(tsm.AddTsFacilityTreePathQuery{}), Wrap(addTsFacilityTree))
+					tsFacilitytree.Put("/", bind(tsm.UpdateTsFacilityTreePathQuery{}), Wrap(updateTsFacilityTree))
+					tsFacilitytree.Delete("/", bind(tsm.DeleteTsFacilityTreePathQuery{}), Wrap(deleteTsFacilityTree))
 				})
 								
-				tsFaciltesRoute.Group("/:facilityId", func(tsFaciltyTag routing.RouteRegister) {
-					tsFaciltyTag.Get("/", Wrap(getAllTsFacilityTag))
-					tsFaciltyTag.Put("/tag/:tagId", bind(tsm.UpdateTsFacilityTagNameQuery{}), Wrap(updateTsFacilityTagName))
-					tsFaciltyTag.Delete("/:tagId", Wrap(deleteTsFacilityTag))
+				tsFacilitesRoute.Group("/:facilityId/tag", func(tsFacilityTag routing.RouteRegister) {
+					tsFacilityTag.Get("/", Wrap(getAllTsFacilityTag))
+					tsFacilityTag.Put("/:tagId", bind(tsm.UpdateTsFacilityTagNameQuery{}), Wrap(updateTsFacilityTagName))
+					tsFacilityTag.Delete("/:tagId", Wrap(deleteTsFacilityTag))
 				})
 			})
 		})

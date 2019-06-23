@@ -15,7 +15,8 @@ func init() {
 	bus.AddHandler("thingspin-sql", GetTsFacilityTreeFacilityItem)
 	bus.AddHandler("thingspin-sql", GetTsFacilityTreeTagItem)
 	bus.AddHandler("thingspin-sql", AddTsFacilityTree)
-	bus.AddHandler("thingspin-sql", UpdateTsFacilityTree)
+	bus.AddHandler("thingspin-sql", UpdateTsFacilityTreeTag)
+	bus.AddHandler("thingspin-sql", UpdateTsFacilityTreeFacility)
 	bus.AddHandler("thingspin-sql", DelelteTsFacilityTree)
 }
 
@@ -80,8 +81,14 @@ func AddTsFacilityTree(cmd *m.AddTsFacilityTreeQuery) error {
 	return err
 }
 
-func UpdateTsFacilityTree(cmd *m.UpdateTsFacilityTreeQuery) error {
+func UpdateTsFacilityTreeTag(cmd *m.UpdateTsFacilityTreeTagQuery) error {
 	_, err := x.Table(m.TsFmsFacilityTreeTbl).Where("site_id = ? AND tag_id = ?", cmd.SiteId, cmd.TagId).AllCols().Update(cmd)
+
+	return err
+}
+
+func UpdateTsFacilityTreeFacility(cmd *m.UpdateTsFacilityTreeFacilityQuery) error {
+	_, err := x.Table(m.TsFmsFacilityTreeTbl).Where("site_id = ? AND facility_id = ?", cmd.SiteId, cmd.FacilityId).AllCols().Update(cmd)
 
 	return err
 }

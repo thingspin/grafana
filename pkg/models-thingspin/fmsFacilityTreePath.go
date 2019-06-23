@@ -24,6 +24,10 @@ type TsFacilityTreePathItem struct {
 	FacilityTreeOrder int                  `json:"facility_tree_order"`
 }
 
+type AddTsFacilityTreePathOneQuery struct {
+	Result TsFacilityTreeItem
+}
+
 type AddTsFacilityTreePathQuery struct {
 	Result []TsFacilityTreeItem
 }

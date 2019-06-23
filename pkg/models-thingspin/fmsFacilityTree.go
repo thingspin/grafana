@@ -39,12 +39,20 @@ type AddTsFacilityTreeQuery struct {
 	Result     int
 }
 
-type UpdateTsFacilityTreeQuery struct {
+type UpdateTsFacilityTreeTagQuery struct {
 	SiteId     int    `xorm:"'site_id'"`
 	FacilityId int    `xorm:"'facility_id'"`
 	TagId      int    `xorm:"'tag_id'"`
 	Path       string `xorm:"'path'"`
 	Order      int    `xorm:"'order'"`
+}
+
+type UpdateTsFacilityTreeFacilityQuery struct {
+	SiteId     int    `xorm:"'site_id'"`
+	FacilityId int    `xorm:"'facility_id'"`
+	TagId      int    `xorm:"'tag_id'"`
+	Path       string `xorm:"'path'"`
+	Order      int    `xorm:"'order'"`	
 }
 
 type DeleteTsFacilityTreeQuery struct {
