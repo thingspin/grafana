@@ -1,6 +1,8 @@
 import angular from "angular";
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/core';
+import $ from 'jquery';
+import "./tagdefine.scss";
 //import appEvents from 'app/core/app_events';
 
 export class TsTagDefineCtrl {
@@ -9,8 +11,8 @@ export class TsTagDefineCtrl {
   source: any;
   dataList: any;
   options: any;
-  checkedMap: any;
-  prevMap: any;
+  result: any;
+  resultIdx: any;
   // facility
   data: any;
   isShow: boolean;
@@ -33,7 +35,7 @@ export class TsTagDefineCtrl {
         lon: "",
         imgpath: ""
     };
-
+    // right tree info
     this.$scope.$watch('ctrl.data', (newValue: any, oldValue: any) => {
         console.log(newValue);
         console.log(oldValue);
@@ -54,168 +56,160 @@ export class TsTagDefineCtrl {
         });
     });
 
+    // left tree data
+    this.backendSrv.get('/thingspin/tagdefine').then((res: any) => {
+      console.log("connect data");
+      console.log(res);
+      this.source = res.Result;
+      //this.data = res.Result;
+    }).catch((err: any) => {
+      console.log("After ordering, error!");
+      console.log(err);
+    });
+
+    // Tree callback functions : beforeDrop, Dropped
     this.options = {
-        beforeDrop: (event) => {
-        const fromNode = event.source.cloneModel;
-        const toNode = event.dest.nodesScope.$nodeScope;
-        const idx = event.dest.index;
-          if (fromNode === undefined) {
-            // 우측 트리 이동
-          } else {
-            // 좌측 -> 우측 복제
-              if ( this.checkedMap.size === 0 ) {
-                console.log("Map empty");
-                return false;
-              }
-              this.prevMap = new Map(this.checkedMap);
-              const postdata = [];
-              if (!fromNode.ischecked) {
-                  console.log("Not selected");
-                  return false;
-              }
-              //let exitFlag = false;
-              console.log(fromNode);
-              console.log(toNode);
-              //toNode.node.tag_name = "zzz";
-              const newChildren = [];
-              let cnt = 1;
-              // toNode에서 facility id 얻어서 업데이트
-              for (let i = 0;i < idx; i++) {
-                console.log("new child");
-                console.log(toNode.node.children[i]);
-                toNode.node.children[i].facility_tree_order = cnt;
-                cnt = cnt + 1;
-                newChildren.push(toNode.node.children[i]);
-                postdata.push(toNode.node.children[i]);
-              }
-              this.checkedMap.delete(fromNode.facility_tree_order);
-              fromNode.facility_tree_order = cnt;
-              cnt = cnt + 1;
-              postdata.push(fromNode);
-              for (const [key, value] of this.checkedMap.entries()) {
-                value.facility_id = toNode.node.facility_id;
-                value.facility_tree_order = cnt;
-                cnt = cnt + 1;
-                console.log("new child");
-                console.log(value);
-                newChildren.push(value);
-                postdata.push(value);
-                console.log(key);
-              }
-              //console.log("==================zz");
-              //console.log(toNode.node.children);
-              //console.log(toNode.node.children[1]);
-              for (let i = idx;i<toNode.node.children.length;i++) {
-                  console.log("new child");
-                  console.log(toNode.node.children[i]);
-                  toNode.node.children[i].facility_tree_order = cnt;
-                  cnt = cnt + 1;
-                  newChildren.push(toNode.node.children[i]);
-              }
-              toNode.node.children = newChildren;
+      beforeDrop: (event) => {
+        if (event.source.cloneModel === undefined) {
+          // 우측 트리내에서 이동 할 경우
+          console.log("This is right tree - before");
+          // src Parent
+          const fromNode = event.source.nodeScope.node;
+          // dst Parent
+          const toNode = event.dest.nodesScope.$nodeScope;
+          const idx = event.dest.index;
+          console.log(fromNode);
+          console.log(toNode);
+          console.log(idx);
+          return true;
+        } else {
+          console.log("This is left tree");
+          const fromNode = event.source.cloneModel;
+          const toNode = event.dest.nodesScope.$nodeScope;
+          const idx = event.dest.index;
+          console.log(fromNode);
+          console.log(toNode);
+          console.log(idx);
+          const postdata = [];
+          let curIdx = idx + 1;
+          // source node
+          fromNode.facility_tree_order = curIdx;
+          fromNode.facility_id = toNode.node.facility_id;
+          fromNode.site_id = this.data;
+          postdata.push(fromNode);
+          // target node's child
+          for (let i = idx;i < toNode.node.children.length; i++) {
+            curIdx = curIdx + 1;
+            toNode.node.children[i].facility_tree_order = curIdx;
+            //toNode.node.children[i].facility_id = toNode.node.facility_id;
+            //toNode.node.children[i].site_id = this.data;
+            postdata.push(toNode.node.children[i]);
           }
-/*
-          for (const value of this.checkedMap.values()) {
-
-            console.log(value);
-          }
-          backendSrv.post('/thingspin/menu/'+fid,newData).then((res: any) => {
-            toNode.$modelValue.facility_id
-          }).catch((err: any) => {
-            console.log("After ordering, error!");
-            console.log(err);
+          console.log(postdata);
+          // this must be modified because of timing issue
+          const test = {
+            "Result" : postdata,
+          };
+          let exitFlag = true;
+          $.ajax({
+            type: 'POST',
+            url: `/thingspin/sites/`+ this.data + `/facilities/tree`,
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+            data: JSON.stringify(test),
+            async: false,
+            success: (data) => {
+              console.log("Post result");
+              console.log(data);
+              this.result = data;
+              this.resultIdx = idx;
+            },
+            error : (request, status, error ) => {
+              exitFlag = false;
+              this.resultIdx = -1;
+              console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+              },
           });
-          */
-         return true;
-        },
-        dropped: (event) => {
-            this.checkedMap = this.prevMap;
-            const fromNode = event.source.nodeScope.node;
-            //const fromNodeParent = event.source.nodesScope.node;
-            //const from = event.source;
-            //const to = event.dest;
-            const toNode = event.dest.nodesScope.$nodeScope;
-            console.log(event);
-            console.log(fromNode);
-            console.log(toNode);
+          console.log("Drag check!");
+          console.log(exitFlag);
+          return exitFlag;
+          /*
+          this.backendSrv.post(`/thingspin/sites/`+ this.data + `/facilities/tree`,{
+              "Result" : postdata,
+            }).then((result) => {
+                console.log("Post result");
+                this.result = result;
+                this.resultIdx = idx;
+                //event.dest.nodesScope.$nodeScope.node.children[this.resultIdx] = this.result[0];
+                console.log(result);
+            }).catch(err => {
+              console.log(err);
+              this.resultIdx = -1;
+            });
+            */
         }
-      };
-  }
-
-  checked(node) {
-    console.log(node);
-    if (node.ischecked) {
-        // 제거
-        if ( node.children != null && node.children.length) {
-          for ( let i = 0; i < node.children.length; i++) {
-              node.children[i].ischecked = false;
-              this.checkedMap.delete(node.children[i].facility_tree_order);
+      },
+      dropped: (event) => {
+        const fromNode = event.source.cloneModel;
+        if (fromNode === undefined) {
+          console.log("This is right tree - after");
+        } else {
+          console.log("This is left tree - after");
+          setTimeout(() => {
+            console.log("After dropped!");
+            if (this.resultIdx !== -1) {
+              console.log(event);
+              console.log(event.dest.nodesScope.$nodeScope.node.children[this.resultIdx]);
+              event.dest.nodesScope.$nodeScope.node.children[this.resultIdx] = this.result[0];
             }
-            node.ischecked = false;
-        } else {
-          node.ischecked = false;
-          this.checkedMap.delete(node.facility_tree_order);
+          },300);
         }
-    } else {
-        // 추가
-        if ( node.children != null && node.children.length) {
-          for ( let i = 0; i < node.children.length; i++) {
-              node.children[i].ischecked = true;
-              this.checkedMap.set(node.children[i].facility_tree_order,node.children[i]);
-          }
-        } else {
-          node.ischecked = true;
-          this.checkedMap.set(node.facility_tree_order,node);
-        }
-    }
-
-    for (const value of this.checkedMap.values()) {
-      console.log(value);
-    }
+      }
+    };
   }
 
   link(scope, elem, attrs, ctrl) {
       //ctrl.scope = scope;
   }
 
-    $onInit(): void {
-        console.log("SiteTable : " + this.data);
-        this.isShow = false;
-    }
+  $onInit(): void {
+      console.log("SiteTable : " + this.data);
+      this.isShow = false;
+  }
 
-    onShowEditView(value) {
-      if (value) {
-          this.isEditView = true;
-          this.isEditBtn = false;
-        } else {
-            this.isEditView = false;
-            this.isEditBtn = true;
-        }
-    }
+  onShowEditView(value) {
+    if (value) {
+        this.isEditView = true;
+        this.isEditBtn = false;
+      } else {
+          this.isEditView = false;
+          this.isEditBtn = true;
+      }
+  }
 
-    deleteTreeItem() {
-        console.log("deleteTreeItem");
-    }
+  deleteTreeItem() {
+      console.log("deleteTreeItem");
+  }
 
-    onFacilityAdd() {
-        this.backendSrv.post(`thingspin/sites/${this.data}/facilities`,
-        {
-            "SiteId": this.data,
-            "Name": this.facility.name,
-            "Desc": this.facility.desc,
-            "Lat": parseFloat(this.facility.lat),
-            "Lon": parseFloat(this.facility.lon),
-            "Imgpath": this.facility.imgpath
-        }).then((result) => {
-            // this.onLoadData(result);
-            console.log(result);
-            this.dataList = result;
-        }).catch(err => {
-            if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
-            }
-        });
-    }
+  onFacilityAdd() {
+      this.backendSrv.post(`thingspin/sites/${this.data}/facilities`,
+      {
+          "SiteId": this.data,
+          "Name": this.facility.name,
+          "Desc": this.facility.desc,
+          "Lat": parseFloat(this.facility.lat),
+          "Lon": parseFloat(this.facility.lon),
+          "Imgpath": this.facility.imgpath
+      }).then((result) => {
+          // this.onLoadData(result);
+          console.log(result);
+          this.dataList = result;
+      }).catch(err => {
+          if (err.status === 500) {
+            appEvents.emit('alert-error', [err.statusText]);
+          }
+      });
+  }
 }
 
 /** @ngInject */

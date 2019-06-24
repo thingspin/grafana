@@ -1,4 +1,4 @@
-// 
+//
 import React, { PureComponent, ReactNode } from 'react';
 import config from 'app/core/config';
 import { PanelPluginMeta, Select, SelectOptionItem, FormLabel } from '@grafana/ui';
