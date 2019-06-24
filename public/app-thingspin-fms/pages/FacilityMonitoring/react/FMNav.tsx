@@ -1,6 +1,7 @@
 import { auto } from 'angular';
 import React from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 // Grafana React Components
 import { DashNav } from 'app/features/dashboard/components/DashNav/DashNav';
@@ -16,6 +17,8 @@ import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/
 
 // Thingspin component libs
 import { FMNavButton } from './FMNavButton';
+import { updateFmMetaToggleTreeView } from '../redux/actions/FMAction';
+import { store } from 'app/store/store';
 
 // Facaility Monitoring Navigation Component
 // (Customized grafana react component: iiHOC)
@@ -29,19 +32,35 @@ export class FMNavComp extends DashNav {
 
     // Override
     renderDashboardTitleSearchButton(): JSX.Element {
-        return (
-            <>
-                {this.isSettings && <span className="navbar-settings-title">&nbsp;/ Settings</span>}
-                <div className="navbar__spacer" />
-            </>
-        );
+        return (<>
+            {this.isSettings && <span className="navbar-settings-title">&nbsp;/ Settings</span>}
+            <div className="navbar__spacer" />
+        </>);
+    }
+
+    openFacilityTree = (): void => {
+        const { dashboard } = this.props;
+        const meta: any = dashboard.meta;
+        meta.viewTree = !meta.viewTree;
+    };
+    onFmTreeView() {
+        (this.props as any).updateFmMetaToggleTreeView();
+        this.forceUpdate();
     }
 
     // Override
     render(): JSX.Element {
-        const { dashboard, location } = this.props;
-        const { snapshot, meta: { canStar, canSave, canShare, showSettings, isStarred } } = dashboard;
+        const { dashboard, location, editview } = this.props;
+        const { snapshot, meta: { canStar, canSave, canShare, showSettings, isStarred, isEditing } } = dashboard;
+        const meta = dashboard.meta as any;
         const snapshotUrl = snapshot && snapshot.originalUrl;
+
+        const isTreeView = store.getState().thingspinFmMeta.isTreeView;
+        const treeViewIconClassName = classNames({
+            'fa': true,
+            'fa-indent': !isTreeView,
+            'fa-outdent': isTreeView,
+        });
 
         return (<>
             <div className="navbar">
@@ -72,6 +91,19 @@ export class FMNavComp extends DashNav {
                 )}
 
                 <div className="navbar-buttons navbar-buttons--actions">
+                    {!isEditing && !meta.isNew && !editview ? <DashNavButton
+                        tooltip="설비 목록 열기"
+                        classSuffix=""
+                        icon={treeViewIconClassName}
+                        onClick={this.onFmTreeView.bind(this)}
+                    />: ''}
+
+                    {canSave && (
+                        <FMNavButton tooltip="Save dashboard" classSuffix="save" onClick={this.onSave} >
+                            메뉴에 저장
+                        </FMNavButton>
+                    )}
+
                     {canStar && (
                         <DashNavButton
                             tooltip="Mark as favorite"
@@ -100,12 +132,6 @@ export class FMNavComp extends DashNav {
                         />
                     )}
 
-                    {canSave && (
-                        <FMNavButton tooltip="Save dashboard" classSuffix="save" onClick={this.onSave} >
-                            메뉴에 저장
-                        </FMNavButton>
-                    )}
-
                     {showSettings && (
                         <DashNavButton
                             tooltip="Dashboard settings"
@@ -115,7 +141,6 @@ export class FMNavComp extends DashNav {
                         />
                     )}
                 </div>
-
 
                 {!dashboard.timepicker.hidden && (
                     <div className="navbar-buttons">
@@ -135,9 +160,7 @@ const mapStateToProps = ({location}: StoreState) => ({
 
 const mapDispatchToProps = {
     updateLocation,
+    updateFmMetaToggleTreeView,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(FMNavComp);
+export default connect(mapStateToProps, mapDispatchToProps)(FMNavComp);

@@ -21,7 +21,7 @@ import { FMDashboardGrid } from './FMDashboardGrid';
 // ThingSPIN Utils
 import { tsInitDashboard } from './initDashboard';
 import { FMDashboardModel } from '../models';
-import { FMLeftTree } from './FMLeftTree';
+import FMLeftTree from './FMLeftTree';
 
 interface FmPanelFilter {
     removes: any;
@@ -33,7 +33,6 @@ interface FmPanelFilter {
 export class FMDashboardPage extends DashboardPage {
     panelType = 'graph';
     oldPanel = {}; // panel cache data
-    viewTree = true;
 
     constructor(props) {
         super(props);
@@ -127,17 +126,12 @@ export class FMDashboardPage extends DashboardPage {
         const dashboard = this.props.dashboard as FMDashboardModel;
         const { $injector } = this.props;
 
-        return (
+        return (<>
             <FMLeftTree $injector={$injector} dashboard={dashboard}
                 onChangeFacilityTree={this.onClickFacilityTree.bind(this)}
                 onPanelTypeChange={this.onPanelTypeChange.bind(this)}
             />
-        );
-    }
-
-    toggleViewTree() {
-        this.viewTree = !this.viewTree;
-        this.forceUpdate();
+        </>);
     }
 
     // add thingspin method
@@ -160,7 +154,7 @@ export class FMDashboardPage extends DashboardPage {
         const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
         return (<div className={gridClassName}>
 
-            {!dashboard.meta.isEditing && !editview && this.viewTree ? this.renderFacilityTree() : ''}
+            {!dashboard.meta.isEditing && !editview ? this.renderFacilityTree() : ''}
 
             <div className={gridWrapperClasses}>
                 {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}

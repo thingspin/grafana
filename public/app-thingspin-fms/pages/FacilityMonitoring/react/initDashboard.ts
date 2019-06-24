@@ -27,6 +27,7 @@ import { InitDashboardArgs } from 'app/features/dashboard/state/initDashboard';
 import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
 import { FMDashboardModel } from '../models/index';
 import { FmUnsavedChangesSrv } from 'app-thingspin-fms/angular-modules/core/services/UnsavedChangesSrv';
+import { setFmMetaTreeView } from '../redux/actions/FMAction';
 
 async function redirectToNewUrl(slug: string, dispatch: ThunkDispatch, currentPath: string) {
   const res = await getBackendSrv().getDashboardBySlug(slug);
@@ -90,9 +91,11 @@ async function fetchDashboard(
             return null;
           }
         }
+        dispatch(setFmMetaTreeView(false));
         return dashDTO;
       }
       case DashboardRouteInfo.New: {
+        dispatch(setFmMetaTreeView(true));
         return getNewDashboardModelData(args.urlFolderId);
       }
       default:

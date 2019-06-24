@@ -3,6 +3,7 @@ import { addRootReducer } from 'app/store/configureStore';
 import { tsNavbarReducer as thingspinNavbar } from './reducers/navbar';
 import { tsToolbarReducer as thingspinToolbar } from './reducers/toolbar';
 import { tsTsMenuReducer as thingspinMenu } from './reducers/tsMenu';
+import { tsFmMetaReducer as thingspinFmMeta } from '../../pages/FacilityMonitoring/redux/reducers/FMReducers';
 
 import { projectListReducer as droneProjects } from '../../pro/drone/state/reducer';
 import { projectReducer as droneProject } from '../../pro/drone/state/reducer';
@@ -13,6 +14,7 @@ export default function addThingspinReducers() {
       thingspinNavbar,
       thingspinToolbar,
       thingspinMenu,
+      thingspinFmMeta,
       droneProjects,
       droneProject,
     },
