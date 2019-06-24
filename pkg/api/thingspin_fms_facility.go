@@ -558,7 +558,7 @@ func updateTsFacilityTreeTag(treeItem *m.TsFacilityTreeItem) error {
 			SiteId: treeItem.SiteId,
 			FacilityId: 0,
 			TagId: treeItem.TagId,
-			Path: strconv.Itoa(treeItem.FacilityId) + "/" + strconv.Itoa(treeItem.FacilityTreeOrder),
+			Path: treeItem.FacilityTreePath,
 			Order: treeItem.FacilityTreeOrder,
 		}
 	
@@ -596,14 +596,14 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 		
 			if err := bus.Dispatch(&tree); err != nil {
 				return err
-			}	
+			}
 		}
 	} else {
 		tree := m.UpdateTsFacilityTreeFacilityQuery {
 			SiteId: treeItem.SiteId,
 			FacilityId: treeItem.FacilityId,
 			TagId: 0,
-			Path: strconv.Itoa(treeItem.FacilityId) + "/",
+			Path: treeItem.FacilityTreePath,
 			Order: treeItem.FacilityTreeOrder,
 		}
 	
@@ -625,6 +625,19 @@ func updateTsFacilityTree(c *gfm.ReqContext, req m.UpdateTsFacilityTreePathQuery
 			result := updateTsFacilityTreeFacility(&treeItem)
 			if result != nil {
 				return Error(500, "ThingSPIN Store Error", result)
+			}
+		}
+		for _, treeItem := range treeItem.Children {
+			if treeItem.TagId > 0 {
+				result := updateTsFacilityTreeTag(&treeItem)
+				if result != nil {
+					return Error(500, "ThingSPIN Store Error", result)
+				}
+			} else {
+				result := updateTsFacilityTreeFacility(&treeItem)
+				if result != nil {
+					return Error(500, "ThingSPIN Store Error", result)
+				}
 			}
 		}
 	}
