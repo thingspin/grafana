@@ -26,6 +26,7 @@ import { InitDashboardArgs } from 'app/features/dashboard/state/initDashboard';
 // ThingSPIN
 import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
 import { FMDashboardModel } from '../models/index';
+import { FmUnsavedChangesSrv } from 'app-thingspin-fms/angular-modules/core/services/UnsavedChangesSrv';
 
 async function redirectToNewUrl(slug: string, dispatch: ThunkDispatch, currentPath: string) {
   const res = await getBackendSrv().getDashboardBySlug(slug);
@@ -158,7 +159,7 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
     const annotationsSrv: AnnotationsSrv = args.$injector.get('annotationsSrv');
     const variableSrv: VariableSrv = args.$injector.get('variableSrv');
     const keybindingSrv: KeybindingSrv = args.$injector.get('keybindingSrv');
-    const unsavedChangesSrv = args.$injector.get('unsavedChangesSrv');
+    const unsavedChangesSrv: FmUnsavedChangesSrv = args.$injector.get('unsavedChangesSrv');
     const dashboardSrv: TsDashboardSrv = args.$injector.get('dashboardSrv');
 
     timeSrv.init(dashboard);
@@ -184,7 +185,7 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
       }
 
       // init unsaved changes tracking
-      unsavedChangesSrv.init(dashboard, args.$scope);
+      unsavedChangesSrv.fmInit(dashboard, args.$scope);
       keybindingSrv.setupDashboardBindings(args.$scope, dashboard);
     } catch (err) {
       dispatch(notifyApp(createErrorNotification('Dashboard init failed', err)));

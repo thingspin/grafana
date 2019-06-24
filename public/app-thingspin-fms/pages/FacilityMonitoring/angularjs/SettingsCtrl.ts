@@ -12,8 +12,8 @@ import { route } from 'angular';
 
 // customize Grafana SettingsCtrl angular controller
 export class TsSettingsCtrl extends SettingsCtrl {
-  dbSrv: TsDashboardSrv;
-  ngRoute: route.IRouteService;
+  protected dbSrv: TsDashboardSrv;
+  protected ngRoute: route.IRouteService;
 
   /** @ngInject */
   constructor(

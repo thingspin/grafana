@@ -8,6 +8,7 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 import config from 'app/core/config';
 import { store } from 'app/store/store';
 import { updateTsMenu } from 'app-thingspin-fms/react/redux/dispayches/tsMenu';
+import { appEvents } from 'app/core/app_events';
 // import location_util from 'app/core/utils/location_util';
 
 // Define Thingspin DashboardService interface
@@ -194,6 +195,8 @@ coreModule.decorator('dashboardSrv',
   self.saveJSONFmDashboard = (json) => {
       return self.fmSave(JSON.parse(json), {});
   };
+
+  appEvents.on('save-fm-dashboard', self.fmSaveFM.bind(self), $rootScope);
 
   return self;
 });
