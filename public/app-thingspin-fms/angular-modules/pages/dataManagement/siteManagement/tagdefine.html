@@ -73,22 +73,22 @@
         
                             <!--Level 2 starting point-->
                             <ol ui-tree-nodes="" ng-model="pnode.children" ng-class="{hidden: collapsed}">
-                                <li ng-repeat="pnode2 in pnode.children" ui-tree-node>    
+                                <li ng-repeat="pnode in pnode.children" ui-tree-node>    
                                     <div>
                                         <!--
                                         <input type="checkbox" ng-click="ctrl.checked(pnode2)" ng-checked="pnode2.ischecked" />
                                         -->
-                                        <a ui-tree-handle class="tree-node tree-node-content">{{pnode2.facility_name}}</a>
+                                        <a>{{pnode.facility_name}}</a>
                                     </div>
                                     
                                     <!--Level 3 starting point-->
-                                    <ol ui-tree-nodes="" ng-model="pnode2.children" ng-class="{hidden: collapsed}">
-                                        <li ng-repeat="pnode3 in pnode2.children" ui-tree-node>
+                                    <ol ui-tree-nodes="" ng-model="pnode.children" ng-class="{hidden: collapsed}">
+                                        <li ng-repeat="pnode in pnode.children" ui-tree-node>
                                                 <div>
                                                      <!--
                                                 <input data-drag-enabled type="checkbox" ng-click="ctrl.checked(pnode3)" ng-checked="pnode3.ischecked" />
                                                 -->
-                                                    <a ui-tree-handle class="tree-node tree-node-content">{{pnode3.tag_name}}</a>
+                                                    <a ui-tree-handle class="tree-node tree-node-content">{{pnode.tag_name}}</a>
                                                 </div>
                                         
                                             <!--
@@ -133,31 +133,31 @@
 
                         <!--Level 2 starting point-->
                         <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
-                            <li ng-repeat="node2 in node.children" ui-tree-node>
+                            <li ng-repeat="node in node.children" ui-tree-node>
                                 <div ui-tree-handle class="tree-node tree-node-content">
-                                        <a ng-if="node2.tag_name !== ''">{{node2.tag_name}}</a>
-                                        <a ng-if="node2.tag_name === ''">{{node2.facility_name}}</a>
+                                        <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
+                                        <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
                                 </div>
                                 <!--Level 3 starting point-->
-                                <ol ui-tree-nodes="" ng-model="node2.children" ng-class="{hidden: collapsed}">
-                                    <li ng-repeat="node3 in node2.children" ui-tree-node>
+                                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                                    <li ng-repeat="node in node.children" ui-tree-node>
                                         <div ui-tree-handle class="tree-node tree-node-content ">
-                                                <a ng-if="node3.tag_name !== ''">{{node3.tag_name}}</a>
-                                                <a ng-if="node3.tag_name === ''">{{node3.facility_name}}</a>
+                                                <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
+                                                <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
                                         </div>
                                         <!--Level 4 starting point-->
-                                        <ol ui-tree-nodes="" ng-model="node3.children" ng-class="{hidden: collapsed}">
-                                            <li ng-repeat="node4 in node3.children" ui-tree-node>
+                                        <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                                            <li ng-repeat="node in node.children" ui-tree-node>
                                                 <div ui-tree-handle class="tree-node tree-node-content">
-                                                        <a ng-if="node4.tag_name !== ''">{{node4.tag_name}}</a>
-                                                        <a ng-if="node4.tag_name === ''">{{node4.facility_name}}</a>
+                                                        <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
+                                                        <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
                                                 </div>
                                                 <!--Level 5 starting point-->
-                                                <ol ui-tree-nodes="" ng-model="node4.children" ng-class="{hidden: collapsed}">
-                                                    <li ng-repeat="node5 in node4.children" ui-tree-node>
+                                                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                                                    <li ng-repeat="node in node.children" ui-tree-node>
                                                         <div ui-tree-handle class="tree-node tree-node-content">
-                                                                <a ng-if="node5.tag_name !== ''">{{node5.tag_name}}</a>
-                                                                <a ng-if="node5.tag_name === ''">{{node5.facility_name}}</a>
+                                                                <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
+                                                                <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
                                                         </div>
                                                     </li>
                                                 </ol>
