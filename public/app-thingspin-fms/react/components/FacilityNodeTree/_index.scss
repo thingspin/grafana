@@ -30,6 +30,14 @@
         }
     }
 }
+.facility-siteManage-page-btn2 {
+    margin-top: 9px;
+    margin-left: 16px;
+    border-radius: 4px;
+    color: #6a6a6a;
+    font-size: 14px;
+}
+
 .facility-warning-facility-empty{
     color: #d81b60;
     font-family: Roboto;
@@ -37,6 +45,7 @@
     //font-weight: bold;
     font-style: normal;
     margin-left: 16px;
+    margin-bottom: 5px;
 }
 .facility-tree-pos {
     margin-top: 9px;//16.5
@@ -46,7 +55,7 @@
 .facility-site-pos {
     margin-left: 16px;
     margin-right: 16px;
-    margin-bottom: 16px;
+    //margin-bottom: 16px;
     margin-top: 16px;
 }
 .facility-filter-pos {
