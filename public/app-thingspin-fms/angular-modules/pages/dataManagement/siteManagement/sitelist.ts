@@ -3,6 +3,7 @@ import angular from "angular";
 import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/core';
+import "./sitelist.scss";
 
 interface SiteTableData {
     id: string;
@@ -25,15 +26,15 @@ export interface TableModel {
 }
 
 
-export class TsSiteTableCtrl implements angular.IController {
+export class TsSiteListCtrl implements angular.IController {
     data: any;
     list: SiteTableData[];
     tData: TableModel = {
-        rowCount: 3,
-        selectOpts: [3, 6, 9],
+        rowCount: 10,
+        selectOpts: [10, 20, 30],
         currPage: 0,
         maxPage: 0,
-        maxPageLen: 3,
+        maxPageLen: 10,
         pageNode: [],
     };
 
@@ -49,6 +50,7 @@ export class TsSiteTableCtrl implements angular.IController {
     constructor(
         private $scope: angular.IScope,
         private backendSrv: BackendSrv,
+        private $location: angular.ILocationService,
     ) {
         this.isEditView = false;
         this.isEditBtn = true;
@@ -129,6 +131,7 @@ export class TsSiteTableCtrl implements angular.IController {
         this.data = value;
         this.selIdx = idx;
         this.tableSelect(idx);
+        this.$location.path(`/thingspin/manage/data/site/${value}`);
     }
 
     tableSelect(idx) {
@@ -206,20 +209,16 @@ export class TsSiteTableCtrl implements angular.IController {
     }
 }
 
-export class TsSiteTableDirective implements angular.IDirective {
-    templateUrl = require('./sitetable.html');
+export class TsSiteListDirective implements angular.IDirective {
+    templateUrl = require('./sitelist.html');
     restrict = 'E';
     bindToController = true;
     controllerAs = 'ctrl';
-    controller = TsSiteTableCtrl;
-    replace = true;
-
-    scope = {
-        data: "="
-    };
+    controller = TsSiteListCtrl;
+    scope = {};
     /** @ngInject */
     constructor() {
     }
 }
 
-coreModule.directive('tsSiteTable', [() => new TsSiteTableDirective()]);
+coreModule.directive('tsSiteList', [() => new TsSiteListDirective()]);

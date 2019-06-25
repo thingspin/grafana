@@ -15,16 +15,18 @@ export class TsTagDefineCtrl {
   resultIdx: any;
   // facility
   data: any;
-  isShow: boolean;
+  // isShow: boolean;
   isEditView: boolean;
   isEditBtn: boolean;
   facility: any;
   /** @ngInject */
   constructor(
     private backendSrv: BackendSrv,
-    private $scope: angular.IScope
+    private $scope: angular.IScope,
+    private $location: angular.ILocationService,
+    $routeParams
   ) {
-    this.isShow = false;
+    // this.isShow = false;
     this.isEditView = false;
     this.isEditBtn = true;
 
@@ -35,26 +37,23 @@ export class TsTagDefineCtrl {
         lon: "",
         imgpath: ""
     };
-    // right tree info
-    this.$scope.$watch('ctrl.data', (newValue: any, oldValue: any) => {
-        console.log(newValue);
-        console.log(oldValue);
-        if (newValue === undefined && oldValue === undefined) {
-          this.isShow = false;
+
+    if ($routeParams.id !== undefined || $routeParams.id !== null) {
+      this.data = +$routeParams.id;
+
+      this.backendSrv.get(`/thingspin/sites/${$routeParams.id}/facilities/tree`,{}).then((result)=> {
+        if (result !== null || result !== undefined) {
+          this.dataList = [];
+          this.dataList = result;
         } else {
-          this.isShow = true;
+          this.dataList = [];
         }
-        this.backendSrv.get(`/thingspin/sites/${newValue}/facilities/tree`,{}).then((result) => {
-          if (result !== null || result !== undefined) {
-            this.dataList = [];
-            this.dataList = result;
-          }
-        }).catch(err => {
-            if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
-            }
-        });
-    });
+      }).catch(err => {
+        if (err.status === 500) {
+          appEvents.emit('alert-error', [err.statusText]);
+        }
+      });
+    }
 
     // left tree data
     this.backendSrv.get('/thingspin/tagdefine').then((res: any) => {
@@ -172,9 +171,23 @@ export class TsTagDefineCtrl {
       //ctrl.scope = scope;
   }
 
+  async asyncDataLoader(id): Promise<void> {
+    console.log("asyncDataLoader");
+    try {
+        const result = await this.backendSrv.get(`/thingspin/sites/${id}/facilities/tree`);
+        if (result !== null || result !== undefined) {
+          this.dataList = [];
+          this.dataList = result;
+        }
+        this.$scope.$applyAsync();
+    } catch (e) {
+        console.error(e);
+    }
+  }
+
   $onInit(): void {
-      console.log("SiteTable : " + this.data);
-      this.isShow = false;
+      // console.log("SiteTable : " + this.data);
+      // this.isShow = false;
   }
 
   onShowEditView(value) {
@@ -187,28 +200,33 @@ export class TsTagDefineCtrl {
       }
   }
 
+  backtosite() {
+    this.$location.path(`/thingspin/manage/data/site`);
+  }
+
   deleteTreeItem() {
       console.log("deleteTreeItem");
   }
 
   onFacilityAdd() {
-      this.backendSrv.post(`thingspin/sites/${this.data}/facilities`,
-      {
-          "SiteId": this.data,
-          "Name": this.facility.name,
-          "Desc": this.facility.desc,
-          "Lat": parseFloat(this.facility.lat),
-          "Lon": parseFloat(this.facility.lon),
-          "Imgpath": this.facility.imgpath
-      }).then((result) => {
-          // this.onLoadData(result);
-          console.log(result);
-          this.dataList = result;
-      }).catch(err => {
-          if (err.status === 500) {
-            appEvents.emit('alert-error', [err.statusText]);
-          }
-      });
+    this.onShowEditView(false);
+    this.backendSrv.post(`thingspin/sites/${this.data}/facilities`,
+    {
+        "SiteId": this.data,
+        "Name": this.facility.name,
+        "Desc": this.facility.desc,
+        "Lat": parseFloat(this.facility.lat),
+        "Lon": parseFloat(this.facility.lon),
+        "Imgpath": this.facility.imgpath
+    }).then((result) => {
+        // this.onLoadData(result);
+        console.log(result);
+        this.dataList = result;
+    }).catch(err => {
+        if (err.status === 500) {
+          appEvents.emit('alert-error', [err.statusText]);
+        }
+    });
   }
 }
 
@@ -220,9 +238,7 @@ export function TsTagDefineDirective() {
       controller: TsTagDefineCtrl,
       bindToController: true,
       controllerAs: 'ctrl',
-      scope: {
-        data: "="
-      },
+      scope: {},
     };
   }
 

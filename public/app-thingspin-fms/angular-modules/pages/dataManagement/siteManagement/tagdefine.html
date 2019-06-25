@@ -1,12 +1,15 @@
-<div ng-show="ctrl.isShow">
+<div class="ts-tag-define">
     <div class="ts-site-main-title">
         목록
     </div>
     <div id="mqtt-addview-right-button-area" ng-show="ctrl.isEditBtn">
+        <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.backtosite()">
+            사이트 목록
+        </button>  
         <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.deleteTreeItem()">
             삭제
         </button>
-        <button id="site-add-plus-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
+        <button id="tag-add-plus-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
             설비추가
         </button>
     </div>
@@ -51,7 +54,7 @@
             <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowEditView(false)">
                 취소
             </button>
-            <button id="site-add-plus-btn" className="btn" ng-click="ctrl.onFacilityAdd()">
+            <button id="tag-add-plus-btn" className="btn" ng-click="ctrl.onFacilityAdd()">
                 저장
             </button>
         </div>
