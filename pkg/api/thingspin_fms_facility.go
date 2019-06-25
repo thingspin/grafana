@@ -655,7 +655,7 @@ func updateTsFacilityTreeChildren(item *m.TsFacilityTreeItem) error {
 			if len(path) > 0 {
 				treeItem.Value = path
 			} else {
-				treeItem.Value = item.Value	
+				treeItem.Value = strconv.Itoa(item.FacilityId)
 			}
 			result := updateTsFacilityTreeTag(&treeItem)
 			if result != nil {
@@ -665,7 +665,7 @@ func updateTsFacilityTreeChildren(item *m.TsFacilityTreeItem) error {
 			if len(path) > 0 {
 				treeItem.Value = path
 			} else {
-				treeItem.Value = item.Value	
+				treeItem.Value = strconv.Itoa(item.FacilityId)	
 			}
 			result := updateTsFacilityTreeFacility(&treeItem)
 			if result != nil {
