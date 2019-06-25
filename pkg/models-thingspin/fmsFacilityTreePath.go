@@ -38,6 +38,7 @@ type UpdateTsFacilityTreePathQuery struct {
 
 type DeleteTsFacilityTreePathQuery struct {
 	Result []TsFacilityTreeItem
+	Delete []TsFacilityTreeItem
 }
 
 type TsFacilityTreeItem struct {

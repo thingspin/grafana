@@ -11,6 +11,7 @@ type TsFacilityTreeField struct {
 }
 
 type GetAllTsFacilityTreeQuery struct {
+	SiteId int
 	Result []TsFacilityTreeField
 }
 
@@ -58,5 +59,10 @@ type UpdateTsFacilityTreeFacilityQuery struct {
 type DeleteTsFacilityTreeQuery struct {
 	SiteId     int
 	FacilityId int
+	Result     sql.Result
+}
+
+type DeleteTsFacilityTreeTagQuery struct {
+	TagId      int
 	Result     sql.Result
 }

@@ -282,33 +282,81 @@ func Find(tree []m.TsFacilityTreeItem, item m.TsFacilityTreeItem) bool {
 }
 
 func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
-	facilityList := m.GetAllTsFacilityQuery{
+	treeList := m.GetAllTsFacilityTreeQuery {
 		SiteId: siteId,
 	}
 
-	if err := bus.Dispatch(&facilityList); err != nil {
+	if err := bus.Dispatch(&treeList); err != nil {
 		return err
 	}
 
-	for _, facility := range facilityList.Result {
-		tagsList := []m.TsFacilityTreeItem{}
-		tags := m.GetAllTsFacilityTagQuery{
+	for _, treeItem := range treeList.Result {
+		facilityList := m.GetTsFacilityItemQuery{
 			SiteId: siteId,
-			FacilityId: facility.Id,
+			FacilityId: treeItem.FacilityId,
 		}
-		if err := bus.Dispatch(&tags); err != nil {
+	
+		if err := bus.Dispatch(&facilityList); err != nil {
 			return err
 		}
-		for _, tag := range tags.Result {
-			treeItem := m.GetTsFacilityTreeTagItemQuery {
+	
+		for _, facility := range facilityList.Result {
+			tagsList := []m.TsFacilityTreeItem{}
+			tags := m.GetAllTsFacilityTagQuery{
 				SiteId: siteId,
-				TagId: tag.Id,
+				FacilityId: facility.Id,
+			}
+			if err := bus.Dispatch(&tags); err != nil {
+				return err
+			}
+			for _, tag := range tags.Result {
+				treeItem := m.GetTsFacilityTreeTagItemQuery {
+					SiteId: siteId,
+					TagId: tag.Id,
+				}
+				if err := bus.Dispatch(&treeItem); err != nil {
+					return err
+				}
+				if len(treeItem.Result) > 0 {
+					tagItem := m.TsFacilityTreeItem {
+						SiteId: siteId,
+						Label: facility.Name,
+						Value: treeItem.Result[0].Path,
+						IsChecked: false,
+						IsEditing: false,
+						FacilityId: facility.Id,
+						FacilityName: facility.Name,
+						FacilityDesc: facility.Description,
+						FacilityLat: facility.Location_lat,
+						FacilityLon: facility.Location_lon,
+						FacilityPath: facility.Image_path,
+						TagId: tag.Id,
+						TagDatasource: tag.DatasourceId,
+						TagTableName: tag.Table_name,
+						TagColumnName: tag.Column_name,
+						TagColumnType: tag.Column_type,
+						TagName: tag.Name,
+						FacilityTreePath: treeItem.Result[0].Path,
+						FacilityTreeOrder: treeItem.Result[0].Order,
+						Children: []m.TsFacilityTreeItem{},
+					}
+					tagsList = append(tagsList, tagItem)
+				}
+			}
+			sort.Slice(tagsList, func(i, j int) bool {
+				return tagsList[i].FacilityTreeOrder < tagsList[j].FacilityTreeOrder
+			})
+	
+			treeItem := m.GetTsFacilityTreeFacilityItemQuery {
+				SiteId: siteId,
+				FacilityId: facility.Id,
 			}
 			if err := bus.Dispatch(&treeItem); err != nil {
 				return err
 			}
+	
 			if len(treeItem.Result) > 0 {
-				tagItem := m.TsFacilityTreeItem {
+				facilityItem := m.TsFacilityTreeItem {
 					SiteId: siteId,
 					Label: facility.Name,
 					Value: treeItem.Result[0].Path,
@@ -320,57 +368,20 @@ func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
 					FacilityLat: facility.Location_lat,
 					FacilityLon: facility.Location_lon,
 					FacilityPath: facility.Image_path,
-					TagId: tag.Id,
-					TagDatasource: tag.DatasourceId,
-					TagTableName: tag.Table_name,
-					TagColumnName: tag.Column_name,
-					TagColumnType: tag.Column_type,
-					TagName: tag.Name,
+					TagId: 0,
+					TagDatasource: 0,
+					TagTableName: "",
+					TagColumnName: "",
+					TagColumnType: "",
+					TagName: "",
 					FacilityTreePath: treeItem.Result[0].Path,
 					FacilityTreeOrder: treeItem.Result[0].Order,
-					Children: []m.TsFacilityTreeItem{},
+					Children: tagsList,
 				}
-				tagsList = append(tagsList, tagItem)
-			}
-		}
-		sort.Slice(tagsList, func(i, j int) bool {
-			return tagsList[i].FacilityTreeOrder < tagsList[j].FacilityTreeOrder
-		})
-
-		treeItem := m.GetTsFacilityTreeFacilityItemQuery {
-			SiteId: siteId,
-			FacilityId: facility.Id,
-		}
-		if err := bus.Dispatch(&treeItem); err != nil {
-			return err
-		}
-
-		if len(treeItem.Result) > 0 {
-			facilityItem := m.TsFacilityTreeItem {
-				SiteId: siteId,
-				Label: facility.Name,
-				Value: treeItem.Result[0].Path,
-				IsChecked: false,
-				IsEditing: false,
-				FacilityId: facility.Id,
-				FacilityName: facility.Name,
-				FacilityDesc: facility.Description,
-				FacilityLat: facility.Location_lat,
-				FacilityLon: facility.Location_lon,
-				FacilityPath: facility.Image_path,
-				TagId: 0,
-				TagDatasource: 0,
-				TagTableName: "",
-				TagColumnName: "",
-				TagColumnType: "",
-				TagName: "",
-				FacilityTreePath: treeItem.Result[0].Path,
-				FacilityTreeOrder: treeItem.Result[0].Order,
-				Children: tagsList,
-			}
-
-			if false == Find(*data, facilityItem) {
-				*data = append(*data, facilityItem)
+	
+				if false == Find(*data, facilityItem) {
+					*data = append(*data, facilityItem)
+				}
 			}
 		}
 	}
@@ -575,27 +586,41 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 		if err != nil {
 			return err
 		}
-		parentTree := m.GetTsFacilityTreeFacilityItemQuery {
-			SiteId: treeItem.SiteId,
-			FacilityId: newParentId,
-		}
-		if err := bus.Dispatch(&parentTree); err != nil {
-			return err
-		}
-	
-		if len(parentTree.Result) > 0 {
-			parentPath := parentTree.Result[0].Path
-			
+		if newParentId == 0 {
 			tree := m.UpdateTsFacilityTreeFacilityQuery {
 				SiteId: treeItem.SiteId,
 				FacilityId: treeItem.FacilityId,
 				TagId: 0,
-				Path: parentPath + strconv.Itoa(treeItem.FacilityId) + "/",
+				Path: strconv.Itoa(treeItem.FacilityId) + "/",
 				Order: treeItem.FacilityTreeOrder,
 			}
 		
 			if err := bus.Dispatch(&tree); err != nil {
 				return err
+			}
+		} else {
+			parentTree := m.GetTsFacilityTreeFacilityItemQuery {
+				SiteId: treeItem.SiteId,
+				FacilityId: newParentId,
+			}
+			if err := bus.Dispatch(&parentTree); err != nil {
+				return err
+			}
+		
+			if len(parentTree.Result) > 0 {
+				parentPath := parentTree.Result[0].Path
+				
+				tree := m.UpdateTsFacilityTreeFacilityQuery {
+					SiteId: treeItem.SiteId,
+					FacilityId: treeItem.FacilityId,
+					TagId: 0,
+					Path: parentPath + strconv.Itoa(treeItem.FacilityId) + "/",
+					Order: treeItem.FacilityTreeOrder,
+				}
+			
+				if err := bus.Dispatch(&tree); err != nil {
+					return err
+				}
 			}
 		}
 	} else {
@@ -614,7 +639,67 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 	return nil
 }
 
+func updateTsFacilityTreeChildren(item *m.TsFacilityTreeItem) error {
+	var path string = ""
+	if  len(item.Value) == 1 {
+		newParentId, err := strconv.Atoi(item.Value)
+		if err != nil {
+			return err
+		}
+		if newParentId == 0 {
+			path = strconv.Itoa(item.FacilityId)
+		}	
+	}
+	for _, treeItem := range item.Children {
+		if treeItem.TagId > 0 {
+			if len(path) > 0 {
+				treeItem.Value = path
+			} else {
+				treeItem.Value = item.Value	
+			}
+			result := updateTsFacilityTreeTag(&treeItem)
+			if result != nil {
+				return result
+			}
+		} else {
+			if len(path) > 0 {
+				treeItem.Value = path
+			} else {
+				treeItem.Value = item.Value	
+			}
+			result := updateTsFacilityTreeFacility(&treeItem)
+			if result != nil {
+				return result
+			}
+			if len(treeItem.Children) > 0 {
+				updateTsFacilityTreeChildren(&treeItem)
+			}
+		}
+	}
+	return nil
+}
+
 func updateTsFacilityTree(c *gfm.ReqContext, req m.UpdateTsFacilityTreePathQuery) Response {
+	for _, treeItem := range req.Result {
+		if treeItem.TagId > 0 {
+			result := updateTsFacilityTreeTag(&treeItem)
+			if result != nil {
+				return Error(500, "ThingSPIN Store Error", result)
+			}
+		} else {		
+			result := updateTsFacilityTreeFacility(&treeItem)
+			if result != nil {
+				return Error(500, "ThingSPIN Store Error", result)
+			}
+			if len(treeItem.Children) > 0 {
+				updateTsFacilityTreeChildren(&treeItem)
+			}
+		}
+	}
+	return JSON(200, true)
+}
+
+func deleteTsFacilityTree(c *gfm.ReqContext, req m.DeleteTsFacilityTreePathQuery) Response {
 	for _, treeItem := range req.Result {
 		if treeItem.TagId > 0 {
 			result := updateTsFacilityTreeTag(&treeItem)
@@ -627,25 +712,60 @@ func updateTsFacilityTree(c *gfm.ReqContext, req m.UpdateTsFacilityTreePathQuery
 				return Error(500, "ThingSPIN Store Error", result)
 			}
 		}
-		for _, treeItem := range treeItem.Children {
-			if treeItem.TagId > 0 {
-				result := updateTsFacilityTreeTag(&treeItem)
-				if result != nil {
-					return Error(500, "ThingSPIN Store Error", result)
+	}
+	for _, treeDelItem := range req.Delete {
+		if treeDelItem.TagId > 0 {
+			delTag := m.DeleteTsFacilityTagQuery {
+				Id : treeDelItem.TagId,
+			}
+		
+			if err := bus.Dispatch(&delTag); err != nil {
+				return Error(500, "ThingSPIN Server Error", err)
+			}
+
+			delTreeItem := m.DeleteTsFacilityTreeTagQuery {
+				TagId : treeDelItem.TagId,
+			}
+
+			if err := bus.Dispatch(&delTreeItem); err != nil {
+				return Error(500, "ThingSPIN Server Error", err)
+			}
+		} else {
+			if len(treeDelItem.Children) > 0 {
+				for _, treeDelItemChild := range treeDelItem.Children {
+					delTag := m.DeleteTsFacilityTagQuery {
+						Id : treeDelItemChild.TagId,
+					}
+				
+					if err := bus.Dispatch(&delTag); err != nil {
+						return Error(500, "ThingSPIN Server Error", err)
+					}
+				}
+				delFacility := m.DeleteTsFacilityQuery{
+					Id: treeDelItem.FacilityId,
+				}
+				if err := bus.Dispatch(&delFacility); err != nil {
+					return Error(500, "ThingSPIN Store Error", err)
+				}
+				resultErr := deleteTsFacilityTreeData(treeDelItem.SiteId, treeDelItem.FacilityId)
+				if resultErr != nil {
+					return Error(500, "ThingSPIN Store Error", resultErr)
 				}
 			} else {
-				result := updateTsFacilityTreeFacility(&treeItem)
-				if result != nil {
-					return Error(500, "ThingSPIN Store Error", result)
+				delFacility := m.DeleteTsFacilityQuery{
+					Id: treeDelItem.FacilityId,
+				}
+				if err := bus.Dispatch(&delFacility); err != nil {
+					return Error(500, "ThingSPIN Store Error", err)
+				}
+				resultErr := deleteTsFacilityTreeData(treeDelItem.SiteId, treeDelItem.FacilityId)
+				if resultErr != nil {
+					return Error(500, "ThingSPIN Store Error", resultErr)
 				}
 			}
 		}
 	}
 	return JSON(200, true)
-}
-
-func deleteTsFacilityTree(c *gfm.ReqContext, req m.DeleteTsFacilityTreePathQuery) Response {
-	return JSON(200, "deleteTsFacilityTree")
 }
 
 

@@ -17,7 +17,8 @@ func init() {
 	bus.AddHandler("thingspin-sql", AddTsFacilityTree)
 	bus.AddHandler("thingspin-sql", UpdateTsFacilityTreeTag)
 	bus.AddHandler("thingspin-sql", UpdateTsFacilityTreeFacility)
-	bus.AddHandler("thingspin-sql", DelelteTsFacilityTree)
+	bus.AddHandler("thingspin-sql", DeleteTsFacilityTree)
+	bus.AddHandler("thingspin-sql", DeleteTsFacilityTreeTag)
 }
 
 type InsertTsFacilityTreeQuery struct {
@@ -32,7 +33,7 @@ type InsertTsFacilityTreeQuery struct {
 func GetTsFacilityTreeList(cmd *m.GetAllTsFacilityTreeQuery) error {
 	var res []m.TsFacilityTreeField
 
-	err := x.Table(m.TsFmsFacilityTreeTbl).Find(&res)
+	err := x.Table(m.TsFmsFacilityTreeTbl).Where("site_id = ?", cmd.SiteId).Asc("path").Find(&res)
 	cmd.Result = res
 
 	return err
@@ -93,7 +94,7 @@ func UpdateTsFacilityTreeFacility(cmd *m.UpdateTsFacilityTreeFacilityQuery) erro
 	return err
 }
 
-func DelelteTsFacilityTree(cmd *m.DeleteTsFacilityTreeQuery) error {
+func DeleteTsFacilityTree(cmd *m.DeleteTsFacilityTreeQuery) error {
 	sqlQueryItem := fmt.Sprintf(`DELETE FROM '%s' where path like "%d%s"`,
 		m.TsFmsFacilityTreeTbl, cmd.FacilityId, "/%")
 	_, err := x.Exec(sqlQueryItem)
@@ -101,6 +102,15 @@ func DelelteTsFacilityTree(cmd *m.DeleteTsFacilityTreeQuery) error {
 	sqlQuery := fmt.Sprintf(`DELETE FROM '%s' WHERE site_id=%d and facility_id=%d`,
 		m.TsFmsFacilityTreeTbl, cmd.SiteId, cmd.FacilityId)
 	result, err := x.Exec(sqlQuery)
+	cmd.Result = result
+
+	return err
+}
+
+func DeleteTsFacilityTreeTag(cmd *m.DeleteTsFacilityTreeTagQuery) error {
+	sqlQueryItem := fmt.Sprintf(`DELETE FROM '%s' where tag_id = "%d"`,
+	m.TsFmsFacilityTreeTbl, cmd.TagId)
+	result, err := x.Exec(sqlQueryItem)	
 	cmd.Result = result
 
 	return err
