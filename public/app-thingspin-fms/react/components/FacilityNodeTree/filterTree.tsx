@@ -108,23 +108,17 @@ class FilterTree extends Component<Props,State> {
     }
 
   render() {
-      const {nodesCount} = this.state;
-      //console.log("render-filterTree: ",nodesCount);
-      //console.log("fiterTree: ",this.state.checked);
     return (
         <div>
-            { nodesCount?
-                    <div className="facility-filter-pos">
-                        <input
-                            className="filter-text"
-                            placeholder={this.state.filterPlaceholder}
-                            type="text"
-                            value={this.state.filterText}
-                            onChange={this.onFilterChange}
-                            />
-                    </div>
-                : null
-            }
+            <div className="facility-filter-pos">
+                <input
+                    className="filter-text"
+                    placeholder={this.state.filterPlaceholder}
+                    type="text"
+                    value={this.state.filterText}
+                    onChange={this.onFilterChange}
+                    />
+            </div>
             <div className="facility-tree-pos">
                 <CheckboxTree
                     nodes={this.state.nodesFiltered}

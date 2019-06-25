@@ -77,9 +77,6 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
 
         };
         console.log("constructor");
-        //this.getSiteList();
-        //console.log(this.props);
-        //this.testGetList();
     }
 
     componentWillMount() {
@@ -113,15 +110,16 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
            this.getTreeinfo(selectedOption.value);
            // tag selected
            const elements = [];
-           if (taginfo.length > 0) {
+           if (taginfo && taginfo.length > 0) {
                for (let i = 0; i < taginfo.length; i++) {
                    const data = taginfo[i].value;
                    elements.push(data);
                }
-               console.log("props-test elements: ",elements);
+               console.log("props-taginfo elements: ",elements);
                this.setState({checkedSave: elements as any});
            }else {
-                console.log("props-test elements: ",elements);
+                console.log("props-taginfo empty");
+                //console.log("props-test elements: ",elements);
                 this.setState({checkedSave: []});
            }
     }
@@ -131,7 +129,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         getBackendSrv().get("/thingspin/sites/sample").then((result: any) => {
             //console.log(result);
             const elements = [];
-            if (result.length > 0) {
+            if (result && result.length > 0) {
               this.setState({sitesListinfo: []}); // initialize
               this.setState({sitesListinfo: result});
 
@@ -162,24 +160,24 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
     //BACKEND SRV
     getSiteList() {
         getBackendSrv().get("/thingspin/sites").then((result: any) => {
-            //console.log(result);
-            const elements = [];
-            if (result.length > 0) {
-              this.setState({sitesListinfo: []}); // initialize
-              this.setState({sitesListinfo: result});
+                //console.log(result);
+                const elements = [];
+                if (result && result.length > 0) {
+                this.setState({sitesListinfo: []}); // initialize
+                this.setState({sitesListinfo: result});
 
-              for (let i = 0; i < result.length; i++) {
-                  elements.push({value: result[i].id,label: result[i].name});
-              }
+                for (let i = 0; i < result.length; i++) {
+                    elements.push({value: result[i].id,label: result[i].name});
+                }
 
-              //copy elemenets to select options
-              //init set first index
-              this.setState({siteOptions: elements });
-              this.setState({selectedOption: elements[0]});
-              this.getTreeinfo(this.state.selectedOption.value);
-            } else {
-              console.log("** sites list empty **");
-            }
+                //copy elemenets to select options
+                //init set first index
+                this.setState({siteOptions: elements });
+                this.setState({selectedOption: elements[0]});
+                this.getTreeinfo(this.state.selectedOption.value);
+                } else {
+                console.log("** sites list empty **");
+                }
           }).catch((err: any) => {
             console.log("get Sites, error!");
             console.log(err);
@@ -213,6 +211,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
 
     //CHECK TREE
     onCheck2(checked) {
+        console.log(checked);
         const siteData = this.state.selectedOption;
         const Taginfo = checked.Taginfo;
         this.setState({Taginfo: Taginfo});
@@ -231,9 +230,6 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         //refresh/
         console.log("check: ",this.state.checked);
         console.log("saved: ",this.state.testChecked);
-        //this.getTreeinfo(1);
-        //this.setState({checkedSave: this.state.testChecked});
-        //send checked save
     }
     testSave() {
         this.setState({testChecked: this.state.checked});
@@ -247,7 +243,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         const {checkedSave} = this.state;
         let isdataEmpty = false;
 
-        console.log("render:",checkedSave);
+        //console.log("render:",checkedSave);
 
         if (nodesCount === 0 || siteOptions.length === 0) {
             //console.log("render nodesCount NULL");
@@ -267,15 +263,20 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                 </div>
 
                 <div className = "facility-section-line"/>
-                  <FilterTree
-                  nodes = {this.state.nodes}
-                  nodesChecked = {checkedSave}
-                  click={(checked,Taginfo) => this.onCheck2(checked)}></FilterTree>
+                    { isdataEmpty?
+                        null
+                        :
+                        <FilterTree
+                        nodes = {this.state.nodes}
+                        nodesChecked = {checkedSave}
+                        click={(checked,Taginfo) => this.onCheck2(checked)}></FilterTree>
+                    }
                 <div>
                     { isdataEmpty?
                         <div>
+                            <div className = "facility-warning-facility-empty">WARNING</div>
                             <div className = "facility-warning-facility-empty">설정된 데이터가 없습니다.</div>
-                            <button className ="facility-siteManage-page-btn" onClick = {this.siteManagePage}>사이트 관리 이동</button>
+                            <button className ="facility-siteManage-page-btn2" onClick = {this.siteManagePage}>사이트 관리 이동</button>
                         </div>
                         : null
                     }
