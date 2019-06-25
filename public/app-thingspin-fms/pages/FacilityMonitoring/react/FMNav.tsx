@@ -50,7 +50,7 @@ export class FMNavComp extends DashNav {
 
     // Override
     render(): JSX.Element {
-        const { dashboard, location, editview } = this.props;
+        const { dashboard, location, $injector, editview } = this.props;
         const { snapshot, meta: { canStar, canSave, canShare, showSettings, isStarred, isEditing } } = dashboard;
         const meta = dashboard.meta as any;
         const snapshotUrl = snapshot && snapshot.originalUrl;
@@ -144,8 +144,12 @@ export class FMNavComp extends DashNav {
 
                 {!dashboard.timepicker.hidden && (
                     <div className="navbar-buttons">
-                        <div className="gf-timepicker-nav" ref={element => (this.timePickerEl = element)} />
-                        <DashNavTimeControls dashboard={dashboard} location={location} updateLocation={updateLocation} />
+                        <DashNavTimeControls
+                        $injector={$injector}
+                        dashboard={dashboard}
+                        location={location}
+                        updateLocation={updateLocation}
+                        />
                     </div>
                 )}
             </div>
