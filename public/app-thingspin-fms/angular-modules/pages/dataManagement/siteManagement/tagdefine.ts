@@ -209,7 +209,7 @@ export class TsTagDefineCtrl {
           const fromNode = event.source.cloneModel;
           const toNode = event.dest.nodesScope.$nodeScope;
           const idx = event.dest.index;
-          if (toNode.node === null || (fromNode.facility_id === 0 && toNode === null)) {
+          if ((fromNode.facility_id === 0 && toNode === null) || toNode.$modelValue.facility_id === 0) {
             console.log("against rules!");
             return false;
           }
