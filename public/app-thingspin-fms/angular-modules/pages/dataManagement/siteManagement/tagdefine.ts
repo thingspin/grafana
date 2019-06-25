@@ -41,7 +41,7 @@ export class TsTagDefineCtrl {
     if ($routeParams.id !== undefined || $routeParams.id !== null) {
       this.data = +$routeParams.id;
 
-      this.backendSrv.get(`/thingspin/sites/${$routeParams.id}/facilities/tree`,{}).then((result)=> {
+      backendSrv.get(`/thingspin/sites/${$routeParams.id}/facilities/tree`,{}).then((result)=> {
         if (result !== null || result !== undefined) {
           this.dataList = [];
           this.dataList = result;
@@ -54,9 +54,9 @@ export class TsTagDefineCtrl {
         }
       });
     }
-
+    console.log("==============================");
     // left tree data
-    this.backendSrv.get('/thingspin/tagdefine').then((res: any) => {
+    backendSrv.get('/thingspin/tagdefine').then((res: any) => {
       console.log("connect data");
       console.log(res);
       this.source = res.Result;
