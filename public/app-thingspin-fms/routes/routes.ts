@@ -45,7 +45,8 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
     .when('/thingspin/manage/data/connect/mqtt', { template: '<ts-mqtt-connect />', })
     .when('/thingspin/manage/data/connect/mqtt/:id', { template: '<ts-mqtt-connect />', })
     // 사이트 관리
-    .when('/thingspin/manage/data/site', { template: '<ts-site-management />', })
+    .when('/thingspin/manage/data/site', { template: '<ts-site-list />', })
+    .when('/thingspin/manage/data/site/:id', { template: '<ts-tag-define />', })
 
     // Facility Mangement
     .when('/thingspin/manage/facility', { template: '<ts-facility-management />', })
