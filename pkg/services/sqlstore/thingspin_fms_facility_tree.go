@@ -33,7 +33,7 @@ type InsertTsFacilityTreeQuery struct {
 func GetTsFacilityTreeList(cmd *m.GetAllTsFacilityTreeQuery) error {
 	var res []m.TsFacilityTreeField
 
-	err := x.Table(m.TsFmsFacilityTreeTbl).Where("site_id = ?", cmd.SiteId).Asc("path").Find(&res)
+	err := x.Table(m.TsFmsFacilityTreeTbl).Where("site_id = ? and tag_id = ?", cmd.SiteId, 0).Desc("path").Find(&res)
 	cmd.Result = res
 
 	return err

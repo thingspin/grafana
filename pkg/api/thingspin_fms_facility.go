@@ -259,29 +259,59 @@ func addTsFacilityTreePath(c *gfm.ReqContext, req m.AddTsFacilityTreePathOneQuer
 	return nil
 }
 
-func Find(tree []m.TsFacilityTreeItem, item m.TsFacilityTreeItem) bool {
-	slicePath := strings.Split(item.FacilityTreePath, "/")
-
-	for _, path := range slicePath {
-		for i, treeItem := range tree {
-			if path + "/" == treeItem.FacilityTreePath {
-				// fmt.Printf("%+v", treeItem.Children)
-				treeItem.Children = append(treeItem.Children, item)
-				fmt.Printf("%+v", treeItem.Children)
-				tree[i] = treeItem
-
-				sort.Slice(treeItem.Children, func(i, j int) bool {
-					return treeItem.Children[i].FacilityTreeOrder < treeItem.Children[j].FacilityTreeOrder
-				})
-
-				return true
-			}
-		}	
+func createFacilityTreeData(tree *[]m.TsFacilityTreeItem, treeMap map[string]m.TsFacilityTreeItem) {
+	var keys []string
+	for k := range treeMap {
+		keys = append(keys, k)
 	}
-	return false
+	sort.Strings(keys)
+
+	for i := len(keys)-1; i >= 0; i-- {
+		key := keys[i]
+		item := treeMap[key]
+		fmt.Println(key)
+		if i == 0 {
+			*tree = append(*tree, item)
+			// sort.Slice(tree.Children, func(i, j int) bool {
+			// 	return tree.Children[i].FacilityTreeOrder < tree.Children[j].FacilityTreeOrder
+			// })			
+			break;
+		};
+		slicePath := strings.Split(item.FacilityTreePath, "/")
+		pathStr := []string{}
+		prevStr := ""
+		for j := 0; j < len(slicePath) ; j++ {
+			if len(slicePath[j]) > 0 {
+				if len(prevStr) > 0 {
+					prevStr = prevStr + slicePath[j] + "/"
+					pathStr = append(pathStr, prevStr)
+				} else {
+					prevStr = slicePath[j] + "/"
+					pathStr = append(pathStr, prevStr)
+				}
+			}
+		}
+
+		for k := len(pathStr)-1; k >= 0 ; k-- {
+			if pathStr[k] == key {
+				if len(pathStr)-1 == 0 {
+					*tree = append(*tree, item)
+					// sort.Slice(tree.Children, func(i, j int) bool {
+					// 	return tree.Children[i].FacilityTreeOrder < tree.Children[j].FacilityTreeOrder
+					// })
+				}
+				continue
+			}
+			parent := treeMap[pathStr[k]]
+			parent.Children = append(parent.Children, item)
+			treeMap[pathStr[k]] = parent
+			break
+		}
+	}
 }
 
 func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
+	treeMap := make(map[string]m.TsFacilityTreeItem)
 	treeList := m.GetAllTsFacilityTreeQuery {
 		SiteId: siteId,
 	}
@@ -290,16 +320,16 @@ func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
 		return err
 	}
 
-	for _, treeItem := range treeList.Result {
+	for _, treePath := range treeList.Result {
 		facilityList := m.GetTsFacilityItemQuery{
 			SiteId: siteId,
-			FacilityId: treeItem.FacilityId,
+			FacilityId: treePath.FacilityId,
 		}
 	
 		if err := bus.Dispatch(&facilityList); err != nil {
 			return err
 		}
-	
+
 		for _, facility := range facilityList.Result {
 			tagsList := []m.TsFacilityTreeItem{}
 			tags := m.GetAllTsFacilityTagQuery{
@@ -309,19 +339,20 @@ func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
 			if err := bus.Dispatch(&tags); err != nil {
 				return err
 			}
+
 			for _, tag := range tags.Result {
-				treeItem := m.GetTsFacilityTreeTagItemQuery {
+				tagItem := m.GetTsFacilityTreeTagItemQuery {
 					SiteId: siteId,
 					TagId: tag.Id,
 				}
-				if err := bus.Dispatch(&treeItem); err != nil {
+				if err := bus.Dispatch(&tagItem); err != nil {
 					return err
 				}
-				if len(treeItem.Result) > 0 {
+				if len(tagItem.Result) > 0 {
 					tagItem := m.TsFacilityTreeItem {
 						SiteId: siteId,
 						Label: facility.Name,
-						Value: treeItem.Result[0].Path,
+						Value: tagItem.Result[0].Path,
 						IsChecked: false,
 						IsEditing: false,
 						FacilityId: facility.Id,
@@ -336,8 +367,8 @@ func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
 						TagColumnName: tag.Column_name,
 						TagColumnType: tag.Column_type,
 						TagName: tag.Name,
-						FacilityTreePath: treeItem.Result[0].Path,
-						FacilityTreeOrder: treeItem.Result[0].Order,
+						FacilityTreePath: tagItem.Result[0].Path,
+						FacilityTreeOrder: tagItem.Result[0].Order,
 						Children: []m.TsFacilityTreeItem{},
 					}
 					tagsList = append(tagsList, tagItem)
@@ -378,14 +409,27 @@ func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
 					FacilityTreeOrder: treeItem.Result[0].Order,
 					Children: tagsList,
 				}
-	
-				if false == Find(*data, facilityItem) {
-					*data = append(*data, facilityItem)
-				}
+
+				treeMap[facilityItem.FacilityTreePath] = facilityItem
+			}			
+		}
+	}
+	createFacilityTreeData(data, treeMap)
+	return nil
+}
+
+func sortReturnTreeData(data []m.TsFacilityTreeItem) {
+	for i :=0; i < len(data);i++ {
+		childrenItem := data[i].Children
+		sort.Slice(childrenItem, func(i, j int) bool {
+			return childrenItem[i].FacilityTreeOrder < childrenItem[j].FacilityTreeOrder
+		})
+		for j := 0; j <len(childrenItem);j++ {
+			if len(childrenItem[j].Children) > 0 {
+				sortReturnTreeData(childrenItem[j].Children)
 			}
 		}
 	}
-	return nil
 }
 
 func getAllTsFacilityTree(c *gfm.ReqContext) Response {
@@ -395,6 +439,9 @@ func getAllTsFacilityTree(c *gfm.ReqContext) Response {
 	sort.Slice(returnList, func(i, j int) bool {
         return returnList[i].FacilityTreeOrder < returnList[j].FacilityTreeOrder
 	})
+
+	sortReturnTreeData(returnList)
+
 	return JSON(200, returnList)
 }
 
@@ -522,7 +569,8 @@ func addTsFacilityTree(c *gfm.ReqContext, req m.AddTsFacilityTreePathQuery) Resp
 }
 
 func updateTsFacilityTreeTag(treeItem *m.TsFacilityTreeItem) error {
-	if  len(treeItem.Value) == 1 {
+	slicePath := strings.Split(treeItem.Value, "/")
+	if  len(slicePath) == 1 {
 		newParentId, err := strconv.Atoi(treeItem.Value)
 		if err != nil {
 			return err
@@ -581,11 +629,14 @@ func updateTsFacilityTreeTag(treeItem *m.TsFacilityTreeItem) error {
 }
 
 func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
-	if  len(treeItem.Value) == 1 {
+	slicePath := strings.Split(treeItem.Value, "/")
+	if  len(slicePath) == 1 {
+		fmt.Println(treeItem.Value)
 		newParentId, err := strconv.Atoi(treeItem.Value)
 		if err != nil {
 			return err
 		}
+		fmt.Printf("newParentId : %d", newParentId)
 		if newParentId == 0 {
 			tree := m.UpdateTsFacilityTreeFacilityQuery {
 				SiteId: treeItem.SiteId,
@@ -599,6 +650,7 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 				return err
 			}
 		} else {
+			fmt.Println(newParentId)
 			parentTree := m.GetTsFacilityTreeFacilityItemQuery {
 				SiteId: treeItem.SiteId,
 				FacilityId: newParentId,
@@ -617,6 +669,8 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 					Path: parentPath + strconv.Itoa(treeItem.FacilityId) + "/",
 					Order: treeItem.FacilityTreeOrder,
 				}
+
+				fmt.Println(tree)
 			
 				if err := bus.Dispatch(&tree); err != nil {
 					return err
@@ -641,7 +695,8 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 
 func updateTsFacilityTreeChildren(item *m.TsFacilityTreeItem) error {
 	var path string = ""
-	if  len(item.Value) == 1 {
+	slicePath := strings.Split(item.Value, "/")
+	if  len(slicePath) == 1 {
 		newParentId, err := strconv.Atoi(item.Value)
 		if err != nil {
 			return err
