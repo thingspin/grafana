@@ -19,6 +19,7 @@ export class TsTagDefineCtrl {
   // isShow: boolean;
   isEditView: boolean;
   isEditBtn: boolean;
+  isEdit: boolean;
   facility: any;
   /** @ngInject */
   constructor(
@@ -30,7 +31,7 @@ export class TsTagDefineCtrl {
     // this.isShow = false;
     this.isEditView = false;
     this.isEditBtn = true;
-
+    this.isEdit = false;
     this.facility = {
         name: "",
         desc: "",
@@ -128,34 +129,38 @@ export class TsTagDefineCtrl {
             // src Parent
             const from = event.source;
             const to = event.dest;
-            const fromNode = event.source.nodeScope.$modelValue;
-            //const fromNodeParent = event.source.nodeScope.$nodeScope.$modelValue;
+            //const fromNode = event.source.nodeScope.$modelValue;
+            const fromNodeParent = event.source.nodeScope.$parentNodeScope.$modelValue;
             // dst Parent
             const toNode = event.dest.nodesScope.$nodeScope;
             const toNodeParent = toNode.$modelValue;
             //const idx = event.dest.index;
-            if (fromNode.facility_id === toNode.node.facility_id) {
+            if (fromNodeParent.facility_id === toNodeParent.facility_id) {
                   if ( from.index < to.index ) {
                     console.log("Same Level : Up -> down");
-                    toNodeParent.children[from.index].facility_tree_order = to.index + 1;
+                    if (toNodeParent.children.length > 0) {
+                      toNodeParent.children[from.index].facility_tree_order = to.index + 1;
 
-                    postData.push(toNodeParent.children[from.index]);
-                    // 이동후 순서 변경
-                    for (let _j = from.index, _i = _j + 1; _i <= to.index; _i++,_j++) {
-                      toNodeParent.children[_i].facility_tree_order = _j + 1;
+                      postData.push(toNodeParent.children[from.index]);
+                      // 이동후 순서 변경
+                      for (let _j = from.index, _i = _j + 1; _i <= to.index; _i++,_j++) {
+                        toNodeParent.children[_i].facility_tree_order = _j + 1;
 
-                      postData.push(toNodeParent.children[_i]);
+                        postData.push(toNodeParent.children[_i]);
+                      }
                     }
                   } else {
                     console.log("Same Level : Down -> up");
-                    toNodeParent.children[from.index].facility_tree_order = to.index + 1;
+                    if (toNodeParent.children.length > 0) {
+                      toNodeParent.children[from.index].facility_tree_order = to.index + 1;
 
-                    postData.push(toNodeParent.children[from.index]);
-                    // 이동후 순서 변경
-                    for ( let _j = to.index + 1, _i = to.index; _i < from.index; _i++,_j++) {
-                      toNodeParent.children[_i].facility_tree_order = _j + 1;
+                      postData.push(toNodeParent.children[from.index]);
+                      // 이동후 순서 변경
+                      for ( let _j = to.index + 1, _i = to.index; _i < from.index; _i++,_j++) {
+                        toNodeParent.children[_i].facility_tree_order = _j + 1;
 
-                      postData.push(toNodeParent.children[_i]);
+                        postData.push(toNodeParent.children[_i]);
+                      }
                     }
                   }
             } else {
@@ -282,7 +287,6 @@ export class TsTagDefineCtrl {
   }
   editElement(scope,node) {
     //const parent = scope.$parent.$parent.$parentNodeScope.node;
-    this.onShowEditView(true);
     this.facility = {
       name: node.facility_name,
       desc: node.facility_desc,
@@ -291,6 +295,7 @@ export class TsTagDefineCtrl {
       imgpath: node.facility_path,
       tagName: node.tag_name
     };
+    this.onShowFacilityEditView(true);
     // 설비 인지 태그 인지 체크
   }
   removeElement(scope, node) {
@@ -346,18 +351,30 @@ export class TsTagDefineCtrl {
       // this.isShow = false;
   }
 
+  onShowFacilityEditView(value) {
+    if (value) {
+        this.isEditView = true;
+        this.isEditBtn = false;
+        this.isEdit = true;
+      } else {
+          this.isEditView = false;
+          this.isEditBtn = true;
+          this.isEdit = false;
+          this.facility = {
+            name: "",
+            desc: "",
+            lat: "",
+            lon: "",
+            imgpath: "",
+            tagName: ""
+        };
+      }
+  }
+
   onShowEditView(value) {
     if (value) {
         this.isEditView = true;
         this.isEditBtn = false;
-        this.facility = {
-          name: "",
-          desc: "",
-          lat: "",
-          lon: "",
-          imgpath: "",
-          tagName: ""
-        };
       } else {
           this.isEditView = false;
           this.isEditBtn = true;
@@ -373,24 +390,48 @@ export class TsTagDefineCtrl {
   }
 
   onFacilityAdd() {
-    this.onShowEditView(false);
-    this.backendSrv.post(`thingspin/sites/${this.data}/facilities`,
-    {
-        "SiteId": this.data,
-        "Name": this.facility.name,
-        "Desc": this.facility.desc,
-        "Lat": parseFloat(this.facility.lat),
-        "Lon": parseFloat(this.facility.lon),
-        "Imgpath": this.facility.imgpath
-    }).then((result) => {
-        // this.onLoadData(result);
-        console.log(result);
-        this.dataList = result;
-    }).catch(err => {
-        if (err.status === 500) {
-          appEvents.emit('alert-error', [err.statusText]);
-        }
-    });
+    console.log("===");
+    if (this.isEdit) {
+      console.log("===================Edit!");
+      this.onShowFacilityEditView(false);
+      this.backendSrv.put(`thingspin/sites/${this.data}/facilities`,
+      {
+          "SiteId": this.data,
+          "Name": this.facility.name,
+          "Desc": this.facility.desc,
+          "Lat": parseFloat(this.facility.lat),
+          "Lon": parseFloat(this.facility.lon),
+          "Imgpath": this.facility.imgpath
+      }).then((result) => {
+          // this.onLoadData(result);
+          console.log(result);
+          //this.dataList = result;
+      }).catch(err => {
+          if (err.status === 500) {
+            appEvents.emit('alert-error', [err.statusText]);
+          }
+      });
+    } else {
+      console.log("===================Add!");
+      this.onShowEditView(false);
+      this.backendSrv.post(`thingspin/sites/${this.data}/facilities`,
+      {
+          "SiteId": this.data,
+          "Name": this.facility.name,
+          "Desc": this.facility.desc,
+          "Lat": parseFloat(this.facility.lat),
+          "Lon": parseFloat(this.facility.lon),
+          "Imgpath": this.facility.imgpath
+      }).then((result) => {
+          // this.onLoadData(result);
+          console.log(result);
+          this.dataList = result;
+      }).catch(err => {
+          if (err.status === 500) {
+            appEvents.emit('alert-error', [err.statusText]);
+          }
+      });
+    }
   }
 }
 
