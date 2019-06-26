@@ -411,8 +411,9 @@ testAddGetter1(address, quantity, functioncode,flowid,posY) {
 }
 
 //template 관련
-addModbusGETTER( address, quantity, functioncode,flowid,posY,interval) {
+addModbusGETTER( name,address, quantity, functioncode,flowid,posY,interval) {
   //this.nodeModbusGetterList = "";
+  //console.log(name);
   const objInjector =      {
     "id": "TS-MODBUS-INJECT-"+address+"-"+flowid,
     "type": "inject",
@@ -464,7 +465,7 @@ addModbusGETTER( address, quantity, functioncode,flowid,posY,interval) {
     "z": "8900476a.91f358",
     "name": "Parser",
     // tslint:disable-next-line:max-line-length
-    "func": "var Total_item = "+quantity+";\n\nvar res = [\n            {\n                measurement:'modbus',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '"+address+"'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
+    "func": "var Total_item = "+quantity+";\n\nvar res = [\n            {\n                measurement:'modbus',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '"+name+"'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "x": 510,
@@ -518,7 +519,7 @@ testCreate() {
    if (this.tableList.length > 0) {
     for (let i = 0; i < this.tableList.length; i++) {
       // tslint:disable-next-line:max-line-length
-      this.addModbusGETTER(this.tableList[i].address,this.tableList[i].quantity,this.tableList[i].functioncode,this.FlowId,i*20,this.modbusReadIntervals);
+      this.addModbusGETTER(this.tableList[i].name,this.tableList[i].address,this.tableList[i].quantity,this.tableList[i].functioncode,this.FlowId,i*20,this.modbusReadIntervals);
     }
 
   }
