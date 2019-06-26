@@ -73,142 +73,165 @@ export class TsTagDefineCtrl {
       beforeDrop: (event) => {
         const postData = [];
         if (event.source.cloneModel === undefined) {
-          // 우측 트리내에서 이동 할 경우
-          console.log("This is right tree - before");
-          console.log(event);
+              // 우측 트리내에서 이동 할 경우
+              console.log("This is right tree - before");
+              console.log(event);
 
-          if (event.dest.nodesScope.$nodeScope === null) {
-            // 설비가 Lv1 로 이동하는 경우
-            if (event.source.nodesScope.$nodeScope !== null) {
-              console.log("From >= lv2, to == Lv1 ");
-              // Src 순서 변경
-              for ( let _i = event.source.index + 1, _j = event.source.index; _i < event.source.nodesScope.$modelValue.length; _i++,_j++) {
-                event.source.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
+              if (event.dest.nodesScope.$nodeScope === null) {
+                // 설비가 Lv1 로 이동하는 경우
+                if (event.source.nodesScope.$nodeScope !== null) {
+                  console.log("From >= lv2, to == Lv1 ");
+                  // Src 순서 변경
+                  for ( let _i = event.source.index + 1, _j = event.source.index; _i < event.source.nodesScope.$modelValue.length; _i++,_j++) {
+                    event.source.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
 
-                postData.push(event.source.nodesScope.$modelValue[_i]);
-              }
-              // Dst 내용 변경
-              event.source.nodesScope.$modelValue[event.source.index].value = "0";
-              event.source.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
+                    postData.push(event.source.nodesScope.$modelValue[_i]);
+                  }
+                  // Dst 내용 변경
+                  event.source.nodesScope.$modelValue[event.source.index].value = "0";
+                  event.source.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
 
-              postData.push(event.source.nodesScope.$modelValue[event.source.index]);
-              // Dst 순서 변경
-              for ( let _i = event.dest.index, _j = event.dest.index + 1; _i < event.dest.nodesScope.$modelValue.length; _i++, _j++) {
-                event.dest.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
+                  postData.push(event.source.nodesScope.$modelValue[event.source.index]);
+                  // Dst 순서 변경
+                  for ( let _i = event.dest.index, _j = event.dest.index + 1; _i < event.dest.nodesScope.$modelValue.length; _i++, _j++) {
+                    event.dest.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
 
-                postData.push(event.dest.nodesScope.$modelValue[_i]);
-              }
-            } else {
-              // Lv1 설비 사이의 이동
-              if ( event.source.index < event.dest.index ) {
-                console.log("From Lv1 up -> to Lv1 down");
-                // 위에서 아래로 이동할 때
-                event.dest.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
+                    postData.push(event.dest.nodesScope.$modelValue[_i]);
+                  }
+                } else {
+                  // Lv1 설비 사이의 이동
+                  if ( event.source.index < event.dest.index ) {
+                    console.log("From Lv1 up -> to Lv1 down");
+                    // 위에서 아래로 이동할 때
+                    event.dest.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
 
-                postData.push(event.dest.nodesScope.$modelValue[event.source.index]);
-                // 이동 후 순서 변경
-                for (let _j = event.source.index, _i = _j + 1; _i <= event.dest.index; _i++,_j++) {
-                  event.dest.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
+                    postData.push(event.dest.nodesScope.$modelValue[event.source.index]);
+                    // 이동 후 순서 변경
+                    for (let _j = event.source.index, _i = _j + 1; _i <= event.dest.index; _i++,_j++) {
+                      event.dest.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
 
-                  postData.push(event.dest.nodesScope.$modelValue[_i]);
-                }
-              } else {
-                console.log("From Lv1 down -> to Lv1 up");
-                event.dest.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
-
-                postData.push(event.dest.nodesScope.$modelValue[event.source.index]);
-                for ( let _j = event.dest.index + 1, _i = event.dest.index; _i < event.source.index; _i++,_j++) {
-                  event.dest.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
-
-                  postData.push(event.dest.nodesScope.$modelValue[_i]);
-                }
-              }
-            }
-          }else {
-            console.log("From >= lv1 , to >= lv2 : normal case");
-            // src Parent
-            const from = event.source;
-            const to = event.dest;
-            //const fromNode = event.source.nodeScope.$modelValue;
-            const fromNodeParent = event.source.nodeScope.$parentNodeScope.$modelValue;
-            // dst Parent
-            const toNode = event.dest.nodesScope.$nodeScope;
-            const toNodeParent = toNode.$modelValue;
-            //const idx = event.dest.index;
-            if (fromNodeParent.facility_id === toNodeParent.facility_id) {
-                  if ( from.index < to.index ) {
-                    console.log("Same Level : Up -> down");
-                    if (toNodeParent.children.length > 0) {
-                      toNodeParent.children[from.index].facility_tree_order = to.index + 1;
-
-                      postData.push(toNodeParent.children[from.index]);
-                      // 이동후 순서 변경
-                      for (let _j = from.index, _i = _j + 1; _i <= to.index; _i++,_j++) {
-                        toNodeParent.children[_i].facility_tree_order = _j + 1;
-
-                        postData.push(toNodeParent.children[_i]);
-                      }
+                      postData.push(event.dest.nodesScope.$modelValue[_i]);
                     }
                   } else {
-                    console.log("Same Level : Down -> up");
-                    if (toNodeParent.children.length > 0) {
-                      toNodeParent.children[from.index].facility_tree_order = to.index + 1;
+                    console.log("From Lv1 down -> to Lv1 up");
+                    event.dest.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
 
-                      postData.push(toNodeParent.children[from.index]);
-                      // 이동후 순서 변경
-                      for ( let _j = to.index + 1, _i = to.index; _i < from.index; _i++,_j++) {
-                        toNodeParent.children[_i].facility_tree_order = _j + 1;
+                    postData.push(event.dest.nodesScope.$modelValue[event.source.index]);
+                    for ( let _j = event.dest.index + 1, _i = event.dest.index; _i < event.source.index; _i++,_j++) {
+                      event.dest.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
 
-                        postData.push(toNodeParent.children[_i]);
-                      }
+                      postData.push(event.dest.nodesScope.$modelValue[_i]);
                     }
                   }
-            } else {
-              // 다른 레벨
-              console.log("diff level");
-              // Src 순서 변경
-              for ( let _i = event.source.index + 1, _j = event.source.index; _i < event.source.nodesScope.$modelValue.length; _i++,_j++) {
-                event.source.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
+                }
+              } else if (event.source.nodesScope.$nodeScope === null) {
+                // 설비1 에서 다른 레벨로 가는 경우
+                console.log("From lv1, to >= lv2");
+                // Src 순서 변경
+                for ( let _i = event.source.index + 1, _j = event.source.index; _i < event.source.nodesScope.$modelValue.length; _i++,_j++) {
+                  event.source.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
 
-                postData.push(event.source.nodesScope.$modelValue[_i]);
+                  postData.push(event.source.nodesScope.$modelValue[_i]);
+                }
+                // 부모정보 변경
+                const toNode = event.dest.nodesScope.$nodeScope;
+                const toNodeParent = toNode.$modelValue;
+                const to = event.dest;
+                event.source.nodesScope.$modelValue[event.source.index].value = toNodeParent.facility_id.toString();
+                event.source.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
+
+                postData.push(event.source.nodesScope.$modelValue[event.source.index]);
+                // Dst 순서 변경
+                for ( let _i = to.index, _j = to.index + 1; _i < toNodeParent.children.length; _i++, _j++) {
+                  toNodeParent.children[_i].facility_tree_order = _j + 1;
+
+                  postData.push(toNodeParent.children[_i]);
+                }
+              } else {
+                console.log("From >= lv2 , to >= lv2 : normal case");
+                // src Parent
+                const from = event.source;
+                const to = event.dest;
+                //const fromNode = event.source.nodeScope.$modelValue;
+                const fromNodeParent = event.source.nodeScope.$parentNodeScope.$modelValue;
+                // dst Parent
+                const toNode = event.dest.nodesScope.$nodeScope;
+                const toNodeParent = toNode.$modelValue;
+                //const idx = event.dest.index;
+                if (fromNodeParent.facility_id === toNodeParent.facility_id) {
+                      if ( from.index < to.index ) {
+                        console.log("Same Level : Up -> down");
+                        if (toNodeParent.children.length > 0) {
+                          toNodeParent.children[from.index].facility_tree_order = to.index + 1;
+
+                          postData.push(toNodeParent.children[from.index]);
+                          // 이동후 순서 변경
+                          for (let _j = from.index, _i = _j + 1; _i <= to.index; _i++,_j++) {
+                            toNodeParent.children[_i].facility_tree_order = _j + 1;
+
+                            postData.push(toNodeParent.children[_i]);
+                          }
+                        }
+                      } else {
+                        console.log("Same Level : Down -> up");
+                        if (toNodeParent.children.length > 0) {
+                          toNodeParent.children[from.index].facility_tree_order = to.index + 1;
+
+                          postData.push(toNodeParent.children[from.index]);
+                          // 이동후 순서 변경
+                          for ( let _j = to.index + 1, _i = to.index; _i < from.index; _i++,_j++) {
+                            toNodeParent.children[_i].facility_tree_order = _j + 1;
+
+                            postData.push(toNodeParent.children[_i]);
+                          }
+                        }
+                      }
+                } else {
+                  // 다른 레벨
+                  console.log("diff level");
+                  // Src 순서 변경
+                  for ( let _i = event.source.index + 1, _j = event.source.index; _i < event.source.nodesScope.$modelValue.length; _i++,_j++) {
+                    event.source.nodesScope.$modelValue[_i].facility_tree_order = _j + 1;
+
+                    postData.push(event.source.nodesScope.$modelValue[_i]);
+                  }
+                  // 부모정보 변경
+                  event.source.nodesScope.$modelValue[event.source.index].value = toNodeParent.facility_id.toString();
+                  event.source.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
+
+                  postData.push(event.source.nodesScope.$modelValue[event.source.index]);
+                  // Dst 순서 변경
+                  for ( let _i = to.index, _j = to.index + 1; _i < toNodeParent.children.length; _i++, _j++) {
+                    toNodeParent.children[_i].facility_tree_order = _j + 1;
+
+                    postData.push(toNodeParent.children[_i]);
+                  }
+                }
               }
-              // 부모정보 변경
-              event.source.nodesScope.$modelValue[event.source.index].value = toNodeParent.facility_id.toString();
-              event.source.nodesScope.$modelValue[event.source.index].facility_tree_order = event.dest.index + 1;
-
-              postData.push(event.source.nodesScope.$modelValue[event.source.index]);
-              // Dst 순서 변경
-              for ( let _i = to.index, _j = to.index + 1; _i < toNodeParent.children.length; _i++, _j++) {
-                toNodeParent.children[_i].facility_tree_order = _j + 1;
-
-                postData.push(toNodeParent.children[_i]);
-              }
-            }
-          }
-          // Update ! 이동은 정보 업데이트할 필요없으므로 response : true or false
-          const test = {
-            "Result" : postData,
-          };
-          let result = true;
-          console.log("Post before");
-          console.log(postData);
-          $.ajax({
-            type: 'PUT',
-            url: `/thingspin/sites/`+ this.data + `/facilities/tree`,
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8",
-            data: JSON.stringify(test),
-            async: false,
-            success: (data) => {
-              console.log("Post result");
-              console.log(data);
-            },
-            error : (request, status, error ) => {
-              console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-              result = false;
-            },
-          });
-          return result;
+              // Update ! 이동은 정보 업데이트할 필요없으므로 response : true or false
+              const test = {
+                "Result" : postData,
+              };
+              let result = true;
+              console.log("Post before");
+              console.log(postData);
+              $.ajax({
+                type: 'PUT',
+                url: `/thingspin/sites/`+ this.data + `/facilities/tree`,
+                dataType: "json",
+                contentType: "application/json; charset=UTF-8",
+                data: JSON.stringify(test),
+                async: false,
+                success: (data) => {
+                  console.log("Post result");
+                  console.log(data);
+                },
+                error : (request, status, error ) => {
+                  console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                  result = false;
+                },
+              });
+              return result;
         } else {
           console.log("This is left tree");
           console.log(event);
