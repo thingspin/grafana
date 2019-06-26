@@ -3,6 +3,7 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/core';
 import $ from 'jquery';
 import "./tagdefine.scss";
+//import StateHistory from 'app/features/alerting/StateHistory';
 //import appEvents from 'app/core/app_events';
 
 export class TsTagDefineCtrl {
@@ -35,7 +36,8 @@ export class TsTagDefineCtrl {
         desc: "",
         lat: "",
         lon: "",
-        imgpath: ""
+        imgpath: "",
+        tagName: ""
     };
 
     if ($routeParams.id !== undefined || $routeParams.id !== null) {
@@ -54,7 +56,6 @@ export class TsTagDefineCtrl {
         }
       });
     }
-    console.log("==============================");
     // left tree data
     backendSrv.get('/thingspin/tagdefine').then((res: any) => {
       console.log("connect data");
@@ -271,13 +272,57 @@ export class TsTagDefineCtrl {
               //onsole.log(event);
               //console.log(event.dest.nodesScope.$nodeScope.node.children[this.resultIdx]);
               event.dest.nodesScope.$nodeScope.node.children[this.resultIdx] = this.result[0];
+              console.log(event.dest.nodesScope.$nodeScope.node.children[this.resultIdx]);
+              console.log(event);
             }
           },300);
         }
       }
     };
   }
-
+  editElement(scope,node) {
+    //const parent = scope.$parent.$parent.$parentNodeScope.node;
+    this.onShowEditView(true);
+    this.facility = {
+      name: node.facility_name,
+      desc: node.facility_desc,
+      lat: node.facility_lat,
+      lon: node.lon,
+      imgpath: node.facility_path,
+      tagName: node.tag_name
+    };
+    // 설비 인지 태그 인지 체크
+  }
+  removeElement(scope, node) {
+    console.log("================= Remove!");
+    const orders = [];
+    const deletes = [];
+    const parent = scope.$parent.$parent.$parentNodeScope.node;
+    for ( let _i = node.facility_tree_order; _i < parent.children.length; _i++) {
+      parent.children[_i].facility_tree_order = _i;
+      orders.push(parent.children[_i]);
+    }
+    deletes.push(node);
+    const postData = {
+      "Result": orders,
+      "Delete": deletes,
+    };
+    $.ajax({
+      type: 'DELETE',
+      url: `/thingspin/sites/`+ this.data + `/facilities/tree`,
+      dataType: "json",
+      contentType: "application/json; charset=UTF-8",
+      data: JSON.stringify(postData),
+      async: false,
+      success: (data) => {
+        scope.remove();
+        console.log(this.dataList);
+      },
+      error : (request, status, error ) => {
+        console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+      },
+    });
+  }
   link(scope, elem, attrs, ctrl) {
       //ctrl.scope = scope;
   }
@@ -305,6 +350,14 @@ export class TsTagDefineCtrl {
     if (value) {
         this.isEditView = true;
         this.isEditBtn = false;
+        this.facility = {
+          name: "",
+          desc: "",
+          lat: "",
+          lon: "",
+          imgpath: "",
+          tagName: ""
+        };
       } else {
           this.isEditView = false;
           this.isEditBtn = true;

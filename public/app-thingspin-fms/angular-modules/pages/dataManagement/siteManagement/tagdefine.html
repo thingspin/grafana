@@ -49,7 +49,13 @@
                 <span ng-class="{separator: true, enable: ctrl.facility.imgpath}"></span>
             </div>
         </div>
-        
+        <div class="ts-input-group img-path">
+            <div class="ts-mqtt-url-label">태그 이름</div>
+            <div class="ts-input">
+                <input type="text" ng-model="ctrl.facility.tagName"/>
+                <span ng-class="{separator: true, enable: ctrl.facility.imgpath}"></span>
+            </div>
+        </div>
         <div id="mqtt-addview-right-button-area">
             <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowEditView(false)">
                 취소
@@ -129,6 +135,12 @@
                         <div ui-tree-handle class="tree-node tree-node-content">
                                 <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
                                 <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
+                                <a data-nodrag ng-click="ctrl.editElement(this,node)">
+                                    <span class="tsi icon-ts-create"></span>
+                                </a>
+                                <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)">
+                                    <span class="tsi icon-ts-delete"></span>
+                                </a>
                         </div>
 
                         <!--Level 2 starting point-->
@@ -137,6 +149,12 @@
                                 <div ui-tree-handle class="tree-node tree-node-content">
                                         <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
                                         <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
+                                        <a data-nodrag ng-click="ctrl.editElement(this,node)">
+                                            <span class="tsi icon-ts-create"></span>
+                                        </a>
+                                        <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)">
+                                            <span class="tsi icon-ts-delete"></span>
+                                        </a>
                                 </div>
                                 <!--Level 3 starting point-->
                                 <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
@@ -144,6 +162,12 @@
                                         <div ui-tree-handle class="tree-node tree-node-content ">
                                                 <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
                                                 <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
+                                                <a data-nodrag ng-click="ctrl.editElement(this,node)">
+                                                    <span class="tsi icon-ts-create"></span>
+                                                </a>
+                                                <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)">
+                                                    <span class="tsi icon-ts-delete"></span>
+                                                </a>
                                         </div>
                                         <!--Level 4 starting point-->
                                         <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
@@ -151,6 +175,12 @@
                                                 <div ui-tree-handle class="tree-node tree-node-content">
                                                         <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
                                                         <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
+                                                        <a data-nodrag ng-click="ctrl.editElement(this,node)">
+                                                            <span class="tsi icon-ts-create"></span>
+                                                        </a>
+                                                        <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)">
+                                                            <span class="tsi icon-ts-delete"></span>
+                                                        </a>
                                                 </div>
                                                 <!--Level 5 starting point-->
                                                 <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
@@ -158,6 +188,12 @@
                                                         <div ui-tree-handle class="tree-node tree-node-content">
                                                                 <a ng-if="node.tag_name !== ''">{{node.tag_name}}</a>
                                                                 <a ng-if="node.tag_name === ''">{{node.facility_name}}</a>
+                                                                <a data-nodrag ng-click="ctrl.editElement(this,node)">
+                                                                    <span class="tsi icon-ts-create"></span>
+                                                                </a>
+                                                                <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)">
+                                                                    <span class="tsi icon-ts-delete"></span>
+                                                                </a>
                                                         </div>
                                                     </li>
                                                 </ol>

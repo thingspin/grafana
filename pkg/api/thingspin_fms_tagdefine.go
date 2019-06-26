@@ -82,6 +82,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 						TagColumnType : v[1].(string),
 						TagName : v[0].(string),
 						FacilityTreeOrder : order,
+						Children : []m.TsFacilityTreeItem{},
 					})
 
 					lev2Map[ms.Name] = lv2
@@ -94,6 +95,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 						TagColumnType : v[1].(string),
 						TagName : v[0].(string),
 						FacilityTreeOrder : order,
+						Children : []m.TsFacilityTreeItem{},
 					})
 
 					lev2Map[ms.Name] = m.TsFacilityTreeItem{
