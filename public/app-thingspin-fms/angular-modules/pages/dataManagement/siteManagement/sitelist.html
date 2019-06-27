@@ -56,7 +56,7 @@
             </thead>
 
             <tbody>
-                <tr id='table-tr-{{$index}}' class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
+                <tr id='table-tr-{{$index}}' class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index" ng-click="ctrl.tableClick(item.id, $index)">
                     <td>
                         <div class="ts-site-id">
                             {{ item.titleid }}
@@ -65,11 +65,11 @@
                     <td>{{ item.name }}</td>
                     <td>{{ item.desc }}</td>
                     <td>
-                        <button class="btn btn-padding" ng-click="ctrl.tableClick(item.id, $index)">
+                        <!-- <button class="btn btn-padding" ng-click="ctrl.tableClick(item.id, $index)">
                             <i class="fa fa-university"></i>
-                        </button>
-                        <button class="btn btn-padding-margin" ng-click="ctrl.editSite(item)">
-                            <i class="fa fa-pencil"></i>
+                        </button> -->
+                        <button class="btn btn-padding" ng-click="ctrl.editSite(item)">
+                            <i class="fa fa-cog"></i>
                         </button>
                         <button class="btn btn-padding-margin" ng-click="ctrl.removeSite(item.id)">
                             <i class="fa fa-trash"></i>
