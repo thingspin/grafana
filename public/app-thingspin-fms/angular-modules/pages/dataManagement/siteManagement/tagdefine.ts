@@ -225,6 +225,7 @@ export class TsTagDefineCtrl {
                 success: (data) => {
                   console.log("Post result");
                   console.log(data);
+                  appEvents.emit('alert-success', ['이동되었습니다.']);
                 },
                 error : (request, status, error ) => {
                   console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -276,6 +277,7 @@ export class TsTagDefineCtrl {
               console.log(data);
               this.result = data;
               this.resultIdx = idx;
+              appEvents.emit('alert-success', ['이동되었습니다.']);
             },
             error : (request, status, error ) => {
               exitFlag = false;
@@ -390,6 +392,7 @@ export class TsTagDefineCtrl {
       success: (data) => {
         scope.remove();
         console.log(this.dataList);
+        appEvents.emit('alert-success', ['삭제되었습니다.']);
       },
       error : (request, status, error ) => {
         console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -473,6 +476,7 @@ export class TsTagDefineCtrl {
       }).then((result) => {
           // this.onLoadData(result);
           console.log(result);
+          appEvents.emit('alert-success', ['수정되었습니다.']);
           //this.dataList = result;
       }).catch(err => {
           if (err.status === 500) {
@@ -494,6 +498,7 @@ export class TsTagDefineCtrl {
           // this.onLoadData(result);
           console.log(result);
           this.dataList = result;
+          appEvents.emit('alert-success', ['추가되었습니다.']);
       }).catch(err => {
           if (err.status === 500) {
             appEvents.emit('alert-error', [err.statusText]);

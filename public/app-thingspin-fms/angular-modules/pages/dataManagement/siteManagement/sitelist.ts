@@ -84,6 +84,7 @@ export class TsSiteListCtrl implements angular.IController {
         this.backendSrv.delete("/thingspin/sites/"+sid).then((result) => {
             console.log("Remove after");
             console.log(result);
+            appEvents.emit('alert-success', ['삭제되었습니다.']);
             this.onLoadData(result);
         }).catch(err => {
             if (err.status === 500) {
@@ -118,6 +119,7 @@ export class TsSiteListCtrl implements angular.IController {
                 "Lat": parseFloat(this.lat),
                 "Lon": parseFloat(this.lon),
             }).then((result) => {
+                appEvents.emit('alert-success', ['수정되었습니다.']);
                 this.onLoadData(result);
             }).catch(err => {
                 if (err.status === 500) {
@@ -133,6 +135,7 @@ export class TsSiteListCtrl implements angular.IController {
                 "Lat": parseFloat(this.lat),
                 "Lon": parseFloat(this.lon),
             }).then((result) => {
+                appEvents.emit('alert-success', ['추가되었습니다.']);
                 this.onLoadData(result);
             }).catch(err => {
                 if (err.status === 500) {
