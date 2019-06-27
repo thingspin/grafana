@@ -37,7 +37,7 @@ export class TsSiteListCtrl implements angular.IController {
         maxPageLen: 10,
         pageNode: [],
     };
-
+    isEdit: boolean;
     isEditView: boolean;
     isEditBtn: boolean;
     name: string;
@@ -52,6 +52,7 @@ export class TsSiteListCtrl implements angular.IController {
         private backendSrv: BackendSrv,
         private $location: angular.ILocationService,
     ) {
+        this.isEdit = false;
         this.isEditView = false;
         this.isEditBtn = true;
         this.list = [];
@@ -66,9 +67,37 @@ export class TsSiteListCtrl implements angular.IController {
 
     $onDestroy(): void {
     }
-
+    editSite(site) {
+        this.onShowEditView(true);
+        this.isEdit = true;
+        this.data = site.id;
+        this.name = site.name;
+        this.desc = site.desc;
+        this.lon = site.lon;
+        this.lat = site.lat;
+        console.log("==========Edit site");
+        console.log(site);
+    }
+    removeSite(sid) {
+        console.log("Remove site");
+        console.log(sid);
+        this.backendSrv.delete("/thingspin/sites/"+sid).then((result) => {
+            console.log("Remove after");
+            console.log(result);
+            this.onLoadData(result);
+        }).catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+        });
+    }
     onShowEditView(value) {
         if (value) {
+            this.name = "";
+            this.desc = "";
+            this.lon = "";
+            this.lat = "";
+            this.isEdit = false;
             this.isEditView = true;
             this.isEditBtn = false;
         } else {
@@ -77,19 +106,40 @@ export class TsSiteListCtrl implements angular.IController {
         }
     }
     onSiteAdd(): void {
-        this.backendSrv.post("/thingspin/sites",
-        {
-            "Name": this.name,
-            "Desc": this.desc,
-            "Lat": parseFloat(this.lat),
-            "Lon": parseFloat(this.lon),
-        }).then((result) => {
-            this.onLoadData(result);
-        }).catch(err => {
-            if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
-            }
-        });
+        if (this.isEdit) {
+            // Edit
+            console.log("sid");
+            console.log(this.data);
+            this.backendSrv.put("/thingspin/sites",
+            {
+                "Id": this.data,
+                "Name": this.name,
+                "Desc": this.desc,
+                "Lat": parseFloat(this.lat),
+                "Lon": parseFloat(this.lon),
+            }).then((result) => {
+                this.onLoadData(result);
+            }).catch(err => {
+                if (err.status === 500) {
+                  appEvents.emit('alert-error', [err.statusText]);
+                }
+            });
+        } else {
+            // Add
+            this.backendSrv.post("/thingspin/sites",
+            {
+                "Name": this.name,
+                "Desc": this.desc,
+                "Lat": parseFloat(this.lat),
+                "Lon": parseFloat(this.lon),
+            }).then((result) => {
+                this.onLoadData(result);
+            }).catch(err => {
+                if (err.status === 500) {
+                  appEvents.emit('alert-error', [err.statusText]);
+                }
+            });
+        }
     }
 
     siteAdd(): void {
