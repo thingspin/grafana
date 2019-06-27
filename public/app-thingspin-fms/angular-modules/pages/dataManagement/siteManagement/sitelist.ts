@@ -3,6 +3,7 @@ import angular from "angular";
 import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/core';
+import $ from 'jquery';
 import "./sitelist.scss";
 
 interface SiteTableData {
@@ -81,6 +82,23 @@ export class TsSiteListCtrl implements angular.IController {
     removeSite(sid) {
         console.log("Remove site");
         console.log(sid);
+        $.ajax({
+            type: 'DELETE',
+            url: "/thingspin/sites/"+sid,
+            dataType: "json",
+            contentType: "application/json; charset=UTF-8",
+            async: false,
+            success: (result) => {
+                console.log("Remove after");
+                console.log(result);
+                appEvents.emit('alert-success', ['삭제되었습니다.']);
+                this.onLoadData(result);
+            },
+            error : (request, status, err ) => {
+                appEvents.emit('alert-error', [err]);
+            },
+        });
+        /*
         this.backendSrv.delete("/thingspin/sites/"+sid).then((result) => {
             console.log("Remove after");
             console.log(result);
@@ -91,6 +109,7 @@ export class TsSiteListCtrl implements angular.IController {
               appEvents.emit('alert-error', [err.statusText]);
             }
         });
+        */
     }
     onShowEditView(value) {
         if (value) {
@@ -165,7 +184,7 @@ export class TsSiteListCtrl implements angular.IController {
     onLoadData(item) {
         this.list = [];
         console.log(item);
-        if (item !== null || item !== undefined) {
+        if (item !== null) {
             for (let i = 0; i< item.length; i++) {
                 const siteItem = {} as SiteTableData;
                 siteItem.id = item[i].id;
@@ -177,6 +196,7 @@ export class TsSiteListCtrl implements angular.IController {
             }
             this.initTable();
         }
+        this.initTable();
     }
     // TABLE Method
     tableClick(value, idx) {
