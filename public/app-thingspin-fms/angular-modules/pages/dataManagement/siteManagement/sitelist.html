@@ -20,6 +20,7 @@
                 <span ng-class="{separator: true, enable: ctrl.desc}"></span>
             </div>
         </div>
+        <!--
         <div class="ts-input-group lat">
             <div class="ts-mqtt-collect-label">위도</div>
             <div class="ts-input">
@@ -34,6 +35,7 @@
                 <span ng-class="{separator: true, enable: ctrl.lon}"></span>
             </div>
         </div>
+        -->
         <div id="mqtt-addview-right-button-area">
             <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowEditView(false)">
                 취소
@@ -62,8 +64,10 @@
                     <th>Id</th>
                     <th>사이트 명</th>
                     <th>설명</th>
+                    <!--
                     <th>위도</th>
                     <th>경도</th>
+                    -->
                     <th>동작</th>
                 </tr>
             </thead>
@@ -73,8 +77,10 @@
                     <td>{{ item.id }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.desc }}</td>
+                     <!--
                     <td>{{ item.lat }}</td>
                     <td>{{ item.lon }}</td>
+                     -->
                     <td>
                         <button class="btn" ng-click="ctrl.tableClick(item.id, $index)">
                             <i class="fa fa-university"></i>
