@@ -69,13 +69,16 @@
             </thead>
 
             <tbody>
-                <tr id='table-tr-{{$index}}' class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index" ng-click="ctrl.tableClick(item.id, $index)">
+                <tr id='table-tr-{{$index}}' class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
                     <td>{{ item.id }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.desc }}</td>
                     <td>{{ item.lat }}</td>
                     <td>{{ item.lon }}</td>
                     <td>
+                        <button class="btn" ng-click="ctrl.tableClick(item.id, $index)">
+                            <i class="fa fa-university"></i>
+                        </button>
                         <button class="btn" ng-click="ctrl.editSite(item)">
                             <i class="fa fa-pencil"></i>
                         </button>
