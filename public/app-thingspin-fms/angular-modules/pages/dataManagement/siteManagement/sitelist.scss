@@ -32,7 +32,7 @@ ts-site-list {
     }
     
     .ts-site-main-title {
-        margin-top: 17px;
+        margin-top: 16px;
         display: inline-block;
         opacity: 0.8;
         font-family: Roboto;
@@ -48,7 +48,7 @@ ts-site-list {
     
     #site-add-btn {
         float: right;
-        width: 100px;
+        width: 88px;
         height: 36px;
         border-radius: 4px;
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
@@ -58,11 +58,34 @@ ts-site-list {
 
     #site-add-plus-btn {
         width: 80px;
-        height: 28px;
+        height: 36px;
         border-radius: 4px;
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
         background-color: #1e88e5;
         color:#ffffff;
+    }
+
+    #site-cancel-btn {
+        width: 80px;
+        height: 36px;
+        margin-right:16px;
+        border-radius: 4px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+        background-color: #6a6a6a;
+        color:#ffffff;
+    }
+
+    .ts-site-input-area {
+        margin-top: 21px;
+        height: 193px;
+        border: solid 1px #dcdbdc;
+        background-color: #ffffff;        
+    }
+
+    .ts-site-input-title {
+        font-size: 16px;
+        margin-left: 20px;
+        margin-top: 20px;
     }
 
     .ts-site-table-container {
@@ -74,11 +97,15 @@ ts-site-list {
             background-color: rgba(#000,0);
         }
         .connect-table-header {
+            height: 15px;
+            font-size: 12px;
             opacity: 0.6;
         }
         .connect-page-rows {
             display: inline-block;
             .connect-table-select {
+                font-size: 12px;
+                height:16px;
                 width: 100%;
                 border: 0;
             }
@@ -95,12 +122,14 @@ ts-site-list {
                     }
                 }
                 th {
-                    padding: 7px 0;
-                    padding-left: 7px;
+                    font-size:12px;
+                    height: 28px;
+                    padding: 4px 0 5px 0;
+                    padding-left: 16px;
                 }
                 td {
-                    padding: 12px 0;
-                    padding-left: 7px;
+                    font-size:14px;
+                    padding-left: 16px;
                     color: rgba(#1e1e1e, 0.8);
                     button {
                         font-size: 20px;
@@ -114,18 +143,48 @@ ts-site-list {
                         font-size: 20px;
                     }
                 }
+                .ts-site-id {
+                    font-size: 14px;
+                    width: fit-content;
+                    height: 32px;
+                    padding: 5px 16px 6px 16px;
+                    border-radius: 4px;
+                    border: solid 1px #1e88e5;
+                    color: #1e88e5;
+                    margin-top: 4px;
+                    margin-bottom: 4px;
+                }
+                .th-site-id {
+                    width:16.86%
+                }
+                .th-site-name {
+                    width:25.30%
+                }
+                .th-site-desc {
+                    width:42.17%
+                }
                 .ts-table-header {
                     background-color: #ecebeb;
                 }
                 .selected {
                     background-color: #e3f2fd;
                 }
+                .btn-padding {
+                    font-size: 17.5px;
+                    padding: 4px 4px 4px 4px;
+                }
+                .btn-padding-margin {
+                    margin-left: 20px;
+                    font-size: 17.5px;
+                    padding: 4px 4px 4px 4px;
+                }                
             }
         }
         .connect-table-footer {
             width: 100%;
             display: inline-flex;
             .table-page-range {
+                font-size: 12px;
                 opacity: 0.6;
             }
             .table-paging {
@@ -142,6 +201,71 @@ ts-site-list {
     }    
 }
 
+.ts-site-right-button-area {
+    display:block;
+    float: right;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
 ts-site-table {
     background-color: #1e88e5;
+}
+
+.ts-site-input-group {
+    margin-top: 41px;
+    display: inline-flex;
+
+    &.name {
+        width: 38%;
+    }
+    &.desc {
+        margin-left: 4.25%;
+        width: 56.3%;
+    }
+    .ts-site-input-label-name {
+        margin-left: 20px;
+        margin-top:10px;
+        width: 64px;
+        display: flex;
+        align-items: left;
+    }
+    .ts-site-input-label-desc {
+        margin-top:10px;
+        width:59px;
+        display: flex;
+        align-items: left;
+    }
+    .ts-input {
+        margin-left: 16px;
+        display: inline-block;
+        width: 100%;
+        &>:first-child {
+            width: 100%;
+            height: 36px;
+            border-radius: 4px;
+            padding-left: 8px;
+            background-color: rgba(#1e1e1e, 0.07);
+            &:focus + .separator {
+                opacity: 1;
+                height: 2px;
+                background: #1e88e5;
+                transform: scaleX(1) translateY(-2px);   
+            }
+        }
+        .separator {
+            display: block;
+            opacity: 0;
+            width: 100%;
+            background: rgba(#1e1e1e, 0.3);
+            transform: scaleX(0) translateY(-2px);
+            transform-origin: 50%;
+            transition: all .15s linear;
+            &.enable {
+                opacity: 1;
+                height: 1px;
+                transform: scaleX(1) translateY(-2px);   
+            }
+        }
+    }
 }
