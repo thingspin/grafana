@@ -377,12 +377,22 @@ export class TsTagDefineCtrl {
   */
   removeElement(scope, node) {
     console.log("================= Remove!");
+    console.log(scope);
     const orders = [];
     const deletes = [];
-    const parent = scope.$parent.$parent.$parentNodeScope.node;
-    for ( let _i = node.facility_tree_order; _i < parent.children.length; _i++) {
-      parent.children[_i].facility_tree_order = _i;
-      orders.push(parent.children[_i]);
+    if (scope.$parent.$parent.$nodeScope === null) {
+        // lv1 삭제
+      const parent = scope.$parent.$parent.$parent.$modelValue;
+      for ( let _i = node.facility_tree_order; _i < parent.length; _i++) {
+        parent[_i].facility_tree_order = _i;
+        orders.push(parent[_i]);
+      }
+    } else {
+      const parent = scope.$parent.$parent.$parentNodeScope.node;
+      for ( let _i = node.facility_tree_order; _i < parent.children.length; _i++) {
+        parent.children[_i].facility_tree_order = _i;
+        orders.push(parent.children[_i]);
+      }
     }
     deletes.push(node);
     const postData = {
