@@ -73,19 +73,32 @@
                     <ol ui-tree-nodes="" ng-model="ctrl.source">
                         <li ng-repeat="pnode in ctrl.source" ui-tree-node>
                             <div>
-                                <div>
-                                    <i class="fa fa-industry"></i>
-                                    <a>{{pnode.label}}</a>
-                                </div>
+                                <a data-nodrag ng-click="ctrl.toggle(this)">
+                                    <span ng-class="{
+                                        'tsi icon-ts-arrow_drop_up': collapsed,
+                                        'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                        }">
+                                    </span>
+                                 </a>
+                                <i class="fa fa-industry"></i>
+                                <a>{{pnode.label}}</a>
                             </div>
+                            
         
                             <!--Level 2 starting point-->
                             <ol ui-tree-nodes="" ng-model="pnode.children" ng-class="{hidden: collapsed}">
-                                <li ng-repeat="pnode in pnode.children" ui-tree-node>    
+                                <li ng-repeat="pnode in pnode.children" ui-tree-node> 
                                     <div>
                                         <!--
                                         <input type="checkbox" ng-click="ctrl.checked(pnode2)" ng-checked="pnode2.ischecked" />
                                         -->
+                                        <a data-nodrag ng-click="ctrl.toggle(this)">
+                                            <span ng-class="{
+                                                'tsi icon-ts-arrow_drop_up': collapsed,
+                                                'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                                }">
+                                            </span>
+                                        </a>
                                         <i class="fa fa-steam"></i>
                                         <a>{{pnode.facility_name}}</a>
                                     </div>
@@ -137,6 +150,13 @@
                 <ol ui-tree-nodes="" ng-model="ctrl.dataList">
                     <li ng-repeat="node in ctrl.dataList" ui-tree-node>
                         <div ui-tree-handle class="tree-node tree-node-content">
+                                <a data-nodrag ng-click="ctrl.toggle(this)">
+                                    <span ng-class="{
+                                        'tsi icon-ts-arrow_drop_up': collapsed,
+                                        'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                        }">
+                                    </span>
+                                </a>
                                 <a ng-if="node.tag_id !== 0">
                                     <i class="fa fa-arrows-h"></i>
                                 </a>
@@ -161,6 +181,13 @@
                         <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
                             <li ng-repeat="node in node.children" ui-tree-node>
                                 <div ui-tree-handle class="tree-node tree-node-content">
+                                        <a data-nodrag ng-click="ctrl.toggle(this)">
+                                            <span ng-class="{
+                                                'tsi icon-ts-arrow_drop_up': collapsed,
+                                                'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                                }">
+                                            </span>
+                                        </a>
                                         <a ng-if="node.tag_id !== 0">
                                             <i class="fa fa-arrows-h"></i>
                                         </a>
@@ -184,6 +211,13 @@
                                 <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
                                     <li ng-repeat="node in node.children" ui-tree-node>
                                         <div ui-tree-handle class="tree-node tree-node-content ">
+                                                <a data-nodrag ng-click="ctrl.toggle(this)">
+                                                    <span ng-class="{
+                                                        'tsi icon-ts-arrow_drop_up': collapsed,
+                                                        'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                                        }">
+                                                    </span>
+                                                </a>
                                                 <a ng-if="node.tag_id !== 0">
                                                     <i class="fa fa-arrows-h"></i>
                                                 </a>
@@ -207,6 +241,13 @@
                                         <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
                                             <li ng-repeat="node in node.children" ui-tree-node>
                                                 <div ui-tree-handle class="tree-node tree-node-content">
+                                                        <a data-nodrag ng-click="ctrl.toggle(this)">
+                                                            <span ng-class="{
+                                                                'tsi icon-ts-arrow_drop_up': collapsed,
+                                                                'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                                                }">
+                                                            </span>
+                                                        </a>
                                                         <a ng-if="node.tag_id !== 0">
                                                             <i class="fa fa-arrows-h"></i>
                                                         </a>
@@ -230,6 +271,13 @@
                                                 <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
                                                     <li ng-repeat="node in node.children" ui-tree-node>
                                                         <div ui-tree-handle class="tree-node tree-node-content">
+                                                                <a data-nodrag ng-click="ctrl.toggle(this)">
+                                                                    <span ng-class="{
+                                                                        'tsi icon-ts-arrow_drop_up': collapsed,
+                                                                        'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                                                        }">
+                                                                    </span>
+                                                                </a>
                                                                 <a ng-if="node.tag_id !== 0">
                                                                     <i class="fa fa-arrows-h"></i>
                                                                 </a>

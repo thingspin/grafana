@@ -312,6 +312,11 @@ export class TsTagDefineCtrl {
       }
     };
   }
+  toggle(scope) {
+    console.log("toggle!");
+    console.log(scope);
+    scope.toggle();
+  }
   onKeyPress(evt,node) {
    if (evt.which === 13) {
       // Enter
