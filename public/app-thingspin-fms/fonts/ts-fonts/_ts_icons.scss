@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'tsi';
   src:
-    url('/public/app-thingspin-fms/fonts/ts-fonts/ThingSPIN-ico.ttf?ghccvo') format('truetype'),
-    url('/public/app-thingspin-fms/fonts/ts-fonts/ThingSPIN-ico.woff?ghccvo') format('woff'),
-    url('/public/app-thingspin-fms/fonts/ts-fonts/ThingSPIN-ico.svg?ghccvo#tsi') format('svg');
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.ttf?3e9ios') format('truetype'),
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.woff?3e9ios') format('woff'),
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.svg?3e9ios#tsi') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,6 +23,33 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ts-equipment2:before {
+  content: "\e94f";
+}
+.icon-ts-site:before {
+  content: "\e94e";
+}
+.icon-ts-data:before {
+  content: "\e947";
+}
+.icon-ts-equipment:before {
+  content: "\e948";
+}
+.icon-ts-error1:before {
+  content: "\e949";
+}
+.icon-ts-foresight:before {
+  content: "\e94a";
+}
+.icon-ts-notifications_active:before {
+  content: "\e94b";
+}
+.icon-ts-tag:before {
+  content: "\e94c";
+}
+.icon-ts-warning1:before {
+  content: "\e94d";
+}
 .icon-ts-add_alert:before {
   content: "\e92e";
 }
