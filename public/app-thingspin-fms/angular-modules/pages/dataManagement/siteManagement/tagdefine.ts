@@ -302,10 +302,12 @@ export class TsTagDefineCtrl {
               //onsole.log(event);
               //console.log(event.dest.nodesScope.$nodeScope.node.children[this.resultIdx]);
               event.dest.nodesScope.$nodeScope.node.children[this.resultIdx] = this.result[0];
+              event.dest.nodesScope.$nodeScope.$digest();
+              console.log(event.dest.nodesScope.$nodeScope);
               console.log(event.dest.nodesScope.$nodeScope.node.children[this.resultIdx]);
-              console.log(event);
+              //console.log(event);
             }
-          },300);
+          },100);
         }
       }
     };
