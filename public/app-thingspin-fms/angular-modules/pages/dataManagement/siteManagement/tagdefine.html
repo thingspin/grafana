@@ -6,7 +6,7 @@
     -->
     <div id="mqtt-addview-right-button-area" ng-show="ctrl.isEditBtn">
         <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.backtosite()">
-            사이트 목록
+            이전
         </button>  
         <button id="tag-add-plus-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
             설비추가
@@ -74,6 +74,7 @@
                         <li ng-repeat="pnode in ctrl.source" ui-tree-node>
                             <div>
                                 <div>
+                                    <i class="fa fa-industry"></i>
                                     <a>{{pnode.label}}</a>
                                 </div>
                             </div>
@@ -85,6 +86,7 @@
                                         <!--
                                         <input type="checkbox" ng-click="ctrl.checked(pnode2)" ng-checked="pnode2.ischecked" />
                                         -->
+                                        <i class="fa fa-steam"></i>
                                         <a>{{pnode.facility_name}}</a>
                                     </div>
                                     
@@ -95,6 +97,7 @@
                                                      <!--
                                                 <input data-drag-enabled type="checkbox" ng-click="ctrl.checked(pnode3)" ng-checked="pnode3.ischecked" />
                                                 -->
+                                                    <i class="fa fa-arrows-h"></i>
                                                     <a ui-tree-handle class="tree-node tree-node-content">{{pnode.tag_name}}</a>
                                                 </div>
                                         
@@ -134,11 +137,17 @@
                 <ol ui-tree-nodes="" ng-model="ctrl.dataList">
                     <li ng-repeat="node in ctrl.dataList" ui-tree-node>
                         <div ui-tree-handle class="tree-node tree-node-content">
-                                <a ng-if="node.tag_name !== ''" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                <input ng-if="node.tag_name !== ''" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+                                <a ng-if="node.tag_id !== 0">
+                                    <i class="fa fa-arrows-h"></i>
+                                </a>
+                                <a ng-if="node.tag_id === 0">
+                                    <i class="fa fa-steam"></i>
+                                </a>
+                                <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
+                                <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
 
-                                <a ng-if="node.tag_name === ''" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                <input ng-if="node.tag_name === ''" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+                                <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
+                                <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
 
                                 <a data-nodrag ng-click="" class="ts-edit-show">
                                     <span class="tsi icon-ts-create"></span>
@@ -152,12 +161,18 @@
                         <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
                             <li ng-repeat="node in node.children" ui-tree-node>
                                 <div ui-tree-handle class="tree-node tree-node-content">
-                                        <a ng-if="node.tag_name !== ''" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                        <input ng-if="node.tag_name !== ''" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-        
-                                        <a ng-if="node.tag_name === ''" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                        <input ng-if="node.tag_name === ''" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-        
+                                        <a ng-if="node.tag_id !== 0">
+                                            <i class="fa fa-arrows-h"></i>
+                                        </a>
+                                        <a ng-if="node.tag_id === 0">
+                                            <i class="fa fa-steam"></i>
+                                        </a>
+                                        <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
+                                        <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+
+                                        <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
+                                        <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+
                                         <a data-nodrag ng-click="" class="ts-edit-show">
                                             <span class="tsi icon-ts-create"></span>
                                         </a>
@@ -169,11 +184,17 @@
                                 <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
                                     <li ng-repeat="node in node.children" ui-tree-node>
                                         <div ui-tree-handle class="tree-node tree-node-content ">
-                                                <a ng-if="node.tag_name !== ''" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                                <input ng-if="node.tag_name !== ''" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+                                                <a ng-if="node.tag_id !== 0">
+                                                    <i class="fa fa-arrows-h"></i>
+                                                </a>
+                                                <a ng-if="node.tag_id === 0">
+                                                    <i class="fa fa-steam"></i>
+                                                </a>
+                                                <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
+                                                <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
 
-                                                <a ng-if="node.tag_name === ''" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                                <input ng-if="node.tag_name === ''" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+                                                <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
+                                                <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
 
                                                 <a data-nodrag ng-click="" class="ts-edit-show">
                                                     <span class="tsi icon-ts-create"></span>
@@ -186,12 +207,21 @@
                                         <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
                                             <li ng-repeat="node in node.children" ui-tree-node>
                                                 <div ui-tree-handle class="tree-node tree-node-content">
-                                                        <a ng-if="node.tag_name !== ''" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                                        <input ng-if="node.tag_name !== ''" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+                                                        <a ng-if="node.tag_id !== 0">
+                                                            <i class="fa fa-arrows-h"></i>
+                                                        </a>
+                                                        <a ng-if="node.tag_id === 0">
+                                                            <i class="fa fa-steam"></i>
+                                                        </a>
+                                                        <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
+                                                        <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
 
-                                                        <a ng-if="node.tag_name === ''" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                                        <input ng-if="node.tag_name === ''" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-                                                        
+                                                        <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
+                                                        <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+
+                                                        <a data-nodrag ng-click="" class="ts-edit-show">
+                                                            <span class="tsi icon-ts-create"></span>
+                                                        </a>
                                                         <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" class="ts-edit-show">
                                                             <span class="tsi icon-ts-delete"></span>
                                                         </a>
@@ -200,11 +230,17 @@
                                                 <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
                                                     <li ng-repeat="node in node.children" ui-tree-node>
                                                         <div ui-tree-handle class="tree-node tree-node-content">
-                                                                <a ng-if="node.tag_name !== ''" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                                                <input ng-if="node.tag_name !== ''" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+                                                                <a ng-if="node.tag_id !== 0">
+                                                                    <i class="fa fa-arrows-h"></i>
+                                                                </a>
+                                                                <a ng-if="node.tag_id === 0">
+                                                                    <i class="fa fa-steam"></i>
+                                                                </a>
+                                                                <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
+                                                                <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
 
-                                                                <a ng-if="node.tag_name === ''" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                                                <input ng-if="node.tag_name === ''" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
+                                                                <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
+                                                                <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
 
                                                                 <a data-nodrag ng-click="" class="ts-edit-show">
                                                                     <span class="tsi icon-ts-create"></span>
