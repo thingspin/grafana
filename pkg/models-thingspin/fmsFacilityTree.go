@@ -16,6 +16,7 @@ type GetAllTsFacilityTreeQuery struct {
 }
 
 type GetTsFacilityTreeLastPathQuery struct {
+	SiteId int
 	Result []TsFacilityTreeField
 }
 

@@ -45,6 +45,7 @@ func getTsFacility(c *gfm.ReqContext) Response {
 
 func addTsFacilityTreeData(siteId int, facilityId int) error {
 	q1 := m.GetTsFacilityTreeLastPathQuery {}
+	q1.SiteId = siteId
 	if err := bus.Dispatch(&q1); err != nil {
 		return err
 	}
@@ -640,7 +641,7 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("newParentId : %d", newParentId)
+		// fmt.Printf("newParentId : %d", newParentId)
 		if newParentId == 0 {
 			tree := m.UpdateTsFacilityTreeFacilityQuery {
 				SiteId: treeItem.SiteId,
