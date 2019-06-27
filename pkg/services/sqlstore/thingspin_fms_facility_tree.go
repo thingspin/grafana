@@ -43,7 +43,6 @@ func GetTsFacilityTreeLastPath(cmd *m.GetTsFacilityTreeLastPathQuery) error {
 	err := x.Table(m.TsFmsFacilityTreeTbl).
 		Where(`path like "%/"`).
 		OrderBy("path desc").
-		Limit(1).
 		Find(&cmd.Result)
 
 	return err
