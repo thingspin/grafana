@@ -23,6 +23,7 @@ class FilterTree extends Component<Props,State> {
 
         super(props);
 
+        this.putNodeIcon = this.putNodeIcon.bind(this);
         this.onFilterChange = this.onFilterChange.bind(this);
         this.filterTree = this.filterTree.bind(this);
         this.filterNodes = this.filterNodes.bind(this);
@@ -47,7 +48,8 @@ class FilterTree extends Component<Props,State> {
         //console.log("prev: ",this.props.nodesChecked);
         //console.log("next: ",nextProps.nodesChecked);
         if (this.props.nodes !== nextProps.nodes || this.props.nodesChecked !== nextProps.nodesChecked) {
-            console.log(nextProps.nodes);
+            //console.log(nextProps.nodes);
+            this.putNodeIcon(nextProps.nodes);
             this.setState({nodesFiltered: nextProps.nodes});
             this.setState({nodes: nextProps.nodes});
             this.setState({nodesCount: nextProps.nodes.length});
@@ -64,11 +66,46 @@ class FilterTree extends Component<Props,State> {
             //console.log("props same");
         }
     }
+    componentWillMount() {
+        console.log("componentWillMount");
+        this.putNodeIcon(this.props.nodes);
+    }
 
+    putNodeIcon(node) {
+        //console.log("parent check");
+        if (node && node.length > 0) {
+            for (let i = 0; i < node.length; i++) {
+                if (node[i].tag_id === 0) {
+                    //console.log("parent: ",node[i].value);
+                    //console.log(node[i].children);
+                    node[i]['icon'] = <span className="icon-facility"><i className="fa fa-steam fa-1x"/></span>;
+                    this.putNodeIcon(node[i].children);
+                } else {
+                    node[i]['icon'] =  <span className="icon-tag"><i className="fa fa-arrows-h"/></span>;
+                }
+            }
+        }
+    }
     //CHECK TREE
-    onCkeck = (checked,a,Taginfo) => {
+    onCheck = (checked,a,Taginfo) => {
         //console.log("FT-oncheck tag: ",Taginfo);
         //console.log("FT-oncheck checked: ",checked);
+        let checkedSize = checked.length;
+        if (checked && checked.length > 0) {
+            //console.log("TEST_CHECKED");
+            for (let i = 0; i < checkedSize; i++) {
+                if (Taginfo[i].tag_id === 0) {
+                    //console.log("delete: ",i);
+                    checked.splice(i,1);
+                    Taginfo.splice(i,1);
+                    checkedSize = checked.length;
+                    i--;
+                }
+            }
+        }
+        //console.log(checked.length);
+        //console.log(checked);
+        //console.log(Taginfo);
         this.setState({ checked });
         this.props.click({checked,Taginfo}); //sending to parent component
     };
@@ -113,7 +150,7 @@ class FilterTree extends Component<Props,State> {
         <div>
             <div className="facility-filter-pos">
                 <input
-                    className="filter-text"
+                    className="facility-filter-text"
                     placeholder={this.state.filterPlaceholder}
                     type="text"
                     value={this.state.filterText}
@@ -123,7 +160,7 @@ class FilterTree extends Component<Props,State> {
             <div className="facility-tree-pos">
                 <CheckboxTree
                     icons={{
-                        check: <span className="rct-icon rct-icon-check" />,
+                        check: <i className="fa fa-check-square"/>,
                         uncheck: <span className="rct-icon rct-icon-uncheck" />,
                         halfCheck: <span className="rct-icon rct-icon-half-check" />,
                         expandClose: <span className="rct-icon rct-icon-expand-close" />,
@@ -137,8 +174,9 @@ class FilterTree extends Component<Props,State> {
                     nodes={this.state.nodesFiltered}
                     checked = {this.state.checked}
                     expanded = {this.state.expanded}
-                    onCheck = {this.onCkeck}
+                    onCheck = {this.onCheck}
                     onExpand = {expanded => this.setState({ expanded })}
+                    optimisticToggle={false}
                 ></CheckboxTree>
             </div>
         </div>
