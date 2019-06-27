@@ -9,6 +9,7 @@
         <div class="ts-site-input-title">
             사이트 추가
         </div>
+        <div class="site-content-line"></div>
         <div class="ts-site-input-group name">
             <div class="ts-site-input-label-name">사이트 명</div>
             <div class="ts-input">
@@ -56,7 +57,7 @@
             </thead>
 
             <tbody>
-                <tr id='table-tr-{{$index}}' class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index" ng-click="ctrl.tableClick(item.id, $index)">
+                <tr id='table-tr-{{$index}}' class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
                     <td>
                         <div class="ts-site-id">
                             {{ item.titleid }}
@@ -65,10 +66,10 @@
                     <td>{{ item.name }}</td>
                     <td>{{ item.desc }}</td>
                     <td>
-                        <!-- <button class="btn btn-padding" ng-click="ctrl.tableClick(item.id, $index)">
+                        <button class="btn btn-padding" ng-click="ctrl.tableClick(item.id, $index)">
                             <i class="fa fa-university"></i>
-                        </button> -->
-                        <button class="btn btn-padding" ng-click="ctrl.editSite(item)">
+                        </button>
+                        <button class="btn btn-padding-margin" ng-click="ctrl.editSite(item)">
                             <i class="fa fa-cog"></i>
                         </button>
                         <button class="btn btn-padding-margin" ng-click="ctrl.removeSite(item.id)">
