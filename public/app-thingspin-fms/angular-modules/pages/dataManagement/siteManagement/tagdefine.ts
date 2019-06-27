@@ -308,6 +308,50 @@ export class TsTagDefineCtrl {
       }
     };
   }
+  onKeyPress(evt,node) {
+   if (evt.which === 13) {
+      // Enter
+      if (node.tag_id === 0) {
+        this.backendSrv.put(`thingspin/sites/${this.data}/facilities`,
+        {
+            "Id": node.facility_id,
+            "Name": node.facility_name,
+            "Desc": node.facility_desc,
+            "Lat": parseFloat(node.facility_lat),
+            "Lon": parseFloat(node.facility_lon),
+            "Imgpath": node.facility_imgpath
+        }).then((result) => {
+            // this.onLoadData(result);
+            console.log("Edit the faciltiy");
+            console.log(node);
+            console.log(result);
+            appEvents.emit('alert-success', ['이름이 변경되었습니다.']);
+            //this.dataList = result;
+        }).catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+        });
+      } else {
+        this.backendSrv.put(`thingspin/sites/${this.data}/facilities/${node.facility_id}/tag/${node.tag_id}`,
+        {
+            "Name": node.tag_name,
+        }).then((result) => {
+            // this.onLoadData(result);
+            console.log("Edit the tag");
+            console.log(node);
+            console.log(result);
+            appEvents.emit('alert-success', ['이름이 변경되었습니다.']);
+            //this.dataList = result;
+        }).catch(err => {
+            if (err.status === 500) {
+              appEvents.emit('alert-error', [err.statusText]);
+            }
+        });
+      }
+    }
+  }
+  /*
   editElement(scope,node) {
     //const parent = scope.$parent.$parent.$parentNodeScope.node;
     this.facility = {
@@ -321,6 +365,7 @@ export class TsTagDefineCtrl {
     this.onShowFacilityEditView(true);
     // 설비 인지 태그 인지 체크
   }
+  */
   removeElement(scope, node) {
     console.log("================= Remove!");
     const orders = [];

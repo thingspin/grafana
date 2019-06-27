@@ -39,6 +39,13 @@ ts-tag-define {
     visibility: collapse!important;
 }
 
+.ts-edit-show {
+    display: none;
+}
+
+.ts-edit-hidden {
+    display: initial;
+}
 
 .btn {
     margin-right: 3px;
@@ -51,7 +58,15 @@ ts-tag-define {
     padding: 3px 6px;
 }
 
-.angular-ui-tree-handle:hover {
+.angular-ui-tree-handle:hover .ts-edit-hidden {
+    display: none;
+}
+
+.angular-ui-tree-handle:hover .ts-edit-show {
+    display: initial;
+}
+
+.angular-ui-tree-handle:hover{
     color: #438eb9;
     background: #f4f6f7;
     border-color: #dce2e8;
