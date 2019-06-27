@@ -1,46 +1,33 @@
 <div class="ts-site-list">
     <div class="ts-site-main-title">
-        목록
+        사이트 목록
     </div>
     <button id="site-add-btn" className="btn" ng-click="ctrl.onShowEditView(true)" ng-show="ctrl.isEditBtn">
-        사이트에 추가
+        사이트 추가
     </button>
-    <div class="" ng-show="ctrl.isEditView">
-        <div class="ts-input-group name">
-            <div class="ts-mqtt-collect-label">사이트 이름</div>
+    <div class="ts-site-input-area" ng-show="ctrl.isEditView">
+        <div class="ts-site-input-title">
+            사이트 추가
+        </div>
+        <div class="ts-site-input-group name">
+            <div class="ts-site-input-label-name">사이트 명</div>
             <div class="ts-input">
                 <input type="text" ng-model="ctrl.name"/>
                 <span ng-class="{separator: true, enable: ctrl.name}"></span>
             </div>
         </div>
-        <div class="ts-input-group desc">
-            <div class="ts-mqtt-url-label">설명</div>
+        <div class="ts-site-input-group desc">
+            <div class="ts-site-input-label-desc">설명</div>
             <div class="ts-input">
                 <input type="text" ng-model="ctrl.desc"/>
                 <span ng-class="{separator: true, enable: ctrl.desc}"></span>
             </div>
         </div>
-        <!--
-        <div class="ts-input-group lat">
-            <div class="ts-mqtt-collect-label">위도</div>
-            <div class="ts-input">
-                <input type="text" ng-model="ctrl.lat"/>
-                <span ng-class="{separator: true, enable: ctrl.lat}"></span>
-            </div>
-        </div>
-        <div class="ts-input-group lon">
-            <div class="ts-mqtt-url-label">경도</div>
-            <div class="ts-input">
-                <input type="text" ng-model="ctrl.lon"/>
-                <span ng-class="{separator: true, enable: ctrl.lon}"></span>
-            </div>
-        </div>
-        -->
-        <div id="mqtt-addview-right-button-area">
-            <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowEditView(false)">
+        <div class="ts-site-right-button-area">
+            <button id="site-cancel-btn" class="btn" ng-click="ctrl.onShowEditView(false)">
                 취소
             </button>
-            <button id="site-add-plus-btn" className="btn" ng-click="ctrl.onSiteAdd()">
+            <button id="site-add-plus-btn" class="btn" ng-click="ctrl.onSiteAdd()">
                 저장
             </button>
         </div>
@@ -61,34 +48,30 @@
             <table>
             <thead>
                 <tr class="ts-table-header">
-                    <th>Id</th>
-                    <th>사이트 명</th>
-                    <th>설명</th>
-                    <!--
-                    <th>위도</th>
-                    <th>경도</th>
-                    -->
+                    <th class="th-site-id">사이트 ID</th>
+                    <th class="th-site-name">사이트 명</th>
+                    <th class="th-site-desc">설명</th>
                     <th>동작</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr id='table-tr-{{$index}}' class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
-                    <td>{{ item.id }}</td>
+                    <td>
+                        <div class="ts-site-id">
+                            {{ item.titleid }}
+                        </div>
+                    </td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.desc }}</td>
-                     <!--
-                    <td>{{ item.lat }}</td>
-                    <td>{{ item.lon }}</td>
-                     -->
                     <td>
-                        <button class="btn" ng-click="ctrl.tableClick(item.id, $index)">
+                        <button class="btn btn-padding" ng-click="ctrl.tableClick(item.id, $index)">
                             <i class="fa fa-university"></i>
                         </button>
-                        <button class="btn" ng-click="ctrl.editSite(item)">
+                        <button class="btn btn-padding-margin" ng-click="ctrl.editSite(item)">
                             <i class="fa fa-pencil"></i>
                         </button>
-                        <button class="btn" ng-click="ctrl.removeSite(item.id)">
+                        <button class="btn btn-padding-margin" ng-click="ctrl.removeSite(item.id)">
                             <i class="fa fa-trash"></i>
                         </button>                            
                     </td>

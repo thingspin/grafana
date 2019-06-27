@@ -8,6 +8,7 @@ import "./sitelist.scss";
 
 interface SiteTableData {
     id: string;
+    titleid: string;
     name: string;
     desc: string;
     lat: string;
@@ -147,20 +148,27 @@ export class TsSiteListCtrl implements angular.IController {
             });
         } else {
             // Add
-            this.backendSrv.post("/thingspin/sites",
-            {
-                "Name": this.name,
-                "Desc": this.desc,
-                "Lat": parseFloat(this.lat),
-                "Lon": parseFloat(this.lon),
-            }).then((result) => {
-                appEvents.emit('alert-success', ['추가되었습니다.']);
-                this.onLoadData(result);
-            }).catch(err => {
-                if (err.status === 500) {
-                  appEvents.emit('alert-error', [err.statusText]);
+            if (this.name) {
+                this.backendSrv.post("/thingspin/sites",
+                {
+                    "Name": this.name,
+                    "Desc": this.desc,
+                    "Lat": parseFloat(this.lat),
+                    "Lon": parseFloat(this.lon),
+                }).then((result) => {
+                    appEvents.emit('alert-success', ['추가되었습니다.']);
+                    this.onLoadData(result);
+                    this.onShowEditView(false);
+                }).catch(err => {
+                    if (err.status === 500) {
+                      appEvents.emit('alert-error', [err.statusText]);
+                    }
+                });
+            } else {
+                if (!this.name) {
+                    this.openAlartNotification("사이트에 이름을 입력해주세요.");
                 }
-            });
+            }
         }
     }
 
@@ -181,13 +189,24 @@ export class TsSiteListCtrl implements angular.IController {
         }
     }
 
+    siteNameCreate(value) {
+        console.log(value.length);
+        let resultStr = "";
+        for (let i = 0; i<5 - value.length; i++) {
+            resultStr += "0";
+        }
+        return resultStr;
+    }
+
     onLoadData(item) {
         this.list = [];
         console.log(item);
-        if (item !== null) {
+        if (item !== null || item !== undefined) {
             for (let i = 0; i< item.length; i++) {
                 const siteItem = {} as SiteTableData;
+                const strID = (item[i].id).toString();
                 siteItem.id = item[i].id;
+                siteItem.titleid = "SITE_" + this.siteNameCreate(strID) + item[i].id;
                 siteItem.name = item[i].name;
                 siteItem.desc = item[i].desc;
                 siteItem.lat = item[i].lat;
@@ -279,6 +298,10 @@ export class TsSiteListCtrl implements angular.IController {
         console.log("click");
         this.tCalcPaging();
         this.setPageNodes();
+    }
+
+    openAlartNotification(value) {
+        appEvents.emit('alert-error', [value]);
     }
 }
 
