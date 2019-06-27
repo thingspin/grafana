@@ -1,4 +1,4 @@
-import { ILocationService, IScope, ITimeoutService, IRootScopeService, IControllerService } from 'angular';
+import { ILocationService, IScope, ITimeoutService, IRootScopeService, } from 'angular';
 import Drop from 'tether-drop';
 
 import { GrafanaCtrl, grafanaAppDirective } from 'app/routes/GrafanaCtrl';
@@ -15,6 +15,7 @@ import DatasourceSrv from 'app/features/plugins/datasource_srv';
 import { TS_NAV_ACTION_TYPES } from 'app-thingspin-fms/react/redux/reducers/navbar';
 import { PlaylistSrv } from 'app/features/playlist/playlist_srv';
 import { AngularLoader } from 'app/core/services/AngularLoader';
+import { LinkSrv } from 'app/features/panel/panellinks/link_srv';
 
 export class ThingspinCtrl extends GrafanaCtrl {
   navbarEnable: boolean;
@@ -23,11 +24,11 @@ export class ThingspinCtrl extends GrafanaCtrl {
     $scope: IScope,
     utilSrv: UtilSrv,
     $rootScope: IRootScopeService,
-    $controller: IControllerService,
     contextSrv: ContextSrv,
     bridgeSrv: BridgeSrv,
     backendSrv: BackendSrv,
     timeSrv: TimeSrv,
+    linkSrv: LinkSrv,
     datasourceSrv: DatasourceSrv,
     keybindingSrv: KeybindingSrv,
     angularLoader: AngularLoader
@@ -36,11 +37,11 @@ export class ThingspinCtrl extends GrafanaCtrl {
       $scope,
       utilSrv,
       $rootScope,
-      $controller,
       contextSrv,
       bridgeSrv,
       backendSrv,
       timeSrv,
+      linkSrv,
       datasourceSrv,
       keybindingSrv,
       angularLoader

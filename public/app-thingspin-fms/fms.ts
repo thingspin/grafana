@@ -11,6 +11,7 @@ import { coreModule, angularModules } from './grafana_custom/core_module';
 import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
 import { registerAngularDirectives } from './grafana_custom/core';
 import { importPluginModule } from 'app/features/plugins/plugin_loader';
+import { setMarkdownOptions } from '@grafana/data';
 
 import { fmsSetupAngularRoutes } from './routes/routes';
 import addThingspinReducers from './react/redux/addReducers';
@@ -29,6 +30,8 @@ class ThingspinFmsApp extends GrafanaApp {
     this.ng1App = angular.module('thingspin', []);
 
     setLocale(config.bootData.user.locale);
+
+    setMarkdownOptions({ sanitize: !config.disableSanitizeHtml });
 
     this.ngModuleDependencies = [
       'grafana.core',
