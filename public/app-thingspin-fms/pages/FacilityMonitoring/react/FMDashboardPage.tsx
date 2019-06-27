@@ -101,7 +101,7 @@ export class FMDashboardPage extends DashboardPage {
             for (const tag of tags) {
                 const panelType = this.panelType || 'graph';
 
-                const panelData = generatePanelData(tag.tag_name, panelType, {
+                const panelData = generatePanelData(tag.label, panelType, {
                     tagNodes: [tag],
                     checked: [tag.value],
                 });
