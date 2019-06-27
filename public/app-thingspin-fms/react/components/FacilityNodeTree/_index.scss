@@ -33,8 +33,12 @@
 .facility-siteManage-page-btn2 {
     margin-top: 9px;
     margin-left: 16px;
+    margin-right: 16px;
+    width: 80%;
     border-radius: 4px;
-    color: #6a6a6a;
+    //color: #6a6a6a;
+    color: #ecebeb;
+    background-color: #ff4400;
     font-size: 14px;
 }
 
@@ -116,4 +120,11 @@
     margin-right: 16px;
     margin-bottom: 9px;
     align-content: center;
+}
+
+.icon-tag{
+    color: #767980;
+}
+.icon-facility{
+    color:#607d8b
 }

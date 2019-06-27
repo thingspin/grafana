@@ -56,6 +56,9 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         this.siteManagePage = this.siteManagePage.bind(this);
 
         this.restoreFacilityData = this.restoreFacilityData.bind(this);
+
+        this.customSingleValue = this.customSingleValue.bind(this);
+
         //test
         this.testChecked = this.testChecked.bind(this);
         this.testSave = this.testSave.bind(this);
@@ -167,7 +170,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                 this.setState({sitesListinfo: result});
 
                 for (let i = 0; i < result.length; i++) {
-                    elements.push({value: result[i].id,label: result[i].name});
+                    elements.push({value: result[i].id,label: result[i].name,icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>});
                 }
 
                 //copy elemenets to select options
@@ -235,6 +238,14 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         this.setState({testChecked: this.state.checked});
     }
 
+    customSingleValue = ({ data }) => (
+        <div className="input-select">
+            <div className="input-select__single-value">
+                { data.icon && <span className="input-select__icon">{ data.icon }</span> }
+                <span>{ data.label }</span>
+            </div>
+        </div>
+    );
 
     render() {
         const {selectedOption} = this.state;
@@ -253,13 +264,14 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         return (
             <div className = "facility-tree-container">
                 <div className="facility-site-pos">
-                <Select
-                    value = {selectedOption}
-                    onChange = {this.handleChange}
-                    options = {siteOptions}
-                    placeholder = "사이트 선택"
-                    className = "facility-select"
-                    ></Select>
+                    <Select
+                        value = {selectedOption}
+                        onChange = {this.handleChange}
+                        options = {siteOptions}
+                        placeholder = "사이트 선택"
+                        className = "facility-select"
+                        components={ {SingleValue: this.customSingleValue} }
+                        ></Select>
                 </div>
 
                 <div className = "facility-section-line"/>
@@ -274,7 +286,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                 <div>
                     { isdataEmpty?
                         <div>
-                            <div className = "facility-warning-facility-empty">WARNING</div>
+                            <div className = "facility-warning-facility-empty"><i className ="fa fa-exclamation-triangle">&nbsp;</i> WARNING</div>
                             <div className = "facility-warning-facility-empty">설정된 데이터가 없습니다.</div>
                             <button className ="facility-siteManage-page-btn2" onClick = {this.siteManagePage}>사이트 관리 이동</button>
                         </div>

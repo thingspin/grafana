@@ -47,6 +47,7 @@ class FilterTree extends Component<Props,State> {
         //console.log("prev: ",this.props.nodesChecked);
         //console.log("next: ",nextProps.nodesChecked);
         if (this.props.nodes !== nextProps.nodes || this.props.nodesChecked !== nextProps.nodesChecked) {
+            console.log(nextProps.nodes);
             this.setState({nodesFiltered: nextProps.nodes});
             this.setState({nodes: nextProps.nodes});
             this.setState({nodesCount: nextProps.nodes.length});
@@ -121,6 +122,18 @@ class FilterTree extends Component<Props,State> {
             </div>
             <div className="facility-tree-pos">
                 <CheckboxTree
+                    icons={{
+                        check: <span className="rct-icon rct-icon-check" />,
+                        uncheck: <span className="rct-icon rct-icon-uncheck" />,
+                        halfCheck: <span className="rct-icon rct-icon-half-check" />,
+                        expandClose: <span className="rct-icon rct-icon-expand-close" />,
+                        expandOpen: <span className="rct-icon rct-icon-expand-open" />,
+                        expandAll: <span className="rct-icon rct-icon-expa nd-all" />,
+                        collapseAll: <span className="rct-icon rct-icon-collapse-all" />,
+                        parentClose: <span className="icon-facility"><i className="fa fa-steam-square fa-1x"/></span>,
+                        parentOpen: <span className="icon-facility"><i className="fa fa-steam fa-1x"/></span>,
+                        leaf: <span className="icon-tag"><i className="fa fa-arrows-h"/></span>,
+                    }}
                     nodes={this.state.nodesFiltered}
                     checked = {this.state.checked}
                     expanded = {this.state.expanded}
