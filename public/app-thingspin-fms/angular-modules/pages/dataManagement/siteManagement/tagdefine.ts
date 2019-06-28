@@ -248,6 +248,7 @@ export class TsTagDefineCtrl {
           // source node
           fromNode.facility_tree_order = curIdx;
           fromNode.facility_id = toNode.node.facility_id;
+          fromNode.facility_tree_path = toNode.node.facility_tree_path;
           fromNode.site_id = this.data;
           postdata.push(fromNode);
           // target node's child

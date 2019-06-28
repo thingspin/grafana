@@ -484,6 +484,7 @@ func addTsFacilityTree(c *gfm.ReqContext, req m.AddTsFacilityTreePathQuery) Resp
 			facilityItem = addTsFacilityTreePathItem(&treeItem)
 		}
 		if len(treeItem.FacilityName) > 0 {
+			// 설비
 			tree := m.UpdateTsFacilityTreeTagQuery {
 				SiteId: treeItem.SiteId,
 				FacilityId: 0,
@@ -520,6 +521,7 @@ func addTsFacilityTree(c *gfm.ReqContext, req m.AddTsFacilityTreePathQuery) Resp
 			}
 			returnList = append(returnList, returnItem)				
 		} else {
+			// 태그
 			tag := m.AddTsFacilityTagQuery {
 				SiteId       : treeItem.SiteId,
 				FacilityId   : treeItem.FacilityId,
@@ -532,50 +534,95 @@ func addTsFacilityTree(c *gfm.ReqContext, req m.AddTsFacilityTreePathQuery) Resp
 			if err := bus.Dispatch(&tag); err != nil {
 				return Error(500, "ThingSPIN Store Error", err)
 			}
-	
-			tree := m.AddTsFacilityTreeQuery {
+			
+			// 부모 설비의 id를 가지고 path를 받아와야한다.
+			parentTree := m.GetTsFacilityTreeFacilityItemQuery {
 				SiteId: treeItem.SiteId,
-				FacilityId: 0,
-				TagId: tag.Result,
-				Path: strconv.Itoa(treeItem.FacilityId) + "/" + strconv.Itoa(tag.Result),
-				Order: treeItem.FacilityTreeOrder,
+				FacilityId: treeItem.FacilityId,
 			}
-	
-			if err := bus.Dispatch(&tree); err != nil {
+			if err := bus.Dispatch(&parentTree); err != nil {
 				return Error(500, "ThingSPIN Store Error", err)
 			}
-			returnItem := m.TsFacilityTreeItem {
-				SiteId: treeItem.SiteId,
-				Label: treeItem.TagColumnName,
-				Value: tree.Path,
-				IsChecked: false,
-				IsEditing: false,
-				FacilityId: facilityItem.Id,
-				FacilityName: facilityItem.Name,
-				FacilityDesc: facilityItem.Description,
-				FacilityLat: facilityItem.Location_lat,
-				FacilityLon: facilityItem.Location_lon,
-				FacilityPath: facilityItem.Image_path,
-				TagId: tag.Result,
-				TagDatasource: tag.DatasourceId,
-				TagTableName: tag.Table_name,
-				TagColumnName: tag.Column_name,
-				TagColumnType: tag.Column_type,
-				TagName: tag.Name,
-				FacilityTreePath: tree.Path,
-				FacilityTreeOrder: tree.Order,
-				Children: []m.TsFacilityTreeItem{},
-			}
-			returnList = append(returnList, returnItem)	
+		
+			if len(parentTree.Result) > 0 {
+				parentPath := parentTree.Result[0].Path
+				tree := m.AddTsFacilityTreeQuery {
+					SiteId: treeItem.SiteId,
+					FacilityId: 0,
+					TagId: tag.Result,
+					Path: parentPath + strconv.Itoa(tag.Result),
+					Order: treeItem.FacilityTreeOrder,
+				}
+			
+				if err := bus.Dispatch(&tree); err != nil {
+					return Error(500, "ThingSPIN Store Error", err)
+				}
+
+				returnItem := m.TsFacilityTreeItem {
+					SiteId: treeItem.SiteId,
+					Label: treeItem.TagColumnName,
+					Value: tree.Path,
+					IsChecked: false,
+					IsEditing: false,
+					FacilityId: facilityItem.Id,
+					FacilityName: facilityItem.Name,
+					FacilityDesc: facilityItem.Description,
+					FacilityLat: facilityItem.Location_lat,
+					FacilityLon: facilityItem.Location_lon,
+					FacilityPath: facilityItem.Image_path,
+					TagId: tag.Result,
+					TagDatasource: tag.DatasourceId,
+					TagTableName: tag.Table_name,
+					TagColumnName: tag.Column_name,
+					TagColumnType: tag.Column_type,
+					TagName: tag.Name,
+					FacilityTreePath: tree.Path,
+					FacilityTreeOrder: tree.Order,
+					Children: []m.TsFacilityTreeItem{},
+				}
+				returnList = append(returnList, returnItem)
+			}		
 		}
 	}
 	// fmt.Printf("%+v", returnList)
 	return JSON(200, returnList)
 }
 
+func updateTSFacilityTreeTagUnderFacility(newPath string, treeItem *m.TsFacilityTreeItem) error {
+    // 태그 트리 정보 업데이트 with New path
+    tree := m.UpdateTsFacilityTreeTagQuery {
+        SiteId: treeItem.SiteId,
+        FacilityId: 0,
+        TagId: treeItem.TagId,
+        Path: newPath,
+        Order: treeItem.FacilityTreeOrder,
+    }
+
+    if err := bus.Dispatch(&tree); err != nil {
+        return err
+	}
+	return nil
+}
+
+func updateTsFacilityTreeFacilityUnderFacility(newPath string, treeItem *m.TsFacilityTreeItem) error {
+    tree := m.UpdateTsFacilityTreeFacilityQuery {
+        SiteId: treeItem.SiteId,
+        FacilityId: treeItem.FacilityId,
+        TagId: 0,
+        Path: newPath,
+        Order: treeItem.FacilityTreeOrder,
+    }
+    
+    if err := bus.Dispatch(&tree); err != nil {
+        return err
+	}
+	return nil
+}
+
 func updateTsFacilityTreeTag(treeItem *m.TsFacilityTreeItem) error {
 	slicePath := strings.Split(treeItem.Value, "/")
 	if  len(slicePath) == 1 {
+		// 태그 부모가 바뀌는 경우
 		newParentId, err := strconv.Atoi(treeItem.Value)
 		if err != nil {
 			return err
@@ -604,7 +651,6 @@ func updateTsFacilityTreeTag(treeItem *m.TsFacilityTreeItem) error {
 	
 		if len(parentTree.Result) > 0 {
 			parentPath := parentTree.Result[0].Path
-
 			tree := m.UpdateTsFacilityTreeTagQuery {
 				SiteId: treeItem.SiteId,
 				FacilityId: 0,
@@ -618,6 +664,7 @@ func updateTsFacilityTreeTag(treeItem *m.TsFacilityTreeItem) error {
 			}
 		}	
 	} else {
+		// 태그 순서만 바뀌는 겨우
 		tree := m.UpdateTsFacilityTreeTagQuery {
 			SiteId: treeItem.SiteId,
 			FacilityId: 0,
@@ -636,13 +683,15 @@ func updateTsFacilityTreeTag(treeItem *m.TsFacilityTreeItem) error {
 func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 	slicePath := strings.Split(treeItem.Value, "/")
 	if  len(slicePath) == 1 {
-		// fmt.Println(treeItem.Value)
+		// 부모가 바뀌는 경우
+		fmt.Println("===Parent changed")
 		newParentId, err := strconv.Atoi(treeItem.Value)
 		if err != nil {
 			return err
 		}
 		// fmt.Printf("newParentId : %d", newParentId)
 		if newParentId == 0 {
+			// Lv1 로 가는 경우
 			tree := m.UpdateTsFacilityTreeFacilityQuery {
 				SiteId: treeItem.SiteId,
 				FacilityId: treeItem.FacilityId,
@@ -650,12 +699,16 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 				Path: strconv.Itoa(treeItem.FacilityId) + "/",
 				Order: treeItem.FacilityTreeOrder,
 			}
-		
+			
 			if err := bus.Dispatch(&tree); err != nil {
 				return err
 			}
+
+			// 자식 들도 업데이트 해야함
+		
+
 		} else {
-			// fmt.Println(newParentId)
+			// 부모설비 밑으로 가는 경우
 			parentTree := m.GetTsFacilityTreeFacilityItemQuery {
 				SiteId: treeItem.SiteId,
 				FacilityId: newParentId,
@@ -666,7 +719,6 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 		
 			if len(parentTree.Result) > 0 {
 				parentPath := parentTree.Result[0].Path
-				
 				tree := m.UpdateTsFacilityTreeFacilityQuery {
 					SiteId: treeItem.SiteId,
 					FacilityId: treeItem.FacilityId,
@@ -674,15 +726,52 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 					Path: parentPath + strconv.Itoa(treeItem.FacilityId) + "/",
 					Order: treeItem.FacilityTreeOrder,
 				}
-
-				// fmt.Println(tree)
-			
+				
 				if err := bus.Dispatch(&tree); err != nil {
 					return err
+				}
+
+				// 자식들도 업데이트 해야함
+				for _, lv2Item := range treeItem.Children {
+					if lv2Item.TagId > 0 {
+						// lv2 태그
+						lv2TagPath := tree.Path + strconv.Itoa(lv2Item.TagId)
+						updateTSFacilityTreeTagUnderFacility(lv2TagPath,&lv2Item)
+					} else {
+						// lv2 설비
+						lv2FacilityPath := tree.Path + strconv.Itoa(lv2Item.FacilityId) + "/"
+						updateTsFacilityTreeFacilityUnderFacility(lv2FacilityPath,&lv2Item)
+
+						for _, lv3Item := range lv2Item.Children {
+							if lv3Item.TagId > 0 {
+								// lv3 태그
+								lv3TagPath := lv2FacilityPath + strconv.Itoa(lv3Item.TagId)
+								updateTSFacilityTreeTagUnderFacility(lv3TagPath,&lv3Item)
+							} else {
+								// lv3 설비
+								lv3FacilityPath := lv2FacilityPath + strconv.Itoa(lv3Item.FacilityId) + "/"
+								updateTsFacilityTreeFacilityUnderFacility(lv3FacilityPath,&lv3Item)
+
+								for _, lv4Item := range lv3Item.Children {
+									if lv4Item.TagId > 0 {
+										// lv4 태그
+										lv4TagPath := lv3FacilityPath + strconv.Itoa(lv4Item.TagId)
+										updateTSFacilityTreeTagUnderFacility(lv4TagPath,&lv4Item)
+									} else {
+										// lv4 설비
+										lv4FacilityPath := lv3FacilityPath + strconv.Itoa(lv4Item.FacilityId) + "/"
+										updateTsFacilityTreeFacilityUnderFacility(lv4FacilityPath,&lv4Item)
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
 	} else {
+		// 순서만 바뀌는 경우
+
 		tree := m.UpdateTsFacilityTreeFacilityQuery {
 			SiteId: treeItem.SiteId,
 			FacilityId: treeItem.FacilityId,
@@ -693,47 +782,6 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 	
 		if err := bus.Dispatch(&tree); err != nil {
 			return err
-		}
-	}
-	return nil
-}
-
-func updateTsFacilityTreeChildren(item *m.TsFacilityTreeItem) error {
-	var path string = ""
-	slicePath := strings.Split(item.Value, "/")
-	if  len(slicePath) == 1 {
-		newParentId, err := strconv.Atoi(item.Value)
-		if err != nil {
-			return err
-		}
-		if newParentId == 0 {
-			path = strconv.Itoa(item.FacilityId)
-		}	
-	}
-	for _, treeItem := range item.Children {
-		if treeItem.TagId > 0 {
-			if len(path) > 0 {
-				treeItem.Value = path
-			} else {
-				treeItem.Value = strconv.Itoa(item.FacilityId)
-			}
-			result := updateTsFacilityTreeTag(&treeItem)
-			if result != nil {
-				return result
-			}
-		} else {
-			if len(path) > 0 {
-				treeItem.Value = path
-			} else {
-				treeItem.Value = strconv.Itoa(item.FacilityId)	
-			}
-			result := updateTsFacilityTreeFacility(&treeItem)
-			if result != nil {
-				return result
-			}
-			if len(treeItem.Children) > 0 {
-				updateTsFacilityTreeChildren(&treeItem)
-			}
 		}
 	}
 	return nil
@@ -750,9 +798,6 @@ func updateTsFacilityTree(c *gfm.ReqContext, req m.UpdateTsFacilityTreePathQuery
 			result := updateTsFacilityTreeFacility(&treeItem)
 			if result != nil {
 				return Error(500, "ThingSPIN Store Error", result)
-			}
-			if len(treeItem.Children) > 0 {
-				updateTsFacilityTreeChildren(&treeItem)
 			}
 		}
 	}
