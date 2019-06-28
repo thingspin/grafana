@@ -2,7 +2,7 @@
     <div class="ts-site-main-title">
         사이트 목록
     </div>
-    <button id="site-add-btn" className="btn" ng-click="ctrl.onShowEditView(true)" ng-show="ctrl.isEditBtn">
+    <button id="site-add-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
         사이트 추가
     </button>
     <div class="ts-site-input-area" ng-show="ctrl.isEditView">
@@ -33,7 +33,7 @@
             </button>
         </div>
     </div>
-    <div class="ts-site-table-container site-table-size">
+    <div class="ts-site-table-container site-table-size" ng-show="ctrl.isListView">
         <div class="connect-table-header">
             <span>페이지당 행수 : </span>
             <span class="connect-page-rows">
