@@ -9,7 +9,7 @@
       "icon": "fa fa-bar-chart",
       "url": "/thingspin/manage/data",
       "hideFromMenu": false,
-      "placeBottom": true,
+      "placeBottom": false,
       "canDelete": false,
       "children": [
         {
@@ -114,9 +114,9 @@
           "canDelete": false
         },
         {
-          "text": "시스템 설정",
+          "text": "플로우 편집",
           "icon": "gicon gicon-alert-rules",
-          "url": "/v1.0/sys/config",
+          "url": "http://localhost:1880",
           "canDelete": false
         },
         {
