@@ -1,0 +1,142 @@
+// ROOT
+.fms-history-card {
+    width: 100%;
+
+    &>div {
+        display: inline-flex;
+        padding: 16px 16px 0 16px;
+    }
+
+
+    .ts-err-bg {
+        background-color: #fce4ec;
+    }
+    .ts-err {
+        color: #e91e63;
+    }
+
+    .ts-warn-bg {
+        background-color: #fff3e0;
+    }
+    .ts-warn {
+        color: #ff8d02;
+    }
+
+    .ts-on-bg {
+        background-color: white;
+    }
+
+    .ts-off-card-bg {
+        background-color: #ecebeb;
+    }
+    .ts-off-bg {
+        background-color: #fafafa;
+    }
+    .ts-off {
+        color: #6a6a6a;
+    }
+
+    &>div:hover {
+        background-color: #dcdbdc;
+    }
+}
+
+// LEFT
+.fms-tl-left {
+    width: 20px;
+}
+.fms-tl-icon {
+    display:flex;
+
+    font-size: 20px;
+    padding-bottom:7.5px;
+
+}
+.fms-tl-dot {
+    height: calc(100% - (20px + 7.5px));
+    border-right: 1px dotted #b5b5b5;
+    display: table;
+    margin: 0 auto;
+}
+
+
+// RIGHT
+.fms-tl-right {
+    width: calc(100%);
+    padding: 0 0 16px 16px;
+    font-size: 12px;
+}
+
+.fms-tl-title {
+    display: inline-flex;
+
+    font-size: 17px;
+}
+.fms-tl-subtitle {
+    display: table;
+    margin: auto;
+
+    padding-left: 8px;
+    font-size: 12px;
+}
+.fms-tl-time-layer {
+    width: 100%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    display: inline-flex;
+    justify-content: space-between;
+    
+    a {
+        &:hover {
+            color: #1e88e5;
+        }
+    }
+}
+
+.fms-hist-info-card {
+    width: 100%;
+    height: 87px;
+    display: inline-flex;
+
+    border-radius: 4px;
+    background-color: rgba(#ecebeb, 1);
+}
+
+.fms-hist-card-icon {
+    width: 56px;
+    min-width:56px;
+    
+}
+.fms-hist-card-info {
+    width: 100%;
+    height: 100%;
+    display: table;
+}
+.fms-hist-icon-layer {
+    display: table;
+    margin: auto;
+    margin-top: 16px;
+
+    width: 24px;
+    border-radius: 50%;
+
+    font-size: 16px;
+    text-align: center;
+
+    background-color: white;
+}
+.fms-hist-info-layer {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.fms {
+    &.hist-info {
+        width: 100%;
+        line-height: 1.67;
+    }
+
+    .key {
+        font-weight: bold;
+    }
+}

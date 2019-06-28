@@ -7,5 +7,7 @@
   height: calc(100vh - (#{$navbar-height} + #{$right-side-tab-height} + #{$right-side-tabbar-height}));
 
   // test
-  background-color: rgba(236, 239, 241, 1);
+  background-color: rgba(#fff, 1);
+
+  border: solid 1px #ecebeb;
 }

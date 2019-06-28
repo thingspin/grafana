@@ -1,16 +1,18 @@
 @import './RightSideLog/RightSideLog';
 @import './RightSideTabbar/RightSideTabbar';
 @import './RightSideHistory/RightSideHistory';
+@import './FmsHistoryCard/FmsHistoryCard';
 
 ts-right-sidebar {
   display: none;
   width: 360px;
+  min-width: 360px;
   height: 100%;
 
   overflow: hidden;
 
-  // test
-  background-color: olive;
+  border: solid 1px #ecebeb;
+  background-color: white;
 }
 
 .rightmenu-open {
@@ -24,6 +26,27 @@ ts-right-sidebar {
   // mode 2
   ts-right-sidebar {
     display: none;
+  }
+}
+
+.fms-tab-header {
+  width: 100%;
+  display: inline-flex;
+
+  overflow: auto;
+
+  background-color: #dcdbdc;
+}
+
+.fms-right-tab {
+  width: 128px;
+  color: rgba(34, 44, 49, 0.8);
+  height: $right-side-tab-height;
+  font-size: 14px;
+  background-color: rgba(#fff, 0.6);
+
+  &.rtab-active {
+    background-color: rgba(#fff, 1);
   }
 }
 
@@ -52,13 +75,7 @@ ts-right-sidebar {
   width: 128px;
 }
 
-.fms-right-tap-selected {
-  color: rgba(30, 30, 30, 0.8);
-}
 
-.fms-right-tap-normal {
-  color: rgba(34, 44, 49, 0.8);
-}
 
 .fms-right-tap-alarm-icon {
   margin-left: 16px;

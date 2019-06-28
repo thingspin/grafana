@@ -1,45 +1,46 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, ReactNode } from 'react';
+
 import Tabs from './Tabs';
+import Tab from './Tab';
+
 import { TsRightSideTabbarComponent } from './RightSideTabbar';
 import { TsRightSideHistoryComponent } from './RightSideHistory';
 import { TsRightSideLogComponent } from './RightSideLog';
 
 export class TsRightSidebar extends PureComponent {
-  constructor(props) {
-    super(props);
+
+  getTabNode(title, icon): () => ReactNode {
+    return () => { return (<>
+        <i className={`fa ${icon} fa-2`} />
+        <span className="fms-right-tap-alarm-title">
+          {title}
+        </span>
+      </>);
+    };
   }
 
-  render() {
-    return (
-      <div>
-        <Tabs>
-          <Tabs.Tab
-            name="alarm"
-            initialActive={true}
-            heading={() => (
-              <li className="fms-right-tapitem fms-right-tap-alarm">
-                <i className="fms-right-tap-alarm-icon fa fa-bell fa-2" />
-                <span className="fms-right-tap-alarm-title">알람</span>
-              </li>
-            )}
-          >
-            <TsRightSideTabbarComponent />
-            <TsRightSideHistoryComponent />
-          </Tabs.Tab>
-          <Tabs.Tab
-            name="log"
-            heading={() => (
-              <li className="fms-right-tapitem fms-right-tap-systemlog">
-                <i className="fms-right-tap-alarm-icon fa fa-window-maximize fa-2" />
-                <span className="fms-right-tap-alarm-title">시스템 로그</span>
-              </li>
-            )}
-          >
-            <TsRightSideTabbarComponent />
-            <TsRightSideLogComponent />
-          </Tabs.Tab>
-        </Tabs>
-      </div>
+  render(): ReactNode {
+    return (<Tabs>
+
+      {/* Alarm Log Tab */}
+      <Tab
+        name="alarm" initActive={true}
+        heading={this.getTabNode('알람', "fms-right-tap-alarm-icon fa-bell").bind(this)}
+      >
+        <TsRightSideTabbarComponent />
+        <TsRightSideHistoryComponent />
+      </Tab>
+
+      {/* System Log Tab */}
+      <Tab
+        name="log"
+        heading={this.getTabNode('시스템 로그', "fms-right-tap-alarm-icon fa-window-maximize").bind(this)}
+      >
+        <TsRightSideTabbarComponent />
+        <TsRightSideLogComponent />
+      </Tab>
+
+    </Tabs>
     );
   }
 }
