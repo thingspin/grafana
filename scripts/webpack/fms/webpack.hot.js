@@ -16,6 +16,10 @@ let fmsHot = merge(common, {
   entry: {
     app: ['webpack-dev-server/client?http://0.0.0.0:3333', './public/app-thingspin-fms/dev.ts'],
   },
+
+  resolve: {
+    extensions: ['.scss', '.css', '.ts', '.tsx', '.es6', '.js', '.json', '.svg', '.woff2', '.png', '.html'],
+  },
   
   output: {
     path: path.resolve(__dirname, '../../../public/build'),
@@ -65,8 +69,13 @@ fmsHot = Object.assign(fmsHot, {
   resolve,
   devtool,
   optimization,
-  module: gfHot.module,
-
+  module: {
+    rules: (gfHot.module.rules.concat([{
+      test: /\.css$/,  
+      include: /node_modules/,  
+      loaders: ['style-loader', 'css-loader'],
+    }])),
+  },
 });
 
 module.exports = fmsHot;
