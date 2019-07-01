@@ -110,7 +110,7 @@ func addTsFacility(c *gfm.ReqContext, req m.AddTsFacilityQuery) Response {
 	sort.Slice(returnList, func(i, j int) bool {
         return returnList[i].FacilityTreeOrder < returnList[j].FacilityTreeOrder
 	})	
-
+	sortReturnTreeData(returnList)
 	return JSON(200, returnList)
 }
 

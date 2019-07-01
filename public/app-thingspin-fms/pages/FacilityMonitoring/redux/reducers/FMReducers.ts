@@ -1,7 +1,6 @@
 import { FMMetaPayload, FMMetaAction, FM_META_ACTION_TYPES } from '../actions/FMAction';
 
 // init
-console.log(window.location.pathname === '/thingspin/manage/monitoring');
 export const initialState: FMMetaPayload = {
     isTreeView: window.location.pathname === '/thingspin/manage/monitoring'
 };

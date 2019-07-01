@@ -71,11 +71,27 @@ export class TsTagDefineCtrl {
     // Tree callback functions : beforeDrop, Dropped
     this.options = {
       beforeDrop: (event) => {
+        console.log(event);
         const postData = [];
         if (event.source.cloneModel === undefined) {
               // 우측 트리내에서 이동 할 경우
               console.log("This is right tree - before");
               console.log(event);
+              if (event.dest.nodesScope.$nodeScope !== null && event.source.nodeScope !== null) {
+                if (event.dest.nodesScope.$nodeScope.$modelValue.tag_id > 0 && event.source.nodeScope.$modelValue.tag_id === 0) {
+                  // 설비가 태그 밑으로 이동할 경우 예외처리
+                  console.log("against rules!");
+                  appEvents.emit('alert-error', ["태그는 설비를 포함할 수 없습니다."]);
+                  return false;
+                }
+              } else if (event.dest.nodesScope.$nodeScope === null) {
+                if (event.source.nodeScope.$modelValue.tag_id > 0) {
+                  // 태그가 lv1로 이동할 경우
+                  console.log("against rules!");
+                  appEvents.emit('alert-error', ["태그는 설비에 포함되어야 합니다."]);
+                  return false;
+                }
+              }
 
               if (event.dest.nodesScope.$nodeScope === null) {
                 // 설비가 Lv1 로 이동하는 경우
@@ -241,6 +257,11 @@ export class TsTagDefineCtrl {
           const idx = event.dest.index;
           if ((fromNode.facility_id === 0 && toNode === null) || toNode.$modelValue.facility_id === 0) {
             console.log("against rules!");
+            appEvents.emit('alert-error', ["태그는 설비에 포함되어야 합니다."]);
+            return false;
+          }else if ( fromNode.facility_id === 0 && toNode.$modelValue.tag_id > 0) {
+            console.log("against rules!");
+            appEvents.emit('alert-error', ["태그는 설비에 포함되어야 합니다."]);
             return false;
           }
           const postdata = [];
