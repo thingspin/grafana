@@ -1,5 +1,6 @@
 {
   "name": "@thingspin/toolkit",
+  "version": "0.1.0",
   "description": "Thingspin Toolkit",
   "keywords": [
     "typescript",
