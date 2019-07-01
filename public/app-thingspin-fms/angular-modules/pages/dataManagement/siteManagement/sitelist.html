@@ -2,7 +2,7 @@
     <div class="ts-site-main-title">
         사이트 목록
     </div>
-    <button id="site-add-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
+    <button id="site-add-btn" className="btn" ng-click="ctrl.onShowEditView(true)" ng-show="ctrl.isAddSiteBtn">
         사이트 추가
     </button>
     <div class="ts-site-input-area" ng-show="ctrl.isEditView">
@@ -67,13 +67,13 @@
                     <td>{{ item.desc }}</td>
                     <td>
                         <button class="btn btn-padding" ng-click="ctrl.tableClick(item.id, $index)">
-                            <i class="fa fa-university"></i>
+                            <i class="tsi icon-ts-tagtree"></i>
                         </button>
                         <button class="btn btn-padding-margin" ng-click="ctrl.editSite(item)">
-                            <i class="fa fa-cog"></i>
+                            <i class="tsi icon-ts-create"></i>
                         </button>
                         <button class="btn btn-padding-margin" ng-click="ctrl.removeSite(item.id)">
-                            <i class="fa fa-trash"></i>
+                            <i class="tsi icon-ts-delete"></i>
                         </button>                            
                     </td>
                 </tr>

@@ -1,118 +1,104 @@
-<div class="ts-tag-define">
-    <!--
-    <div class="ts-site-main-title">
-        목록
+<div class="ts-tag-define"> 
+    <div class="ts-define-main-title">
+        설비 모델링
     </div>
-    -->
-    <div id="mqtt-addview-right-button-area" ng-show="ctrl.isEditBtn">
-        <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.backtosite()">
+    <div id="ts-define-right-button-area" ng-show="ctrl.isEditBtn">
+        <button id="define-cancel-btn" className="btn" ng-click="ctrl.backtosite()">
             이전
         </button>  
-        <button id="tag-add-plus-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
-            설비추가
+        <button id="define-add-plus-btn" className="btn" ng-click="ctrl.onShowEditView(true)">
+            설비 추가
         </button>
     </div>
-    <div class="" ng-show="ctrl.isEditView">
-        <div class="ts-input-group name">
-            <div class="ts-mqtt-collect-label">설비 이름</div>
+    <div class="ts-site-input-area" ng-show="ctrl.isEditView">
+        <div class="ts-site-input-title">
+            설비 (논리 모델) 추가
+        </div>
+        <div class="site-content-line"></div>
+        <div class="ts-site-input-group name">
+            <div class="ts-site-input-label-name">설비 명</div>
             <div class="ts-input">
                 <input type="text" ng-model="ctrl.facility.name"/>
                 <span ng-class="{separator: true, enable: ctrl.facility.name}"></span>
             </div>
         </div>
-        <div class="ts-input-group desc">
-            <div class="ts-mqtt-url-label">설명</div>
+        <div class="ts-site-input-group desc">
+            <div class="ts-site-input-label-desc">설명</div>
             <div class="ts-input">
                 <input type="text" ng-model="ctrl.facility.desc"/>
                 <span ng-class="{separator: true, enable: ctrl.facility.desc}"></span>
             </div>
         </div>
-        <!--
-        <div class="ts-input-group lat">
-            <div class="ts-mqtt-collect-label">위도</div>
-            <div class="ts-input">
-                <input type="text" ng-model="ctrl.facility.lat"/>
-                <span ng-class="{separator: true, enable: ctrl.facility.lat}"></span>
-            </div>
-        </div>
-        <div class="ts-input-group lon">
-            <div class="ts-mqtt-url-label">경도</div>
-            <div class="ts-input">
-                <input type="text" ng-model="ctrl.facility.lon"/>
-                <span ng-class="{separator: true, enable: ctrl.facility.lon}"></span>
-            </div>
-        </div>
-        <div class="ts-input-group img-path">
-            <div class="ts-mqtt-url-label">이미지</div>
-            <div class="ts-input">
-                <input type="text" ng-model="ctrl.facility.imgpath"/>
-                <span ng-class="{separator: true, enable: ctrl.facility.imgpath}"></span>
-            </div>
-        </div>
-        <div class="ts-input-group img-path">
-            <div class="ts-mqtt-url-label">태그 이름</div>
-            <div class="ts-input">
-                <input type="text" ng-model="ctrl.facility.tagName"/>
-                <span ng-class="{separator: true, enable: ctrl.facility.imgpath}"></span>
-            </div>
-        </div>
-        -->
-        <div id="mqtt-addview-right-button-area">
-            <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowEditView(false)">
+        <div class="ts-define-right-button-area">
+            <button id="define-cancel-btn" class="btn" ng-click="ctrl.onShowEditView(false)">
                 취소
             </button>
-            <button id="tag-add-plus-btn" className="btn" ng-click="ctrl.onFacilityAdd()">
+            <button id="define-add-plus-btn" class="btn" ng-click="ctrl.onFacilityAdd()">
                 저장
             </button>
         </div>
     </div>
+    <div class="tree-title-view-area">
+        <div class="ts-define-tree-title-area">
+            <div class="ts-define-tree-title ts-define-tree-left-title">
+                연결 (물리 모델)
+            </div>
+            <div class="ts-define-tree-title ts-define-tree-right-title">
+                설비 (논리 모델)
+            </div>
+        </div>
+    </div>
+    <div class="ts-define-tree-title-line">
+        <div class="ts-define-tree-left-line"></div>        
+        <div class="ts-define-tree-right-line"></div>
+    </div>
     <div class="tree-view-area">
-        <div class="section gf-form-group">
+        <div class="section gf-form-group" id="tree-left-view">
             <!--Level 1 starting point-->
             <div ui-tree="ctrl.options" data-clone-enabled="true" data-nodrop-enabled="true" id="tree1-root">
-                    <ol ui-tree-nodes="" ng-model="ctrl.source">
+                    <ol ui-tree-nodes ng-model="ctrl.source">
                         <li ng-repeat="pnode in ctrl.source" ui-tree-node>
-                            <div>
-                                <a data-nodrag ng-click="ctrl.toggle(this)">
+                            <div class="left-tree-title-content">
+                                <a data-nodrag ng-click="ctrl.toggle(this)" class="left-tree-item-arrow">
                                     <span ng-class="{
                                         'tsi icon-ts-arrow_drop_up': collapsed,
                                         'tsi icon-ts-manuarrow-drop-down': !collapsed
                                         }">
                                     </span>
-                                 </a>
-                                <i class="fa fa-industry"></i>
-                                <a>{{pnode.label}}</a>
+                                </a>
+                                <i class="title-icon-root-content tsi icon-ts-data"></i>
+                                <a class="left-title-text-content">{{pnode.label}}</a>
                             </div>
                             
         
                             <!--Level 2 starting point-->
-                            <ol ui-tree-nodes="" ng-model="pnode.children" ng-class="{hidden: collapsed}">
+                            <ol ui-tree-nodes ng-model="pnode.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                 <li ng-repeat="pnode in pnode.children" ui-tree-node> 
-                                    <div>
+                                    <div class="left-tree-title-content">
                                         <!--
                                         <input type="checkbox" ng-click="ctrl.checked(pnode2)" ng-checked="pnode2.ischecked" />
                                         -->
-                                        <a data-nodrag ng-click="ctrl.toggle(this)">
+                                        <a data-nodrag ng-click="ctrl.toggle(this)" class="left-tree-second-item-arrow">
                                             <span ng-class="{
                                                 'tsi icon-ts-arrow_drop_up': collapsed,
                                                 'tsi icon-ts-manuarrow-drop-down': !collapsed
                                                 }">
                                             </span>
                                         </a>
-                                        <i class="fa fa-steam"></i>
-                                        <a>{{pnode.facility_name}}</a>
+                                        <i class="left-title-icon-content tsi icon-ts-equipment"></i>
+                                        <a class="left-title-text-content">{{pnode.facility_name}}</a>
                                     </div>
                                     
                                     <!--Level 3 starting point-->
-                                    <ol ui-tree-nodes="" ng-model="pnode.children" ng-class="{hidden: collapsed}">
+                                    <ol ui-tree-nodes="tree-nodes-padding" ng-model="pnode.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                         <li ng-repeat="pnode in pnode.children" ui-tree-node>
-                                                <div>
-                                                     <!--
+                                            <div class="left-tree-three-title-content" ui-tree-handle>
+                                                    <!--
                                                 <input data-drag-enabled type="checkbox" ng-click="ctrl.checked(pnode3)" ng-checked="pnode3.ischecked" />
                                                 -->
-                                                    <i class="fa fa-arrows-h"></i>
-                                                    <a ui-tree-handle class="tree-node tree-node-content">{{pnode.tag_name}}</a>
-                                                </div>
+                                                <i class="left-tree-three-item-arrow tsi icon-ts-tag"></i>
+                                                <a class="left-three-title-text-content" id="parent-node-view">{{pnode.tag_name}}</a>
+                                            </div>
                                         
                                             <!--
                                             <ol ui-tree-nodes="" ng-model="pnode3.children" ng-class="{hidden: collapsed}">
@@ -143,159 +129,218 @@
                     </ol>
             </div>                        
         </div>
-
-        <div class="section gf-form-group">
+        <div class="section gf-form-group" id="tree-right-view">
             <!--Level 1 starting point-->
             <div ui-tree="ctrl.options" id="tree2-root">
                 <ol ui-tree-nodes="" ng-model="ctrl.dataList">
                     <li ng-repeat="node in ctrl.dataList" ui-tree-node>
-                        <div ui-tree-handle class="tree-node tree-node-content">
-                                <a data-nodrag ng-click="ctrl.toggle(this)">
-                                    <span ng-class="{
-                                        'tsi icon-ts-arrow_drop_up': collapsed,
-                                        'tsi icon-ts-manuarrow-drop-down': !collapsed
-                                        }">
-                                    </span>
-                                </a>
-                                <a ng-if="node.tag_id !== 0">
-                                    <i class="fa fa-arrows-h"></i>
-                                </a>
-                                <a ng-if="node.tag_id === 0">
-                                    <i class="fa fa-steam"></i>
-                                </a>
-                                <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-
-                                <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-
-                                <a data-nodrag ng-click="" class="ts-edit-show">
-                                    <span class="tsi icon-ts-create"></span>
-                                </a>
-                                <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" class="ts-edit-show">
-                                    <span class="tsi icon-ts-delete"></span>
-                                </a>
+                        <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
+                            <a data-nodrag ng-click="ctrl.toggle(this)" class="right-tree-item-arrow">
+                                <span ng-class="{
+                                    'tsi icon-ts-arrow_drop_up': collapsed,
+                                    'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                    }">
+                                </span>
+                            </a>
+                            <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                            <a class="right-content-facility-text ts-edit-hidden">{{node.facility_name}}</a>
+                            <div class="ts-tree-input-group name" id="ts-edit-show">
+                                <div class="ts-input">
+                                    <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                    <span ng-class="{separator: true, enable: node.facility_name}"></span>
+                                </div>
+                            </div>
+                            <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                <span class="tsi icon-ts-create"></span>
+                            </a>
+                            <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                <span class="tsi icon-ts-delete"></span>
+                            </a>
+                        </div>
+                        <div ng-if="node.tag_id !== 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-tag-item-content">
+                            <a><i class="right-tag-content tsi icon-ts-tag"></i></a>
+                            <a class="right-content-tag-text ts-edit-hidden">{{node.tag_name}}</a>
+                            <div class="ts-tree-child-input-group name" id="ts-edit-show">
+                                <div class="ts-input">
+                                    <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                    <span ng-class="{separator: true, enable: node.tag_name}"></span>
+                                </div>
+                            </div>
+                            <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                <span class="tsi icon-ts-create"></span>
+                            </a>
+                            <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                <span class="tsi icon-ts-delete"></span>
+                            </a>
                         </div>
 
                         <!--Level 2 starting point-->
-                        <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                        <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                             <li ng-repeat="node in node.children" ui-tree-node>
-                                <div ui-tree-handle class="tree-node tree-node-content">
-                                        <a data-nodrag ng-click="ctrl.toggle(this)">
-                                            <span ng-class="{
+                                <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
+                                    <a data-nodrag ng-click="ctrl.toggle(this)">
+                                        <span ng-class="{
                                                 'tsi icon-ts-arrow_drop_up': collapsed,
                                                 'tsi icon-ts-manuarrow-drop-down': !collapsed
-                                                }">
-                                            </span>
-                                        </a>
-                                        <a ng-if="node.tag_id !== 0">
-                                            <i class="fa fa-arrows-h"></i>
-                                        </a>
-                                        <a ng-if="node.tag_id === 0">
-                                            <i class="fa fa-steam"></i>
-                                        </a>
-                                        <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                        <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-        
-                                        <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                        <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-        
-                                        <a data-nodrag ng-click="" class="ts-edit-show">
-                                            <span class="tsi icon-ts-create"></span>
-                                        </a>
-                                        <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" class="ts-edit-show">
-                                            <span class="tsi icon-ts-delete"></span>
-                                        </a>
+                                            }">
+                                        </span>
+                                    </a>
+                                    <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                                    <a class="right-content-facility-text ts-edit-hidden">{{node.facility_name}}</a>
+                                    <div class="ts-tree-input-group name" id="ts-edit-show">
+                                        <div class="ts-input">
+                                            <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                            <span ng-class="{separator: true, enable: node.facility_name}"></span>
+                                        </div>
+                                    </div>
+                                    <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                        <span class="tsi icon-ts-create"></span>
+                                    </a>
+                                    <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                        <span class="tsi icon-ts-delete"></span>
+                                    </a>
                                 </div>
+                                <div ng-if="node.tag_id !== 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-tag-item-content">
+                                    <a><i class="right-tag-content tsi icon-ts-tag"></i></a>
+                                    <a class="right-content-tag-text ts-edit-hidden">{{node.tag_name}}</a>
+                                    <div class="ts-tree-child-input-group name" id="ts-edit-show">
+                                        <div class="ts-input">
+                                            <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                            <span ng-class="{separator: true, enable: node.tag_name}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                    <span class="tsi icon-ts-create"></span>
+                                </a>
+                                <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                    <span class="tsi icon-ts-delete"></span>
+                                </a>
                                 <!--Level 3 starting point-->
-                                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                     <li ng-repeat="node in node.children" ui-tree-node>
-                                        <div ui-tree-handle class="tree-node tree-node-content ">
-                                                <a data-nodrag ng-click="ctrl.toggle(this)">
-                                                    <span ng-class="{
-                                                        'tsi icon-ts-arrow_drop_up': collapsed,
-                                                        'tsi icon-ts-manuarrow-drop-down': !collapsed
-                                                        }">
-                                                    </span>
-                                                </a>
-                                                <a ng-if="node.tag_id !== 0">
-                                                    <i class="fa fa-arrows-h"></i>
-                                                </a>
-                                                <a ng-if="node.tag_id === 0">
-                                                    <i class="fa fa-steam"></i>
-                                                </a>
-                                                <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                                <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-                
-                                                <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                                <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-                
-                                                <a data-nodrag ng-click="" class="ts-edit-show">
-                                                    <span class="tsi icon-ts-create"></span>
-                                                </a>
-                                                <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" class="ts-edit-show">
-                                                    <span class="tsi icon-ts-delete"></span>
-                                                </a>
+                                        <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
+                                            <a data-nodrag ng-click="ctrl.toggle(this)">
+                                                <span ng-class="{
+                                                    'tsi icon-ts-arrow_drop_up': collapsed,
+                                                    'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                                }">
+                                                </span>
+                                            </a>
+                                            <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                                            <a class="right-content-facility-text ts-edit-hidden">{{node.facility_name}}</a>
+                                            <div class="ts-tree-input-group three-name" id="ts-edit-show">
+                                                <div class="ts-input">
+                                                    <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                    <span ng-class="{separator: true, enable: node.facility_name}"></span>
+                                                </div>
+                                            </div>
+                                            <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                                <span class="tsi icon-ts-create"></span>
+                                            </a>
+                                            <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                                <span class="tsi icon-ts-delete"></span>
+                                            </a>
+                                        </div>
+                                        <div ng-if="node.tag_id !== 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-tag-item-content">
+                                            <a><i class="right-tag-content tsi icon-ts-tag"></i></a>
+                                            <a class="right-content-tag-text ts-edit-hidden">{{node.tag_name}}</a>
+                                            <div class="ts-tree-child-input-group three-name" id="ts-edit-show">
+                                                <div class="ts-input">
+                                                    <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                    <span ng-class="{separator: true, enable: node.tag_name}"></span>
+                                                </div>
+                                            </div>
+                                            <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                                <span class="tsi icon-ts-create"></span>
+                                            </a>
+                                            <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                                <span class="tsi icon-ts-delete"></span>
+                                            </a>
                                         </div>
                                         <!--Level 4 starting point-->
-                                        <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                                        <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                             <li ng-repeat="node in node.children" ui-tree-node>
-                                                <div ui-tree-handle class="tree-node tree-node-content">
-                                                        <a data-nodrag ng-click="ctrl.toggle(this)">
-                                                            <span ng-class="{
-                                                                'tsi icon-ts-arrow_drop_up': collapsed,
-                                                                'tsi icon-ts-manuarrow-drop-down': !collapsed
-                                                                }">
-                                                            </span>
-                                                        </a>
-                                                        <a ng-if="node.tag_id !== 0">
-                                                            <i class="fa fa-arrows-h"></i>
-                                                        </a>
-                                                        <a ng-if="node.tag_id === 0">
-                                                            <i class="fa fa-steam"></i>
-                                                        </a>
-                                                        <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                                        <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-                        
-                                                        <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                                        <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-                        
-                                                        <a data-nodrag ng-click="" class="ts-edit-show">
-                                                            <span class="tsi icon-ts-create"></span>
-                                                        </a>
-                                                        <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" class="ts-edit-show">
-                                                            <span class="tsi icon-ts-delete"></span>
-                                                        </a>
+                                                <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
+                                                    <a data-nodrag ng-click="ctrl.toggle(this)">
+                                                        <span ng-class="{
+                                                            'tsi icon-ts-arrow_drop_up': collapsed,
+                                                            'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                                        }">
+                                                        </span>
+                                                    </a>
+                                                    <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                                                    <a class="right-content-facility-text ts-edit-hidden">{{node.facility_name}}</a>
+                                                    <div class="ts-tree-input-group three-name" id="ts-edit-show">
+                                                        <div class="ts-input">
+                                                            <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                            <span ng-class="{separator: true, enable: node.facility_name}"></span>
+                                                        </div>
+                                                    </div>
+                                                    <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                                        <span class="tsi icon-ts-create"></span>
+                                                    </a>
+                                                    <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                                        <span class="tsi icon-ts-delete"></span>
+                                                    </a>
+                                                </div>
+                                                <div ng-if="node.tag_id !== 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-tag-item-content">
+                                                    <a><i class="right-tag-content tsi icon-ts-tag"></i></a>
+                                                    <a class="right-content-tag-text ts-edit-hidden">{{node.tag_name}}</a>
+                                                    <div class="ts-tree-child-input-group three-name" id="ts-edit-show">
+                                                        <div class="ts-input">
+                                                            <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                            <span ng-class="{separator: true, enable: node.tag_name}"></span>
+                                                        </div>
+                                                    </div>
+                                                    <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                                        <span class="tsi icon-ts-create"></span>
+                                                    </a>
+                                                    <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                                        <span class="tsi icon-ts-delete"></span>
+                                                    </a>
                                                 </div>
                                                 <!--Level 5 starting point-->
-                                                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+                                                <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                                     <li ng-repeat="node in node.children" ui-tree-node>
-                                                        <div ui-tree-handle class="tree-node tree-node-content">
-                                                                <a data-nodrag ng-click="ctrl.toggle(this)">
-                                                                    <span ng-class="{
-                                                                        'tsi icon-ts-arrow_drop_up': collapsed,
-                                                                        'tsi icon-ts-manuarrow-drop-down': !collapsed
-                                                                        }">
-                                                                    </span>
-                                                                </a>
-                                                                <a ng-if="node.tag_id !== 0">
-                                                                    <i class="fa fa-arrows-h"></i>
-                                                                </a>
-                                                                <a ng-if="node.tag_id === 0">
-                                                                    <i class="fa fa-steam"></i>
-                                                                </a>
-                                                                <a ng-if="node.tag_id !== 0" class="ts-edit-hidden">{{node.tag_name}}</a>
-                                                                <input ng-if="node.tag_id !== 0" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-                                
-                                                                <a ng-if="node.tag_id === 0" class="ts-edit-hidden">{{node.facility_name}}</a>
-                                                                <input ng-if="node.tag_id === 0" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" class="ts-edit-show">
-                                
-                                                                <a data-nodrag ng-click="" class="ts-edit-show">
-                                                                    <span class="tsi icon-ts-create"></span>
-                                                                </a>
-                                                                <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" class="ts-edit-show">
-                                                                    <span class="tsi icon-ts-delete"></span>
-                                                                </a>
+                                                        <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
+                                                            <a data-nodrag ng-click="ctrl.toggle(this)">
+                                                                <span ng-class="{
+                                                                    'tsi icon-ts-arrow_drop_up': collapsed,
+                                                                    'tsi icon-ts-manuarrow-drop-down': !collapsed
+                                                                }">
+                                                                </span>
+                                                            </a>
+                                                            <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                                                            <a class="right-content-facility-text ts-edit-hidden">{{node.facility_name}}</a>
+                                                            <div nclass="ts-tree-input-group five-name" id="ts-edit-show">
+                                                                <div class="ts-input">
+                                                                    <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                                    <span ng-class="{separator: true, enable: node.facility_name}"></span>
+                                                                </div>
+                                                            </div>
+                                                            <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                                                <span class="tsi icon-ts-create"></span>
+                                                            </a>
+                                                            <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                                                <span class="tsi icon-ts-delete"></span>
+                                                            </a>
+                                                        </div>
+                                                        <div ng-if="node.tag_id !== 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-tag-item-content">
+                                                            <a><i class="right-tag-content tsi icon-ts-tag"></i></a>
+                                                            <a class="right-content-tag-text ts-edit-hidden">{{node.tag_name}}</a>
+                                                            <div class="ts-tree-child-input-group five-name" id="ts-edit-show">
+                                                                <div class="ts-input">
+                                                                    <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                                    <span ng-class="{separator: true, enable: node.tag_name}"></span>
+                                                                </div>
+                                                            </div>
+                                                            <a data-nodrag ng-click="" class="edit-icon-view" id="ts-edit-show">
+                                                                <span class="tsi icon-ts-create"></span>
+                                                            </a>
+                                                            <a ng-if="node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
+                                                                <span class="tsi icon-ts-delete"></span>
+                                                            </a>
                                                         </div>
                                                     </li>
                                                 </ol>
@@ -308,7 +353,6 @@
                     </li>
                 </ol>
             </div>
-                        
-         </div>
+        </div>
     </div>
 </div>

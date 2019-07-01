@@ -42,6 +42,7 @@ export class TsSiteListCtrl implements angular.IController {
     isEdit: boolean;
     isEditView: boolean;
     isListView: boolean;
+    isAddSiteBtn: boolean;
     name: string;
     desc: string;
     lat: string;
@@ -57,6 +58,7 @@ export class TsSiteListCtrl implements angular.IController {
         this.isEdit = false;
         this.isEditView = false;
         this.isListView = true;
+        this.isAddSiteBtn = true;
         this.list = [];
         this.asyncDataLoader();
 
@@ -123,9 +125,11 @@ export class TsSiteListCtrl implements angular.IController {
             this.isEdit = false;
             this.isEditView = true;
             this.isListView = false;
+            this.isAddSiteBtn = false;
         } else {
             this.isEditView = false;
             this.isListView = true;
+            this.isAddSiteBtn = true;
         }
     }
     onSiteAdd(): void {

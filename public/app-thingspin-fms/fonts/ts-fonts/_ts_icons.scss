@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'tsi';
   src:
-    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.ttf?3e9ios') format('truetype'),
-    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.woff?3e9ios') format('woff'),
-    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.svg?3e9ios#tsi') format('svg');
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.ttf?tvvaco') format('truetype'),
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.woff?tvvaco') format('woff'),
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.svg?tvvaco#tsi') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,6 +23,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ts-tagtree:before {
+  content: "\e950";
+}
 .icon-ts-equipment2:before {
   content: "\e94f";
 }
