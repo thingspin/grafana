@@ -50,7 +50,7 @@ class FilterTree extends Component<Props,State> {
         //console.log("next: ",nextProps.nodesChecked);
         if (this.props.nodes !== nextProps.nodes || this.props.nodesChecked !== nextProps.nodesChecked) {
             //console.log(nextProps.nodes);
-            //this.putNodeIcon(nextProps.nodes);
+            this.putNodeIcon(nextProps.nodes);
             this.setState({nodesFiltered: nextProps.nodes});
             this.setState({nodes: nextProps.nodes});
             this.setState({nodesCount: nextProps.nodes.length});
@@ -82,7 +82,7 @@ class FilterTree extends Component<Props,State> {
                     node[i]['icon'] = <span className="icon-facility"><i className="fa fa-steam fa-1x"/></span>;
                     this.putNodeIcon(node[i].children);
                 } else {
-                    node[i]['icon'] =  <span className="icon-tag"><i className="fa fa-arrows-h"/></span>;
+                    node[i]['icon'] =  <span className="icon-tag"><i className="tsi icon-ts-tag"/></span>;
                 }
             }
         }
@@ -171,7 +171,7 @@ class FilterTree extends Component<Props,State> {
                         collapseAll: <span className="rct-icon rct-icon-collapse-all" />,
                         parentClose: <span className="icon-facility"><i className="fa fa-steam-square fa-1x"/></span>,
                         parentOpen: <span className="icon-facility"><i className="fa fa-steam fa-1x"/></span>,
-                        leaf: <span className="icon-tag"><i className="fa fa-arrows-h"/></span>,
+                        leaf: <span className="icon-tag"><i className="tsi icon-ts-tag"/></span>,
                     }}
                     nodes={this.state.nodesFiltered}
                     checked = {this.state.checked}

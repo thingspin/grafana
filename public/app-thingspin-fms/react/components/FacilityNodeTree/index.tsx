@@ -136,7 +136,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
                         if (result[i].id === selectedOption.value) {
                             idx = i;
                         }
-                        elements.push({value: result[i].id,label: result[i].name,icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>});
+                        elements.push({value: result[i].id,label: result[i].name,icon: <i className="tsi icon-ts-site">&nbsp;&nbsp;</i>});
                     }
                     this.setState({siteOptions: elements });
                     this.setState({selectedOption: elements[idx]});
