@@ -44,12 +44,13 @@ class FilterTree extends Component<Props,State> {
 
     componentWillReceiveProps(nextProps) {
         // this.props 는 아직 바뀌지 않은 상태
+        //console.log("componentWillReceive");
         //console.log("prev -node: ",this.props.nodes);
         //console.log("prev: ",this.props.nodesChecked);
         //console.log("next: ",nextProps.nodesChecked);
         if (this.props.nodes !== nextProps.nodes || this.props.nodesChecked !== nextProps.nodesChecked) {
             //console.log(nextProps.nodes);
-            this.putNodeIcon(nextProps.nodes);
+            //this.putNodeIcon(nextProps.nodes);
             this.setState({nodesFiltered: nextProps.nodes});
             this.setState({nodes: nextProps.nodes});
             this.setState({nodesCount: nextProps.nodes.length});
@@ -59,7 +60,7 @@ class FilterTree extends Component<Props,State> {
             //console.log("props change: ",nChecked);
 
            if ( nChecked > 0 ) {
-                console.log("props Checked change: ",nChecked,nextProps.nodesChecked);
+                //console.log("props Checked change: ",nChecked,nextProps.nodesChecked);
                 this.setState({checked: nextProps.nodesChecked});
             }
         }else {
@@ -67,7 +68,7 @@ class FilterTree extends Component<Props,State> {
         }
     }
     componentWillMount() {
-        console.log("componentWillMount");
+        //console.log("componentWillMount");
         this.putNodeIcon(this.props.nodes);
     }
 
@@ -146,6 +147,7 @@ class FilterTree extends Component<Props,State> {
     }
 
   render() {
+      //console.log("filterTree Render");
     return (
         <div>
             <div className="facility-filter-pos">

@@ -4,6 +4,7 @@ import { Select } from '@grafana/ui';
 import { getBackendSrv } from '@grafana/runtime';
 import { auto, ILocationService, IRootScopeService } from 'angular';
 import FilterTree from './filterTree';
+//import { Item } from 'app-thingspin-fms/react/views/system/configs/types';
 
 
 export type facilityTreeProps = {
@@ -59,10 +60,6 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
 
         this.customSingleValue = this.customSingleValue.bind(this);
 
-        //test
-        this.testChecked = this.testChecked.bind(this);
-        this.testSave = this.testSave.bind(this);
-
         this.state = {
             Taginfo: [],
             checked: [],
@@ -79,18 +76,12 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
             filterPlaceholder: " 태그 검색 ...",
 
         };
-        console.log("constructor");
+        //console.log("constructor");
     }
 
-    componentWillMount() {
-        console.log("componentWillMount");
-        this.getSiteList();
-        this.restoreFacilityData(this.props);
-    }
-
-    //props check
+       //props check
     componentWillReceiveProps(nextProps) {
-        //test.
+    //test.
         console.log("props-tag: ",nextProps.taginfo);
         console.log("props-site: ",nextProps.siteinfo);
 
@@ -103,31 +94,76 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         }
     }
 
+    componentWillMount() {
+        //console.log("componentWillMount");
+        this.getSiteList();
+        //console.log(this.props);
+        if (this.props.taginfo && this.props.taginfo.length > 0) {
+            //console.log("data exist");
+            this.restoreFacilityData(this.props);
+        } else {
+            //console.log("data empty");
+        }
+    }
 
+    componentDidMount() {
+        //console.log('componentDidMount');
+      }
+    componentWillUpdate(nextProps, nextState) {
+        //console.log('componentWillUpdate');
+      }
+    componentDidUpdate(prevProps, prevState) {
+        //console.log('componentDidUpdate');
+      }
+    componentWillUnmount() {
+        //console.log('componentWillUnmount');
+      }
     //restore checked item
     restoreFacilityData(item) {
+           //console.log("restore");
            //site selected
            const selectedOption = item.siteinfo;
            const taginfo = item.taginfo;
-           this.setState({selectedOption});
-           this.getTreeinfo(selectedOption.value);
+
+           getBackendSrv().get("/thingspin/sites").then((result: any) => {
+                const elements = [];
+                let idx;
+                if (result && result.length > 0) {
+                    this.setState({sitesListinfo: []}); // initialize
+                    this.setState({sitesListinfo: result});
+
+                    for (let i = 0; i < result.length; i++) {
+                        if (result[i].id === selectedOption.value) {
+                            idx = i;
+                        }
+                        elements.push({value: result[i].id,label: result[i].name,icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>});
+                    }
+                    this.setState({siteOptions: elements });
+                    this.setState({selectedOption: elements[idx]});
+                    this.getTreeinfo(selectedOption.value);
+                } else {
+                console.log("** sites list empty **");
+                }
+            }).catch((err: any) => {
+                console.log("get Sites, error!");
+                console.log(err);
+            });
            // tag selected
            const elements = [];
+
            if (taginfo && taginfo.length > 0) {
                for (let i = 0; i < taginfo.length; i++) {
                    const data = taginfo[i].value;
                    elements.push(data);
                }
-               console.log("props-taginfo elements: ",elements);
                this.setState({checkedSave: elements as any});
            }else {
-                console.log("props-taginfo empty");
-                //console.log("props-test elements: ",elements);
                 this.setState({checkedSave: []});
            }
     }
 
     //TEST SAMPLE
+    /*
     testGetList() {
         getBackendSrv().get("/thingspin/sites/sample").then((result: any) => {
             //console.log(result);
@@ -159,6 +195,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
             this.setState({nodesCount: result.length});
           });
     }
+*/
 
     //BACKEND SRV
     getSiteList() {
@@ -190,10 +227,11 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
         const url = "/thingspin/sites/"+siteid+"/facilities/tree";
         //console.log('url',url);
         getBackendSrv().get(url).then((result: any) => {
-
-            this.setState({nodes: result});
-            this.setState({nodesCount: result.length});
-            //console.log("getTreeinfo: ",this.state.nodes);
+            if (result && result.length > 0) {
+                this.setState({nodes: result});
+                this.setState({nodesCount: result.length});
+                //console.log("getTreeinfo: ",this.state.nodes);
+            }
           }).catch((err: any) => {
             console.log("get Treeinfo, error!");
             console.log(err);
@@ -229,6 +267,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
     };
 
     //TEST
+    /*
     testChecked() {
         //refresh/
         console.log("check: ",this.state.checked);
@@ -237,6 +276,7 @@ class FacilityTree extends React.Component<facilityTreeProps,facilityItem> {
     testSave() {
         this.setState({testChecked: this.state.checked});
     }
+    */
 
     customSingleValue = ({ data }) => (
         <div className="input-select">
