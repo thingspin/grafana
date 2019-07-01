@@ -317,6 +317,7 @@ func createFacilityTreeData(tree *[]m.TsFacilityTreeItem, treeMap map[string]m.T
 
 func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
 	treeMap := make(map[string]m.TsFacilityTreeItem)
+
 	treeList := m.GetAllTsFacilityTreeQuery {
 		SiteId: siteId,
 	}
@@ -704,7 +705,42 @@ func updateTsFacilityTreeFacility(treeItem *m.TsFacilityTreeItem) error {
 				return err
 			}
 
-			// 자식 들도 업데이트 해야함
+			/// 자식들도 업데이트 해야함
+			for _, lv2Item := range treeItem.Children {
+				if lv2Item.TagId > 0 {
+					// lv2 태그
+					lv2TagPath := tree.Path + strconv.Itoa(lv2Item.TagId)
+					updateTSFacilityTreeTagUnderFacility(lv2TagPath,&lv2Item)
+				} else {
+					// lv2 설비
+					lv2FacilityPath := tree.Path + strconv.Itoa(lv2Item.FacilityId) + "/"
+					updateTsFacilityTreeFacilityUnderFacility(lv2FacilityPath,&lv2Item)
+
+					for _, lv3Item := range lv2Item.Children {
+						if lv3Item.TagId > 0 {
+							// lv3 태그
+							lv3TagPath := lv2FacilityPath + strconv.Itoa(lv3Item.TagId)
+							updateTSFacilityTreeTagUnderFacility(lv3TagPath,&lv3Item)
+						} else {
+							// lv3 설비
+							lv3FacilityPath := lv2FacilityPath + strconv.Itoa(lv3Item.FacilityId) + "/"
+							updateTsFacilityTreeFacilityUnderFacility(lv3FacilityPath,&lv3Item)
+
+							for _, lv4Item := range lv3Item.Children {
+								if lv4Item.TagId > 0 {
+									// lv4 태그
+									lv4TagPath := lv3FacilityPath + strconv.Itoa(lv4Item.TagId)
+									updateTSFacilityTreeTagUnderFacility(lv4TagPath,&lv4Item)
+								} else {
+									// lv4 설비
+									lv4FacilityPath := lv3FacilityPath + strconv.Itoa(lv4Item.FacilityId) + "/"
+									updateTsFacilityTreeFacilityUnderFacility(lv4FacilityPath,&lv4Item)
+								}
+							}
+						}
+					}
+				}
+			}
 		
 
 		} else {
