@@ -357,7 +357,7 @@ func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
 				if len(tagItem.Result) > 0 {
 					tagItem := m.TsFacilityTreeItem {
 						SiteId: siteId,
-						Label: facility.Name,
+						Label: tag.Name,
 						Value: tagItem.Result[0].Path,
 						IsChecked: false,
 						IsEditing: false,
