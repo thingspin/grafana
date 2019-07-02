@@ -41,8 +41,6 @@ class ThingspinFmsApp extends GrafanaApp {
       'ang-drag-drop',
       'thingspin',
       'pasvaz.bindonce',
-      'ui.bootstrap',
-      'ui.bootstrap.tpls',
       'react',
       'ui.tree',
     ];
