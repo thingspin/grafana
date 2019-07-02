@@ -38,6 +38,10 @@ let fmsHot = merge(common, {
         target: 'ws://localhost:3000',
         ws: true,
       },
+      '/ws': {
+        target: 'ws://localhost:3000',
+        ws: true,
+      },
     },
   },
 
