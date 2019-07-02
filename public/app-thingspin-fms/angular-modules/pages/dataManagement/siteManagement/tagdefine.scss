@@ -93,13 +93,6 @@ ts-tag-define {
     display: inline-flex;
 }
 
-.right-node-delete {
-    font-size: 16px;
-    float: right;
-    display: inline-flex;
-    margin-top: 10px;
-}
-
 .btn {
     margin-right: 3px;
 }
@@ -379,25 +372,25 @@ tr.angular-ui-tree-empty {
 .ts-tree-input-group {
     display: inline-flex;
     background-color: #FFFFFF;
-
+    padding-left: 16px;
     &.name {
-        width: 84%;
+        width: 92%;
     }
     &.three-name {
-        width: 80%;
+        width: 90%;
     }
     &.five-name {
-        width: 78%;
+        width: 88%;
     }
     .ts-input {
         // margin-left: 16px;
         display: inline-block;
         width: 100%;
-        font-size: 14px;
         &>:first-child {
             width: 100%;
             height: 36px;
             border-radius: 4px;
+            font-size: 14px;
             // padding-left: 16px;
             background-color: rgba(#1e1e1e, 0.07);
             &:focus + .separator {
@@ -429,7 +422,7 @@ tr.angular-ui-tree-empty {
     background-color: #FFFFFF;
     padding-left: 16px;
     &.name {
-        width: 84%;
+        width: 92%;
     }
     &.three-name {
         width: 80%;
@@ -441,11 +434,11 @@ tr.angular-ui-tree-empty {
         // margin-left: 16px;
         display: inline-block;
         width: 100%;
-        font-size: 12px;
         &>:first-child {
             width: 100%;
             height: 24px;
             border-radius: 4px;
+            font-size: 12px;
             // padding-left: 16px;
             background-color: rgba(#1e1e1e, 0.07);
             &:focus + .separator {
@@ -481,13 +474,14 @@ tr.angular-ui-tree-empty {
 #right-tree-item-content {
     width: 100%;
     height: 40px;
-    margin-top: 10px;
+    display: inline-block;
 }
 
 #right-tree-tag-item-content {
     width: 100%;
     height: 28px;
-    margin-top: 10px;
+    display: inline-flex;
+    // padding-top: 2px;
 }
 
 .left-tree-item-content {
@@ -499,32 +493,44 @@ tr.angular-ui-tree-empty {
     width: 16px;
     height: 16px;
     font-size: 16px;
+    vertical-align: top;
+    padding-top: 12px;
+    display: inline-block;
 }
 
 .right-tree-item-arrow {
     margin-left: 4px;
-    padding-top: 12px;
     width: 16px;
     height: 16px;
-    font-size: 16px;    
+    font-size: 16px;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 11px;
 }
 
 .title-icon-root-content {
-    width: 40px;
+    width: 20px;
     height: 20px;
     font-size: 20px;
     text-align: center;
     display: inline-block;
     color: #1e1e1e;
+    vertical-align: top;
+    padding-top: 9px;
 }
 
 .left-title-icon-content {
-    width: 40px;
+    width: 20px;
     height: 20px;
     font-size: 20px;
     text-align: center;
     display: inline-block;
+    vertical-align: top;
+    padding-top: 9px;
     color: #1397f0;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 9px;
 }
 
 .left-title-text-content {
@@ -539,17 +545,25 @@ tr.angular-ui-tree-empty {
     color: #1e1e1e;
     padding-left: 16px;
     text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 12px;
 }
 
 .left-tree-second-item-arrow {
     width: 16px;
     height: 16px;
     font-size: 16px;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 12px;    
 }
 
 .left-tree-three-title-content {
     width: 100%;
     height: 28px;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .left-tree-three-item-arrow {
@@ -557,11 +571,13 @@ tr.angular-ui-tree-empty {
     height: 16px;
     font-size: 16px;
     color: #009688;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 5px;
 }
 
 .left-three-title-text-content {
-    width: 100%;
-    background-color: #ffffff;
+    width: 96%;
     padding-left: 16px;
     font-family: Roboto;
     font-size: 12px;
@@ -571,7 +587,10 @@ tr.angular-ui-tree-empty {
     line-height: 1.17;
     letter-spacing: normal;
     text-align: left;
-    color: #1e1e1e;    
+    color: #1e1e1e;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 7px;
 }
 
 .right-content-facility-text {
@@ -584,6 +603,10 @@ tr.angular-ui-tree-empty {
     letter-spacing: normal;
     text-align: left;
     color: #1e1e1e;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 12px;
+    padding-left: 16px;
     // margin-left: 16px;
 }
 
@@ -598,14 +621,9 @@ tr.angular-ui-tree-empty {
     text-align: left;
     color: #1e1e1e;
     padding-left: 16px;
-}
-
-.right-tag-content {
-    width: 40px;
-    height: 16px;
-    font-size: 16px;
-    color: #009688;
-    margin-top: 9px;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 7px;
 }
 
 .site-content-line {
@@ -614,8 +632,40 @@ tr.angular-ui-tree-empty {
     border: solid 1px #ecebeb;
 }
 
+.right-tag-content {
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    color: #009688;
+    padding-top: 5px;
+    display: inline-flex;
+    vertical-align: top;
+}
+
+.edit-icon-child-view {
+    font-size:16px;
+    display: inline-flex;
+    padding-top: 5px;
+    vertical-align: top;
+}
+
+.right-node-child-delete {
+    font-size: 16px;
+    display: inline-flex;
+    padding-top: 5px;
+    vertical-align: top;
+}
+
 .edit-icon-view {
     font-size:16px;
     display: inline-flex;
-    margin-top: 10px;
+    padding-top: 10px;
+    vertical-align: top;
+}
+
+.right-node-delete {
+    font-size: 16px;
+    display: inline-flex;
+    padding-top: 10px;
+    vertical-align: top;
 }

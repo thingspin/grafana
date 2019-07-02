@@ -20,7 +20,10 @@ export class TsTagDefineCtrl {
   isEditView: boolean;
   isEditBtn: boolean;
   isEdit: boolean;
+  isTitleEditView: boolean;
+  isTitleView: boolean;
   facility: any;
+  editDataBackup: string;
   /** @ngInject */
   constructor(
     private backendSrv: BackendSrv,
@@ -32,6 +35,8 @@ export class TsTagDefineCtrl {
     this.isEditView = false;
     this.isEditBtn = true;
     this.isEdit = false;
+    this.isTitleEditView = false;
+    this.isTitleView = true;
     this.facility = {
         name: "",
         desc: "",
@@ -40,6 +45,7 @@ export class TsTagDefineCtrl {
         imgpath: "",
         tagName: ""
     };
+    this.editDataBackup = "";
 
     if ($routeParams.id !== undefined || $routeParams.id !== null) {
       this.data = +$routeParams.id;
@@ -357,6 +363,8 @@ export class TsTagDefineCtrl {
             console.log(node);
             console.log(result);
             appEvents.emit('alert-success', ['이름이 변경되었습니다.']);
+            node.isEditing = false;
+            this.editDataBackup = "";
             //this.dataList = result;
         }).catch(err => {
             if (err.status === 500) {
@@ -373,6 +381,8 @@ export class TsTagDefineCtrl {
             console.log(node);
             console.log(result);
             appEvents.emit('alert-success', ['이름이 변경되었습니다.']);
+            node.isEditing = false;
+            this.editDataBackup = "";
             //this.dataList = result;
         }).catch(err => {
             if (err.status === 500) {
@@ -479,6 +489,25 @@ export class TsTagDefineCtrl {
             tagName: ""
         };
       }
+  }
+
+  mouseHoverOut(value) {
+    console.log(value);
+    value.isEditing = false;
+    if (value.tag_id === 0) {
+      value.facility_name = this.editDataBackup;
+    } else {
+      value.tag_name = this.editDataBackup;
+    }
+  }
+
+  onEditInit(value) {
+    value.isEditing = true;
+    if (value.tag_id === 0) {
+      this.editDataBackup = value.facility_name;
+    } else {
+      this.editDataBackup = value.tag_name;
+    }
   }
 
   onShowEditView(value) {
