@@ -98,9 +98,9 @@ export class FMNavComp extends DashNav {
                         onClick={this.onFmTreeView.bind(this)}
                     />: ''}
 
-                    {canSave && (
-                        <FMNavButton tooltip="Save dashboard" classSuffix="save" onClick={this.onSave} >
-                            메뉴에 저장
+                    {canSave &&  (
+                        <FMNavButton tooltip="설비 모니터링 저장" classSuffix="save" onClick={this.onSave} >
+                            {meta.isNew ? '메뉴에 저장' : '저장'}
                         </FMNavButton>
                     )}
 
