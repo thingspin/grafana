@@ -159,21 +159,16 @@ export class TsModbusConnectCtrl {
     }
 
   }
-
   async initMqtt(): Promise<void> {
-    //console.log("initmqtt");
-    //console.log(this.listenerTopic);
     this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
 
     try {
         await this.mqttClient.run(this.recvMqttMessage.bind(this));
-        //console.log("MQTT Connected");
     } catch (e) {
         console.error(e);
     }
   }
   recvMqttMessage(topic: string, payload: string): void {
-    //console.log("recv-MQTT: "+topic+" current flowid: "+this.FlowId);
     const topics = topic.split("/");
     const flowId = topics[topics.length - 2];
       if (flowId === this.FlowId) {
@@ -183,11 +178,9 @@ export class TsModbusConnectCtrl {
     }
   setConnectStatus(color: string): void {
     this.connectStatus = color;
-    //console.log("status color: "+color);
     if (color === "green") {
         this.enableNodeSet = true;
     } else if (color === "yellow") {
-      //this.connectIcon = "icon-ts-connection-loding";
       this.connectIcon = "icon-ts-connection_off";
       this.connectStatus = "red";
     } else if (color === "red") {
@@ -198,7 +191,7 @@ export class TsModbusConnectCtrl {
   }
 
   onLoadData(item) {
-    //console.log(item);
+    console.log(item);
     this.indexID = item.id;
     this.connName = item.name;
     this.modbusReadIntervals = item.intervals;
@@ -256,9 +249,7 @@ export class TsModbusConnectCtrl {
 objectTest() {
 
   const str = "\""+"TS-MODBUS-GETTER-CONN-"+"test"+"\"";
- // str = "\""+str+"\"";
   console.log(str);
-  //console.log(Array.from([1,2,3]));
 }
 
 //---table 관련
@@ -313,20 +304,30 @@ resetEditData() {
  }
 
 editAddressList() {
+  //console.log(this.editAddress, this.editName);
     let editParamFinish = true;
-    //console.log(this.editFC+' '+this.editType);
     //check_edit param
-    if (this.editAddress) {
+    const editIdx = this.editIdx -1;
+    //address check
+    if (this.editAddress && this.editName) {
       for ( let i = 0; i < this.tableList.length; i++) {
-        if (this.editAddress === this.tableList[i].address) {
-          appEvents.emit('alert-warning', ['동일한 Address가 존재 합니다.']);
-          editParamFinish = false;
-          break;
+        if (this.editAddress === this.tableList[i].address || this.editName === this.tableList[i].name) {
+          if (this.isAddressEditmode && editIdx === i) {
+            //console.log("same idx");
+          } else {
+            appEvents.emit('alert-warning', ['동일한 name/Address가 존재 합니다.']);
+            editParamFinish = false;
+            break;
+          }
+        } else {
+          //console.log(" ELSE-this.idx:",editIdx," /current i: ",i);
         }
       }
     } else {
+        editParamFinish = false;
         appEvents.emit('alert-warning', ['MODBUS 수집 Address를 설정 하세요.']);
       }
+   // name check
 
     //check & convert
     if (this.fcSelected === 'Holding Registers') {
@@ -353,25 +354,20 @@ editAddressList() {
     if (editParamFinish) {
       this.addTableData2();
     }
-
 }
 onShowAddressEditView() {
-  //console.log("function called" + " edit-mode: "+this.isAddressEditmode);
   if (this.isAddressEditView) {
     this.isAddressEditView = false;
-    //console.log("value is false");
     this.isAddressEditBtn = true;
     this.resetEditData();
   }else {
     this.isAddressEditView = true;
-    //console.log("value is true");
     this.isAddressEditBtn = false;
-    //console.log($('gf-form-input width-9'));
   }
 }
 
 showEdit2(idx: any): void {
-  //console.log("showEdit2: "+idx);
+  console.log("showEdit2: "+idx);
   this.editIdx = idx+1;
   this.editAddress = this.tableList[idx].address;
   this.editName = this.tableList[idx].name;
@@ -383,7 +379,6 @@ showEdit2(idx: any): void {
   this.onShowAddressEditView();
 }
 removeEdit2(idx: any): void {
-  //console.log("removeEdit2: "+idx);
   this.tableList.splice(idx,1);
   this.list = (Array.from(this.tableList));
   this.setPageNodes();
@@ -412,8 +407,6 @@ testAddGetter1(address, quantity, functioncode,flowid,posY) {
 
 //template 관련
 addModbusGETTER( name,address, quantity, functioncode,flowid,posY,interval) {
-  //this.nodeModbusGetterList = "";
-  //console.log(name);
   const objInjector =      {
     "id": "TS-MODBUS-INJECT-"+address+"-"+flowid,
     "type": "inject",
@@ -488,7 +481,6 @@ checkParams() {
   // tslint:disable-next-line:max-line-length
   if (this.connName && this.modbusHost && this.modbusPort && this.modbusUnitID && this.modbusTimeOut && this.modbusReTimeOut && this.modbusReTimeOut && this.modbusReadIntervals) {
     this.isParamsComplete = true;
-    //console.log('input check complete');
     this.testCreate();
   } else {
             if (!this.connName) {
@@ -514,8 +506,6 @@ testCreate() {
     this.FlowId = uid.generate();
     this.nodeModbusGetteritem = "";
     this.nodeInjectWiresList = "";
-
-   //console.log("list: "+this.tableList.length);
    if (this.tableList.length > 0) {
     for (let i = 0; i < this.tableList.length; i++) {
       // tslint:disable-next-line:max-line-length
@@ -545,11 +535,8 @@ testCreate() {
     //console.log(object);
 
     if (this.isEditMode) {
-      //console.log("EDIT mode SAVE: "+this.indexID);
       this.backendSrv.put("/thingspin/connect/"+this.indexID,object).then((result: any) => {
-        //console.log(result);
         if (this.isConnCheckMode) {
-          //console.log("redirect");
           this.redirect(this.indexID);
           location.reload();
         }else {
@@ -557,21 +544,16 @@ testCreate() {
         }
       });
     } else {
-      //console.log("normal mode SAVE");
       this.backendSrv.post("/thingspin/connect/modbus",object).then((result: any) => {
-        //console.log(result);
         //upadte connection id for nodered-parser measurement name
         this.modbusinfluxID = result;
 
         if (this.isConnCheckMode) {
           this.redirect(this.modbusinfluxID);
         }else {
-          //console.log("connid: "+this.modbusinfluxID);
           object.params.influxID = this.modbusinfluxID;
-          //console.log(object);
           //update DB & nodered flow
           this.backendSrv.put("/thingspin/connect/"+this.modbusinfluxID,object).then((result: any) => {
-            //console.log("put:"+result);
           });
           this.close();
         }
@@ -634,7 +616,59 @@ testCreate() {
       this.tCalcPaging();
       this.setPageNodes();
   }
+
+  //--click input data
+  sampleHost() {
+    if (this.modbusHost) {
+      //console.log("data exist");
+      return;
+    }else {
+      this.modbusHost = '127.0.0.1';
+    }
+  }
+  samplePort() {
+    if (this.modbusPort) {
+      //console.log("data exist");
+      return;
+    }else {
+      this.modbusPort = '502';
+    }
+  }
+  sampleUnitID() {
+    if (this.modbusUnitID) {
+      //console.log("data exist");
+      return;
+    }else {
+      this.modbusUnitID = 1;
+    }
+  }
+  sampleTimeOut() {
+    if (this.modbusTimeOut) {
+      //console.log("data exist");
+      return;
+    }else {
+      this.modbusTimeOut = 1000;
+    }
+  }
+  sampleReTimeOut() {
+    if (this.modbusReTimeOut) {
+      //console.log("data exist");
+      return;
+    }else {
+      this.modbusReTimeOut = 2000;
+    }
+  }
+  sampleInterval() {
+    if (this.modbusReadIntervals) {
+      //console.log("data exist");
+      return;
+    }else {
+      this.modbusReadIntervals = 1;
+    }
+  }
 }
+
+
 
 /** @ngInject */
 export function tsModbusConnectDirective() {
