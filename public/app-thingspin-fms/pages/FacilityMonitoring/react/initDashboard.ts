@@ -212,13 +212,7 @@ function getNewDashboardModelData(urlFolderId?: string): any {
     },
     dashboard: {
       title: '신규 설비 모니터링',
-      panels: [{
-        type: 'graph',
-        title: '신규 설비 모니터링',
-        gridPos: { x: 0, y: 0, w: 24, h: 5 },
-        datasource: "사이트 태그",
-        targets: [{ }],
-      }],
+      panels: [],
     },
   };
 

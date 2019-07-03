@@ -68,6 +68,10 @@ export class FMDashboardPage extends DashboardPage {
             // require panel data
             type,
             title,
+            aliasColors: {
+                [target.tagNodes[0].label]: 'light-blue',
+            },
+            nullPointMode: "connected",
             gridPos: { x: 0, y, w: 24, h: 5 },
 
             // require datasource data
