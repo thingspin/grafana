@@ -37,9 +37,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
     banner: Banner = {
         title: "산업용 프로토콜 및 기타 데이터소스에 대한 연결",
     };
-    connectTypeList: string[];
+    connectTypeList: string[] = [];
     // table
-    list: TsConnect[];
+    list: TsConnect[] = [];
     tData: TableModel = {
         rowCount: 16,
         selectOpts: [16, 32, 48],
