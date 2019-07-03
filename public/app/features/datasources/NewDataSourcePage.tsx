@@ -116,8 +116,12 @@ class NewDataSourcePage extends PureComponent<Props> {
       {} as DataSourceCategories
     );
 
-    categories['cloud'].push(getGrafanaCloudPhantomPlugin());
+    // thingspin add code ----
+    if (!Array.isArray(categories['cloud'])) {
+      categories['cloud'] = [];
+    }
 
+    categories['cloud'].push(getGrafanaCloudPhantomPlugin());
     return (
       <>
         {this.categoryInfoList.map(category => (
