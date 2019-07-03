@@ -5,6 +5,7 @@ import { TS_HISTORY_TYPE } from '../FmsHistoryCard/Card';
 import { liveSrv } from 'app/core/core';
 // tslint:disable-next-line: import-blacklist
 import moment from 'moment';
+import { Switch } from '@grafana/ui';
 
 export interface Props extends TabbarProps {
 
@@ -13,6 +14,7 @@ export interface Props extends TabbarProps {
 export interface States {
   list: any[];
   enable: boolean;
+  checked: boolean;
 }
 
 interface WsStream {
@@ -31,16 +33,20 @@ interface Simulator {
 
 
 export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
+  source: any;
   state: States = {
     list: [],
-    enable: true,
+    enable: this.props.play,
+    checked: false,
   };
 
   async componentWillMount() {
     await liveSrv.getConnection();
 
-    const source = liveSrv.subscribe('ts-alarm');
-    source.subscribe(this.liveSubscribe.bind(this));
+    this.source = liveSrv.subscribe('ts-alarm');
+    if (this.source) {
+      this.source.subscribe(this.liveSubscribe.bind(this));
+    }
   }
 
   liveSubscribe(value: WsStream): void {
@@ -50,7 +56,7 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     }
 
     if (list.length > 10) {
-      list.splice(list.length-1, 1);
+      list.splice(list.length - 1, 1);
     }
     list.push(value.data);
 
@@ -70,6 +76,16 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     }
   }
 
+  componentWillReceiveProps(next: Props) {
+    this.setState({ enable: next.play });
+  }
+
+  componentWillUnmount() {
+    if (this.source) {
+      liveSrv.removeObserver('ts-alarm', this.source);
+    }
+  }
+
   dateFilter(curr: Simulator): boolean {
     const dateFormat = "YYYY년 MM월 DD일";
     const { date } = this.props;
@@ -85,26 +101,50 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     return !filters.includes(curr.alarmType);
   }
 
+  onChangeChecked(event: React.SyntheticEvent) {
+    const target = event.target as HTMLInputElement;
+    this.setState({
+      checked: target.checked,
+    });
+  }
+
   render() {
-    const { list } = this.state;
+    const { list, checked } = this.state;
 
     const filtered = list
       .filter(this.dateFilter.bind(this))
       .filter(this.alarmFilter.bind(this));
 
-    return <div className="ts-right-side-history-component">
-      {filtered.map((value: Simulator, index: number) => {
-        return <FmsHistoryCard key={index}
-          title={value.title}
-          subtitle={value.subtitle}
-          history={value.history}
-          time={new Date(value.time)}
+    return <>
+      <div className="ts-right-side-history-component">
+        {filtered.map((value: Simulator, index: number) => {
+          return <FmsHistoryCard key={index}
+            title={value.title}
+            subtitle={value.subtitle}
+            history={value.history}
+            time={new Date(value.time)}
 
-          isActive={true}
-          alarmType={this.getAlarmType(value.alarmType)}
-          historyType={TS_HISTORY_TYPE.ALARM}
-        />;
-      })}
-    </div>;
+            isActive={true}
+            alarmType={this.getAlarmType(value.alarmType)}
+            historyType={TS_HISTORY_TYPE.ALARM}
+          />;
+        })}
+      </div>
+      <div className="tsr-bottom">
+        <div className="tsrb-left">
+          <div>
+            <i className="tsi icon-ts-notifications_active"></i>
+            <span>알람 룰</span>
+          </div>
+          <div>
+            <i className="tsi icon-ts-foresight"></i>
+            <span>예지진단</span>
+          </div>
+        </div>
+        <div>
+          <Switch label="미확인" checked={checked} onChange={this.onChangeChecked.bind(this)} transparent />
+        </div>
+      </div>
+    </>;
   }
 }

@@ -9,12 +9,14 @@ interface Props {
 export interface States {
     filters: any[];
     date: Date;
+    play: boolean;
 }
 
 export class FmsAlarmBandComp extends PureComponent<Props, States> {
     state: States = {
         filters: [],
         date: new Date(),
+        play: true,
     };
 
     getTabNode(title, icon): () => ReactNode {
@@ -36,16 +38,23 @@ export class FmsAlarmBandComp extends PureComponent<Props, States> {
         this.setState({ filters });
     }
 
+    onPlay(play: boolean) {
+        this.setState({ play, });
+    }
+
     render(): ReactNode {
-        const { filters, date } = this.state;
+        const { filters, date, play } = this.state;
 
         return (<>
             <TsRightSideTabbarComponent
                 date={date}
                 onChangeDate={this.onChangeDate.bind(this)}
                 filters={filters}
-                onChangeFilter={this.onChangeFilter.bind(this)} />
-            <TsRightSideHistoryComponent filters={filters} date={date} />
+                onChangeFilter={this.onChangeFilter.bind(this)}
+                play={play}
+                onPlay={this.onPlay.bind(this)}
+            />
+            <TsRightSideHistoryComponent filters={filters} date={date} play={play} />
         </>);
     }
 }

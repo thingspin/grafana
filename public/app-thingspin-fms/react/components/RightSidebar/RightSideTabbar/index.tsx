@@ -5,18 +5,22 @@ import TsDatePicker from './TsDatePicker';
 export interface Props {
   date: Date;
   filters: any[];
+  play: boolean;
 
   onChangeDate?: (date: Date) => void;
   onChangeFilter?: (filters: any[]) => void;
+  onPlay?: (play: boolean) => void;
 }
 
 export interface States {
   filters: string[];
+  play: boolean;
 }
 
 export class TsRightSideTabbarComponent extends PureComponent<Props, States> {
   state: States = {
     filters: this.props.filters,
+    play: this.props.play,
   };
 
   filtering(target: string, e: MouseEvent<HTMLButtonElement>): void {
@@ -38,6 +42,18 @@ export class TsRightSideTabbarComponent extends PureComponent<Props, States> {
     this.setState({ filters: [...filters] });
   }
 
+  onPlay() {
+    const { onPlay } = this.props;
+    const { play } = this.state;
+
+    if (onPlay) {
+      onPlay(!play);
+    }
+    this.setState({
+      play: !play,
+    });
+  }
+
   get renderCalendarLayout() {
     const { date } = this.props;
 
@@ -56,19 +72,29 @@ export class TsRightSideTabbarComponent extends PureComponent<Props, States> {
   }
 
   get renderFilterLayout() {
-    const { filters } = this.state;
+    const { filters, play } = this.state;
 
     const errCls = `ts-btn ${ !filters.includes('err') ? 'ts-error' : ''}`;
     const warnCls = `ts-btn ${ !filters.includes('warn') ? 'ts-warn' : ''}`;
 
     return <div className="tsr-alarm-filter">
-      <div className='tsr-title'>알람 이벤트</div>
-      <div className='tsr-content'>
-        <div>
-          <button className={errCls} onClick={this.filtering.bind(this, 'err')}>
-            <i className="tsi icon-ts-error1"></i>심각</button>
-          <button className={warnCls} onClick={this.filtering.bind(this, 'warn')}>
-            <i className="icon-ts-warning1"></i>경고</button>
+      <div>
+        <div className='tsr-title'>알람 이벤트</div>
+        <div className='tsr-content'>
+          <div>
+            <button className={errCls} onClick={this.filtering.bind(this, 'err')}>
+              <i className="tsi icon-ts-error1"></i>심각</button>
+            <button className={warnCls} onClick={this.filtering.bind(this, 'warn')}>
+              <i className="tsi icon-ts-warning1"></i>경고</button>
+          </div>
+        </div>
+      </div>
+      <div className="tsr-alarm-play">
+        <div className='tsr-title'>알람 {play ? '동작' : '중지'}</div>
+        <div className='tsr-content'>
+          <button className={`tsr-btn ${play ? 'tsr-play': ''}`} onClick={this.onPlay.bind(this)}>
+            <i className={`fa ${play ? 'fa-play' : 'fa-pause'}`}></i>
+          </button>
         </div>
       </div>
     </div>;

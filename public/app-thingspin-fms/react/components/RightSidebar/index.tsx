@@ -7,8 +7,6 @@ import Tab from './Tab';
 
 // thingspin react components
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
-import { TsRightSideLogComponent } from './RightSideLog';
-import { TsRightSideTabbarComponent } from './RightSideTabbar';
 import { FmsAlarmBandComp } from './FmsAlarmBand/index';
 
 export interface Props extends TsBaseProps {
@@ -52,8 +50,6 @@ export class TsRightSidebar extends PureComponent<Props, States> {
   }
 
   render(): ReactNode {
-    const { filters, date } = this.state;
-
     return (<Tabs>
       {/* Alarm Log Tab */}
       <Tab
@@ -68,10 +64,10 @@ export class TsRightSidebar extends PureComponent<Props, States> {
         name="log"
         heading={this.getTabNode('시스템 로그', "fms-right-tap-alarm-icon fa-window-maximize").bind(this)}
       >
-        <TsRightSideTabbarComponent
+        {/* <TsRightSideTabbarComponent
           date={date} onChangeDate={this.onChangeDate.bind(this)}
           filters={filters} onChangeFilter={this.onChangeFilter.bind(this)} />
-        <TsRightSideLogComponent filters={filters} date={date} />
+        <TsRightSideLogComponent filters={filters} date={date} /> */}
       </Tab>
 
     </Tabs>
