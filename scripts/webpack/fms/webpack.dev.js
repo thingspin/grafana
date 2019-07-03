@@ -47,6 +47,11 @@ let fmsDev = merge(common, {
         test: /\.(png|jpg|gif|ttf|eot|svg|woff(2)?)(\?[a-z0-9=&.]+)?$/,
         loader: 'file-loader'
       },
+      {
+        test: /\.css$/,  
+        include: /node_modules/,  
+        loaders: ['style-loader', 'css-loader'],
+      }
     ]
   },
 
@@ -84,7 +89,13 @@ const { devtool, mode, } = gfDev;
 fmsDev = Object.assign(fmsDev, {
   devtool,
   mode,
-  module: gfDev.module,
+  module: {
+    rules: gfDev.module.rules.concat([{
+      test: /\.css$/,  
+      include: /node_modules/,  
+      loaders: ['style-loader', 'css-loader'],
+    }]),
+  },
 });
 
 module.exports = fmsDev;

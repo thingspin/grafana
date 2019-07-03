@@ -2,50 +2,131 @@
 
 .ts-right-side-tabbar-component {
   width: 100%;
-  height: $right-side-tabbar-height;
+  padding: 0 16px;
 
-  // test
-  background-color: #ffffff;
-  display: block;
+  font-family: Roboto;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+
+  .tsr-title {
+    color: rgba(34, 44, 49, 0.6);
+
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .tsr-content {
+    display: flex;
+    justify-content: space-between;
+
+    margin: 8px 0 0px 0;
+
+    &.tsr-timezone {
+      margin: 10px 0 16px 0;
+    }
+
+    .tsr-btn {
+      @extend .btn;
+
+      border: solid 1px #ecebeb;
+      background-color: #fce4ec;
+      color: #d81b60;
+
+      &.tsr-play {
+        background-color: #e3f2fd;
+        color: #1e88e5;
+      }
+    }
+  }
+
+  .tsr-br {
+    border-top: solid 1px #ecebeb;
+  }
+
+  .ts-btn {
+    @extend .btn;
+
+    width: 76.1px;
+    height: 36px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-indent: 4.4px;
+    padding: 8px 8px 8px 6px;
+    margin: 0 16px 0 0;
+    background-color: #ecebeb;
+    color: #6a6a6a;
+
+    i {
+      font-size: 20px;
+    }
+
+    &.ts-error {
+      background-color: #e91e63;
+      color: white;
+    }
+
+    &.ts-warn {
+      background-color: #ff8d02;
+      color: white;
+    }
+  }
+
+  .ts-date-picker {
+    .dp-btn {
+      @extend .btn;
+
+      padding: 0;
+
+      font-weight: 500;
+      line-height: 1.14;
+      text-align: right;
+      font-size: 14px;
+    }
+
+    .day-shift {
+      font-size: 20px;
+      padding: 0 2px;
+      height: 17px;
+    }
+
+    .ts-date {
+      padding-right: 10px;
+      height: 17px;
+
+      &.active {
+        color: #1e88e5;
+      }
+    }
+
+    .today {
+      padding-left: 10px;
+      height: 17px;
+    }
+
+  }
+  
+  .ts-calendar {
+    position: absolute;
+    width: 328.2px;
+    box-shadow: linear-gradient(to top, rgba(255, 255, 255, 0) 80%, rgba(255, 255, 255, 0.86) 97%, #ffffff);
+
+  }
+
 }
 
-.ts-right-side-tab-timezone-title-font {
-  font-size: 10px;
-  color: rgba(34, 44, 49, 0.6);
+.react-calendar button {
+  border-radius: 50%;
 }
 
-.ts-right-side-tab-timezone-title-calendar {
-  @extend .ts-right-side-tab-timezone-title-font;
-  padding-left: 16px;
-  padding-top: 16px;
+.tsr-alarm-filter {
+  display: flex;
+  justify-content: space-between;
+  margin: 17px 0;
 }
 
-.ts-right-side-tab-timezone-title-event {
-  @extend .ts-right-side-tab-timezone-title-font;
-  padding-left: 16px;
-  padding-top: 89px;
-}
-
-.ts-right-side-tab-timezone-content-font {
-  font-size: 14px;
-  color: rgba(30, 30, 30, 0.8);
-}
-
-.ts-right-side-tab-filter-font {
-  font-size: 16px;
-}
-
-.ts-right-side-tab-filter-font-serious {
-  @extend .ts-right-side-tab-filter-font;
-  color: rgba(233, 30, 99, 1);
-}
-
-.ts-right-side-tab-filter-font-warning {
-  @extend .ts-right-side-tab-filter-font;
-  color: rgba(255, 141, 2, 1);
-}
-
-.ts-right-side-tab-filter-font-check {
-  @extend .ts-right-side-tab-filter-font;
-  color: rgba(0, 121, 107, 1);
+.tsr-alarm-play {
+  padding-left: 16.5px;
+  border-left: solid 1px #ecebeb;
 }

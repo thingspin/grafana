@@ -49,7 +49,7 @@ const renderItem: RenderItem = ({
 }): JSX.Element => (
     <li aria-pressed={active} key={key} onClick={onClick}
       style={{
-        padding: ` 12px  0  12px ${level * LEVEL_SPACE}px`,
+        padding: ` 5px  0  5px ${level * LEVEL_SPACE}px`,
         color: '#1e1e1e',
         background: active ? '#e3f2fd' : 'none',
       }}

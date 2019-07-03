@@ -16,6 +16,10 @@ let fmsHot = merge(common, {
   entry: {
     app: ['webpack-dev-server/client?http://0.0.0.0:3333', './public/app-thingspin-fms/dev.ts'],
   },
+
+  resolve: {
+    extensions: ['.scss', '.css', '.ts', '.tsx', '.es6', '.js', '.json', '.svg', '.woff2', '.png', '.html'],
+  },
   
   output: {
     path: path.resolve(__dirname, '../../../public/build'),
@@ -31,6 +35,10 @@ let fmsHot = merge(common, {
     proxy: {
       '!/public/build': 'http://localhost:3000',
       '/thingspin-proxy/mqtt': {
+        target: 'ws://localhost:3000',
+        ws: true,
+      },
+      '/ws': {
         target: 'ws://localhost:3000',
         ws: true,
       },
@@ -65,8 +73,13 @@ fmsHot = Object.assign(fmsHot, {
   resolve,
   devtool,
   optimization,
-  module: gfHot.module,
-
+  module: {
+    rules: (gfHot.module.rules.concat([{
+      test: /\.css$/,  
+      include: /node_modules/,  
+      loaders: ['style-loader', 'css-loader'],
+    }])),
+  },
 });
 
 module.exports = fmsHot;

@@ -1,6 +1,10 @@
 import React, { PureComponent } from 'react';
+import { TabbarProps } from '../models';
 
-export class TsRightSideLogComponent extends PureComponent {
+export interface Props extends TabbarProps {
+
+}
+export class TsRightSideLogComponent extends PureComponent<Props> {
   constructor(props) {
     super(props);
   }

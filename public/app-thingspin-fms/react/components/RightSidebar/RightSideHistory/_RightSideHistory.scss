@@ -4,8 +4,50 @@
   width: 100%;
 
   overflow: auto;
-  height: calc(100vh - (#{$navbar-height} + #{$right-side-tab-height} + #{$right-side-tabbar-height}));
+  height: calc(100vh - (#{$navbar-height} + #{$right-side-tab-height} + #{$right-side-tabbar-height} + 36px));
 
   // test
-  background-color: rgba(236, 239, 241, 1);
+  background-color: rgba(#fff, 1);
+
+  border-top: solid 1px #ecebeb;
+}
+
+.tsr-bottom {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 8px 16px 8px 0;
+
+  .tsrb-left {
+    font-family: Roboto;
+    font-size: 10px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.1;
+    letter-spacing: normal;
+
+    
+    display: inline-flex;
+
+    div {
+      height: 20px;
+      padding: 4px;
+      border: solid 1px #ecebeb;
+      vertical-align: middle;
+      text-align:center;
+    }
+    &>div {
+      margin-left: 16px;
+    }
+
+    i {
+      vertical-align: middle;
+      font-size: 16px;
+      margin-right: 4.7px;
+    }
+    span {
+      vertical-align: middle;
+    }
+  }
 }

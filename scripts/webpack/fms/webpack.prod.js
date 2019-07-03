@@ -44,7 +44,12 @@ let fmsProd = merge(common, {
       },
       require('../sass.rule.js')({
         sourceMap: false, preserveUrl: false
-      })
+      }),
+      {
+        test: /\.css$/,  
+        include: /node_modules/,  
+        loaders: ['style-loader', 'css-loader'],
+      }
     ]
   },
 
