@@ -35,7 +35,7 @@ export class FmsAlarmBandComp extends PureComponent<Props, States> {
     }
 
     onChangeFilter(filters) {
-        this.setState({ filters });
+        this.setState({ filters: [...filters] });
     }
 
     onPlay(play: boolean) {
