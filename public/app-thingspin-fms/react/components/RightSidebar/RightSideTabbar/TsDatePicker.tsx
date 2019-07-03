@@ -6,6 +6,7 @@ import moment from 'moment';
 
 export interface Props {
     onChange?: (date) => void;
+    date?: Date;
 }
 
 export interface States {
@@ -16,39 +17,49 @@ export interface States {
 
 export default class TsDatePciker extends PureComponent<Props, States> {
     state: States = {
-        date: new Date(),
+        date: this.props.date,
         isShow: false,
     };
 
-    onChange(date) {
+    onChange(date, toggle?: boolean) {
         const { onChange } = this.props;
         if (onChange) {
             onChange(date);
         }
 
         this.setState({ date });
-        this.showToggle();
+        this.showToggle(toggle);
     }
 
-    showToggle() {
+    showToggle(toggle?: boolean) {
         const { isShow } = this.state;
-        this.setState({ isShow: !isShow });
+
+        if (toggle === undefined || toggle === null) {
+            this.setState({ isShow: !isShow });
+        } else {
+            this.setState({ isShow: toggle });
+        }
     }
 
     setToday() {
-        this.setState({ date: new Date() });
+        const d = new Date();
+
+        this.onChange(d, false);
+        this.setState({ date: d });
     }
 
     moveDay(value) {
         const { date } = this.state;
         date.setDate(date.getDate() + value);
 
-        this.setState({ date: new Date(date) });
+        const d = new Date(date);
+        this.onChange(d, false);
+
+        this.setState({ date: d });
     }
 
     viewCalendar() {
-        const { isShow } = this.state;
-        this.setState({ isShow: !isShow });
+        this.showToggle();
     }
 
     render(): ReactNode {

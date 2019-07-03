@@ -1,16 +1,40 @@
+// 3rd party libs
 import React, { PureComponent, ReactNode } from 'react';
 
+// thingspin react components
 import Tabs from './Tabs';
 import Tab from './Tab';
 
-import { TsRightSideTabbarComponent } from './RightSideTabbar';
-import { TsRightSideHistoryComponent } from './RightSideHistory';
+// thingspin react components
+import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import { TsRightSideLogComponent } from './RightSideLog';
+import { TsRightSideTabbarComponent } from './RightSideTabbar';
+import { FmsAlarmBandComp } from './FmsAlarmBand/index';
 
-export class TsRightSidebar extends PureComponent {
+export interface Props extends TsBaseProps {
+}
+
+export interface States {
+  filters: any[];
+  date: Date;
+}
+
+export class TsRightSidebar extends PureComponent<Props, States> {
+  constructor(props) {
+    super(props);
+  }
+
+  async componentWillMount() {
+  }
+
+  state: States = {
+    filters: [],
+    date: new Date(),
+  };
 
   getTabNode(title, icon): () => ReactNode {
-    return () => { return (<>
+    return () => {
+      return (<>
         <i className={`fa ${icon} fa-2`} />
         <span className="fms-right-tap-alarm-title">
           {title}
@@ -19,16 +43,24 @@ export class TsRightSidebar extends PureComponent {
     };
   }
 
-  render(): ReactNode {
-    return (<Tabs>
+  onChangeDate(date) {
+    this.setState({ date });
+  }
 
+  onChangeFilter(filters) {
+    this.setState({ filters });
+  }
+
+  render(): ReactNode {
+    const { filters, date } = this.state;
+
+    return (<Tabs>
       {/* Alarm Log Tab */}
       <Tab
         name="alarm" initActive={true}
         heading={this.getTabNode('알람', "fms-right-tap-alarm-icon fa-bell").bind(this)}
       >
-        <TsRightSideTabbarComponent />
-        <TsRightSideHistoryComponent />
+        <FmsAlarmBandComp />
       </Tab>
 
       {/* System Log Tab */}
@@ -36,8 +68,10 @@ export class TsRightSidebar extends PureComponent {
         name="log"
         heading={this.getTabNode('시스템 로그', "fms-right-tap-alarm-icon fa-window-maximize").bind(this)}
       >
-        <TsRightSideTabbarComponent />
-        <TsRightSideLogComponent />
+        <TsRightSideTabbarComponent
+          date={date} onChangeDate={this.onChangeDate.bind(this)}
+          filters={filters} onChangeFilter={this.onChangeFilter.bind(this)} />
+        <TsRightSideLogComponent filters={filters} date={date} />
       </Tab>
 
     </Tabs>

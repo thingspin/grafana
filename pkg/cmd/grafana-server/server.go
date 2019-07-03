@@ -40,8 +40,10 @@ import (
 	_ "github.com/grafana/grafana/pkg/services/sqlstore"
 	"github.com/grafana/grafana/pkg/setting"
 
+	// thingspin add code ----
 	_ "github.com/grafana/grafana/pkg/thingspin/drone"
 	_ "github.com/grafana/grafana/pkg/thingspin/micro"
+	_ "github.com/grafana/grafana/pkg/services/thingspinSimulator"
 )
 
 func NewGrafanaServer() *GrafanaServerImpl {

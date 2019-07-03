@@ -5,13 +5,12 @@ import (
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 )
 
-func (s *StreamManager) TsPush(packet *m.TsStreamPacket) {
+func (sm *StreamManager) TsPush(packet *m.TsStreamPacket) {
 	// get connected websocket clients(streams)
-	subscribers, exists := s.hub.streams[packet.Stream]
+	subscribers, exists := sm.hub.streams[packet.Stream]
 
 	// empty checker
 	if !exists || len(subscribers) == 0 {
-		s.log.Info("Message to stream without subscribers", "stream", packet.Stream)
 		return
 	}
 
@@ -20,6 +19,8 @@ func (s *StreamManager) TsPush(packet *m.TsStreamPacket) {
 
 	// send message to stream
 	for sub := range subscribers {
-		sub.send <- messageBytes
+		if _, ok := sm.hub.connections[sub]; ok {
+			sub.send <- messageBytes
+		}
 	}
 }

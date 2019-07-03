@@ -39,11 +39,12 @@
     width: 76.1px;
     height: 36px;
     border-radius: 4px;
-    color: white;
     font-size: 14px;
     text-indent: 4.4px;
     padding: 8px 8px 8px 6px;
     margin-right: 16.5px;
+    background-color: #ecebeb;
+    color: #6a6a6a;
 
     i {
       font-size: 20px;
@@ -51,10 +52,12 @@
 
     &.ts-error {
       background-color: #e91e63;
+      color: white;
     }
 
     &.ts-warn {
       background-color: #ff8d02;
+      color: white;
     }
   }
 
