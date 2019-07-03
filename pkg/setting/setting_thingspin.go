@@ -31,6 +31,7 @@ type ThingspinSettings struct {
 	NodeRedModuleList []string
 	Mqtt              MqttSettings
 	Influx            InfluxSettings
+	JupyterHost       string	
 }
 
 func (cfg *Cfg) loadTsIniFile() error {
@@ -86,5 +87,9 @@ func (cfg *Cfg) readThingspinSettings() {
 		Database: influxSec.Key("database").MustString("thingspin"),
 	}
 
+	// Jupyter
+	jupyterSec := TsRaw.Section("jupyter")
+	Thingspin.JupyterHost = jupyterSec.Key("host").String()
+	
 	cfg.Thingspin = Thingspin
 }

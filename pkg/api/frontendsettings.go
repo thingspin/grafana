@@ -195,6 +195,11 @@ func (hs *HTTPServer) getFrontendSettingsMap(c *m.ReqContext) (map[string]interf
 			"env":           setting.Env,
 			"isEnterprise":  setting.IsEnterprise,
 		},
+		// [ thingspin >>> ]
+		"companions": map[string]interface{}{
+			"jupyter":      setting.Thingspin.JupyterHost,
+			"node-red":     setting.Thingspin.NodeRedHost,
+		},
 	}
 
 	return jsonObj, nil

@@ -356,6 +356,11 @@ export function setupAngularRoutes($routeProvider: route.IRouteProvider, $locati
       controller: 'AlertNotificationEditCtrl',
       controllerAs: 'ctrl',
     })
+    .when('/companions/:sys', {
+      templateUrl: 'public/app/features/extpage/main.html',
+      controller: 'ExtPageCtrl',
+      controllerAs: 'ctrl',
+    })
     .otherwise({
       templateUrl: 'public/app/partials/error.html',
       controller: 'ErrorCtrl',

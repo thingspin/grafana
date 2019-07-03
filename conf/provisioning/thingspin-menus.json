@@ -114,9 +114,15 @@
           "canDelete": false
         },
         {
+          "text": "Jupyter",
+          "icon": "",
+          "url": "/companions/jupyter",
+          "canDelete": false
+        },
+        {
           "text": "플로우 편집",
           "icon": "gicon gicon-alert-rules",
-          "url": "http://localhost:1880",
+          "url": "/companions/node-red",
           "canDelete": false
         },
         {
