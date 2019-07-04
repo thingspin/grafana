@@ -7,8 +7,8 @@ import uid from "shortid";
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
-const DEF_URL = "";
-const DEF_PORT = "";
+const DEF_URL = "localhost";
+const DEF_PORT = "1883";
 const DEF_ALIVE = "60";
 // const DEF_TOPIC = "/#";
 const DEF_TOPIC_TYPE_STRING = "String";
