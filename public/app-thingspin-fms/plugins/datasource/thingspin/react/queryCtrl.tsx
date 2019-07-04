@@ -36,9 +36,21 @@ export class QueryCtrl extends Component<RcQueryCtrlProps, RcQueryCtrlStates> {
             const treeData: TsTree[] = await getTree(siteId);
 
             this.setState({
-                treeData: treeData ? treeData : [],
+                treeData: treeData ? this.generateIcon(treeData) : [],
             });
         }
+    }
+
+    generateIcon(treeData: TsTree[]) {
+        if (Array.isArray(treeData)) {
+            for (const data of treeData) {
+                data.icon = data.tag_id
+                    ? <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>
+                    : <span className="icon-facility"><i className="fa fa-steam fa-1x" /></span>;
+                data.children = this.generateIcon(data.children);
+            }
+        }
+        return treeData;
     }
 
     async updateSites(): Promise<void> {
@@ -92,7 +104,7 @@ export class QueryCtrl extends Component<RcQueryCtrlProps, RcQueryCtrlStates> {
 
         const selectOpts = sites.map((site: TsSite): SelectOptionItem<any> => ({ label: site.name, value: site.id, }));
         const value = selectOpts.find((item: SelectOptionItem<any>): boolean => (item.value === siteId));
-        const label = value && value.label ? value.label : 'Unknown';
+        const siteLabel = value && value.label ? value.label : 'Unknown';
         const gridClass = classNames('fms-form-grid', { 'fms-grid1': !siteId, 'fms-grid2': !!siteId, });
 
         return <div className={gridClass}>
@@ -108,7 +120,7 @@ export class QueryCtrl extends Component<RcQueryCtrlProps, RcQueryCtrlStates> {
             </PanelOptionsGroup>
 
             {siteId ?
-                <PanelOptionsGroup title={`${label} 태그 선택`}>
+                <PanelOptionsGroup title={`${siteLabel} 태그 선택`}>
                     <CheckboxTree
                         // Data
                         nodes={treeData} checked={checked ? checked : []} expanded={expanded}
