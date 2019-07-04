@@ -102,6 +102,10 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
       resolve: {
         component: () => ChangePasswordPage,
       },
+      routeInfo: {
+        menupath: [UserSettingInfo.Profile, "비밀번호 변경"],
+        icon: 'fa fa-fw fa-lock',
+      },
     })
     .when('/thingspin/user/profile/select-org', {
       templateUrl: 'public/app/features/org/partials/select_org.html',

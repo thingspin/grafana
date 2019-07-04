@@ -1,4 +1,4 @@
 export enum UserSettingInfo {
-   Profile = 'user-profile',
-   Alarm = "user-alarm"
+   Profile = '사용자 설정',
+   Alarm = "알람",
 }
