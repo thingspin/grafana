@@ -87,8 +87,8 @@
                 <table>
                 <thead>
                     <tr class="ts-table-header">
-                        <th>이름</th>
-                        <th>Topic</th>
+                        <th class="ts-table-name">이름</th>
+                        <th class="ts-table-topic">Topic</th>
                         <th>Value Type</th>
                         <th>동작</th>
                     </tr>
@@ -96,14 +96,14 @@
     
                 <tbody>
                     <tr class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.topic }}</td>
+                        <td>{{ item.type }}</td>
+                        <td>{{ item.viewStr }}</td>
                         <td>{{ item.value }}</td>
                         <td>
-                            <button class="btn" ng-click="ctrl.loadTopicData(item.name)">
+                            <button class="btn" ng-click="ctrl.loadTopicData(item.id)">
                                 <i class="fa fa-pencil"></i>
                             </button>
-                            <button class="btn" ng-click="ctrl.removeTopic(item.name)">
+                            <button class="btn" ng-click="ctrl.removeTopic(item.id)">
                                 <i class="fa fa-trash"></i>
                             </button>                            
                         </td>
@@ -126,7 +126,55 @@
                 </div>
             </div>
         </div>
+
+        <div class="mqtt-topic-add-view" ng-show="ctrl.isTopicEditView">
+            <div class="mqtt-title" id="mqtt-title-topic-add">
+                Topic 추가
+            </div>
+            <span id="mqtt-title-topic-add-info">
+                Topic 아이템 구성하기
+            </span>
+            <div id="mqtt-addview-right-button-area">
+                <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView(false)">
+                    취소
+                </button>
+                <button id="mqtt-topic-add-plus-btn" className="btn" ng-click="ctrl.onTopicListAdd(ctrl.topicItem.id)">
+                    + Topic List
+                </button>
+            </div>
+            <div class="mqtt-add-topic-content-line"></div>
+            <div>
+                <span class="mqtt-subtitle" id="mqtt-topic-name-title">
+                    Name
+                </span>
+                <div class="ts-mqtt-topic-input-group name">
+                    <div class="ts-input">
+                        <input data-nodrag type="text" ng-model="ctrl.topicItem.name" placeholder="Topic 이름 입력"/>
+                        <span ng-class="{separator: true, enable: ctrl.topicItem.name}"></span>
+                    </div>
+                </div>
+                <span class="mqtt-subtitle" id="mqtt-topic-subtopic-title">
+                    Topic
+                </span>
+                <div class="ts-mqtt-topic-input-group tag">
+                    <div class="ts-input">
+                        <input data-nodrag type="text" ng-model="ctrl.topicItem.topicString" placeholder="Topic 입력"/>
+                        <span ng-class="{separator: true, enable: ctrl.topicItem.topicString}"></span>
+                    </div>
+                </div>
+                <div class="ts-mqtt-topic-input-right-view">
+                    <span class="mqtt-subtitle" id="mqtt-topic-value-title">
+                        Value Type
+                    </span>
+                    <div class="mqtt-edit-bg" id="mqtt-topic-value-bg">
+                        <select id="mqtt-topic-value-combobox" ng-model="ctrl.topicItem.value" ng-options="opts for opts in ctrl.defMqtt.values"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- <div id="mqtt-topic-list" class="mqtt-table-size"></div> -->
+<!--      
         <div class="mqtt-topic-add-view" ng-show="ctrl.isTopicEditView">
             <div class="mqtt-title" id="mqtt-title-topic-add">
                 Topic 추가
@@ -186,5 +234,6 @@
                 </div>
             </div>
         </div>
+    -->        
     </div>
 </div>
