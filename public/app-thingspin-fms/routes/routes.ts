@@ -1,11 +1,14 @@
 import 'app/routes/dashboard_loaders';
 
+// Grafana libs
+import ChangePasswordPage from 'app/features/profile/ChangePasswordPage';
+import UsersListPage from 'app/features/users/UsersListPage';
+
 // Types
 import { setupAngularRoutes } from 'app/routes/routes';
 
-import 'app-thingspin-fms/angular-modules/pages';
-
 // thingspin Registrations
+import 'app-thingspin-fms/angular-modules/pages';
 import { UserSettingInfo } from 'app-thingspin-fms/types';
 import FMComponent from 'app-thingspin-fms/pages/FacilityMonitoring/react';
 import { DashboardRouteInfo } from 'app/types';
@@ -74,7 +77,12 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
     // 시스템 관리
     .when('/thingspin/manage/system', { template: '<ts-system-management />', })
     // 사용자 관리
-    .when('/thingspin/manage/system/user', { template: '<ts-user-management />', })
+    .when('/thingspin/manage/system/user', {
+      template: '<react-container />',
+      resolve: {
+        component: () => UsersListPage,
+      },
+    })
     // 메뉴 관리
     .when('/thingspin/manage/system/menu', { template: '<ts-menu-management />', })
 
@@ -90,12 +98,14 @@ export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
       controllerAs: 'ctrl',
     })
     .when('/thingspin/user/profile/password', {
-      templateUrl: 'public/app/features/profile/partials/change_password.html',
+      template: '<react-container />',
+      resolve: {
+        component: () => ChangePasswordPage,
+      },
       routeInfo: {
-        menupath: [UserSettingInfo.Profile],
+        menupath: [UserSettingInfo.Profile, "비밀번호 변경"],
         icon: 'fa fa-fw fa-lock',
       },
-      controller: 'ChangePasswordCtrl',
     })
     .when('/thingspin/user/profile/select-org', {
       templateUrl: 'public/app/features/org/partials/select_org.html',

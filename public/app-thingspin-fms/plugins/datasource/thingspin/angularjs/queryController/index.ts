@@ -15,6 +15,7 @@ export default class FmsQueryCtrl extends QueryCtrl implements IController {
 
     dupTarget: TsDsTarget;
 
+    /** @ngInject */
     constructor($scope: IScope, $injector: auto.IInjectorService, backendSrv: BackendSrv) {
         super($scope, $injector);
         setTsPluginBackendSrv(backendSrv);
