@@ -65,47 +65,49 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 		msName := ms.Type + "_" + strconv.Itoa(ms.Id)
 		q := c.NewQuery("SHOW FIELD KEYS ON thingspin from " + msName, "thingspin", "")
 		if response, err := cli.Query(q); err == nil && response.Error() == nil {
-			result := response.Results[0]
-			serie := result.Series[0]
-			values := serie.Values
+			if len(response.Results) > 0 {
+				result := response.Results[0]
+				if  len(result.Series) > 0 {
+					serie := result.Series[0]
+					values := serie.Values
 
-			for _, v := range values {
-				// tag name
-				fmt.Println(v)
-				order = order + 1
-				if _, ok := lev2Map[ms.Name]; ok {
-			
-					lv2 := lev2Map[ms.Name]
-					lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-						TagTableName : msName,
-						TagColumnName : v[0].(string),
-						TagColumnType : v[1].(string),
-						TagName : v[0].(string),
-						FacilityTreeOrder : order,
-						Children : []m.TsFacilityTreeItem{},
-					})
-
-					lev2Map[ms.Name] = lv2
-
-				} else {
-					tags := []m.TsFacilityTreeItem{}
-					tags = append(tags,  m.TsFacilityTreeItem {
-						TagTableName : msName,
-						TagColumnName : v[0].(string),
-						TagColumnType : v[1].(string),
-						TagName : v[0].(string),
-						FacilityTreeOrder : order,
-						Children : []m.TsFacilityTreeItem{},
-					})
-
-					lev2Map[ms.Name] = m.TsFacilityTreeItem{
-						FacilityName : ms.Name,
-						Children : tags,
-					}
-	
+					for _, v := range values {
+						// tag name
+						fmt.Println(v)
+						order = order + 1
+						if _, ok := lev2Map[ms.Name]; ok {
+					
+							lv2 := lev2Map[ms.Name]
+							lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+								TagTableName : msName,
+								TagColumnName : v[0].(string),
+								TagColumnType : v[1].(string),
+								TagName : v[0].(string),
+								FacilityTreeOrder : order,
+								Children : []m.TsFacilityTreeItem{},
+							})
+		
+							lev2Map[ms.Name] = lv2
+		
+						} else {
+							tags := []m.TsFacilityTreeItem{}
+							tags = append(tags,  m.TsFacilityTreeItem {
+								TagTableName : msName,
+								TagColumnName : v[0].(string),
+								TagColumnType : v[1].(string),
+								TagName : v[0].(string),
+								FacilityTreeOrder : order,
+								Children : []m.TsFacilityTreeItem{},
+							})
+		
+							lev2Map[ms.Name] = m.TsFacilityTreeItem{
+								FacilityName : ms.Name,
+								Children : tags,
+							}
+						}
+					}	
 				}
-			}
-			
+			}			
 		}
 	}
 
