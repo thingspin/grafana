@@ -478,13 +478,13 @@ export class TsMqttConnectCtrl {
         if (count === this.tableList.size) {
           this.topicListArrayString += JSON.stringify(topicNode) + ",";
           this.topicListArrayString += JSON.stringify(topicParse);
-  
+
           this.topicDisListArrayString += JSON.stringify(topicNode) + ",";
           this.topicDisListArrayString += JSON.stringify(topicDisParse);
         } else {
           this.topicListArrayString += JSON.stringify(topicNode) + ",";
           this.topicListArrayString += JSON.stringify(topicParse) + ",";
-  
+
           this.topicDisListArrayString += JSON.stringify(topicNode) + ",";
           this.topicDisListArrayString += JSON.stringify(topicDisParse) + ",";
         }
