@@ -35,7 +35,7 @@ export const initialState: TsNavbarPayload = {
   isEmergency: false,
   enableAlertButton: true,
   enableViewModeButton: true,
-  enableRightSidebarButton: true,
+  enableRightSidebarButton: false,
   enableUserSettingButton: true,
   enableSearchButton: true,
 };
