@@ -24,12 +24,14 @@ export class TsTagDefineCtrl {
   isTitleView: boolean;
   facility: any;
   editDataBackup: string;
+  window: any;
   /** @ngInject */
   constructor(
     private backendSrv: BackendSrv,
     private $scope: angular.IScope,
     private $location: angular.ILocationService,
-    $routeParams
+    $routeParams,
+    $window
   ) {
     // this.isShow = false;
     this.isEditView = false;
@@ -46,6 +48,19 @@ export class TsTagDefineCtrl {
         tagName: ""
     };
     this.editDataBackup = "";
+    this.window = angular.element($window);
+
+    this.window.bind('resize', () => {
+      const total = $('#ts-tag-define-title-left-content').width();
+      const calcResult = (total/2) - 44.719;
+      if (calcResult < 248) {
+        $('#title-info-right-view').css('display', 'none');
+      } else {
+        $('#title-info-right-view').css('display', 'inline-flex');
+      }
+      $('#ts-define-tree-title-left').css('padding-left', (total/2) - 44.719);
+    });
+
 
     if ($routeParams.id !== undefined || $routeParams.id !== null) {
       this.data = +$routeParams.id;
@@ -469,6 +484,7 @@ export class TsTagDefineCtrl {
   $onInit(): void {
       // console.log("SiteTable : " + this.data);
       // this.isShow = false;
+      this.recalculatorSize();
   }
 
   onShowFacilityEditView(value) {
@@ -526,6 +542,17 @@ export class TsTagDefineCtrl {
 
   deleteTreeItem() {
       console.log("deleteTreeItem");
+  }
+
+  recalculatorSize() {
+    const total = $('#ts-tag-define-title-left-content').width();
+    const calcResult = (total/2) - 44.719;
+    if (calcResult < 248) {
+      $('#title-info-right-view').css('display', 'none');
+    } else {
+      $('#title-info-right-view').css('display', 'inline-flex');
+    }
+    $('#ts-define-tree-title-left').css('padding-left', (total/2) - 44.719);
   }
 
   onFacilityAdd() {
