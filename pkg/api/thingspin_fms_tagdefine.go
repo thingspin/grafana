@@ -8,6 +8,7 @@ import (
 	"github.com/grafana/grafana/pkg/bus"
 	"strconv"
 	c "github.com/influxdata/influxdb1-client/v2"
+	"github.com/grafana/grafana/pkg/setting"
 	//m "github.com/grafana/grafana/pkg/models-thingspin"
 	//"reflect"
 )
@@ -24,8 +25,10 @@ func getAllTsConnectInfo(c *gfm.ReqContext) Response {
 }
 
 func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery {
+	var influxHost = "http://" + setting.Thingspin.Influx.Host + ":" + strconv.Itoa(setting.Thingspin.Influx.Port)
+
 	cli, err := c.NewHTTPClient(c.HTTPConfig{
-		Addr: "http://localhost:8086",
+		Addr: influxHost,
 	})
 	if err != nil {
 		fmt.Println("Error creating InfluxDB Client: ", err.Error())
