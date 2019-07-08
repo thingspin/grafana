@@ -89,18 +89,49 @@
                                         }">
                                     </span>
                                 </a>
-                                <i class="title-icon-root-content tsi icon-ts-data"></i>
-                                <div class="left-title-text-content">{{pnode.label}}</div>
+                                <i ng-if="pnode.label === 'mqtt'" class="title-icon-root-content-mqtt tsi icon-ts-mqtt"></i>
+                                <i ng-if="pnode.label === 'opcua'" class="title-icon-root-content-opcua tsi icon-ts-opcua"></i>
+                                <i ng-if="pnode.label === 'modbus'" class="title-icon-root-content-modbus tsi icon-ts-modbus"></i>
+                                <div class="left-title-text-content">{{pnode.facility_name}}</div>
                             </div>
                             
-        
+                            <ol ui-tree-nodes="tree-nodes-padding" ng-model="pnode.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
+                                <li ng-repeat="pnode in pnode.children" ui-tree-node>
+                                    <div class="left-tree-three-title-content" ui-tree-handle>
+                                            <!--
+                                        <input data-drag-enabled type="checkbox" ng-click="ctrl.checked(pnode3)" ng-checked="pnode3.ischecked" />
+                                        -->
+                                        <i class="left-tree-three-item-arrow tsi icon-ts-tag"></i>
+                                        <div class="left-three-title-text-content">{{pnode.tag_name}}</div>
+                                    </div>
+                                
+                                    <!--
+                                    <ol ui-tree-nodes="" ng-model="pnode3.children" ng-class="{hidden: collapsed}">
+                                        <li ng-repeat="pnode4 in pnode3.children" ui-tree-node>
+                                            <div ui-tree-handle class="tree-node tree-node-content">
+                                                <div>
+                                                    <a>{{pnode4.text}}</a>
+                                                </div>
+                                            </div>
+                                        
+                                            <ol ui-tree-nodes="" ng-model="pnode4.children" ng-class="{hidden: collapsed}">
+                                                <li ng-repeat="pnode5 in pnode4.children" ui-tree-node>
+                                                    <div ui-tree-handle class="tree-node tree-node-content">
+                                                        <div>
+                                                            <a>{{pnode5.text}}</a>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ol>
+                                        </li>
+                                    </ol>
+                                    -->
+                                </li>
+                            </ol>        
                             <!--Level 2 starting point-->
-                            <ol ui-tree-nodes ng-model="pnode.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
+                            <!-- <ol ui-tree-nodes ng-model="pnode.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                 <li ng-repeat="pnode in pnode.children" ui-tree-node> 
                                     <div class="left-tree-title-content">
-                                        <!--
-                                        <input type="checkbox" ng-click="ctrl.checked(pnode2)" ng-checked="pnode2.ischecked" />
-                                        -->
                                         <a data-nodrag ng-click="ctrl.toggle(this)" class="left-tree-second-item-arrow">
                                             <span ng-class="{
                                                 'tsi icon-ts-arrow_drop_up': collapsed,
@@ -109,45 +140,10 @@
                                             </span>
                                         </a>
                                         <i class="left-title-icon-content tsi icon-ts-equipment"></i>
-                                        <div class="left-title-text-content">{{pnode.facility_name}}</div>
+                                        <div class="left-title-text-content">{{pnode.tag_name}}</div>
                                     </div>
-                                    
-                                    <!--Level 3 starting point-->
-                                    <ol ui-tree-nodes="tree-nodes-padding" ng-model="pnode.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
-                                        <li ng-repeat="pnode in pnode.children" ui-tree-node>
-                                            <div class="left-tree-three-title-content" ui-tree-handle>
-                                                    <!--
-                                                <input data-drag-enabled type="checkbox" ng-click="ctrl.checked(pnode3)" ng-checked="pnode3.ischecked" />
-                                                -->
-                                                <i class="left-tree-three-item-arrow tsi icon-ts-tag"></i>
-                                                <div class="left-three-title-text-content">{{pnode.tag_name}}</div>
-                                            </div>
-                                        
-                                            <!--
-                                            <ol ui-tree-nodes="" ng-model="pnode3.children" ng-class="{hidden: collapsed}">
-                                                <li ng-repeat="pnode4 in pnode3.children" ui-tree-node>
-                                                    <div ui-tree-handle class="tree-node tree-node-content">
-                                                        <div>
-                                                            <a>{{pnode4.text}}</a>
-                                                        </div>
-                                                    </div>
-                                                
-                                                    <ol ui-tree-nodes="" ng-model="pnode4.children" ng-class="{hidden: collapsed}">
-                                                        <li ng-repeat="pnode5 in pnode4.children" ui-tree-node>
-                                                            <div ui-tree-handle class="tree-node tree-node-content">
-                                                                <div>
-                                                                    <a>{{pnode5.text}}</a>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ol>
-                                                </li>
-                                            </ol>
-                                            -->
-                                        </li>
-                                    </ol>
                                 </li>
-                            </ol>
+                            </ol> -->
                         </li>
                     </ol>
             </div>                        
@@ -165,7 +161,10 @@
                                     }">
                                 </span>
                             </a>
-                            <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                            <a><i ng-class="{
+                                'tsi icon-ts-equipment2': collapsed,
+                                'tsi icon-ts-equipment': !collapsed
+                                }" class="left-title-icon-content"></i></a>
                             <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
                             <div ng-if="node.isEditing === true" class="ts-tree-input-group name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                 <div class="ts-input">
@@ -201,14 +200,17 @@
                         <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                             <li ng-repeat="node in node.children" ui-tree-node>
                                 <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
-                                    <a data-nodrag ng-click="ctrl.toggle(this)">
+                                    <a data-nodrag ng-click="ctrl.toggle(this)" class="right-tree-item-arrow">
                                         <span ng-class="{
                                                 'tsi icon-ts-arrow_drop_up': collapsed,
                                                 'tsi icon-ts-manuarrow-drop-down': !collapsed
                                             }">
                                         </span>
                                     </a>
-                                    <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                                    <a><i ng-class="{
+                                        'tsi icon-ts-equipment2': collapsed,
+                                        'tsi icon-ts-equipment': !collapsed
+                                        }" class="left-title-icon-content tsi icon-ts-equipment"></i></a>
                                     <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
                                     <div ng-if="node.isEditing === true" class="ts-tree-input-group name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                         <div class="ts-input">
@@ -243,14 +245,17 @@
                                 <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                     <li ng-repeat="node in node.children" ui-tree-node>
                                         <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
-                                            <a data-nodrag ng-click="ctrl.toggle(this)">
+                                            <a data-nodrag ng-click="ctrl.toggle(this)" class="right-tree-item-arrow">
                                                 <span ng-class="{
                                                     'tsi icon-ts-arrow_drop_up': collapsed,
                                                     'tsi icon-ts-manuarrow-drop-down': !collapsed
                                                 }">
                                                 </span>
                                             </a>
-                                            <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                                            <a><i ng-class="{
+                                                'tsi icon-ts-equipment2': collapsed,
+                                                'tsi icon-ts-equipment': !collapsed
+                                                }" class="left-title-icon-content tsi icon-ts-equipment"></i></a>
                                             <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
                                             <div ng-if="node.isEditing === true" class="ts-tree-input-group three-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                 <div class="ts-input">
@@ -285,14 +290,17 @@
                                         <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                             <li ng-repeat="node in node.children" ui-tree-node>
                                                 <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
-                                                    <a data-nodrag ng-click="ctrl.toggle(this)">
+                                                    <a data-nodrag ng-click="ctrl.toggle(this)" class="right-tree-item-arrow">
                                                         <span ng-class="{
                                                             'tsi icon-ts-arrow_drop_up': collapsed,
                                                             'tsi icon-ts-manuarrow-drop-down': !collapsed
                                                         }">
                                                         </span>
                                                     </a>
-                                                    <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                                                    <a><i ng-class="{
+                                                        'tsi icon-ts-equipment2': collapsed,
+                                                        'tsi icon-ts-equipment': !collapsed
+                                                        }" class="left-title-icon-content tsi icon-ts-equipment"></i></a>
                                                     <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
                                                     <div ng-if="node.isEditing === true" class="ts-tree-input-group three-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                         <div class="ts-input">
@@ -327,14 +335,17 @@
                                                 <ol ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}" id="tree-nodes-view">
                                                     <li ng-repeat="node in node.children" ui-tree-node>
                                                         <div ng-if="node.tag_id === 0" ui-tree-handle class="tree-node tree-node-content" id="right-tree-item-content">
-                                                            <a data-nodrag ng-click="ctrl.toggle(this)">
+                                                            <a data-nodrag ng-click="ctrl.toggle(this)" class="right-tree-item-arrow">
                                                                 <span ng-class="{
                                                                     'tsi icon-ts-arrow_drop_up': collapsed,
                                                                     'tsi icon-ts-manuarrow-drop-down': !collapsed
                                                                 }">
                                                                 </span>
                                                             </a>
-                                                            <a><i class="left-title-icon-content tsi icon-ts-equipment"></i></a>
+                                                            <a><i ng-class="{
+                                                                'tsi icon-ts-equipment2': collapsed,
+                                                                'tsi icon-ts-equipment': !collapsed
+                                                                }" class="left-title-icon-content tsi icon-ts-equipment"></i></a>
                                                             <a ng-if="node.isEditing === false" class="right-content-facility-text" >{{node.facility_name}}</a>
                                                             <div ng-if="node.isEditing === true" class="ts-tree-input-group five-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                                 <div class="ts-input">

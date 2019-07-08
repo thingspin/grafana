@@ -38,30 +38,30 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 	var tagList = []m.TsFacilityTreeItem{}
 
 	// measurements
-	lev1Map := make(map[string]m.TsFacilityTreeItem)
+	// lev1Map := make(map[string]m.TsFacilityTreeItem)
 	lev2Map := make(map[string]m.TsFacilityTreeItem)
 
 	// Level1 with Level2
-	for _, ms := range conInfo {
-		if _, ok := lev1Map[ms.Type]; ok {
-			//do something here
-			lv1 := lev1Map[ms.Type]
-			lv1.Children = append(lv1.Children, m.TsFacilityTreeItem{
-				FacilityName : ms.Name,
-			})
-			lev1Map[ms.Type] = lv1
-		} else {
-			measurements := []m.TsFacilityTreeItem{}
-			measurements = append(measurements, m.TsFacilityTreeItem{
-				FacilityName : ms.Name,
-			})
-			lev1Map[ms.Type] = m.TsFacilityTreeItem{
-				Label : ms.Type,
-				Children : measurements,
-			}
-		}
-		
-	}
+	// for _, ms := range conInfo {
+	// 	if _, ok := lev1Map[ms.Type]; ok {
+	// 		//do something here
+	// 		lv1 := lev1Map[ms.Type]
+	// 		lv1.Children = append(lv1.Children, m.TsFacilityTreeItem{
+	// 			FacilityName : ms.Name,
+	// 		})
+	// 		lev1Map[ms.Type] = lv1
+	// 	} else {
+	// 		measurements := []m.TsFacilityTreeItem{}
+	// 		measurements = append(measurements, m.TsFacilityTreeItem{
+	// 			FacilityName : ms.Name,
+	// 		})
+	// 		lev1Map[ms.Type] = m.TsFacilityTreeItem{
+	// 			Label : ms.Type,
+	// 			Children : measurements,
+	// 		}
+	// 	}
+	// }
+
 	order := 0
 	// level2 with level3
 	for _, ms := range conInfo {
@@ -73,10 +73,8 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 				if  len(result.Series) > 0 {
 					serie := result.Series[0]
 					values := serie.Values
-
 					for _, v := range values {
 						// tag name
-						fmt.Println(v)
 						order = order + 1
 						if _, ok := lev2Map[ms.Name]; ok {
 					
@@ -106,6 +104,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 							lev2Map[ms.Name] = m.TsFacilityTreeItem{
 								FacilityName : ms.Name,
 								Children : tags,
+								Label : ms.Type,
 							}
 						}
 					}	
@@ -114,19 +113,21 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) m.GetFmsTagDefineQuery 
 		}
 	}
 
-	for _, lv1 := range lev1Map {
-		for _i, lv2 := range lv1.Children{
-			if _, ok := lev2Map[lv2.FacilityName]; ok {
-				lv1.Children[_i].Children = lev2Map[lv2.FacilityName].Children
-				//lv2.Children = lev2Map[lv2.FacilityName].Children
-				//fmt.Println("=-=")
-				//fmt.Println(lv2.Children)
-			}
+	// for _, lv1 := range lev1Map {
+	// 	for _i, lv2 := range lv1.Children{
+	// 		if _, ok := lev2Map[lv2.FacilityName]; ok {
+	// 			lv1.Children[_i].Children = lev2Map[lv2.FacilityName].Children
+	// 			//lv2.Children = lev2Map[lv2.FacilityName].Children
+	// 			//fmt.Println("=-=")
+	// 			//fmt.Println(lv2.Children)
+	// 		}
 			
-		}
-	}
+	// 	}
+	// }
 
-	for _, node := range lev1Map {
+
+
+	for _, node := range lev2Map {
 		tagList = append(tagList, node)
 	}
 

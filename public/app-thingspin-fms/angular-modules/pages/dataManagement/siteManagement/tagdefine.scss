@@ -256,12 +256,12 @@ tr.angular-ui-tree-empty {
 }
 
 #tree-left-view {
-    padding-top: 16px;
     width: 49.3%;
     margin-right: 0px;
     margin-bottom: 0px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
-    background-color: #ffffff;    
+    background-color: #ffffff;
+    padding: 16px;
 }
 
 #tree-right-view {
@@ -540,6 +540,39 @@ tr.angular-ui-tree-empty {
     padding-top: 9px;
 }
 
+.title-icon-root-content-mqtt {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    text-align: center;
+    display: inline-block;
+    color: #8e24aa;
+    vertical-align: top;
+    padding-top: 9px;
+}
+
+.title-icon-root-content-opcua {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    text-align: center;
+    display: inline-block;
+    color: #fb8002;
+    vertical-align: top;
+    padding-top: 9px;
+}
+
+.title-icon-root-content-modbus {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    text-align: center;
+    display: inline-block;
+    color: #00897b;
+    vertical-align: top;
+    padding-top: 9px;
+}
+
 .left-title-icon-content {
     width: 20px;
     height: 20px;
@@ -598,7 +631,7 @@ tr.angular-ui-tree-empty {
 }
 
 .left-three-title-text-content {
-    width: 96%;
+    width: 88%;
     padding-left: 16px;
     font-family: Roboto;
     font-size: 12px;
