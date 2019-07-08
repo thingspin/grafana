@@ -15,10 +15,18 @@ ts-right-sidebar {
   background-color: white;
 }
 
+
 .rightmenu-open {
+
   ts-right-sidebar {
     display: block;
   }
+}
+
+.login-page {
+  ts-right-sidebar {
+    display: none;
+  }  
 }
 
 .view-mode--tv, // mode 1
