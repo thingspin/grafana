@@ -79,6 +79,7 @@ export class TsModbusConnectCtrl {
   nodeInjectWiresList: any;
   templateObject: any; //modbus node-red template
   FlowId: any;
+  timeout; any;
 
   //for test
   getterparserArray: any;
@@ -121,8 +122,10 @@ export class TsModbusConnectCtrl {
     private $scope ,$routeParams,
     private $location: angular.ILocationService,
     //private $compile: angular.ICompileService, $routeParams,
-    private backendSrv: BackendSrv) {
+    private backendSrv: BackendSrv,
+    $timeout) {
     //for tabulator table
+    this.timeout = $timeout;
     this.modbusParams = {
       quantity: ['1','2','3','4','5','6','7','8','9'],
       functioncodes: ['Coil Status','Input Status','Holding Registers','Input Registers'],
@@ -665,6 +668,12 @@ testCreate() {
     }else {
       this.modbusReadIntervals = 1;
     }
+  }
+
+  $onInit(): void {
+    this.timeout(()=> {
+      $('#modbus-edit').focus();
+    });
   }
 }
 

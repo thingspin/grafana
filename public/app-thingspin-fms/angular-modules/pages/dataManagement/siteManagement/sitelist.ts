@@ -54,6 +54,7 @@ export class TsSiteListCtrl implements angular.IController {
         private $scope: angular.IScope,
         private backendSrv: BackendSrv,
         private $location: angular.ILocationService,
+        $timeout,
     ) {
         this.isEdit = false;
         this.isEditView = false;
@@ -63,10 +64,18 @@ export class TsSiteListCtrl implements angular.IController {
         this.asyncDataLoader();
 
         this.selIdx = -1;
+
+        $scope.$watch('ctrl.isEditView', (value) => {
+            if (value) {
+                $timeout(()=> {
+                    $('#site-name').focus();
+                });
+            }
+        });
     }// Dependency Injection
 
     $onInit(): void {
-        console.log("SiteTable : " + this.data);
+        // console.log("SiteTable : " + this.data);
     }
 
     $onDestroy(): void {
@@ -126,6 +135,7 @@ export class TsSiteListCtrl implements angular.IController {
             this.isEditView = true;
             this.isListView = false;
             this.isAddSiteBtn = false;
+            $('#site-name').focus();
         } else {
             this.isEditView = false;
             this.isListView = true;

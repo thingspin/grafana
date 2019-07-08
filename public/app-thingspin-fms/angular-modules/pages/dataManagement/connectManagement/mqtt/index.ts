@@ -67,6 +67,7 @@ export class TsMqttConnectCtrl {
   topicListArrayString: string;
   topicDisListArrayString: string;
 
+  timeout: any;
   // MQTT
   readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
   readonly listenerTopic: string = "/thingspin/connect/+/status" as string;
@@ -91,7 +92,8 @@ export class TsMqttConnectCtrl {
     private backendSrv: BackendSrv,
     private $location: angular.ILocationService,
     private $compile: angular.ICompileService,
-    $routeParams) {
+    $routeParams, $timeout) {
+      this.timeout = $timeout;
       this.connection = {
         url: DEF_URL,
         port: DEF_PORT,
@@ -167,6 +169,12 @@ export class TsMqttConnectCtrl {
           clearTimeout(this.timer);
           this.setConnectStatus(payload);
       }
+  }
+
+  $onInit(): void {
+    this.timeout(()=> {
+      $('#collector_input').focus();
+    });
   }
 
   link(scope: any, elem: any, attrs: any, ctrl: { scope: any; }) {

@@ -13,6 +13,7 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
     // Inheritance data
     input: InputModel;
     connectStatus: string;
+    timeout: any;
 
     // UI setting data
     inputEnable: InputEnable = {
@@ -40,8 +41,14 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
         };
     }
 
-    constructor() {
+    constructor($timeout) {
+        this.timeout = $timeout;
+    }
 
+    $onInit(): void {
+        this.timeout(()=> {
+            $('#input-name').focus();
+        });
     }
 
 }

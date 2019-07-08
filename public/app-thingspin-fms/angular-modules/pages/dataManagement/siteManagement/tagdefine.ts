@@ -31,7 +31,8 @@ export class TsTagDefineCtrl {
     private $scope: angular.IScope,
     private $location: angular.ILocationService,
     $routeParams,
-    $window
+    $window,
+    $timeout,
   ) {
     // this.isShow = false;
     this.isEditView = false;
@@ -49,6 +50,14 @@ export class TsTagDefineCtrl {
     };
     this.editDataBackup = "";
     this.window = angular.element($window);
+
+    $scope.$watch('ctrl.isEditView', (value) => {
+      if (value) {
+          $timeout(()=> {
+              $('#facility-name').focus();
+          });
+      }
+    });
 
     this.window.bind('resize', () => {
       const total = $('#ts-tag-define-title-left-content').width();
