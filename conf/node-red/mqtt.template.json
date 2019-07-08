@@ -192,10 +192,10 @@
             "id": "TS-MQTT-INFLUXD-{{.Params.UUID}}",
             "type": "influxdb",
             "z": "",
-            "hostname": "127.0.0.1",
-            "port": "8086",
+            "hostname": "{{.TsSettings.Influx.Host}}",
+            "port": "{{.TsSettings.Influx.Port}}",
             "protocol": "http",
-            "database": "thingspin",
+            "database": "{{.TsSettings.Influx.Database}}",
             "name": "",
             "usetls": false,
             "tls": ""
