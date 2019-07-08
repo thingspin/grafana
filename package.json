@@ -264,5 +264,8 @@
   },
   "_moduleAliases": {
     "puppeteer": "node_modules/puppeteer-core"
+  },
+  "engines": {
+    "node": ">=10 <11"
   }
 }
