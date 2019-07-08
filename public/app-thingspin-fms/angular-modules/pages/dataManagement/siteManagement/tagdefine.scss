@@ -393,7 +393,6 @@ tr.angular-ui-tree-empty {
 .ts-tree-input-group {
     display: inline-flex;
     background-color: #FFFFFF;
-    padding-left: 16px;
     &.name {
         width: 92%;
     }
@@ -408,6 +407,7 @@ tr.angular-ui-tree-empty {
         display: inline-block;
         width: 100%;
         &>:first-child {
+            padding-left: 16px;
             width: 100%;
             height: 36px;
             border-radius: 4px;
@@ -441,7 +441,6 @@ tr.angular-ui-tree-empty {
 .ts-tree-child-input-group {
     display: inline-flex;
     background-color: #FFFFFF;
-    padding-left: 16px;
     &.name {
         width: 92%;
     }
@@ -456,6 +455,7 @@ tr.angular-ui-tree-empty {
         display: inline-block;
         width: 100%;
         &>:first-child {
+            padding-left: 16px;
             width: 100%;
             height: 24px;
             border-radius: 4px;
@@ -701,6 +701,7 @@ tr.angular-ui-tree-empty {
     display: inline-flex;
     padding-top: 5px;
     vertical-align: top;
+    padding-left: 20px;
 }
 
 .right-node-child-delete {
@@ -708,6 +709,7 @@ tr.angular-ui-tree-empty {
     display: inline-flex;
     padding-top: 5px;
     vertical-align: top;
+    padding-left: 20px;
 }
 
 .edit-icon-view {
@@ -715,6 +717,7 @@ tr.angular-ui-tree-empty {
     display: inline-flex;
     padding-top: 10px;
     vertical-align: top;
+    padding-left: 20px;
 }
 
 .right-node-delete {
@@ -722,6 +725,7 @@ tr.angular-ui-tree-empty {
     display: inline-flex;
     padding-top: 10px;
     vertical-align: top;
+    padding-left: 20px;
 }
 
 .title-info-right-view {

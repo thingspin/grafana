@@ -212,7 +212,7 @@
                                         'tsi icon-ts-equipment': !collapsed
                                         }" class="left-title-icon-content tsi icon-ts-equipment"></i></a>
                                     <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
-                                    <div ng-if="node.isEditing === true" class="ts-tree-input-group name" ng-mouseleave="ctrl.mouseHoverOut(node)">
+                                    <div ng-if="node.isEditing === true" class="ts-tree-input-group three-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                         <div class="ts-input">
                                             <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
                                             <span ng-class="{separator: true, enable: node.facility_name}"></span>
