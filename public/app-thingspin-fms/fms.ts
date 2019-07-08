@@ -5,7 +5,7 @@ import angular from 'angular';
 import config from 'app/core/config';
 import _ from 'lodash';
 
-import { setLocale } from '@grafana/ui/src/utils/moment_wrapper';
+import { setLocale } from '@grafana/data';
 
 import { coreModule, angularModules } from './grafana_custom/core_module';
 import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
