@@ -304,7 +304,7 @@ export class TsMqttConnectCtrl {
   }
 
   onLoadData(item) {
-    console.log(item);
+    console.log("item:" + item);
     this.indexID = item.id;
     this.collector = item.name;
     const getParams = item.params;
@@ -319,8 +319,16 @@ export class TsMqttConnectCtrl {
       // const tableData = {} as MqttTableData;
       const tableData = {} as Topic;
       tableData.id = i;
-      tableData.type = getTopicList[i].type;
-      tableData.viewStr = getTopicList[i].viewStr;
+      if (getTopicList[i].type === undefined || getTopicList[i].type === null) {
+        tableData.type = getTopicList[i].name;
+      } else {
+        tableData.type = getTopicList[i].type;
+      }
+      if (getTopicList[i].viewStr === undefined || getTopicList[i].viewStr === null) {
+        tableData.viewStr = getTopicList[i].topic;
+      } else {
+        tableData.viewStr = getTopicList[i].viewStr;
+      }
       tableData.value = getTopicList[i].value;
       // tableData.topicList = [];
       /*--jwpark 19.07.04
