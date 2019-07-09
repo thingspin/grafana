@@ -67,7 +67,7 @@ export class TsSiteListCtrl implements angular.IController {
 
         $scope.$watch('ctrl.isEditView', (value) => {
             if (value) {
-                $timeout(()=> {
+                $timeout(() => {
                     $('#site-name').focus();
                 });
             }
@@ -98,7 +98,7 @@ export class TsSiteListCtrl implements angular.IController {
         console.log(sid);
         $.ajax({
             type: 'DELETE',
-            url: "/thingspin/sites/"+sid,
+            url: `/thingspin/sites/${sid}`,
             dataType: "json",
             contentType: "application/json; charset=UTF-8",
             async: false,
@@ -108,7 +108,7 @@ export class TsSiteListCtrl implements angular.IController {
                 appEvents.emit('alert-success', ['삭제되었습니다.']);
                 this.onLoadData(result);
             },
-            error : (request, status, err ) => {
+            error: (request, status, err) => {
                 appEvents.emit('alert-error', [err]);
             },
         });
@@ -147,37 +147,35 @@ export class TsSiteListCtrl implements angular.IController {
             // Edit
             console.log("sid");
             console.log(this.data);
-            this.backendSrv.put("/thingspin/sites",
-            {
-                "Id": this.data,
-                "Name": this.name,
-                "Desc": this.desc,
-                "Lat": parseFloat(this.lat),
-                "Lon": parseFloat(this.lon),
+            this.backendSrv.put("/thingspin/sites", {
+                Id: this.data,
+                Name: this.name,
+                Desc: this.desc,
+                Lat: parseFloat(this.lat),
+                Lon: parseFloat(this.lon),
             }).then((result) => {
                 appEvents.emit('alert-success', ['수정되었습니다.']);
                 this.onLoadData(result);
             }).catch(err => {
                 if (err.status === 500) {
-                  appEvents.emit('alert-error', [err.statusText]);
+                    appEvents.emit('alert-error', [err.statusText]);
                 }
             });
         } else {
             // Add
             if (this.name) {
-                this.backendSrv.post("/thingspin/sites",
-                {
-                    "Name": this.name,
-                    "Desc": this.desc,
-                    "Lat": parseFloat(this.lat),
-                    "Lon": parseFloat(this.lon),
+                this.backendSrv.post("/thingspin/sites", {
+                    Name: this.name,
+                    Desc: this.desc,
+                    Lat: parseFloat(this.lat),
+                    Lon: parseFloat(this.lon),
                 }).then((result) => {
-                    appEvents.emit('alert-success', ['추가되었습니다.']);
-                    this.onLoadData(result);
-                    this.onShowEditView(false);
+                appEvents.emit('alert-success', ['추가되었습니다.']);
+                this.onLoadData(result);
+                this.onShowEditView(false);
                 }).catch(err => {
                     if (err.status === 500) {
-                      appEvents.emit('alert-error', [err.statusText]);
+                        appEvents.emit('alert-error', [err.statusText]);
                     }
                 });
             } else {
@@ -208,28 +206,30 @@ export class TsSiteListCtrl implements angular.IController {
     siteNameCreate(value) {
         console.log(value.length);
         let resultStr = "";
-        for (let i = 0; i<5 - value.length; i++) {
+        for (let i = 0; i < 5 - value.length; i++) {
             resultStr += "0";
         }
         return resultStr;
     }
 
-    onLoadData(item) {
+    onLoadData(items) {
         this.list = [];
-        console.log(item);
-        if (item !== null || item !== undefined) {
-            for (let i = 0; i< item.length; i++) {
-                const siteItem = {} as SiteTableData;
-                const strID = (item[i].id).toString();
-                siteItem.id = item[i].id;
-                siteItem.titleid = "SITE_" + this.siteNameCreate(strID) + item[i].id;
-                siteItem.name = item[i].name;
-                siteItem.desc = item[i].desc;
-                siteItem.lat = item[i].lat;
-                siteItem.lon = item[i].lon;
+
+        console.log(items);
+        if (Array.isArray(items)) {
+            for (const item of items) {
+                const { id, name, desc, lat, lon } = item;
+                const strID = (id).toString();
+                const siteItem: SiteTableData = {
+                    id,
+                    titleid: "SITE_" + this.siteNameCreate(strID) + id,
+                    name,
+                    desc,
+                    lat,
+                    lon,
+                };
                 this.list.push(siteItem);
             }
-            this.initTable();
         }
         this.initTable();
     }
@@ -244,7 +244,7 @@ export class TsSiteListCtrl implements angular.IController {
 
     tableSelect(idx) {
         //maxPageLen
-        for (let i = 0; i< this.tData.maxPageLen; i++) {
+        for (let i = 0; i < this.tData.maxPageLen; i++) {
             if (i === idx) {
                 $('#table-tr-' + i).removeClass('ts-table-row');
                 $('#table-tr-' + i).addClass('selected');
@@ -264,10 +264,10 @@ export class TsSiteListCtrl implements angular.IController {
     setPageNodes() {
         const { currPage, rowCount, } = this.tData;
         if (this.list) {
-        this.tData.pageNode = this.list.slice(
-            currPage * rowCount,
-            (currPage * rowCount) + rowCount
-        );
+            this.tData.pageNode = this.list.slice(
+                currPage * rowCount,
+                (currPage * rowCount) + rowCount
+            );
         }
     }
 
@@ -280,8 +280,8 @@ export class TsSiteListCtrl implements angular.IController {
 
     tPrevPaging(): void {
         if (this.tData.currPage) {
-        this.tData.currPage -= 1;
-        this.setPageNodes();
+            this.tData.currPage -= 1;
+            this.setPageNodes();
         }
     }
 
@@ -309,7 +309,7 @@ export class TsSiteListCtrl implements angular.IController {
 
         return _.range(from, to);
     }
-        // table event methods
+    // table event methods
     tOnSelectChange() {
         console.log("click");
         this.tCalcPaging();
