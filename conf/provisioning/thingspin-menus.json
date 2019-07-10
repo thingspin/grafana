@@ -5,27 +5,37 @@
   "ignore": false,
   "menus": [
     {
-      "text": "데이터 관리",
-      "icon": "fa fa-bar-chart",
-      "url": "/thingspin/manage/data",
+      "text": "홈",
+      "icon": "fa fa-fw fa-home",
+      "url": "/",
       "hideFromMenu": false,
       "placeBottom": false,
       "canDelete": false,
       "children": [
-        {
-          "text": "사이트 관리",
-          "icon": "fa fa-bar-chart",
-          "url": "/thingspin/manage/data/site",
-          "canDelete": false,
-          "children": []
-        },        
+      ]
+    },
+    {
+      "text": "데이터 관리",
+      "icon": "fa fa-sitemap",
+      "url": "/thingspin/manage/data",
+      "hideFromMenu": false,
+      "placeBottom": false,
+      "canDelete": false,
+      "children": [      
         {
           "text": "연결 관리",
           "icon": "fa fa-bar-chart",
           "url": "/thingspin/manage/data/connect",
           "canDelete": false,
           "children": []
-        }       
+        },
+        {
+          "text": "사이트 관리",
+          "icon": "fa fa-bar-chart",
+          "url": "/thingspin/manage/data/site",
+          "canDelete": false,
+          "children": []
+        }     
       ]
     },
     {
@@ -37,7 +47,7 @@
     },    
     {
       "text": "대시보드",
-      "icon": "fa fa-fw fa-home",
+      "icon": "gicon gicon-dashboard",
       "url": "/",
       "hideFromMenu": false,
       "placeBottom": true,
@@ -48,14 +58,59 @@
           "url": "/dashboard/new"
         },
         {
-          "text": "불러오기",
-          "icon": "gicon gicon-dashboard-import",
-          "url": "/dashboard/import"
-        },
-        {
           "text": "관리",
           "icon": "gicon gicon-manage",
           "url": "/dashboards"
+        },
+        {
+          "text": "불러오기",
+          "icon": "gicon gicon-dashboard-import",
+          "url": "/dashboard/import"
+        }
+      ]
+    },
+    
+    {
+      "text": "개발자도구",
+      "icon": "gicon gicon-shield",
+      "url": "/thingspin/manage/system",
+      "placeBottom": true,
+      "canDelete": false,
+      "children" : [
+        {
+          "text": "데이터 소스",
+          "icon": "gicon gicon-shield",
+          "url": "/datasources",
+          "canDelete": false
+        },
+        {
+          "text": "플러그인",
+          "icon": "gicon gicon-plugins",
+          "url": "/plugins"
+        },
+        {
+          "text": "노트북 편집",
+          "icon": "",
+          "url": "/companions/jupyter",
+          "canDelete": false
+        },
+        {
+          "text": "플로우 편집",
+          "icon": "gicon gicon-alert-rules",
+          "url": "/companions/node-red",
+          "canDelete": false
+        },
+        {
+          "text": "데이터 조회",
+          "icon": "gicon gicon-alert-rules",
+          "url": "http://localhost:8888",
+          "canDelete": false
+        },
+        {
+          "text": "로그",
+          "icon": "gicon gicon-shield",
+          "url": "",
+          "canDelete": true
         }
       ]
     },
@@ -97,39 +152,10 @@
           "canDelete": false
         },
         {
-          "text": "데이터 소스",
-          "icon": "gicon gicon-shield",
-          "url": "/datasources",
-          "canDelete": false
-        },
-        {
-          "text": "플러그인",
-          "icon": "gicon gicon-plugins",
-          "url": "/plugins"
-        },
-        {
           "text": "시스템 경고",
           "icon": "gicon gicon-alert-rules",
           "url": "/alerting",
           "canDelete": false
-        },
-        {
-          "text": "Jupyter",
-          "icon": "",
-          "url": "/companions/jupyter",
-          "canDelete": false
-        },
-        {
-          "text": "플로우 편집",
-          "icon": "gicon gicon-alert-rules",
-          "url": "/companions/node-red",
-          "canDelete": false
-        },
-        {
-          "text": "로그",
-          "icon": "gicon gicon-shield",
-          "url": "",
-          "canDelete": true
         }
       ]
     }
