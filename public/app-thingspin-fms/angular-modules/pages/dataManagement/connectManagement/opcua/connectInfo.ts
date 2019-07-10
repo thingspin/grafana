@@ -41,6 +41,7 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
         };
     }
 
+    /** @ngInject */
     constructor($timeout) {
         this.timeout = $timeout;
     }
