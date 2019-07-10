@@ -25,6 +25,8 @@ export class TsTagDefineCtrl {
   facility: any;
   editDataBackup: string;
   window: any;
+  timeout: any;
+  inputForm: any;
   /** @ngInject */
   constructor(
     private backendSrv: BackendSrv,
@@ -34,6 +36,7 @@ export class TsTagDefineCtrl {
     $window,
     $timeout,
   ) {
+    this.timeout = $timeout;
     // this.isShow = false;
     this.isEditView = false;
     this.isEditBtn = true;
@@ -50,6 +53,7 @@ export class TsTagDefineCtrl {
     };
     this.editDataBackup = "";
     this.window = angular.element($window);
+    this.inputForm = null;
 
     $scope.$watch('ctrl.isEditView', (value) => {
       if (value) {
@@ -369,7 +373,22 @@ export class TsTagDefineCtrl {
     console.log(scope);
     scope.toggle();
   }
+  checkEvents(evt, node) {
+    if (evt.keyCode === 27 || evt.type === "blur") {
+      if (this.inputForm !== null) {
+        this.inputForm.isEditing = false;
+      }
+      this.inputForm = null;
+      if (node.tag_id === 0) {
+        node.facility_name = this.editDataBackup;
+      } else {
+        node.tag_name = this.editDataBackup;
+      }
+    }
+  }
+
   onKeyPress(evt,node) {
+    console.log(evt);
    if (evt.which === 13) {
       // Enter
       if (node.tag_id === 0) {
@@ -518,15 +537,22 @@ export class TsTagDefineCtrl {
 
   mouseHoverOut(value) {
     console.log(value);
-    value.isEditing = false;
-    if (value.tag_id === 0) {
-      value.facility_name = this.editDataBackup;
-    } else {
-      value.tag_name = this.editDataBackup;
-    }
+    // value.isEditing = false;
+    // if (value.tag_id === 0) {
+    //   value.facility_name = this.editDataBackup;
+    // } else {
+    //   value.tag_name = this.editDataBackup;
+    // }
   }
 
-  onEditInit(value) {
+  onEditInit(value, id) {
+    this.timeout(()=> {
+      $('#' + id).focus();
+    });
+    if (this.inputForm !== null) {
+      this.inputForm.isEditing = false;
+    }
+    this.inputForm = value;
     value.isEditing = true;
     if (value.tag_id === 0) {
       this.editDataBackup = value.facility_name;

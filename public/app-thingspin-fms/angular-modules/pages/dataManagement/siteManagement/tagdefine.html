@@ -168,11 +168,11 @@
                             <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
                             <div ng-if="node.isEditing === true" class="ts-tree-input-group name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                 <div class="ts-input">
-                                    <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                    <input id="first-facility-edit" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node) " ng-blur="ctrl.checkEvents($event, node)"/>
                                     <span ng-class="{separator: true, enable: node.facility_name}"></span>
                                 </div>
                             </div>
-                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" id="ts-edit-show" class="edit-icon-view">
+                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node, 'first-facility-edit')" id="ts-edit-show" class="edit-icon-view">
                                 <span class="tsi icon-ts-create"></span>
                             </a>
                             <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
@@ -184,11 +184,11 @@
                             <a ng-if="node.isEditing === false" class="right-content-tag-text">{{node.tag_name}}</a>
                             <div ng-if="node.isEditing === true" class="ts-tree-child-input-group name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                 <div class="ts-input">
-                                    <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                    <input id="first-tag-edit" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                     <span ng-class="{separator: true, enable: node.tag_name}"></span>
                                 </div>
                             </div>
-                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" id="ts-edit-show" class="edit-icon-child-view">
+                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node, 'first-tag-edit')" id="ts-edit-show" class="edit-icon-child-view">
                                 <span class="tsi icon-ts-create"></span>
                             </a>
                             <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-child-delete">
@@ -214,11 +214,11 @@
                                     <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
                                     <div ng-if="node.isEditing === true" class="ts-tree-input-group three-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                         <div class="ts-input">
-                                            <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                            <input id="second-facility-edit" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                             <span ng-class="{separator: true, enable: node.facility_name}"></span>
                                         </div>
                                     </div>
-                                    <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" id="ts-edit-show" class="edit-icon-view">
+                                    <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node, 'second-facility-edit')" id="ts-edit-show" class="edit-icon-view">
                                         <span class="tsi icon-ts-create"></span>
                                     </a>
                                     <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
@@ -230,11 +230,11 @@
                                     <a ng-if="node.isEditing === false" class="right-content-tag-text">{{node.tag_name}}</a>
                                     <div ng-if="node.isEditing === true" class="ts-tree-child-input-group name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                         <div class="ts-input">
-                                            <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                            <input id="second-tag-edit" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                             <span ng-class="{separator: true, enable: node.tag_name}"></span>
                                         </div>
                                     </div>
-                                    <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" id="ts-edit-show" class="edit-icon-child-view">
+                                    <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node, 'second-tag-edit')" id="ts-edit-show" class="edit-icon-child-view">
                                         <span class="tsi icon-ts-create"></span>
                                     </a>
                                     <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-child-delete">
@@ -259,11 +259,11 @@
                                             <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
                                             <div ng-if="node.isEditing === true" class="ts-tree-input-group three-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                 <div class="ts-input">
-                                                    <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                    <input id="three-facility-edit" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                                     <span ng-class="{separator: true, enable: node.facility_name}"></span>
                                                 </div>
                                             </div>
-                                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" class="edit-icon-view" id="ts-edit-show">
+                                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node, 'three-facility-edit')" class="edit-icon-view" id="ts-edit-show">
                                                 <span class="tsi icon-ts-create"></span>
                                             </a>
                                             <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
@@ -275,11 +275,11 @@
                                             <a ng-if="node.isEditing === false" class="right-content-tag-text">{{node.tag_name}}</a>
                                             <div ng-if="node.isEditing === true" class="ts-tree-child-input-group three-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                 <div class="ts-input">
-                                                    <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                    <input id="three-tag-edit" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                                     <span ng-class="{separator: true, enable: node.tag_name}"></span>
                                                 </div>
                                             </div>
-                                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" class="edit-icon-child-view" id="ts-edit-show">
+                                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node, 'three-tag-edit')" class="edit-icon-child-view" id="ts-edit-show">
                                                 <span class="tsi icon-ts-create"></span>
                                             </a>
                                             <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-child-delete">
@@ -304,11 +304,11 @@
                                                     <a ng-if="node.isEditing === false" class="right-content-facility-text">{{node.facility_name}}</a>
                                                     <div ng-if="node.isEditing === true" class="ts-tree-input-group three-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                         <div class="ts-input">
-                                                            <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                            <input id="four-facility-edit" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                                             <span ng-class="{separator: true, enable: node.facility_name}"></span>
                                                         </div>
                                                     </div>
-                                                    <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" class="edit-icon-view" id="ts-edit-show">
+                                                    <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node, 'four-facility-edit')" class="edit-icon-view" id="ts-edit-show">
                                                         <span class="tsi icon-ts-create"></span>
                                                     </a>
                                                     <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
@@ -320,11 +320,11 @@
                                                     <a ng-if="node.isEditing === false" class="right-content-tag-text">{{node.tag_name}}</a>
                                                     <div ng-if="node.isEditing === true" class="ts-tree-child-input-group three-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                         <div class="ts-input">
-                                                            <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                            <input id="four-tag-edit" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                                             <span ng-class="{separator: true, enable: node.tag_name}"></span>
                                                         </div>
                                                     </div>
-                                                    <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" class="edit-icon-child-view" id="ts-edit-show">
+                                                    <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node,'four-tag-edit')" class="edit-icon-child-view" id="ts-edit-show">
                                                         <span class="tsi icon-ts-create"></span>
                                                     </a>
                                                     <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-child-delete">
@@ -349,11 +349,11 @@
                                                             <a ng-if="node.isEditing === false" class="right-content-facility-text" >{{node.facility_name}}</a>
                                                             <div ng-if="node.isEditing === true" class="ts-tree-input-group five-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                                 <div class="ts-input">
-                                                                    <input data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                                    <input id="five-facility-edit" data-nodrag type="text" ng-model="node.facility_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                                                     <span ng-class="{separator: true, enable: node.facility_name}"></span>
                                                                 </div>
                                                             </div>
-                                                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" class="edit-icon-view" id="ts-edit-show">
+                                                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node,'five-facility-edit')" class="edit-icon-view" id="ts-edit-show">
                                                                 <span class="tsi icon-ts-create"></span>
                                                             </a>
                                                             <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-delete">
@@ -365,11 +365,11 @@
                                                             <a ng-if="node.isEditing === false" class="right-content-tag-text">{{node.tag_name}}</a>
                                                             <div ng-if="node.isEditing === true" class="ts-tree-child-input-group five-name" ng-mouseleave="ctrl.mouseHoverOut(node)">
                                                                 <div class="ts-input">
-                                                                    <input data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)"/>
+                                                                    <input id="five-tag-edit" data-nodrag type="text" ng-model="node.tag_name" ng-keypress="ctrl.onKeyPress($event,node)" ng-keyup="ctrl.checkEvents($event, node)" ng-blur="ctrl.checkEvents($event, node)"/>
                                                                     <span ng-class="{separator: true, enable: node.tag_name}"></span>
                                                                 </div>
                                                             </div>
-                                                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node)" class="edit-icon-child-view" id="ts-edit-show">
+                                                            <a ng-if="node.isEditing === false" data-nodrag ng-click="ctrl.onEditInit(node, 'five-tag-edit')" class="edit-icon-child-view" id="ts-edit-show">
                                                                 <span class="tsi icon-ts-create"></span>
                                                             </a>
                                                             <a ng-if="node.isEditing === false && node.children.length === 0" data-nodrag ng-click="ctrl.removeElement(this, node)" id="ts-edit-show" class="right-node-child-delete">
