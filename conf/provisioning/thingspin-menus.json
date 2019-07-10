@@ -78,15 +78,15 @@
       "canDelete": false,
       "children" : [
         {
+          "text": "플러그인",
+          "icon": "gicon gicon-plugins",
+          "url": "/plugins"
+        },
+        {
           "text": "데이터 소스",
           "icon": "gicon gicon-shield",
           "url": "/datasources",
           "canDelete": false
-        },
-        {
-          "text": "플러그인",
-          "icon": "gicon gicon-plugins",
-          "url": "/plugins"
         },
         {
           "text": "노트북 편집",
@@ -107,6 +107,12 @@
           "canDelete": false
         },
         {
+          "text": "시스템 경고",
+          "icon": "gicon gicon-alert-rules",
+          "url": "/alerting",
+          "canDelete": false
+        },
+        {
           "text": "로그",
           "icon": "gicon gicon-shield",
           "url": "",
@@ -122,15 +128,15 @@
       "canDelete": false,
       "children" : [
         {
-          "text": "조직 관리",
-          "icon": "gicon gicon-team",
-          "url": "/admin/orgs",
+          "text": "메뉴 관리",
+          "icon": "fa fa-fw fa-keyboard-o",
+          "url": "/thingspin/manage/system/menu",
           "canDelete": false
         },
         {
-          "text": "그룹 관리",
+          "text": "조직 관리",
           "icon": "gicon gicon-team",
-          "url": "/org",
+          "url": "/admin/orgs",
           "canDelete": false
         },
         {
@@ -140,21 +146,9 @@
           "canDelete": false
         },
         {
-          "text": "라이센스 관리",
-          "icon": "gicon gicon-shield",
-          "url": "",
-          "canDelete": false
-        },
-        {
-          "text": "메뉴 관리",
-          "icon": "fa fa-fw fa-keyboard-o",
-          "url": "/thingspin/manage/system/menu",
-          "canDelete": false
-        },
-        {
-          "text": "시스템 경고",
-          "icon": "gicon gicon-alert-rules",
-          "url": "/alerting",
+          "text": "그룹 관리",
+          "icon": "gicon gicon-team",
+          "url": "/org",
           "canDelete": false
         }
       ]
