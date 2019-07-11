@@ -230,7 +230,8 @@ func (hs *HTTPServer) addMiddlewaresAndStaticRoutes() {
 	hs.mapStatic(m, setting.StaticRootPath, "robots.txt", "robots.txt")
 
 	if setting.ImageUploadProvider == "local" {
-		hs.mapStatic(m, hs.Cfg.ImagesDir, "", "/public/img/attachments")
+		//hs.mapStatic(m, hs.Cfg.ImagesDir, "", "/public/img/attachments")
+		hs.mapStatic(m, hs.Cfg.ImagesDir, "", "/media")
 	}
 
 	m.Use(middleware.AddDefaultResponseHeaders())

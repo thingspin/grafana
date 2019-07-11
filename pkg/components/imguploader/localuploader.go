@@ -13,7 +13,8 @@ type LocalUploader struct {
 
 func (u *LocalUploader) Upload(ctx context.Context, imageOnDiskPath string) (string, error) {
 	filename := filepath.Base(imageOnDiskPath)
-	image_url := setting.ToAbsUrl(path.Join("public/img/attachments", filename))
+	//image_url := setting.ToAbsUrl(path.Join("public/img/attachments", filename))
+	image_url := setting.ToAbsUrl(path.Join("media", filename))
 	return image_url, nil
 }
 
