@@ -61,11 +61,6 @@
           "text": "관리",
           "icon": "gicon gicon-manage",
           "url": "/dashboards"
-        },
-        {
-          "text": "불러오기",
-          "icon": "gicon gicon-dashboard-import",
-          "url": "/dashboard/import"
         }
       ]
     },
