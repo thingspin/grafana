@@ -7,8 +7,6 @@ import { execTask } from '../../../grafana-toolkit/src/cli/utils/execTask';
 
 // thingspin libs
 import { startTask } from './tasks/core.start';
-import { buildTask } from './tasks/thingspinui.build';
-import { releaseTask } from './tasks/thingspinui.release';
 
 export const run = (includeInternalScripts = false) => {
   if (includeInternalScripts) {
@@ -22,28 +20,6 @@ export const run = (includeInternalScripts = false) => {
         await execTask(startTask)({
           watchThemes: cmd.watchTheme,
           hot: cmd.hot,
-        });
-      });
-
-    program
-      .command('gui:build')
-      .description('Builds @grafana/ui package to packages/grafana-ui/dist')
-      .action(async cmd => {
-        // @ts-ignore
-        await execTask(buildTask)();
-      });
-
-    program
-      .command('gui:release')
-      .description('Prepares @grafana/ui release (and publishes to npm on demand)')
-      .option('-p, --publish', 'Publish @grafana/ui to npm registry')
-      .option('-u, --usePackageJsonVersion', 'Use version specified in package.json')
-      .option('--createVersionCommit', 'Create and push version commit')
-      .action(async cmd => {
-        await execTask(releaseTask)({
-          publishToNpm: !!cmd.publish,
-          usePackageJsonVersion: !!cmd.usePackageJsonVersion,
-          createVersionCommit: !!cmd.createVersionCommit,
         });
       });
   }
