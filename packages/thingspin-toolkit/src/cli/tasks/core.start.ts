@@ -3,14 +3,14 @@
 import concurrently from 'concurrently';
 
 // grafana libs
-import { Task, TaskRunner } from '../../../../grafana-toolkit/src/cli/tasks/task';
+import { Task, TaskRunner } from '@grafana/toolkit/src/cli/tasks/task';
 
-interface StartTaskOptions {
+export interface StartTaskOptions {
   watchThemes: boolean;
   hot: boolean;
 }
 
-const startTaskRunner: TaskRunner<StartTaskOptions> = async ({ watchThemes, hot }) => {
+export const startTaskRunner: TaskRunner<StartTaskOptions> = async ({ watchThemes, hot }) => {
   const jobs = [
     watchThemes && {
       command: 'nodemon -e ts -w ./packages/grafana-ui/src/themes -x yarn run themes:generate',

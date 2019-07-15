@@ -3,7 +3,7 @@ import chalk from 'chalk';
 import program from 'commander';
 
 // grafana libs
-import { execTask } from '../../../grafana-toolkit/src/cli/utils/execTask';
+import { execTask } from '@grafana/toolkit/src/cli/utils/execTask';
 
 // thingspin libs
 import { startTask } from './tasks/core.start';
@@ -11,6 +11,7 @@ import { startTask } from './tasks/core.start';
 export const run = (includeInternalScripts = false) => {
   if (includeInternalScripts) {
     program.option('-d, --depreciate <scripts>', 'Inform about npm script deprecation', v => v.split(','));
+
     program
       .command('core:start')
       .option('-h, --hot', 'Run front-end with HRM enabled')
