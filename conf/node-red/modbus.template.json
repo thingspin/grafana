@@ -4,6 +4,16 @@
     "info": "",
     "nodes":[
         {
+            "id": "TS-MODBUS-COMMENT-{{.Params.FlowId}}",
+            "type": "comment",
+            "z": "e89bb8fb.ce3f08",
+            "name": "{{.Params.FlowName}}",
+            "info": "",
+            "x": 100,
+            "y": 20,
+            "wires": []
+        },
+        {
             "id": "TS-MODBUS-STATE-{{.Params.FlowId}}",
             "type": "status",
             "z": "8900476a.91f358",

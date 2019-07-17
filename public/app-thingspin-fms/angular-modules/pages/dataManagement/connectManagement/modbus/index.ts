@@ -40,6 +40,8 @@ export class TsModbusConnectCtrl {
   fcSelected: string;
   typeSelected: string;
 
+  nodeRedFlowName: any;
+
   connName: any; // connection name
   modbusHost: any; // modbus Host ip
   modbusPort: any; // modbus Host Port
@@ -507,6 +509,7 @@ checkParams() {
 testCreate() {
 
     this.FlowId = uid.generate();
+    this.nodeRedFlowName = "MODBUS-"+this.connName;
     this.nodeModbusGetteritem = "";
     this.nodeInjectWiresList = "";
    if (this.tableList.length > 0) {
@@ -521,6 +524,7 @@ testCreate() {
       name : this.connName,
       params: {
         FlowId : this.FlowId,
+        FlowName: this.nodeRedFlowName,
         AddressListCount: this.tableList.length,
         Intervals : this.modbusReadIntervals,
         Host : this.modbusHost,
@@ -535,7 +539,7 @@ testCreate() {
       },
       intervals: this.modbusReadIntervals
     };
-    //console.log(object);
+    console.log(object);
 
     if (this.isEditMode) {
       this.backendSrv.put("/thingspin/connect/"+this.indexID,object).then((result: any) => {
