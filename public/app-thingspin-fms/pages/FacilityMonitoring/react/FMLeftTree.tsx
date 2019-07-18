@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { auto } from 'angular';
 import { FMDashboardModel } from '../models/index';
 import { FMVizTypeSelector } from './FMVIzTypeSelector';
-import { SelectOptionItem } from '@grafana/ui';
+import { SelectableValue } from '@grafana/data';
 import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
@@ -11,7 +11,7 @@ interface Props {
     $injector: auto.IInjectorService;
     dashboard: FMDashboardModel;
     onChangeFacilityTree: (site, tags) => void;
-    onPanelTypeChange: (item: SelectOptionItem<string>) => void;
+    onPanelTypeChange: (item: SelectableValue<string>) => void;
 
     isTreeView?: boolean;
 }

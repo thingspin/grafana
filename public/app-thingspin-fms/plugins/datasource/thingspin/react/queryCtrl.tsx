@@ -4,7 +4,8 @@ import classNames from 'classnames';
 
 // grafana core libs
 import { coreModule } from "app/core/core";
-import { PanelOptionsGroup, FormLabel, Select, SelectOptionItem } from '@grafana/ui';
+import { PanelOptionsGroup, FormLabel, Select } from '@grafana/ui';
+import { SelectableValue } from '@grafana/data';
 
 // thingspin core libs
 import CheckboxTree from 'app-thingspin-fms/react/components/react-checkbox-tree';
@@ -69,7 +70,7 @@ export class QueryCtrl extends Component<RcQueryCtrlProps, RcQueryCtrlStates> {
         this.props.onChange({ checked, tagNodes});
     }
 
-    onSiteChange(item: SelectOptionItem<any>): void {
+    onSiteChange(item: SelectableValue<any>): void {
         this.props.onChange({
             siteId: item.value,
             checked: [],
@@ -102,8 +103,8 @@ export class QueryCtrl extends Component<RcQueryCtrlProps, RcQueryCtrlStates> {
             onCheck, onExpand, onSiteChange,
         } = this;
 
-        const selectOpts = sites.map((site: TsSite): SelectOptionItem<any> => ({ label: site.name, value: site.id, }));
-        const value = selectOpts.find((item: SelectOptionItem<any>): boolean => (item.value === siteId));
+        const selectOpts = sites.map((site: TsSite): SelectableValue<any> => ({ label: site.name, value: site.id, }));
+        const value = selectOpts.find((item: SelectableValue<any>): boolean => (item.value === siteId));
         const siteLabel = value && value.label ? value.label : 'Unknown';
         const gridClass = classNames('fms-form-grid', { 'fms-grid1': !siteId, 'fms-grid2': !!siteId, });
 

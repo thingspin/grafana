@@ -6,7 +6,8 @@ import classNames from 'classnames';
 // Grafana React Components
 import { DashboardPage, mapStateToProps } from 'app/features/dashboard/containers/DashboardPage';
 import { SubMenu } from 'app/features/dashboard/components/SubMenu';
-import { CustomScrollbar, SelectOptionItem } from '@grafana/ui';
+import { CustomScrollbar } from '@grafana/ui';
+import { SelectableValue } from '@grafana/data';
 
 // Grafana Redux
 import { cleanUpDashboard } from 'app/features/dashboard/state/actions';
@@ -121,7 +122,7 @@ export class FMDashboardPage extends DashboardPage {
         this.onCheckedChange(site.value, tags);
     }
 
-    onPanelTypeChange(item: SelectOptionItem<string>) {
+    onPanelTypeChange(item: SelectableValue<string>) {
         this.panelType = item.value;
     }
 
