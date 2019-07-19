@@ -38,7 +38,7 @@ import * as exampleApp from 'app/plugins/app/example-app/module';
 import { thingspinBuiltInPlugins } from 'app-thingspin-fms/plugins/built_in_plugins_thingspin';
 // thingspin add code ---
 
-const builtInPlugins = {
+const builtInPlugins: any = {
   'app/plugins/datasource/graphite/module': graphitePlugin,
   'app/plugins/datasource/cloudwatch/module': cloudwatchPlugin,
   'app/plugins/datasource/elasticsearch/module': elasticsearchPlugin,
