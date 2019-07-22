@@ -135,7 +135,7 @@
     "start:ignoreTheme": "grafana-toolkit core:start --hot",
     "watch": "yarn start -d watch,start core:start --watchTheme ",
     "build": "grunt build",
-    "dev:fms": "webpack --progress --colors --mode development --config scripts/webpack/fms/webpack.dev.js",
+    "dev:fms": "webpack --progress --colors --config scripts/webpack/fms/webpack.dev.js",
     "start:fms": "thingspin-toolkit core:start --watchTheme",
     "start:fmsHot": "thingspin-toolkit core:start --hot --watchTheme",
     "start:fmsIgnoreTheme": "thingspin-toolkit core:start --hot",
