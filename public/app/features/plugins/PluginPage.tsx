@@ -367,8 +367,6 @@ function getPluginTabsNav(
       }
 
       // Check for the dashboard pages
-      /* ThingSPIN Add code ----
-      if (find(meta.includes, { type: 'dashboard' })) { */
       if (find(meta.includes, { type: PluginIncludeType.dashboard })) {
         pages.push({
           text: 'Dashboards',
