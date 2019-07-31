@@ -1,6 +1,6 @@
 import React, { MouseEvent } from 'react';
 
-const LEVEL_SPACE = 20;
+const LEVEL_SPACE = 20; // pixel
 
 type ToggleIconParams = {
   on: boolean;
@@ -55,21 +55,29 @@ const renderItem: RenderItem = ({
       }}
     >
       {(<div className="rc-opc-node-tree"
-          style={{
-            left: `${level * LEVEL_SPACE}px`,
-          }}
-        >
-          {<ToggleIcon on={isOpen} onClick={onClickOnBtn} /> }
+        style={{
+          left: `${level * LEVEL_SPACE}px`,
+        }}
+      >
+        {<ToggleIcon on={isOpen} onClick={onClickOnBtn} />}
 
-          <div className="rc-opc-node-icon"><i className="fa fa-folder"></i></div>
-
-          {label}
-
-          {item.nodeClass === "Variable" ?
-            <button className="rc-opc-node-button" onClick={onAddBtn}><i className="fa fa-plus-circle"></i></button>
-            : ""
+        <div className="rc-opc-node-icon">
+          {
+            item.nodeClass === "Variable"
+              ? <i className="fa fa-tag" />
+              : <i className="fa fa-folder" />
           }
         </div>
+
+        {label}
+
+        {item.nodeClass === "Variable" ?
+          <button className="rc-opc-node-button" onClick={onAddBtn}>
+            <i className="fa fa-plus-circle"></i>
+          </button>
+          : ""
+        }
+      </div>
       )}
     </li>
   );
