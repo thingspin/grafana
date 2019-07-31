@@ -3,10 +3,10 @@
   "name": "사이트 태그",
   "id": "thingspin",
 
-  "builtIn": true,
+  "builtIn": false,
 
   "metrics": true,
-  "alerting": false,
+  "alerting": true,
   "annotations": false,
 
   "info": {
