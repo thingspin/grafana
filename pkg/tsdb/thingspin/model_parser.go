@@ -11,11 +11,11 @@ import (
 	"github.com/grafana/grafana/pkg/tsdb/influxdb"
 )
 
-// costomized tsdb.influxdb(model_parser.go) InfluxQueryParser struct
+// customized tsdb.influxdb(model_parser.go) InfluxQueryParser struct
 type ThingspinQueryParser struct {
 }
 
-// costomized tsdb.influxdb(model_parser.go) Parse method
+// customized tsdb.influxdb(model_parser.go) Parse method
 func (qp *ThingspinQueryParser) Parse(model *simplejson.Json, dsInfo *models.DataSource) (query *influxdb.Query, err error) {
 	var (
 		measurement    string
@@ -54,7 +54,7 @@ func (qp *ThingspinQueryParser) Parse(model *simplejson.Json, dsInfo *models.Dat
 	return query, nil
 }
 
-// costomized tsdb.influxdb(model_parser.go) parseGroupBy method
+// customized tsdb.influxdb(model_parser.go) parseGroupBy method
 func (qp *ThingspinQueryParser) parseGroupBy(model *simplejson.Json) (result []*influxdb.QueryPart, err error) {
 	var (
 		groupJson *simplejson.Json
@@ -78,7 +78,7 @@ func (qp *ThingspinQueryParser) parseGroupBy(model *simplejson.Json) (result []*
 	return result, nil
 }
 
-// costomized tsdb.influxdb(model_parser.go) parseSelects method
+// customized tsdb.influxdb(model_parser.go) parseSelects method
 func (qp *ThingspinQueryParser) parseSelects(model *simplejson.Json) (result []*influxdb.Select, measurement string, err error) {
 	var (
 		selectJson   *simplejson.Json

@@ -18,11 +18,13 @@ import (
 
 var glog = log.New("tsdb.thingspin")
 
+// customized tsdb.influxdb(github.com/grafana/grafana/pkg/tsdb/influxdb/influxdb.go) InfluxdbExcutor struct
 type ThingspinExecutor struct {
 	QueryParser    *ThingspinQueryParser
 	ResponseParser *influxdb.ResponseParser
 }
 
+// customized tsdb.influxdb(github.com/grafana/grafana/pkg/tsdb/influxdb/influxdb.go) NewInfluxdbExcutor function
 func NewThingspinExecutor(datasource *models.DataSource) (tsdb.TsdbQueryEndpoint, error) {
 	return &ThingspinExecutor{
 		QueryParser:    &ThingspinQueryParser{},
@@ -34,6 +36,7 @@ func init() {
 	tsdb.RegisterTsdbQueryEndpoint("thingspin", NewThingspinExecutor)
 }
 
+// customized tsdb.influxdb(github.com/grafana/grafana/pkg/tsdb/influxdb/influxdb.go) Query method
 func (e *ThingspinExecutor) Query(ctx context.Context, dsInfo *models.DataSource, tsdbQuery *tsdb.TsdbQuery) (*tsdb.Response, error) {
 
 	// get require query information in jsondata
@@ -96,6 +99,7 @@ func (e *ThingspinExecutor) Query(ctx context.Context, dsInfo *models.DataSource
 	}, nil
 }
 
+// customized tsdb.influxdb(github.com/grafana/grafana/pkg/tsdb/influxdb/influxdb.go) getQuery method
 func (e *ThingspinExecutor) getQuery(dsInfo *models.DataSource, queries []*tsdb.Query, context *tsdb.TsdbQuery) (query *influxdb.Query, err error) {
 	// The model supports multiple queries, but right now this is only used from
 	// alerting so we only needed to support batch executing 1 query at a time.
