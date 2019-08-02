@@ -85,7 +85,7 @@ const mapDispatchToProps = {
   //getUserPins,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: any) => ({
   menu: state.thingspinMenu.menu
 });
 

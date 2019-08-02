@@ -49,10 +49,6 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
     nodes: this.props.data,
   };
 
-  constructor(props) {
-    super(props);
-  }
-
   componentWillMount() {
     this.updateData();
   }
@@ -102,7 +98,7 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
     }
   }
 
-  findNode(nodes, nodeId: string) {
+  findNode(nodes: any, nodeId: string) {
     if (!nodes || nodes.length === 0) {
       return null;
     }
@@ -113,7 +109,7 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
       }
 
       // recursive function
-      const result = this.findNode(node.nodes, nodeId);
+      const result: any = this.findNode(node.nodes, nodeId);
       if (result) {
         return result;
       }

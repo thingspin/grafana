@@ -1,4 +1,4 @@
-import uid from "shortid";
+const uid = require("shortid");
 
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/core';

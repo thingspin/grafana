@@ -33,7 +33,7 @@ export const projectLoaded = (project: Project): LoadProjectAction => ({
 
 export function loadProjectList(): ThunkResult<void> {
     return async (dispatch) => {
-        await getBackendSrv().get(`api/drone/projects`).then( (data) => {
+        await getBackendSrv().get(`api/drone/projects`).then( (data: any) => {
             const m = new Map<string, typeof Project>();
             Object.keys(data).forEach(k => { m.set(k, data[k]);});
 
@@ -45,7 +45,7 @@ export function loadProjectList(): ThunkResult<void> {
 
 export function loadProject(id: string): ThunkResult<void> {
     return async (dispatch) => {
-        await getBackendSrv().get(`api/drone/project/` + id).then( (data) => {
+        await getBackendSrv().get(`api/drone/project/` + id).then( (data: any) => {
             dispatch(projectLoaded(data));
         });
     };

@@ -5,10 +5,6 @@ interface Props {
 }
 
 export default class TsMenuLv2 extends PureComponent<Props> {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const { text, url, target } = this.props.menu;
     return [

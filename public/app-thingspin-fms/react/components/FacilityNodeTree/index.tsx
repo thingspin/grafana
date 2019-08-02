@@ -62,7 +62,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     $location: ILocationService; // for route
     $rootScope: IRootScopeService;
 
-    constructor(props) {
+    constructor(props: facilityTreeProps) {
         super(props);
 
         this.handleChange = this.handleChange.bind(this);
@@ -82,7 +82,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     }
 
     //props check
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps: facilityTreeProps) {
         //test.
         console.log("props-tag: ", nextProps.taginfo);
         console.log("props-site: ", nextProps.siteinfo);
@@ -112,10 +112,10 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     componentDidMount() {
         //console.log('componentDidMount');
     }
-    componentWillUpdate(nextProps, nextState) {
+    componentWillUpdate() {
         //console.log('componentWillUpdate');
     }
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate() {
         //console.log('componentDidUpdate');
     }
     componentWillUnmount() {
@@ -123,7 +123,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         //console.log('componentWillUnmount');
     }
     //restore checked item
-    restoreFacilityData(item) {
+    restoreFacilityData(item: facilityTreeProps) {
         //console.log("restore");
         //site selected
         const selectedOption = item.siteinfo;
@@ -139,7 +139,11 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
                     if (result[i].id === selectedOption.value) {
                         idx = i;
                     }
-                    elements.push({ value: result[i].id, label: result[i].name, icon: <i className="tsi icon-ts-site">&nbsp;&nbsp;</i> });
+                    elements.push({
+                        value: result[i].id,
+                        label: result[i].name,
+                        icon: <i className="tsi icon-ts-site">&nbsp;&nbsp;</i>
+                    } as any);
                 }
                 this.setState({ siteOptions: elements });
                 this.setState({ selectedOption: elements[idx] });
@@ -211,7 +215,11 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
                 this.setState({ sitesListinfo: result });
 
                 for (let i = 0; i < result.length; i++) {
-                    elements.push({ value: result[i].id, label: result[i].name, icon: <i className="fa fa-industry">&nbsp;&nbsp;</i> });
+                    elements.push({
+                        value: result[i].id,
+                        label: result[i].name,
+                        icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
+                    } as any);
                 }
 
                 //copy elemenets to select options
@@ -227,7 +235,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             console.log(err);
         }
     }
-    async getTreeinfo(siteid) {
+    async getTreeinfo(siteid: any) {
         const url = `/thingspin/sites/${siteid}/facilities/tree`;
         //console.log('url',url);
         try {
@@ -257,7 +265,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     }
 
     //CHECK TREE
-    onCheck2(checked) {
+    onCheck2(checked: any) {
         console.log(checked);
         const siteData = this.state.selectedOption;
         const Taginfo = checked.Taginfo;
@@ -267,7 +275,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         this.props.click({ Taginfo, siteData });
     }
     //SITE SELECTION
-    handleChange = selectedOption => {
+    handleChange = (selectedOption: any) => {
         this.setState({ selectedOption });
         this.getTreeinfo(selectedOption.value);
     };
@@ -284,7 +292,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     }
     */
 
-    customSingleValue = ({ data }) => (
+    customSingleValue = ({ data }: { data: any } ) => (
         <div className="input-select">
             <div className="input-select__single-value">
                 {data.icon && <span className="input-select__icon">{data.icon}</span>}
@@ -325,7 +333,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
                     <FilterTree
                         nodes={this.state.nodes}
                         nodesChecked={checkedSave}
-                        click={(checked, Taginfo) => this.onCheck2(checked)}
+                        click={(checked: any, Taginfo: any) => this.onCheck2(checked)}
                     />
                 }
                 <div>

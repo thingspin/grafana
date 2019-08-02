@@ -1,5 +1,5 @@
 import _ from "lodash";
-import angular from "angular";
+import angular, { ITimeoutService } from "angular";
 import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/core';
@@ -54,7 +54,7 @@ export class TsSiteListCtrl implements angular.IController {
         private $scope: angular.IScope,
         private backendSrv: BackendSrv,
         private $location: angular.ILocationService,
-        $timeout,
+        $timeout: ITimeoutService,
     ) {
         this.isEdit = false;
         this.isEditView = false;
@@ -82,7 +82,7 @@ export class TsSiteListCtrl implements angular.IController {
     }
 
 
-    editSite(site) {
+    editSite(site: any) {
         this.onShowEditView(true);
         this.isEdit = true;
         this.data = site.id;
@@ -93,7 +93,7 @@ export class TsSiteListCtrl implements angular.IController {
         console.log("==========Edit site");
         console.log(site);
     }
-    removeSite(sid) {
+    removeSite(sid: any) {
         console.log("Remove site");
         console.log(sid);
         $.ajax({
@@ -125,7 +125,7 @@ export class TsSiteListCtrl implements angular.IController {
         });
         */
     }
-    onShowEditView(value) {
+    onShowEditView(value: any) {
         if (value) {
             this.name = "";
             this.desc = "";
@@ -153,10 +153,10 @@ export class TsSiteListCtrl implements angular.IController {
                 Desc: this.desc,
                 Lat: parseFloat(this.lat),
                 Lon: parseFloat(this.lon),
-            }).then((result) => {
+            }).then((result: any) => {
                 appEvents.emit('alert-success', ['수정되었습니다.']);
                 this.onLoadData(result);
-            }).catch(err => {
+            }).catch((err: any) => {
                 if (err.status === 500) {
                     appEvents.emit('alert-error', [err.statusText]);
                 }
@@ -169,11 +169,11 @@ export class TsSiteListCtrl implements angular.IController {
                     Desc: this.desc,
                     Lat: parseFloat(this.lat),
                     Lon: parseFloat(this.lon),
-                }).then((result) => {
+                }).then((result: any) => {
                 appEvents.emit('alert-success', ['추가되었습니다.']);
                 this.onLoadData(result);
                 this.onShowEditView(false);
-                }).catch(err => {
+                }).catch((err: any) => {
                     if (err.status === 500) {
                         appEvents.emit('alert-error', [err.statusText]);
                     }
@@ -203,7 +203,7 @@ export class TsSiteListCtrl implements angular.IController {
         }
     }
 
-    siteNameCreate(value) {
+    siteNameCreate(value: any) {
         console.log(value.length);
         let resultStr = "";
         for (let i = 0; i < 5 - value.length; i++) {
@@ -212,7 +212,7 @@ export class TsSiteListCtrl implements angular.IController {
         return resultStr;
     }
 
-    onLoadData(items) {
+    onLoadData(items: any) {
         this.list = [];
 
         console.log(items);
@@ -234,7 +234,7 @@ export class TsSiteListCtrl implements angular.IController {
         this.initTable();
     }
     // TABLE Method
-    tableClick(value, idx) {
+    tableClick(value: any, idx: any) {
         console.log(idx);
         this.data = value;
         this.selIdx = idx;
@@ -242,7 +242,7 @@ export class TsSiteListCtrl implements angular.IController {
         this.$location.path(`/thingspin/manage/data/site/${value}`);
     }
 
-    tableSelect(idx) {
+    tableSelect(idx: any) {
         //maxPageLen
         for (let i = 0; i < this.tData.maxPageLen; i++) {
             if (i === idx) {
@@ -316,7 +316,7 @@ export class TsSiteListCtrl implements angular.IController {
         this.setPageNodes();
     }
 
-    openAlartNotification(value) {
+    openAlartNotification(value: any) {
         appEvents.emit('alert-error', [value]);
     }
 }

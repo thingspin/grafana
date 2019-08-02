@@ -19,7 +19,7 @@ export class FmsAlarmBandComp extends PureComponent<Props, States> {
         play: true,
     };
 
-    getTabNode(title, icon): () => ReactNode {
+    getTabNode(title: string, icon: string): () => ReactNode {
         return () => {
             return (<>
                 <i className={`fa ${icon} fa-2`} />
@@ -30,11 +30,11 @@ export class FmsAlarmBandComp extends PureComponent<Props, States> {
         };
     }
 
-    onChangeDate(date) {
+    onChangeDate(date: Date) {
         this.setState({ date });
     }
 
-    onChangeFilter(filters) {
+    onChangeFilter(filters: any[]) {
         this.setState({ filters: [...filters] });
     }
 

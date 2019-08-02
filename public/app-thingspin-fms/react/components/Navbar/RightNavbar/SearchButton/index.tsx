@@ -15,7 +15,7 @@ export interface States {
 }
 
 export class TsNavSearchComponent extends PureComponent<Props, States> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -42,7 +42,7 @@ export class TsNavSearchComponent extends PureComponent<Props, States> {
     this.startSearch(this.state.search);
   }
 
-  startSearch(search) {
+  startSearch(search?: string) {
     const { updateLocation } = this.props;
 
     if (search) {

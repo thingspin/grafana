@@ -16,10 +16,6 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
   // public class member variables
   // protected class member variables
 
-  constructor(props) {
-    super(props);
-  }
-
   getViewmodeIcon(num: number) {
     let faIcon: string;
     switch (num) {

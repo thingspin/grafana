@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import CheckboxTree from '../react-checkbox-tree/index';
 
 export interface Props {
@@ -19,7 +19,7 @@ interface State {
 }
 class FilterTree extends Component<Props,State> {
 
-    constructor(props) {
+    constructor(props: Props) {
 
         super(props);
 
@@ -42,7 +42,7 @@ class FilterTree extends Component<Props,State> {
         //console.log("react/filter: ",this.props.nodes);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps: Props) {
         // this.props 는 아직 바뀌지 않은 상태
         //console.log("componentWillReceive");
         //console.log("prev -node: ",this.props.nodes);
@@ -72,7 +72,7 @@ class FilterTree extends Component<Props,State> {
         this.putNodeIcon(this.props.nodes);
     }
 
-    putNodeIcon(node) {
+    putNodeIcon(node: any[]) {
         //console.log("parent check");
         if (node && node.length > 0) {
             for (let i = 0; i < node.length; i++) {
@@ -88,7 +88,7 @@ class FilterTree extends Component<Props,State> {
         }
     }
     //CHECK TREE
-    onCheck = (checked,a,Taginfo) => {
+    onCheck = (checked: any, a: any, Taginfo: any[]) => {
         //console.log("FT-oncheck tag: ",Taginfo);
         //console.log("FT-oncheck checked: ",checked);
         let checkedSize = checked.length;
@@ -112,7 +112,7 @@ class FilterTree extends Component<Props,State> {
     };
 
      //TAG FILTER
-    onFilterChange(e) {
+    onFilterChange(e: ChangeEvent<HTMLInputElement>) {
         this.setState({ filterText: e.target.value }, this.filterTree);
     }
     filterTree() {
@@ -124,13 +124,13 @@ class FilterTree extends Component<Props,State> {
             return;
         }
 
-        const nodesFiltered = prevState => (
+        const nodesFiltered = (prevState: any) => (
             {nodesFiltered: prevState.nodes.reduce(this.filterNodes,[])}
         );
 
         this.setState(nodesFiltered);
     }
-    filterNodes(filtered, node) {
+    filterNodes(filtered: any, node: any) {
         //console.log(this.state);
         const { filterText } = this.state;
         const children = (node.children || []).reduce(this.filterNodes,[]);
@@ -177,7 +177,7 @@ class FilterTree extends Component<Props,State> {
                     checked = {this.state.checked}
                     expanded = {this.state.expanded}
                     onCheck = {this.onCheck}
-                    onExpand = {expanded => this.setState({ expanded })}
+                    onExpand = {(expanded: any) => this.setState({ expanded })}
                     optimisticToggle={false}
                 ></CheckboxTree>
             </div>

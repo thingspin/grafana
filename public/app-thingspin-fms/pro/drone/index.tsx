@@ -15,7 +15,7 @@ export class TsDrone extends PureComponent {
         mode: 'view'
     };
 
-    constructor(props) {
+    constructor(props: any) {
         super(props);
         const { $route } = props;
 

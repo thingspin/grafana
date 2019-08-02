@@ -105,7 +105,7 @@ export const getTitle = (list: NavModelItem[] | undefined) => {
   return retValue;
 };
 
-export const mapStateToProps = (state, { $route }) => {
+export const mapStateToProps = (state: any, { $route }: {$route: angular.route.IRouteParamsService}) => {
   let titleObj: any = getTitle(undefined);
 
   if ($route.current) {

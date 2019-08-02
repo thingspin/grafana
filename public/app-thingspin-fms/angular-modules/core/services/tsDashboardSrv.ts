@@ -9,25 +9,28 @@ import config from 'app/core/config';
 import { store } from 'app/store/store';
 import { updateTsMenu } from 'app-thingspin-fms/react/redux/dispayches/tsMenu';
 import { appEvents } from 'app/core/app_events';
+import { DashboardModel } from 'app/features/dashboard/state';
 // import location_util from 'app/core/utils/location_util';
 
 // Define Thingspin DashboardService interface
 export interface TsDashboardSrv extends DashboardSrv {
   // [ 설비 모니터링 ] customize methods
-  fmSaveFM(options?, clone?);// customized 'saveDashboard' method
-  fmSave(clone, options, isMenuSave?: boolean, parentMenuName?: string, ); // customized 'save' method
-  fmPostSave(clone, data); // customized 'postSave' method
-  fmSaveMenu(clone, data, parentMenuName?: string);
-  fmShowSaveAsModal(); // customized 'showSaveAsModal' method
-  fmShowSaveModal(); // customized 'showSaveModal' method
-  fmHandleSaveDashboardError(clone, options, err); // customized 'handleSaveDashboardError' method
-  saveJSONFmDashboard(json);// customized 'saveJSONDashboard' method
+  fmSaveFM(options?: { overwrite?: any; folderId?: any; makeEditable?: any }, clone?: DashboardModel): any;// customized 'saveDashboard' method
+  fmSave(clone: any, options: any, isMenuSave?: boolean, parentMenuName?: string, ): any; // customized 'save' method
+  fmPostSave(clone: DashboardModel, data: { version: number; url: string }): any; // customized 'postSave' method
+  fmSaveMenu(clone: any, data: any, parentMenuName?: string): any;
+  fmShowSaveAsModal(): void; // customized 'showSaveAsModal' method
+  fmShowSaveModal(): void; // customized 'showSaveModal' method
+  fmHandleSaveDashboardError(clone: any,
+    options: { overwrite?: any },
+    err: { data: { status: string; message: any }; isHandled: boolean }): any; // customized 'handleSaveDashboardError' method
+  saveJSONFmDashboard(json: string): any;// customized 'saveJSONDashboard' method
 }
 
 // Override serivce class in AnularJs (DashboardSrv)
 coreModule.decorator('dashboardSrv',
 /** @ngInject */
-($delegate: DashboardSrv, $rootScope,
+($delegate: DashboardSrv, $rootScope: any,
   backendSrv: BackendSrv, $location: ILocationService): TsDashboardSrv => {
   const self: TsDashboardSrv = $delegate as TsDashboardSrv; //force type assertion
 
@@ -137,7 +140,10 @@ coreModule.decorator('dashboardSrv',
   };
 
   // Add class method
-  self.fmHandleSaveDashboardError = (clone, options, err) => {
+  self.fmHandleSaveDashboardError = (clone: any,
+    options: { overwrite?: any },
+    err: { data: { status: string; message: any }; isHandled: boolean }
+  ) => {
     options = options || {};
     options.overwrite = true;
 
@@ -192,7 +198,7 @@ coreModule.decorator('dashboardSrv',
   };
 
   // Add class method
-  self.saveJSONFmDashboard = (json) => {
+  self.saveJSONFmDashboard = (json: string) => {
       return self.fmSave(JSON.parse(json), {});
   };
 

@@ -21,7 +21,7 @@ export class TsConfigs extends PureComponent<m.Props, m.StatesConfig> {
     sections: []
   };
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     const { $route } = props;
 

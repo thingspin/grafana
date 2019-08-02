@@ -12,9 +12,9 @@ export class NewOrgCtrl {
     $scope.createOrg = () => {
       backendSrv.post('/api/orgs/', $scope.newOrg).then((result: any) => {
         // Create the default menu based on default org
-        backendSrv.get("/thingspin/org/default/1").then( defaultData => {
+        backendSrv.get("/thingspin/org/default/1").then( (defaultMenu: any) => {
           const jsonDefaultData = {
-            defaultMenu: defaultData
+            defaultMenu,
           };
           backendSrv.post('/thingspin/org/new/'+result.orgId,jsonDefaultData).then( () => {
             // Add the user into the new org

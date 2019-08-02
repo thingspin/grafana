@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 interface Props {
     $injector: auto.IInjectorService;
     dashboard: FMDashboardModel;
-    onChangeFacilityTree: (site, tags) => void;
+    onChangeFacilityTree: (site: any, tags: any) => void;
     onPanelTypeChange: (item: SelectableValue<string>) => void;
 
     isTreeView?: boolean;
@@ -20,11 +20,7 @@ interface States {
 }
 
 export class FMLeftTree extends PureComponent<Props, States> {
-    constructor(props) {
-        super(props);
-    }
-
-    setFacilityInfo(site, facilityTags) {
+    setFacilityInfo(site: any, facilityTags: any) {
         const { dashboard } = this.props;
         if (!dashboard) {
             return;
@@ -53,7 +49,7 @@ export class FMLeftTree extends PureComponent<Props, States> {
     }
 }
 
-export const mapStateToProps = (state) => ({
+export const mapStateToProps = (state: any) => ({
     isTreeView: state.thingspinFmMeta.isTreeView,
 });
 

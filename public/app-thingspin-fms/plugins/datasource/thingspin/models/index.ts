@@ -61,4 +61,4 @@ export interface RcQueryCtrlStates {
   sites: TsSite[];
 }
 
-export type ReactDirective = (reactComponentName: any, props: any[], conf?, injectableProps?) => any;
+export type ReactDirective = (reactComponentName: any, props: any[], conf?: any, injectableProps?: any) => any;

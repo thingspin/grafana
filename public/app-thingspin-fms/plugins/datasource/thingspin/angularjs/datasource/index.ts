@@ -44,7 +44,7 @@ export class FmsDatasource extends DataSourceApi<TsDsTarget> {
   generateInfluxQueries(options: DataQueryRequest<TsDsTarget>): InfluxQuery[] {
     const targets: InfluxQuery[] = [];
 
-    const measurementGroup: object = {};
+    const measurementGroup: any = {};
     const getMeasurement = (measurement: string, refId: string): InfluxQuery => {
       let obj: InfluxQuery = measurementGroup[measurement];
 
@@ -99,7 +99,7 @@ export class FmsDatasource extends DataSourceApi<TsDsTarget> {
   }
 
   // implementation
-  metricFindQuery(_options): Promise<MetricFindValue[]> {
+  metricFindQuery(_options: any): Promise<MetricFindValue[]> {
     return Promise.resolve([]);
   }
 

@@ -1,11 +1,14 @@
-import angular from 'angular';
-import { SearchCtrl } from 'app/core/components/search/search';
+import angular, { IScope, ILocationService, ITimeoutService } from 'angular';
+
 import { coreModule } from 'app/core/core';
+import { SearchCtrl } from 'app/core/components/search/search';
+import { SearchSrv } from 'app/core/services/search_srv';
+
 import { multipleDirectiveSelector } from '../../tsReact2Angular';
 
 export class TsSearchCtrl extends SearchCtrl {
   /** @ngInject */
-  constructor($scope, $location, $timeout, searchSrv) {
+  constructor($scope: IScope, $location: ILocationService, $timeout: ITimeoutService, searchSrv: SearchSrv) {
     super($scope, $location, $timeout, searchSrv);
   }
 }

@@ -26,7 +26,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
 
   // protected class member variables
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
   }
 
@@ -127,7 +127,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
   // componentWillUnmount() {}
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   navbar: state.thingspinNavbar,
 });
 

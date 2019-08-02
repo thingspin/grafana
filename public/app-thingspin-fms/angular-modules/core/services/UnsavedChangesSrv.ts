@@ -1,19 +1,29 @@
 import angular, { ITimeoutService, ILocationService, IRootScopeService, IWindowService } from "angular";
 import { ChangeTracker } from "app/features/dashboard/services/ChangeTracker";
 import { ContextSrv } from 'app/core/services/context_srv';
+import { DashboardModel } from 'app/features/dashboard/state';
 
 export interface FmUnsavedChangesSrv {
     tracker: any;
 
-    init(dsahboard, scope): any;
-    fmInit(dashboard, scope): any;
+    init(dsahboard: DashboardModel, scope: any): any;
+    fmInit(dashboard: DashboardModel, scope: any): any;
 }
 
 class FmChangeTracker extends ChangeTracker {
     protected $rc: any; // $rootScope
     protected $to: ITimeoutService; // $timeout
 
-    constructor(dashboard, scope, originalCopyDelay, $location, $window, $timeout, contextSrv, $rootScope) {
+    constructor(
+        dashboard: DashboardModel,
+        scope: any,
+        originalCopyDelay: any,
+        $location: ILocationService,
+        $window: any,
+        $timeout: any,
+        contextSrv: ContextSrv,
+        $rootScope: any
+    ) {
         super(dashboard, scope, originalCopyDelay, $location, $window, $timeout, contextSrv, $rootScope);
 
         this.$rc = $rootScope;

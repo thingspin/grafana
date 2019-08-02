@@ -28,10 +28,6 @@ export class QueryCtrl extends Component<RcQueryCtrlProps, RcQueryCtrlStates> {
         treeData: [],
     };
 
-    constructor(props) {
-        super(props);
-    }
-
     async updateTreeData(siteId: number): Promise<void> {
         if (siteId) {
             const treeData: TsTree[] = await getTree(siteId);

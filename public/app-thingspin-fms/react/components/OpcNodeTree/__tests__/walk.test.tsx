@@ -70,7 +70,7 @@ const mockDataInArray: TreeNodeInArray[] = [
   },
 ];
 
-const expectedOutcome = [
+const expectedOutcome: any = [
   {
     index: 0,
     isOpen: true,

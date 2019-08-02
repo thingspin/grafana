@@ -114,9 +114,9 @@ class TsMenuLv1 extends PureComponent<Props, State> {
       <div key="menulv2" className="fms-menu-body" /*style={bodyStyle}*/>
         {' '}
         {menu.children
-          .filter(item => !item.hideFromMenu)
-          .filter(item => !item.divider)
-          .map((item, idx) => (
+          .filter((item: any) => !item.hideFromMenu)
+          .filter((item: any) => !item.divider)
+          .map((item: any, idx: number) => (
             <TsMenuLv2 key={idx} menu={item} />
           ))}{' '}
       </div>

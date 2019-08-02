@@ -1,4 +1,5 @@
 import 'app/routes/dashboard_loaders';
+import { ILocationProvider } from 'angular';
 
 // Grafana libs
 import ChangePasswordPage from 'app/features/profile/ChangePasswordPage';
@@ -14,7 +15,7 @@ import FMComponent from 'app-thingspin-fms/pages/FacilityMonitoring/react';
 import { DashboardRouteInfo } from 'app/types';
 
 /** @ngInject */
-export function fmsSetupAngularRoutes($routeProvider, $locationProvider) {
+export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: ILocationProvider) {
   setupAngularRoutes($routeProvider, $locationProvider);
 
   // 여기서 프론트엔드 라우터를 추가하거나 덮어쓰기를 하세요.

@@ -17,10 +17,6 @@ export class TsToolbarComponent extends PureComponent<Props> {
 
   // protected class member variables
 
-  constructor(props) {
-    super(props);
-  }
-
   // common event Methods
 
   // get render splitted virtual DOM Methods

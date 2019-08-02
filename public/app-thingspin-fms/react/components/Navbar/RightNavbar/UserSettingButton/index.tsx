@@ -18,7 +18,7 @@ export interface States {
 }
 
 export class TsUserSettingButtonComponent extends PureComponent<Props, States> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
 
     const { isGrafanaAdmin } = contextSrv.user;

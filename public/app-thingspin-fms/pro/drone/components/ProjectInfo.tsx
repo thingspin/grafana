@@ -18,7 +18,7 @@ export class ProjectInfo extends PureComponent<ProjectInfoProps, ProjectInfoStat
 
     unsubscribe: any;
 
-    constructor(props) {
+    constructor(props: ProjectInfoProps) {
         super(props);
         const { store } = this.props;
 
@@ -45,7 +45,7 @@ export class ProjectInfo extends PureComponent<ProjectInfoProps, ProjectInfoStat
         text: '정말 프로젝트를 삭제 하시겠습니까?',
         icon: 'fa-superpowers',
         onConfirm: () => {
-          getBackendSrv().delete(`api/drone/project/` + id).then( (result) => {
+          getBackendSrv().delete(`api/drone/project/` + id).then( () => {
             history.back();
           });
         },
@@ -63,7 +63,7 @@ export class ProjectInfo extends PureComponent<ProjectInfoProps, ProjectInfoStat
     }
 }
 
-const ProjectBasicInfo = (props) => {
+const ProjectBasicInfo = (props: any) => {
     const { project } = props;
     const { onDelete } = props;
 
@@ -96,7 +96,7 @@ const ProjectBasicInfo = (props) => {
     );
   };
 
-  const ControlBar = (props) => {
+  const ControlBar = (props: any) => {
     const { id, onDelete } = props;
     return (
       <div className="row control-bar">
@@ -106,28 +106,28 @@ const ProjectBasicInfo = (props) => {
     );
   };
 
-  const ProjectTitle = (props) => {
+  const ProjectTitle = (props: any) => {
     const { value } = props;
     return (
         <div className="row"><span className="cell title">프로젝트명</span><span className="cell primary project-title">{value}</span></div>
     );
   };
 
-  const ProjectSite = (props) => {
+  const ProjectSite = (props: any) => {
     const { value } = props;
     return (
         <div className="row"><span className="cell title">싸이트</span><span className="cell primary project-site">{value}</span></div>
     );
   };
 
-  const ProjectPilot = (props) => {
+  const ProjectPilot = (props: any) => {
     const { value } = props;
     return (
       <div className="row"><span className="cell title">파일럿</span><span className="cell primary project-pilot">{value}</span></div>
     );
   };
 
-  const ProjectComment = (props) => {
+  const ProjectComment = (props: any) => {
     const { value } = props;
     const [comment, writeComment] = useState(value);
     return (
@@ -143,20 +143,20 @@ const ProjectBasicInfo = (props) => {
     );
   };
 
-  const ProjectFlightTime = (props) => {
+  const ProjectFlightTime = (props: any) => {
     const { begin, end } = props;
     return (
         <div className="row"><span className="cell title">촬영시간</span><span className="cell primary project-flight-time">{begin} ~ {end}</span></div>
     );
   };
-  const ProjectRepoTime = (props) => {
+  const ProjectRepoTime = (props: any) => {
     const { created, updated } = props;
     return (
       <div className="row"><span className="cell title">관리시간</span><span className="cell primary project-repo-time">{created} ~ {updated}</span></div>
     );
   };
 
-  const ProjectGeoPoint = (props) => {
+  const ProjectGeoPoint = (props: any) => {
     const { value } = props;
     return (
       <div className="row"><span className="cell title">위치</span><span className="cell primary geo-point">{value}</span></div>

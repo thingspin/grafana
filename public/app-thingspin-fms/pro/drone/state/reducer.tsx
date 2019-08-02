@@ -5,7 +5,7 @@ import { LayoutModes } from 'app/core/components/LayoutSelector/LayoutSelector';
 import {
     act,
     Action,
-  } from './actions';
+} from './actions';
 
 export const initialState: ProjectListState = {
     isLoading: true,
@@ -23,7 +23,7 @@ export const projectListReducer = (state = initialState, action: Action): Projec
     return state;
 };
 
-export const projectReducer = (state = {isLoading: true, project: null}, action: Action): ProjectInfoState => {
+export const projectReducer = (state: any = {isLoading: true, project: null}, action: Action): ProjectInfoState => {
     switch (action.type) {
       case act.LoadProject: {
         return { ...state, isLoading: false, project: action.payload };

@@ -1,4 +1,4 @@
-import angular from "angular";
+import angular, { IWindowService, ITimeoutService } from "angular";
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/core';
 import $ from 'jquery';
@@ -32,9 +32,9 @@ export class TsTagDefineCtrl {
     private backendSrv: BackendSrv,
     private $scope: angular.IScope,
     private $location: angular.ILocationService,
-    $routeParams,
-    $window,
-    $timeout,
+    $routeParams: angular.route.IRouteParamsService,
+    $window: IWindowService,
+    $timeout: ITimeoutService,
   ) {
     this.timeout = $timeout;
     // this.isShow = false;
@@ -78,14 +78,14 @@ export class TsTagDefineCtrl {
     if ($routeParams.id !== undefined || $routeParams.id !== null) {
       this.data = +$routeParams.id;
 
-      backendSrv.get(`/thingspin/sites/${$routeParams.id}/facilities/tree`,{}).then((result)=> {
+      backendSrv.get(`/thingspin/sites/${$routeParams.id}/facilities/tree`,{}).then((result: any)=> {
         if (result !== null || result !== undefined) {
           this.dataList = [];
           this.dataList = result;
         } else {
           this.dataList = [];
         }
-      }).catch(err => {
+      }).catch((err: any) => {
         if (err.status === 500) {
           appEvents.emit('alert-error', [err.statusText]);
         }
@@ -104,7 +104,7 @@ export class TsTagDefineCtrl {
 
     // Tree callback functions : beforeDrop, Dropped
     this.options = {
-      beforeDrop: (event) => {
+      beforeDrop: (event: any) => {
         console.log(event);
         const postData = [];
         if (event.source.cloneModel === undefined) {
@@ -346,7 +346,7 @@ export class TsTagDefineCtrl {
           return exitFlag;
         }
       },
-      dropped: (event) => {
+      dropped: (event: any) => {
         const fromNode = event.source.cloneModel;
         if (fromNode === undefined) {
           console.log("This is right tree - after");
@@ -368,12 +368,12 @@ export class TsTagDefineCtrl {
       }
     };
   }
-  toggle(scope) {
+  toggle(scope: any) {
     console.log("toggle!");
     console.log(scope);
     scope.toggle();
   }
-  checkEvents(evt, node) {
+  checkEvents(evt: any, node: any) {
     if (evt.keyCode === 27 || evt.type === "blur") {
       if (this.inputForm !== null) {
         this.inputForm.isEditing = false;
@@ -387,7 +387,7 @@ export class TsTagDefineCtrl {
     }
   }
 
-  onKeyPress(evt,node) {
+  onKeyPress(evt: any, node: any) {
     console.log(evt);
    if (evt.which === 13) {
       // Enter
@@ -400,7 +400,7 @@ export class TsTagDefineCtrl {
             "Lat": parseFloat(node.facility_lat),
             "Lon": parseFloat(node.facility_lon),
             "Imgpath": node.facility_imgpath
-        }).then((result) => {
+        }).then((result: any) => {
             // this.onLoadData(result);
             console.log("Edit the faciltiy");
             console.log(node);
@@ -409,7 +409,7 @@ export class TsTagDefineCtrl {
             node.isEditing = false;
             this.editDataBackup = "";
             //this.dataList = result;
-        }).catch(err => {
+        }).catch((err: any) => {
             if (err.status === 500) {
               appEvents.emit('alert-error', [err.statusText]);
             }
@@ -418,7 +418,7 @@ export class TsTagDefineCtrl {
         this.backendSrv.put(`thingspin/sites/${this.data}/facilities/${node.facility_id}/tag/${node.tag_id}`,
         {
             "Name": node.tag_name,
-        }).then((result) => {
+        }).then((result: any) => {
             // this.onLoadData(result);
             console.log("Edit the tag");
             console.log(node);
@@ -427,7 +427,7 @@ export class TsTagDefineCtrl {
             node.isEditing = false;
             this.editDataBackup = "";
             //this.dataList = result;
-        }).catch(err => {
+        }).catch((err: any) => {
             if (err.status === 500) {
               appEvents.emit('alert-error', [err.statusText]);
             }
@@ -450,7 +450,7 @@ export class TsTagDefineCtrl {
     // 설비 인지 태그 인지 체크
   }
   */
-  removeElement(scope, node) {
+  removeElement(scope: any, node: any) {
     console.log("================= Remove!");
     console.log(scope);
     const orders = [];
@@ -491,11 +491,9 @@ export class TsTagDefineCtrl {
       },
     });
   }
-  link(scope, elem, attrs, ctrl) {
-      //ctrl.scope = scope;
-  }
 
-  async asyncDataLoader(id): Promise<void> {
+
+  async asyncDataLoader(id: any): Promise<void> {
     console.log("asyncDataLoader");
     try {
         const result = await this.backendSrv.get(`/thingspin/sites/${id}/facilities/tree`);
@@ -515,7 +513,7 @@ export class TsTagDefineCtrl {
       this.recalculatorSize();
   }
 
-  onShowFacilityEditView(value) {
+  onShowFacilityEditView(value: any) {
     if (value) {
         this.isEditView = true;
         this.isEditBtn = false;
@@ -535,7 +533,7 @@ export class TsTagDefineCtrl {
       }
   }
 
-  mouseHoverOut(value) {
+  mouseHoverOut(value: any) {
     console.log(value);
     // value.isEditing = false;
     // if (value.tag_id === 0) {
@@ -545,7 +543,7 @@ export class TsTagDefineCtrl {
     // }
   }
 
-  onEditInit(value, id) {
+  onEditInit(value: any, id: any) {
     this.timeout(()=> {
       $('#' + id).focus();
     });
@@ -561,7 +559,7 @@ export class TsTagDefineCtrl {
     }
   }
 
-  onShowEditView(value) {
+  onShowEditView(value: any) {
     if (value) {
         this.isEditView = true;
         this.isEditBtn = false;
@@ -603,12 +601,12 @@ export class TsTagDefineCtrl {
           "Lat": parseFloat(this.facility.lat),
           "Lon": parseFloat(this.facility.lon),
           "Imgpath": this.facility.imgpath
-      }).then((result) => {
+      }).then((result: any) => {
           // this.onLoadData(result);
           console.log(result);
           appEvents.emit('alert-success', ['수정되었습니다.']);
           //this.dataList = result;
-      }).catch(err => {
+      }).catch((err: any) => {
           if (err.status === 500) {
             appEvents.emit('alert-error', [err.statusText]);
           }
@@ -624,12 +622,12 @@ export class TsTagDefineCtrl {
           "Lat": parseFloat(this.facility.lat),
           "Lon": parseFloat(this.facility.lon),
           "Imgpath": this.facility.imgpath
-      }).then((result) => {
+      }).then((result: any) => {
           // this.onLoadData(result);
           console.log(result);
           this.dataList = result;
           appEvents.emit('alert-success', ['추가되었습니다.']);
-      }).catch(err => {
+      }).catch((err: any) => {
           if (err.status === 500) {
             appEvents.emit('alert-error', [err.statusText]);
           }

@@ -5,7 +5,7 @@ import Calendar from 'react-calendar';
 import moment from 'moment';
 
 export interface Props {
-    onChange?: (date) => void;
+    onChange?: (date: Date) => void;
     date?: Date;
 }
 
@@ -21,7 +21,7 @@ export default class TsDatePciker extends PureComponent<Props, States> {
         isShow: false,
     };
 
-    onChange(date, toggle?: boolean) {
+    onChange(date: Date, toggle?: boolean) {
         const { onChange } = this.props;
         if (onChange) {
             onChange(date);
@@ -48,7 +48,7 @@ export default class TsDatePciker extends PureComponent<Props, States> {
         this.setState({ date: d });
     }
 
-    moveDay(value) {
+    moveDay(value: number) {
         const { date } = this.state;
         date.setDate(date.getDate() + value);
 

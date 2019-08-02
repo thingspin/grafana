@@ -1,4 +1,4 @@
-import angular from 'angular';
+import angular, { ITimeoutService } from 'angular';
 import { InputModel } from './controller';
 
 interface InputEnable {
@@ -13,7 +13,6 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
     // Inheritance data
     input: InputModel;
     connectStatus: string;
-    timeout: any;
 
     // UI setting data
     inputEnable: InputEnable = {
@@ -42,12 +41,11 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
     }
 
     /** @ngInject */
-    constructor($timeout) {
-        this.timeout = $timeout;
+    constructor(private $timeout: ITimeoutService) {
     }
 
     $onInit(): void {
-        this.timeout(()=> {
+        this.$timeout(()=> {
             $('#input-name').focus();
         });
     }
