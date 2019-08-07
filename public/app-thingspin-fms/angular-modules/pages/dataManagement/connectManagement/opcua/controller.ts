@@ -131,7 +131,9 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     }
 
     genPayload(FlowId: string): BackendConnectPayload {
+        const { nodes } = this;
         const { name, endpointUrl, auth, securityPolicy, securityMode } = this.input;
+        const targets = Array.from(nodes, ({ displayName }) => displayName.text);
 
         return {
             name,
@@ -139,10 +141,11 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 FlowId,
                 EndpointUrl: endpointUrl,
                 AddressSpaceItems: [],
-                nodes: this.nodes,
+                nodes,
                 auth,
                 securityPolicy,
-                securityMode
+                securityMode,
+                targets,
             },
             intervals: 1,
         };
