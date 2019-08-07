@@ -2,6 +2,15 @@
   "label": "{{.Params.FlowId}}",
   "info": "",
   "nodes": [
+    {  
+      "id":"TS-OPC-UA-COMMENT-{{.Params.FlowId}}",
+      "type":"comment",
+      "name":"OPC/UA : {{.Name}}",
+      "info":"",
+      "x":140,
+      "y":60,
+      "wires":[[]]
+    },
     {
       "id": "TS-OPC-UA-READ-ID-{{.Params.FlowId}}",
       "type": "OPCUA-IIoT-Read",
