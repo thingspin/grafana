@@ -37,7 +37,7 @@
       "upload": false,
       "swaggerDoc": "",
       "x": 140,
-      "y": 300,
+      "y": 380,
       "wires": [["TS-OPC-UA-BROWSER-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -57,7 +57,7 @@
       "showStatusActivities": false,
       "showErrors": false,
       "x": 460,
-      "y": 300,
+      "y": 380,
       "wires": [["TS-OPC-UA-BROWSER-HTTP-RESPONSE-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -67,7 +67,7 @@
       "statusCode": "",
       "headers": {},
       "x": 590,
-      "y": 300,
+      "y": 380,
       "wires": []
     },
     {
@@ -78,7 +78,7 @@
       "outputs": 1,
       "noerr": 0,
       "x": 310,
-      "y": 300,
+      "y": 380,
       "wires": [["TS-OPC-UA-BROWSER-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -101,7 +101,7 @@
       "upload": false,
       "swaggerDoc": "",
       "x": 140,
-      "y": 360,
+      "y": 440,
       "wires": [["TS-OPC-UA-STATUS-HTTP-GET-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -112,7 +112,7 @@
       "outputs": 1,
       "noerr": 0,
       "x": 310,
-      "y": 360,
+      "y": 440,
       "wires": [["TS-OPC-UA-STATUS-HTTP-RESPONSE-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -122,7 +122,7 @@
       "statusCode": "",
       "headers": {},
       "x": 450,
-      "y": 360,
+      "y": 440,
       "wires": []
     },
     {
@@ -148,7 +148,10 @@
       "x": 480,
       "y": 240,
       "wires": [[
-        {{if .Enable }} "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}" {{end}}
+        {{if .Enable }} 
+          "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
+          "TS-CONV-MQTT-PAYLOAD-FUNC-ID-{{.Params.FlowId}}"
+        {{end}}
       ]]
     },
     {
@@ -192,6 +195,29 @@
       "name": "",
       "x": 950,
       "y": 240,
+      "wires": []
+    },
+    {
+      "id": "TS-CONV-MQTT-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
+      "type": "function",
+      "name": "",
+      "func": "msg.qos = 2;\nmsg.topic = `thingspin/opcua/${msg.id}/data`;\nmsg.retain = true;\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 690,
+      "y": 300,
+      "wires": [
+        [ "TS-ADD-MQTT-ID-{{.Params.FlowId}}" ]
+      ]
+    },
+    {
+      "id": "TS-ADD-MQTT-ID-{{.Params.FlowId}}",
+      "type": "mqtt out",
+      "name": "/thingspin/opcua/{{.Id}}/data",
+      "topic": "/thingspin/opcua/{{.Id}}/data",
+      "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+      "x": 930,
+      "y": 300,
       "wires": []
     }
   ],
