@@ -61,5 +61,12 @@
                 <span ng-class="{separator: true, enable: ctrl.inputEnable.auth}"></span>
             </div>
         </div>
+        <div class="ts-input-group">
+            <div class="ts-input-label">Read Intervals(Sec)</div>
+            <div class="ts-input">
+                <input type="number" ng-model="ctrl.input.intervals" ng-change="ctrl.changeEvt()" />
+                <span ng-class="{separator: true, enable: ctrl.inputEnable.intervals}"></span>
+            </div>
+        </div>
     </div>
 </div>

@@ -7,6 +7,7 @@ interface InputEnable {
     policy: boolean;
     mode: boolean;
     auth: boolean;
+    intervals: boolean;
 }
 
 export class TsOpcUaConnectInfoCtrl implements angular.IController {
@@ -21,6 +22,7 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
         policy: false,
         mode: false,
         auth: false,
+        intervals: false,
     };
     selectList = {
         policy: ["None", "Basic128RSA15", "Basic256", "Basic256HA256",],
@@ -29,7 +31,7 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
     };
 
     changeEvt() {
-        const { name, endpointUrl, securityPolicy, securityMode, auth } = this.input;
+        const { name, endpointUrl, securityPolicy, securityMode, auth, intervals } = this.input;
 
         this.inputEnable = {
             name: !!name,
@@ -37,6 +39,7 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
             policy: !!securityPolicy,
             mode: !!securityMode,
             auth: !!auth,
+            intervals: !!intervals,
         };
     }
 

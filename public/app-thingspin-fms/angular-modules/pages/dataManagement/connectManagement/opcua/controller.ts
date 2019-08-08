@@ -18,6 +18,7 @@ export interface InputModel {
     securityPolicy: string;
     securityMode: string ;
     auth: string;
+    intervals?: number;
 }
 
 export interface OpcConnectModel {
@@ -83,6 +84,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 securityPolicy: "None",
                 endpointUrl: "http://localhost:4843/",
                 name: '',
+                intervals: 1,
             };
         }
     }
@@ -98,6 +100,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 auth: result.params.auth,
                 securityMode: result.params.securityMode,
                 securityPolicy: result.params.securityPolicy,
+                intervals: result.intervals,
             };
             this.FlowId = result.params.FlowId;
             this.nodes = result.params.nodes;
@@ -132,7 +135,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
 
     genPayload(FlowId: string): BackendConnectPayload {
         const { nodes } = this;
-        const { name, endpointUrl, auth, securityPolicy, securityMode } = this.input;
+        const { name, endpointUrl, auth, securityPolicy, securityMode, intervals } = this.input;
         const PtagList = Array.from(nodes, ({ displayName }) => ({
             name: displayName.text,
             type: ""
@@ -150,7 +153,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 securityMode,
                 PtagList,
             },
-            intervals: 1,
+            intervals,
         };
     }
 
