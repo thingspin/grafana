@@ -45,7 +45,7 @@ require (
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
 	github.com/klauspost/compress v1.4.1 // indirect
 	github.com/klauspost/cpuid v1.2.0 // indirect
-	github.com/lib/pq v1.0.0
+	github.com/lib/pq v1.2.0
 	github.com/mattn/go-colorable v0.1.1 // indirect
 	github.com/mattn/go-isatty v0.0.7
 	github.com/mattn/go-sqlite3 v1.10.0

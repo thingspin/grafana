@@ -41,7 +41,7 @@ export interface TreeNodeShape {
 }
 
 export default class NodeModel {
-    constructor(protected props: Props, protected flatNodes: object = {}) {
+    constructor(protected props: Props, protected flatNodes: any = {}) {
     }
 
     setProps(props: Props): void {
@@ -49,7 +49,7 @@ export default class NodeModel {
     }
 
     clone(): NodeModel {
-        const clonedNodes = {};
+        const clonedNodes: any = {};
 
         // Re-construct nodes one level deep to avoid shallow copy of mutable characteristics
         Object.keys(this.flatNodes).forEach((value: string): void => {
@@ -60,7 +60,7 @@ export default class NodeModel {
         return new NodeModel(this.props, clonedNodes);
     }
 
-    getNode(value): any {
+    getNode(value: string): any {
         return this.flatNodes[value];
     }
 
@@ -96,7 +96,7 @@ export default class NodeModel {
         return Array.isArray(node.children) && node.children.length > 0;
     }
 
-    getDisabledState(node: TreeNodeShape, parent: TreeNodeShape, disabledProp, noCascade: boolean): boolean {
+    getDisabledState(node: TreeNodeShape, parent: TreeNodeShape, disabledProp: boolean, noCascade: boolean): boolean {
         if (disabledProp) {
             return true;
         }
@@ -108,7 +108,7 @@ export default class NodeModel {
         return Boolean(node.disabled);
     }
 
-    deserializeLists(lists): void {
+    deserializeLists(lists: any): void {
         const listKeys: string[] = ['checked', 'expanded'];
 
         // Reset values to false
@@ -129,7 +129,7 @@ export default class NodeModel {
     }
 
     serializeList(key: string): any[] {
-        const list = [];
+        const list: string[] = [];
 
         Object.keys(this.flatNodes).forEach((value: string): void => {
             if (this.flatNodes[value][key]) {
@@ -140,7 +140,7 @@ export default class NodeModel {
         return list;
     }
 
-    expandAllNodes(expand): NodeModel {
+    expandAllNodes(expand: any): NodeModel {
         Object.keys(this.flatNodes).forEach( (value: string): void => {
             if (this.flatNodes[value].isParent) {
                 this.flatNodes[value].expanded = expand;
@@ -150,7 +150,7 @@ export default class NodeModel {
         return this;
     }
 
-    toggleChecked(node, isChecked, noCascade): NodeModel {
+    toggleChecked(node: any, isChecked: string, noCascade: boolean): NodeModel {
         const flatNode = this.flatNodes[node.value];
 
         if (flatNode.isLeaf || noCascade) {
@@ -170,7 +170,7 @@ export default class NodeModel {
         return this;
     }
 
-    toggleNode(nodeValue, key, toggleValue): NodeModel {
+    toggleNode(nodeValue: string, key: string, toggleValue: any): NodeModel {
         this.flatNodes[nodeValue][key] = toggleValue;
 
         return this;

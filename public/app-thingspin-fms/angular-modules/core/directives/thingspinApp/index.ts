@@ -1,4 +1,5 @@
 import { ILocationService, IScope, ITimeoutService, IRootScopeService, } from 'angular';
+// @ts-ignore
 import Drop from 'tether-drop';
 
 import { GrafanaCtrl, grafanaAppDirective } from 'app/routes/GrafanaCtrl';
@@ -89,9 +90,9 @@ export function thingspinAppDirective(
   $location: ILocationService
 ) {
   // link function override
-  const link = (scope, elem) => {
+  const link = (scope: any, elem: JQuery) => {
     // thingspin add code ----
-    let sidemenuOpen;
+    let sidemenuOpen: any;
     // thingspin add code ----
 
     const body = $('body');
@@ -169,8 +170,8 @@ export function thingspinAppDirective(
 
     // tooltip removal fix
     // manage page classes
-    let pageClass;
-    scope.$on('$routeChangeSuccess', (evt, data) => {
+    let pageClass: any;
+    scope.$on('$routeChangeSuccess', (_evt: any, data: any) => {
       if (pageClass) {
         body.removeClass(pageClass);
       }

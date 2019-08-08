@@ -1,7 +1,7 @@
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 import isEqual from 'lodash/isEqual';
-import nanoid from 'nanoid';
-import React, { ReactNode } from 'react';
+const  nanoid = require('nanoid');
 
 import Button from './Button';
 import TreeNode from './TreeNode';
@@ -43,7 +43,7 @@ interface States {
 }
 
 export default class CheckboxTree extends React.Component<Props, States> {
-    static defaultProps = {
+    static defaultProps: any = {
         checked: [],
         disabled: false,
         expandDisabled: false,
@@ -129,7 +129,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         return newState;
     }
 
-    onCheck(nodeInfo): void {
+    onCheck(nodeInfo: any): void {
         const { noCascade, onCheck } = this.props;
         const model = this.state.model.clone();
         const node = model.getNode(nodeInfo.value);
@@ -156,7 +156,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         onExpand(model.serializeList('expanded'), { ...node, ...nodeInfo });
     }
 
-    onNodeClick(nodeInfo): void {
+    onNodeClick(nodeInfo: any): void {
         const { onClick } = this.props;
         const { model } = this.state;
         const node = model.getNode(nodeInfo.value);

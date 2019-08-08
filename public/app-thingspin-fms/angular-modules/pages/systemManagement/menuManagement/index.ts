@@ -1,6 +1,7 @@
 import angular from 'angular';
 import "./index.scss";
 import config from 'app/core/config';
+import { BackendSrv } from 'app/core/services/backend_srv';
 
 export class TsMenuManagementCtrl {
   static template = require("./index.html");
@@ -15,7 +16,7 @@ export class TsMenuManagementCtrl {
   menuInfoType: any;
   clickedMenu: any;
   /** @ngInject */
-  constructor(backendSrv) {
+  constructor(backendSrv: BackendSrv) {
     this.backendSrv = backendSrv;
 
     this.menuInfo = false;
@@ -28,7 +29,7 @@ export class TsMenuManagementCtrl {
       url: ""
     };
     this.options = {
-      beforeDrop: (event) => {
+      beforeDrop: (event: any) => {
         const fromNode = event.source.nodeScope.node;
         const toNode = event.dest.nodesScope.$nodeScope;
         if ( fromNode.parent_id === -1 && toNode != null ) {
@@ -38,7 +39,7 @@ export class TsMenuManagementCtrl {
         }
         return true;
       },
-      dropped: (event) => {
+      dropped: (event: any) => {
         console.log(event);
         this.evt = event;
 
@@ -180,28 +181,28 @@ export class TsMenuManagementCtrl {
       }
     };
     // load the menu list
-    this.backendSrv.get('/thingspin/menu/'+config.bootData.user.orgId).then( data => {
+    this.backendSrv.get('/thingspin/menu/'+config.bootData.user.orgId).then( (data: any) => {
       this.data = data;
       console.log("raw data");
       console.log(this.data);
     });
     // load dashboard list
-    this.backendSrv.get('/api/search').then( data => {
+    this.backendSrv.get('/api/search').then( (data: any) => {
       this.dashboardList = data;
       console.log(this.dashboardList);
     });
   }
 
-  cloneMenu(node) {
+  cloneMenu(node: any) {
   }
-  menuClicked(node) {
+  menuClicked(node: any) {
     console.log(node);
     console.log("clicked!");
     this.menuInfo = true;
     //this.url = "";
     this.clickedMenu = node;
   }
-  blur(scope,node) {
+  blur(scope: any, node: any) {
     console.log("hide!");
     console.log(scope);
     console.log(node);
@@ -224,7 +225,7 @@ export class TsMenuManagementCtrl {
     }
     //this.url = "";
   }
-  toggle(scope) {
+  toggle(scope: any) {
       console.log("toggle!");
       console.log(scope);
       scope.toggle();
@@ -275,7 +276,7 @@ export class TsMenuManagementCtrl {
       };
   }
 
-  remove(scope, node) {
+  remove(scope: any, node: any) {
       const nodes = [];
       if (node.parent_id === -1) {
         // L1
@@ -309,9 +310,6 @@ export class TsMenuManagementCtrl {
         console.log("After deleting, error!");
         console.log(err);
       });
-  }
-  link(scope, elem, attrs, ctrl) {
-      //ctrl.scope = scope;
   }
 }
 

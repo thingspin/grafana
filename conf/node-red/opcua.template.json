@@ -2,6 +2,89 @@
   "label": "{{.Params.FlowId}}",
   "info": "",
   "nodes": [
+    {  
+      "id":"TS-OPC-UA-COMMENT-{{.Params.FlowId}}",
+      "type":"comment",
+      "name":"OPC/UA : {{.Name}}",
+      "info":"",
+      "x":140,
+      "y":60,
+      "wires":[[]]
+    },
+    {
+        "id": "TS-OPC-UA-INJECT-INIT-{{.Params.FlowId}}",
+        "type": "inject",
+        "name": "init inject",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0,
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "TS-OPC-UA-INIT-FUNC-{{.Params.FlowId}}"
+            ]
+        ]
+    },
+    {
+        "id": "TS-OPC-UA-INIT-FUNC-{{.Params.FlowId}}",
+        "type": "function",
+        "name": "flow init",
+        "func": "flow.set('influx-stat', {});\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 480,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+      "id": "TS-FLOW-STATUS-LISTENER-{{.Params.FlowId}}",
+      "type": "status",
+      "name": "",
+      "scope": [
+          "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
+          "TS-ADD-MQTT-ID-{{.Params.FlowId}}",
+          "TS-OPC-UA-BROWSER-ID-{{.Params.FlowId}}"
+      ],
+      "x": 100,
+      "y": 120,
+      "wires": [
+          [
+              "TS-FLOW-STATUS-FUNC-ID-{{.Params.FlowId}}"
+          ]
+      ]
+    },
+    {
+        "id": "TS-FLOW-STATUS-FUNC-ID-{{.Params.FlowId}}",
+        "type": "function",
+        "name": "status processing",
+        "func": "const { status } = msg;\nconst stat = flow.get('status') || {\n    id: '{{.Params.FlowId}}',\n};\n\nstat[status.source.name] = status;\n\nflow.set('status', stat);\n\nmsg.payload = stat;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 330,
+        "y": 120,
+        "wires": [
+          [ "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}" ]
+        ]
+    },
+    {
+      "id": "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}",
+      "type": "mqtt out",
+      "name": "",
+      "topic": "/thingspin/connect/{{.Id}}/status",
+      "qos": "2",
+      "retain": "true",
+      "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+      "x": 940,
+      "y": 120,
+      "wires": []
+    },
     {
       "id": "TS-OPC-UA-READ-ID-{{.Params.FlowId}}",
       "type": "OPCUA-IIoT-Read",
@@ -37,7 +120,7 @@
       "upload": false,
       "swaggerDoc": "",
       "x": 140,
-      "y": 300,
+      "y": 380,
       "wires": [["TS-OPC-UA-BROWSER-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -45,7 +128,7 @@
       "type": "OPCUA-IIoT-Browser",
       "connector": "TS-OPC-UA-CONNECT-ID-{{.Params.FlowId}}",
       "nodeId": "",
-      "name": "",
+      "name": "OPCUA",
       "justValue": false,
       "sendNodesToRead": false,
       "sendNodesToListener": false,
@@ -57,7 +140,7 @@
       "showStatusActivities": false,
       "showErrors": false,
       "x": 460,
-      "y": 300,
+      "y": 380,
       "wires": [["TS-OPC-UA-BROWSER-HTTP-RESPONSE-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -66,8 +149,8 @@
       "name": "",
       "statusCode": "",
       "headers": {},
-      "x": 590,
-      "y": 300,
+      "x": 870,
+      "y": 380,
       "wires": []
     },
     {
@@ -78,7 +161,7 @@
       "outputs": 1,
       "noerr": 0,
       "x": 310,
-      "y": 300,
+      "y": 380,
       "wires": [["TS-OPC-UA-BROWSER-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -101,7 +184,7 @@
       "upload": false,
       "swaggerDoc": "",
       "x": 140,
-      "y": 360,
+      "y": 440,
       "wires": [["TS-OPC-UA-STATUS-HTTP-GET-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -112,7 +195,7 @@
       "outputs": 1,
       "noerr": 0,
       "x": 310,
-      "y": 360,
+      "y": 440,
       "wires": [["TS-OPC-UA-STATUS-HTTP-RESPONSE-ID-{{.Params.FlowId}}"]]
     },
     {
@@ -121,8 +204,8 @@
       "name": "",
       "statusCode": "",
       "headers": {},
-      "x": 450,
-      "y": 360,
+      "x": 870,
+      "y": 440,
       "wires": []
     },
     {
@@ -134,7 +217,7 @@
       "qos": "2",
       "retain": "true",
       "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
-      "x": 450,
+      "x": 970,
       "y": 160,
       "wires": []
     },
@@ -148,7 +231,10 @@
       "x": 480,
       "y": 240,
       "wires": [[
-        {{if .Enable }} "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}" {{end}}
+        {{if .Enable }} 
+          "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
+          "TS-CONV-MQTT-PAYLOAD-FUNC-ID-{{.Params.FlowId}}"
+        {{end}}
       ]]
     },
     {
@@ -179,7 +265,8 @@
       "y": 240,
       "wires": [
           [
-              "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}"
+              "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}",
+              "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}"
           ]
       ]
     },
@@ -192,6 +279,56 @@
       "name": "",
       "x": 950,
       "y": 240,
+      "wires": []
+    },
+    {
+      "id": "TS-CONV-MQTT-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
+      "type": "function",
+      "name": "",
+      "func": "msg.qos = 2;\nmsg.topic = `thingspin/opcua/${msg.id}/data`;\nmsg.retain = true;\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 690,
+      "y": 340,
+      "wires": [
+        [ "TS-ADD-MQTT-ID-{{.Params.FlowId}}" ]
+      ]
+    },
+    {
+        "id": "TS-ADD-INFLUXDB-CATCH-{{.Params.FlowId}}",
+        "type": "catch",
+        "name": "",
+        "scope": [
+            "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}"
+        ],
+        "uncaught": false,
+        "x": 690,
+        "y": 280,
+        "wires": [
+            [ "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}" ]
+        ]
+    },
+    {
+        "id": "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
+        "type": "function",
+        "name": "INFLUXDB",
+        "func": "const status = flow.get('influx-stat') || {};\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif(newStatus.text !== status.text) {\n    node.status(newStatus);\n    flow.set('influx-stat', newStatus);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 870,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+      "id": "TS-ADD-MQTT-ID-{{.Params.FlowId}}",
+      "type": "mqtt out",
+      "name": "MQTT",
+      "topic": "/thingspin/opcua/{{.Id}}/data",
+      "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+      "x": 930,
+      "y": 340,
       "wires": []
     }
   ],
@@ -206,7 +343,7 @@
       "loginEnabled": false,
       "securityPolicy": "None",
       "securityMode": "NONE",
-      "name": "REMOTE SERVER",
+      "name": "REMOTE SERVER-{{.Params.FlowId}}",
       "showErrors": false,
       "individualCerts": false,
       "publicCertificateFile": "",

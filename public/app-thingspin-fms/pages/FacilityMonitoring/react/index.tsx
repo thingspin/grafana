@@ -24,10 +24,6 @@ export interface State {
 }
 
 export class FMComponent extends PureComponent<Props, State> {
-    constructor(props) {
-        super(props);
-    }
-
     render(): ReactNode {
         return (<FMDashboardPage {...this.props}></FMDashboardPage>);
     }

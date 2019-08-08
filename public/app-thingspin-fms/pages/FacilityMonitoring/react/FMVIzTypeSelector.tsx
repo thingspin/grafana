@@ -1,14 +1,15 @@
 //
 import React, { PureComponent, ReactNode } from 'react';
 import config from 'app/core/config';
-import { PanelPluginMeta, Select, SelectOptionItem, FormLabel } from '@grafana/ui';
+import { PanelPluginMeta, Select, FormLabel } from '@grafana/ui';
+import { SelectableValue } from '@grafana/data';
 
 export interface Props {
-    onChange: (item: SelectOptionItem<string>) => void;
+    onChange: (item: SelectableValue<string>) => void;
 }
 
 export interface States {
-    current: SelectOptionItem<string>;
+    current: SelectableValue<string>;
 }
 
 export class FMVizTypeSelector extends PureComponent<Props, States> {
@@ -30,7 +31,7 @@ export class FMVizTypeSelector extends PureComponent<Props, States> {
             .sort((a: PanelPluginMeta, b: PanelPluginMeta) => a.sort - b.sort);
     }
 
-    onChange(item: SelectOptionItem<string>) {
+    onChange(item: SelectableValue<string>) {
         this.props.onChange(item);
         this.setState({
             current: {

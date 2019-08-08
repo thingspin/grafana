@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default class Button extends React.PureComponent<Props> {
-    static defaultProps = {
+    static defaultProps: Props = {
         title: null,
     };
 

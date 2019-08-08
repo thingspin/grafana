@@ -16,7 +16,7 @@ export function tsReact2AngularDirective(name: string, component: any, options: 
 
 // ref : https://gist.github.com/bennadel/647bf5b82b9d4332e8f0
 // ref : https://mobicon.tistory.com/329
-export function multipleDirectiveSelector($delegate) {
+export function multipleDirectiveSelector($delegate: any) {
   for (const mod of $delegate) {
     if (mod.$$moduleName === 'thingspin.directives') {
       return [mod];

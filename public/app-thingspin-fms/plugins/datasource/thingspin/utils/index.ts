@@ -11,8 +11,8 @@ export function generateTree(facTrees: any[] = [], tags: any[] = [], facs: any[]
     const tree: TreeNodeShape[] = [];
 
     // set list2map
-    const tagsObj = {};
-    const facsObj = {};
+    const tagsObj: any = {};
+    const facsObj: any = {};
     for (const tag of tags) {
         tagsObj[tag.id] = tag;
     }

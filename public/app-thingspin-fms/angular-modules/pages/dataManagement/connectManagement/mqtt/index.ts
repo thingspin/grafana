@@ -1,9 +1,9 @@
 import _ from "lodash";
 import "./index.scss";
 import { BackendSrv } from 'app/core/services/backend_srv';
-import angular from 'angular';
+import angular, { ITimeoutService } from 'angular';
 import { appEvents } from 'app/core/core';
-import uid from "shortid";
+const uid = require("shortid");
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
@@ -92,7 +92,8 @@ export class TsMqttConnectCtrl {
     private backendSrv: BackendSrv,
     private $location: angular.ILocationService,
     private $compile: angular.ICompileService,
-    $routeParams, $timeout) {
+    $routeParams: angular.route.IRouteParamsService,
+    $timeout: ITimeoutService) {
       this.timeout = $timeout;
       this.connection = {
         url: DEF_URL,
@@ -135,7 +136,7 @@ export class TsMqttConnectCtrl {
       }
   }
 
-  async asyncDataLoader(id): Promise<void> {
+  async asyncDataLoader(id: any): Promise<void> {
     console.log("asyncDataLoader");
     try {
         const list = await this.backendSrv.get("/thingspin/connect/" + id);
@@ -214,7 +215,7 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  onShowTopicEditView(value) {
+  onShowTopicEditView(value: any) {
     if (value) {
       this.isTopicEditView = true;
       console.log("value is true");
@@ -236,7 +237,7 @@ export class TsMqttConnectCtrl {
   }
 
   initAddressTable() {
-    const actionFormatter = (cell: any, formatterParams, onRendered: Function) => {
+    const actionFormatter = (cell: any, _formatterParams: any, onRendered: Function) => {
       const data = cell.getData();
       const $html = this.$compile(/*html*/`
           <button class="btn" ng-click="ctrl.loadTopicData('${data.id}')">
@@ -267,15 +268,15 @@ export class TsMqttConnectCtrl {
     // this.table = new Tabulator("#mqtt-topic-list", this.defTabulatorOpts);
   }
 
-  delTopicItemList(value) {
-    const index = this.topicItem.topicList.findIndex(topic => topic.viewStr === value);
+  delTopicItemList(value: any) {
+    const index = this.topicItem.topicList.findIndex((topic: any) => topic.viewStr === value);
     if (index !== -1) {
       this.topicItem.topicList.splice(index, 1);
     }
     console.log(this.topicItem.topicList);
   }
 
-  loadTopicData(value) {
+  loadTopicData(value: any) {
     this.onDataResetTopic();
     const topicData = this.tableList.get(value);
     this.topicItem.id = topicData.id;
@@ -294,7 +295,7 @@ export class TsMqttConnectCtrl {
     this.onShowTopicEditView(true);
   }
 
-  removeTopic(name) {
+  removeTopic(name: any) {
     console.log(this.tableList);
     this.tableList.delete(name);
     this.list = (Array.from(this.tableList.values()));
@@ -303,7 +304,7 @@ export class TsMqttConnectCtrl {
     console.log(this.list);
   }
 
-  onLoadData(item) {
+  onLoadData(item: any) {
     console.log("item:" + item);
     this.indexID = item.id;
     this.collector = item.name;
@@ -362,7 +363,7 @@ export class TsMqttConnectCtrl {
     this.topicItem.selType = this.defMqtt.types[0];
   }
 
-  onTopicAdd(item) {
+  onTopicAdd(item: any) {
     if (item) {
       const itemTopic = {} as Topic;
       if (this.topicItem.selType === DEF_TOPIC_TYPE_STRING) {
@@ -386,7 +387,7 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  onTopicListAdd(name) {
+  onTopicListAdd(name: any) {
     console.log("onTopicListAdd");
     if (name !== -1 && this.topicItem.topicString.length > 0) {
       const inputData = this.tableList.get(name);
@@ -431,7 +432,7 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  onJsonCreatSender(withclose) {
+  onJsonCreatSender(withclose: any) {
     let count = 0;
     if (this.topicListArrayString.length === 0 &&
       this.topicDisListArrayString.length === 0) {
@@ -446,7 +447,7 @@ export class TsMqttConnectCtrl {
       this.topicListArrayString += ",";
       this.topicDisListArrayString += ",";
 
-      this.tableList.forEach((value, key, mapObject) => {
+      this.tableList.forEach((value: any, key: any, mapObject: any) => {
         const topicNode = {
           "id": "TS-MQTT-IN-" + value.type + "_" + value.id,
           "type": "mqtt in",
@@ -479,17 +480,17 @@ export class TsMqttConnectCtrl {
               ]
           ]
         };
-        const topicDisParse = {
-          "id": "TS-MQTT-PARSE-" + value.type + "_" + value.id,
-          "type": "function",
-          "name": value.type + "_" + value.id + "::" + "Parse",
+        const topicDisParse: any = {
+          id: "TS-MQTT-PARSE-" + value.type + "_" + value.id,
+          type: "function",
+          name: value.type + "_" + value.id + "::" + "Parse",
           // "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
-          "func": this.onJsonParseWithInfluxTagCreate(value.type, value.value, value.viewStr),
-          "outputs": 1,
-          "noerr": 0,
-          "x": 500,
-          "y": 220 + (this.increaseYPos * count++),
-          "wires": [[]]
+          func: this.onJsonParseWithInfluxTagCreate(value.type, value.value, value.viewStr),
+          outputs: 1,
+          noerr: 0,
+          x: 500,
+          y: 220 + (this.increaseYPos * count++),
+          wires: [[]],
         };
         if (count === this.tableList.size) {
           this.topicListArrayString += JSON.stringify(topicNode) + ",";
@@ -516,28 +517,22 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  onJsonParseCreate(value, type) {
-    const index = this.defMqtt.values.findIndex((item, index) => {
-      return item === type;
-    });
+  onJsonParseCreate(value: any, type: any) {
+    const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type );
     // console.log(index);
     return "const payload = \n{\n  \"" + value + "\" : parse" + this.defMqtt.values[index] + "(msg.payload)\n};\n\nmsg.payload = payload;\n";
   }
 
-  onJsonParseWithInfluxCreate(value, type) {
-    const index = this.defMqtt.values.findIndex((item, index) => {
-      return item === type;
-    });
+  onJsonParseWithInfluxCreate(value: any, type: any) {
+    const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type );
     const returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.indexID + "\",\n    \"fields\": {\n        \""
     + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n    }\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
     // console.log(returnValue);
     return returnValue;
   }
 
-  onJsonParseWithInfluxTagCreate(value, type, topic) {
-    const index = this.defMqtt.values.findIndex((item, index) => {
-      return item === type;
-    });
+  onJsonParseWithInfluxTagCreate(value: any, type: any, topic: any) {
+    const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type);
     let returnValue = "";
     if (type === this.defMqtt.values[0]) {
       //String
@@ -557,17 +552,17 @@ export class TsMqttConnectCtrl {
   }
 
   createConnectNode() {
-    const connectNode = {
-      "id": "TS-MQTT-CHECKNODE-" + this.uuid,
-      "type": "mqtt out",
-      "name": this.uuid,
-      "topic": "#",
-      "qos": "0",
-      "datatype": "auto",
-      "broker": "TS-MQTT-CONNECT-" + this.uuid,
-      "x": 810,
-      "y": 100,
-      "wires": [[]]
+    const connectNode: any = {
+      id: "TS-MQTT-CHECKNODE-" + this.uuid,
+      type: "mqtt out",
+      name: this.uuid,
+      topic: "#",
+      qos: "0",
+      datatype: "auto",
+      broker: "TS-MQTT-CONNECT-" + this.uuid,
+      x: 810,
+      y: 100,
+      wires: [[]]
     };
     this.topicListArrayString += JSON.stringify(connectNode);
     this.topicDisListArrayString += JSON.stringify(connectNode);
@@ -593,7 +588,7 @@ export class TsMqttConnectCtrl {
     return data;
   }
 
-  openAlartNotification(value) {
+  openAlartNotification(value: any) {
     appEvents.emit('alert-error', [value]);
   }
 
@@ -623,7 +618,7 @@ export class TsMqttConnectCtrl {
 
   // CASE BY SEND HTTP (PUT, POST)
   // VALUE IS "TRUE" >> CLOSE FUNCTION
-  methodProcess(object, value) {
+  methodProcess(object: any, value: any) {
     console.log(object);
     if (this.isEditMode) {
       this.backendSrv
@@ -635,13 +630,13 @@ export class TsMqttConnectCtrl {
             this.close();
           }
         })
-        .catch(err => {
+        .catch((err: any) => {
           if (err.status === 500) {
             appEvents.emit('alert-error', [err.statusText]);
           }
         });
       })
-      .catch(err => {
+      .catch((err: any) => {
         if (err.status === 500) {
           appEvents.emit('alert-error', [err.statusText]);
         }
@@ -658,13 +653,13 @@ export class TsMqttConnectCtrl {
               this.close();
             }
           })
-          .catch(err => {
+          .catch((err: any) => {
             if (err.status === 500) {
               appEvents.emit('alert-error', [err.statusText]);
             }
           });
         })
-        .catch(err => {
+        .catch((err: any) => {
           if (err.status === 500) {
             appEvents.emit('alert-error', [err.statusText]);
           }
@@ -677,7 +672,7 @@ export class TsMqttConnectCtrl {
           this.topicDisListArrayString = "";
           this.onJsonCreatSender(value);
         })
-        .catch(err => {
+        .catch((err: any) => {
           if (err.status === 500) {
             appEvents.emit('alert-error', [err.statusText]);
           }

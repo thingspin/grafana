@@ -9,7 +9,7 @@ import { Project } from '../types';
 export interface PropsAddProject {
   title?: string;
   onCancel?: () => void;
-  onSave?: (e) => void;
+  onSave?: (e: any) => void;
   onWarnning?: (t: any, m: any) => void;
 }
 
@@ -44,7 +44,7 @@ export class ProjectInfoEditor extends PureComponent<PropsAddProject, Project> {
       altActionText: '보류',
       icon: 'fa-superpowers',
       onConfirm: () => {
-        getBackendSrv().put(`api/drone/project/`, this.state).then( (result) => {
+        getBackendSrv().put(`api/drone/project/`, this.state).then( (result: any) => {
           console.log(result);
           this.props.onSave(this.state);
         });
@@ -58,23 +58,23 @@ export class ProjectInfoEditor extends PureComponent<PropsAddProject, Project> {
     this.props.onCancel();
   };
 
-  onChangeName = (data) => {
+  onChangeName = (data: string) => {
     this.setState( { name: data });
   };
 
-  onChangeSite = (data) => {
+  onChangeSite = (data: string) => {
     this.setState( { site: data });
   };
 
-  onChangePilot = (data) => {
+  onChangePilot = (data: string) => {
     this.setState( { pilot: data });
   };
 
-  onChangeComment = (data) => {
+  onChangeComment = (data: string) => {
     this.setState( { comment: data });
   };
 
-  onChangeFlightTime = (begin, end) => {
+  onChangeFlightTime = (begin: Date, end: Date) => {
     this.setState( { begin: begin, end: end });
   };
 
@@ -93,7 +93,7 @@ export class ProjectInfoEditor extends PureComponent<PropsAddProject, Project> {
   }
 }
 
-const ProjectTitleEditor = (props) => {
+const ProjectTitleEditor = (props: any) => {
   const { value, onChange } = props;
   const [ title, changeValue ] = useState(value);
   return (<div className="gf-form">
@@ -109,7 +109,7 @@ const ProjectTitleEditor = (props) => {
   </div>);
 };
 
-const ProjectSiteEditor = (props) => {
+const ProjectSiteEditor = (props: any) => {
   const { value, onChange } = props;
   const [ site, changeValue] = useState(value);
   return (<div className="gf-form">
@@ -125,7 +125,7 @@ const ProjectSiteEditor = (props) => {
   </div>);
 };
 
-const ProjectPilotEditor = (props) => {
+const ProjectPilotEditor = (props: any) => {
   const { value, onChange } = props;
   const [ pilot, changeValue] = useState(value);
   return (<div className="gf-form">
@@ -141,7 +141,7 @@ const ProjectPilotEditor = (props) => {
   </div>);
 };
 
-const ProjectPilotTimeEditor = (props) => {
+const ProjectPilotTimeEditor = (props: any) => {
   const { begin, end, onChange } = props;
   const [ begineDate, writeBegineDate] = useState(begin);
   const [ endDate, writeEndDate] = useState(end);
@@ -166,7 +166,7 @@ const ProjectPilotTimeEditor = (props) => {
   );
 };
 
-const ProjectSaveButton = (props) => {
+const ProjectSaveButton = (props: any) => {
   const { onSave, onCancel } = props;
   return (<div className="action">
     <button className="width-10 fa fa-list btn btn-secondary gf-form-btn" onClick={onCancel}> 취소</button>

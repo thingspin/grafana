@@ -1,4 +1,4 @@
-import angular from 'angular';
+import angular, { ITimeoutService } from 'angular';
 import { InputModel } from './controller';
 
 interface InputEnable {
@@ -7,13 +7,13 @@ interface InputEnable {
     policy: boolean;
     mode: boolean;
     auth: boolean;
+    intervals: boolean;
 }
 
 export class TsOpcUaConnectInfoCtrl implements angular.IController {
     // Inheritance data
     input: InputModel;
     connectStatus: string;
-    timeout: any;
 
     // UI setting data
     inputEnable: InputEnable = {
@@ -22,6 +22,7 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
         policy: false,
         mode: false,
         auth: false,
+        intervals: false,
     };
     selectList = {
         policy: ["None", "Basic128RSA15", "Basic256", "Basic256HA256",],
@@ -30,7 +31,7 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
     };
 
     changeEvt() {
-        const { name, endpointUrl, securityPolicy, securityMode, auth } = this.input;
+        const { name, endpointUrl, securityPolicy, securityMode, auth, intervals } = this.input;
 
         this.inputEnable = {
             name: !!name,
@@ -38,16 +39,16 @@ export class TsOpcUaConnectInfoCtrl implements angular.IController {
             policy: !!securityPolicy,
             mode: !!securityMode,
             auth: !!auth,
+            intervals: !!intervals,
         };
     }
 
     /** @ngInject */
-    constructor($timeout) {
-        this.timeout = $timeout;
+    constructor(private $timeout: ITimeoutService) {
     }
 
     $onInit(): void {
-        this.timeout(()=> {
+        this.$timeout(()=> {
             $('#input-name').focus();
         });
     }

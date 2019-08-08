@@ -30,6 +30,8 @@ import (
 	_ "github.com/grafana/grafana/pkg/tsdb/prometheus"
 	_ "github.com/grafana/grafana/pkg/tsdb/stackdriver"
 	_ "github.com/grafana/grafana/pkg/tsdb/testdata"
+	// thingspin add code -----
+	_ "github.com/grafana/grafana/pkg/tsdb/thingspin"
 )
 
 var version = "5.0.0"

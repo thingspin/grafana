@@ -18,10 +18,6 @@ export interface States {
 }
 
 export class TsRightSidebar extends PureComponent<Props, States> {
-  constructor(props) {
-    super(props);
-  }
-
   async componentWillMount() {
   }
 
@@ -30,7 +26,7 @@ export class TsRightSidebar extends PureComponent<Props, States> {
     date: new Date(),
   };
 
-  getTabNode(title, icon): () => ReactNode {
+  getTabNode(title: string, icon: string): () => ReactNode {
     return () => {
       return (<>
         <i className={`fa ${icon} fa-2`} />
@@ -41,11 +37,11 @@ export class TsRightSidebar extends PureComponent<Props, States> {
     };
   }
 
-  onChangeDate(date) {
+  onChangeDate(date: Date) {
     this.setState({ date });
   }
 
-  onChangeFilter(filters) {
+  onChangeFilter(filters: any[]) {
     this.setState({ filters });
   }
 

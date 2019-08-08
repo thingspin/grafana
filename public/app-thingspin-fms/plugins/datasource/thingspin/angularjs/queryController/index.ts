@@ -23,7 +23,7 @@ export default class FmsQueryCtrl extends QueryCtrl implements IController {
         this.updateTarget = this.updateTarget.bind(this);
     }
 
-    async updateTarget(t: object) {
+    async updateTarget(t: any) {
         for (const item in t) {
             this.target[item] = t[item];
         }

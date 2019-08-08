@@ -1,10 +1,10 @@
-import angular from 'angular';
+import angular, { IScope, ITimeoutService } from 'angular';
 import _ from "lodash";
 import "./index.scss";
 import { BackendSrv } from 'app/core/services/backend_srv';
 //import Tabulator from 'tabulator-tables';
 import { appEvents } from 'app/core/core';
-import uid from "shortid";
+const uid = require("shortid");
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
@@ -81,7 +81,7 @@ export class TsModbusConnectCtrl {
   nodeInjectWiresList: any;
   templateObject: any; //modbus node-red template
   FlowId: any;
-  timeout; any;
+  timeout: any;
 
   //for test
   getterparserArray: any;
@@ -121,11 +121,11 @@ export class TsModbusConnectCtrl {
 
   /** @ngInject */
   constructor(
-    private $scope ,$routeParams,
+    private $scope: IScope ,$routeParams: angular.route.IRouteParamsService,
     private $location: angular.ILocationService,
     //private $compile: angular.ICompileService, $routeParams,
     private backendSrv: BackendSrv,
-    $timeout) {
+    $timeout: ITimeoutService) {
     //for tabulator table
     this.timeout = $timeout;
     this.modbusParams = {
@@ -195,7 +195,7 @@ export class TsModbusConnectCtrl {
     this.$scope.$applyAsync();
   }
 
-  onLoadData(item) {
+  onLoadData(item: any) {
     console.log(item);
     this.indexID = item.id;
     this.connName = item.name;
@@ -220,7 +220,7 @@ export class TsModbusConnectCtrl {
     }
     //
   }
-  async asyncDataLoader(id): Promise<void> {
+  async asyncDataLoader(id: any): Promise<void> {
     //console.log("asyncDataLoader");
     try {
         const list = await this.backendSrv.get("/thingspin/connect/" + id);
@@ -240,7 +240,7 @@ export class TsModbusConnectCtrl {
  close() {
   this.$location.path(`/thingspin/manage/data/connect/`);
 }
- redirect(connid) {
+ redirect(connid: any) {
   this.$location.path(`/thingspin/manage/data/connect/modbus/`+connid);
  }
 
@@ -391,7 +391,7 @@ removeEdit2(idx: any): void {
 }
 
 //-----------------------------
-testAddGetter1(address, quantity, functioncode,flowid,posY) {
+testAddGetter1(address: any, quantity: any, functioncode: any,flowid: any, posY: any) {
   const addNodeinfo = {
     getterId: "TS-MODBUS-GETTER-"+address+"-"+flowid,
     getterName: address+"-Getter",
@@ -411,7 +411,7 @@ testAddGetter1(address, quantity, functioncode,flowid,posY) {
 }
 
 //template 관련
-addModbusGETTER( name,address, quantity, functioncode,flowid,posY,interval) {
+addModbusGETTER( name: any,address: any, quantity: any, functioncode: any, flowid: any, posY: any, interval: any) {
   const objInjector =      {
     "id": "TS-MODBUS-INJECT-"+address+"-"+flowid,
     "type": "inject",

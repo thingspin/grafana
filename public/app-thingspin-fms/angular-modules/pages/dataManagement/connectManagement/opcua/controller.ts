@@ -1,4 +1,4 @@
-import uid from "shortid";
+const uid = require("shortid");
 
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/core';
@@ -18,6 +18,7 @@ export interface InputModel {
     securityPolicy: string;
     securityMode: string ;
     auth: string;
+    intervals?: number;
 }
 
 export interface OpcConnectModel {
@@ -83,6 +84,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 securityPolicy: "None",
                 endpointUrl: "http://localhost:4843/",
                 name: '',
+                intervals: 1,
             };
         }
     }
@@ -98,6 +100,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 auth: result.params.auth,
                 securityMode: result.params.securityMode,
                 securityPolicy: result.params.securityPolicy,
+                intervals: result.intervals,
             };
             this.FlowId = result.params.FlowId;
             this.nodes = result.params.nodes;
@@ -131,7 +134,12 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     }
 
     genPayload(FlowId: string): BackendConnectPayload {
-        const { name, endpointUrl, auth, securityPolicy, securityMode } = this.input;
+        const { nodes } = this;
+        const { name, endpointUrl, auth, securityPolicy, securityMode, intervals } = this.input;
+        const PtagList = Array.from(nodes, ({ displayName }) => ({
+            name: displayName.text,
+            type: ""
+        }));
 
         return {
             name,
@@ -139,12 +147,13 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 FlowId,
                 EndpointUrl: endpointUrl,
                 AddressSpaceItems: [],
-                nodes: this.nodes,
+                nodes,
                 auth,
                 securityPolicy,
-                securityMode
+                securityMode,
+                PtagList,
             },
-            intervals: 1,
+            intervals,
         };
     }
 

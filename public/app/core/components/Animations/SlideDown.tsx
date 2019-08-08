@@ -41,8 +41,7 @@ export const SlideDown: FC<Props> = ({ children, in: inProp, maxHeight = default
           style={{
             ...style,
             ...transitionStyles[state],
-            inProp,
-          } /* thingspin add code ---- */as any}
+          }}
         >
           {children}
         </div>

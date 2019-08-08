@@ -25,7 +25,7 @@ export class ProjectList extends PureComponent<ProjectListProps, ProjectListStat
 
     unsubscribe: any;
 
-    constructor(props) {
+    constructor(props: ProjectListProps) {
         super(props);
         const { store } = this.props;
 
@@ -50,7 +50,7 @@ export class ProjectList extends PureComponent<ProjectListProps, ProjectListStat
         this.unsubscribe();
     }
 
-    renderProjectItem = (item, index) => {
+    renderProjectItem = (item: any, index: any) => {
         return (<ProjectListItem key={index} project={item} onDelete={this.onDelete}/>);
     };
 
@@ -97,7 +97,7 @@ export class ProjectList extends PureComponent<ProjectListProps, ProjectListStat
         this.setState({ isAddMode: false });
     };
 
-    onSave = (data) => {
+    onSave = (data: any) => {
         this.onClose();
         this.setState({ isLoading: true });
         this.props.loadProjectList();
@@ -115,7 +115,7 @@ export class ProjectList extends PureComponent<ProjectListProps, ProjectListStat
         this.onClose();
     };
 
-    onWarnning = (title, message) => {
+    onWarnning = (title: any, message: any) => {
         this.props.notifyApp(createWarningNotification(title, message));
     }
 
@@ -130,7 +130,7 @@ export class ProjectList extends PureComponent<ProjectListProps, ProjectListStat
     }
 }
 
-const PageTitle = (props) => {
+const PageTitle = (props: any) => {
     const { value } = props;
     return (
         <div className="gf-form-group">
@@ -141,7 +141,7 @@ const PageTitle = (props) => {
     );
 };
 
-const PageTools = (props) => {
+const PageTools = (props: any) => {
     const toolsEnabled = false;
     const { isAddMode, onAdd } = props;
     const { layoutMode, onSearchQueryChange } = props;

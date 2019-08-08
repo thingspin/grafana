@@ -11,10 +11,6 @@ export class TsComponentNameComponent extends PureComponent<Props, States> {
 
   // protected class member variables
 
-  constructor(props) {
-    super(props);
-  }
-
   // common event Methods
 
   // get render splitted virtual DOM Methods

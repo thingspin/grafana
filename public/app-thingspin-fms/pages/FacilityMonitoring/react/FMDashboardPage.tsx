@@ -6,7 +6,8 @@ import classNames from 'classnames';
 // Grafana React Components
 import { DashboardPage, mapStateToProps } from 'app/features/dashboard/containers/DashboardPage';
 import { SubMenu } from 'app/features/dashboard/components/SubMenu';
-import { CustomScrollbar, SelectOptionItem } from '@grafana/ui';
+import { CustomScrollbar } from '@grafana/ui';
+import { SelectableValue } from '@grafana/data';
 
 // Grafana Redux
 import { cleanUpDashboard } from 'app/features/dashboard/state/actions';
@@ -32,14 +33,10 @@ interface FmPanelFilter {
 // (Customized grafana react component: iiHOC)
 export class FMDashboardPage extends DashboardPage {
     panelType = 'graph';
-    oldPanel = {}; // panel cache data
-
-    constructor(props) {
-        super(props);
-    }
+    oldPanel: any = {}; // panel cache data
 
     // add thingspin method
-    updateFmPanel(newPanel, { removes, adds }: FmPanelFilter): void {
+    updateFmPanel(newPanel: any, { removes, adds }: FmPanelFilter): void {
         const { dashboard } = this.props;
 
         // remove panels
@@ -62,7 +59,7 @@ export class FMDashboardPage extends DashboardPage {
     }
 
     // add thingspin method
-    onCheckedChange(siteId, tags) {
+    onCheckedChange(siteId: any, tags: any) {
         // local method
         const generatePanelData = (title: string, type: string, target: any, y = 0): object => ({
             // require panel data
@@ -100,7 +97,7 @@ export class FMDashboardPage extends DashboardPage {
         };
 
 
-        const newPanel = {};
+        const newPanel: any = {};
         if (Array.isArray(tags)) {
             for (const tag of tags) {
                 const panelType = this.panelType || 'graph';
@@ -116,12 +113,12 @@ export class FMDashboardPage extends DashboardPage {
         this.updateFmPanel(newPanel, getDiffPanel(this.oldPanel, newPanel));
     }
 
-    onClickFacilityTree(site, tags) {
+    onClickFacilityTree(site: any, tags: any) {
         this.setFacilityInfo(site, tags);
         this.onCheckedChange(site.value, tags);
     }
 
-    onPanelTypeChange(item: SelectOptionItem<string>) {
+    onPanelTypeChange(item: SelectableValue<string>) {
         this.panelType = item.value;
     }
 
@@ -173,7 +170,7 @@ export class FMDashboardPage extends DashboardPage {
         </div>);
     }
 
-    setFacilityInfo(site, facilityTags) {
+    setFacilityInfo(site: any, facilityTags: any) {
         const dashboard = this.props.dashboard as FMDashboardModel;
         if (!dashboard) {
             return;

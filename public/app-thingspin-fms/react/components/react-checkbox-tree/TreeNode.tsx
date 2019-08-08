@@ -32,7 +32,7 @@ interface Props {
 }
 
 class TreeNode extends React.Component<Props> {
-    static defaultProps = {
+    static defaultProps: any = {
         children: null,
         className: null,
         expandOnClick: false,
@@ -42,7 +42,7 @@ class TreeNode extends React.Component<Props> {
         onClick: () => {},
     };
 
-    constructor(props) {
+    constructor(props: Props) {
         super(props);
 
         this.onCheck = this.onCheck.bind(this);
@@ -78,7 +78,7 @@ class TreeNode extends React.Component<Props> {
         onExpand({ value, expanded: !expanded });
     }
 
-    getCheckState({ toggle }): boolean {
+    getCheckState({ toggle }: { toggle: boolean }): boolean {
         const { checked, optimisticToggle } = this.props;
 
         // Toggle off state to checked

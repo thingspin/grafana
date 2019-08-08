@@ -1,6 +1,6 @@
 import _ from "lodash";
 import angular from "angular";
-import uid from "shortid";
+const uid = require("shortid");
 
 import { TsConnect } from "app-thingspin-fms/models/connect";
 import { BackendSrv } from 'app/core/services/backend_srv';

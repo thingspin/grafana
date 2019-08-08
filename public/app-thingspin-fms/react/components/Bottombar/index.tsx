@@ -9,13 +9,9 @@ export interface States {
 }
 
 export class TsBottombar extends PureComponent<Props, States> {
-  constructor(props) {
-    super(props);
-
-    this.state = {
+  state = {
       enable: false,
-    };
-  }
+  };
 
   get rednerMain(): JSX.Element {
     return (

@@ -17,7 +17,7 @@ class TsLogo extends PureComponent<Props> {
   smallLogoPath: string;
   viewMode: EViewModeState;
 
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.title = `ThingSPIN`;
     this.fullLogoPath = `public/img/thingspin/thingspin_logo.svg`;

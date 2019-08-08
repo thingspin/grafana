@@ -14,10 +14,6 @@ interface Props extends TsBaseProps {
 }
 
 export class TsIconLogo extends PureComponent<Props> {
-  constructor(props) {
-    super(props);
-  }
-
   toggleMenu() {
     // ignore if we just made a location change, stops hiding sidemenu on double clicks of back button
     const timeSinceLocationChanged: number = new Date().getTime() - store.getState().location.lastUpdated;

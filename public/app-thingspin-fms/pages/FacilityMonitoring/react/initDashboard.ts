@@ -203,7 +203,7 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
 }
 
 function getNewDashboardModelData(urlFolderId?: string): any {
-  const data = {
+  const data: any = {
     meta: {
       canStar: false,
       canShare: false,
