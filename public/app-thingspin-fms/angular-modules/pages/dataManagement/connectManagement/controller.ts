@@ -29,7 +29,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     // MQTT
     readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
-    readonly listenerTopic: string = "/thingspin/connect/+/status" as string;
+    readonly listenerTopic: string = "/thingspin/+/+/status" as string;
     mqttClient: TsMqttController; // mqtt client instance
 
     // UI Data
@@ -82,13 +82,32 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     recvMqttMessage(topic: string, payload: string | object): void {
         const topics = topic.split("/");
-        const flowId = topics[topics.length - 2];
+        const target = topics[topics.length - 3];
+        const id = topics[topics.length - 2];
+        let isChange = false;
 
-        for (const item of this.list) {
-            if (item.params.FlowId === flowId) {
-                item.color = payload;
-                this.$scope.$applyAsync();
-            }
+        switch (target) {
+            case 'connect':
+                for (const item of this.list) {
+                    if (item.params.FlowId === id) {
+                        item.color = payload;
+                        item.status[target] = payload;
+                        isChange = true;
+                    }
+                }
+                break;
+            default:
+                const num = parseInt(id, 10);
+                for (const item of this.list) {
+                    if (item.id === num) {
+                        isChange = true;
+                        item.status = payload;
+                    }
+                }
+        }
+
+        if (isChange) {
+            this.$scope.$applyAsync();
         }
     }
 
@@ -157,6 +176,10 @@ export default class TsConnectManagementCtrl implements angular.IController {
             const list: TsConnect[] = await this.backendSrv.get("thingspin/connect");
             if (list) {
                 this.list = list;
+                for (const item of this.list) {
+                    item.status = {};
+                }
+
                 this.$scope.$applyAsync();
                 this.setPageNodes();
             }

@@ -11,6 +11,7 @@ export interface TsConnect {
     creatd: Date;
     updated: string;
 
+    status?: any;
     [name: string]: any;
 }
 

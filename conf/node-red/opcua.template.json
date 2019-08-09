@@ -34,13 +34,13 @@
         "id": "TS-OPC-UA-INIT-FUNC-{{.Params.FlowId}}",
         "type": "function",
         "name": "flow init",
-        "func": "flow.set('influx-stat', {});\n",
+        "func": "msg.payload = flow.get('status');\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "x": 480,
         "y": 60,
         "wires": [
-            []
+            [ "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}" ]
         ]
     },
     {
@@ -77,7 +77,7 @@
       "id": "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}",
       "type": "mqtt out",
       "name": "",
-      "topic": "/thingspin/connect/{{.Id}}/status",
+      "topic": "/thingspin/opcua/{{.Id}}/status",
       "qos": "2",
       "retain": "true",
       "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
@@ -128,7 +128,7 @@
       "type": "OPCUA-IIoT-Browser",
       "connector": "TS-OPC-UA-CONNECT-ID-{{.Params.FlowId}}",
       "nodeId": "",
-      "name": "OPCUA",
+      "name": "connect",
       "justValue": false,
       "sendNodesToRead": false,
       "sendNodesToListener": false,
@@ -312,7 +312,7 @@
         "id": "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
         "type": "function",
         "name": "INFLUXDB",
-        "func": "const status = flow.get('influx-stat') || {};\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif(newStatus.text !== status.text) {\n    node.status(newStatus);\n    flow.set('influx-stat', newStatus);\n}\n",
+        "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif(newStatus.text !== INFLUXDB.text) {\n    node.status(newStatus);\n}\n",
         "outputs": 1,
         "noerr": 0,
         "x": 870,
