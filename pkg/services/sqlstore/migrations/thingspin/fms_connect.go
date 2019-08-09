@@ -25,4 +25,9 @@ func addFmsConnectMigrations(mg *Migrator) {
 
 	// create table
 	mg.AddMigration("[thingspin] FMS 연결 테이블 생성", NewRawSqlMigration(query))
+
+	// add publish column
+	updateTableQueryV1 := fmt.Sprintf(`ALTER TABLE '%s' ADD 'publish' bool DEFAULT false`, m.TsFmsConnectTbl)
+	mg.AddMigration("[thingspin] FMS 연결 테이블 MQTT 배포 컬럼 추가", NewRawSqlMigration(updateTableQueryV1))
+
 }

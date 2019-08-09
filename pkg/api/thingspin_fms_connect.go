@@ -238,6 +238,49 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	return JSON(200, info.Id)
 }
 
+func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
+	connId := c.ParamsInt(":connId")
+
+	// 이전 flow 정보 가져오기
+	info, err := getTsConnectInfo(connId)
+	if err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	// toggle MQTT Publish state
+	info.Publish = !info.Publish
+
+	if info.Active {
+		nodeResp, err := thingspin.UpdateFlowNode(info.FlowId, info.Type, info)
+		if err != nil {
+			return Error(500, "ThingSPIN Connect Error", err)
+		}
+
+		// get updated flowId
+		body := nodeResp.Body.([]byte)
+		var common map[string]interface{}
+		err = json.Unmarshal(body, &common)
+		if err != nil {
+			return Error(500, "ThingSPIN Parsing Error", err)
+		}
+		info.FlowId = common["id"].(string)
+	}
+
+	q := m.UpdateToggleMqttPublishTsConnectQuery{
+		Publish: info.Publish,
+		Enable:  info.Enable,
+		FlowId:  info.FlowId,
+		Params:  info.Params,
+		Id:      connId,
+	}
+
+	if err := bus.Dispatch(&q); err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	return JSON(200, info.Id)
+}
+
 func deleteTsConnect(c *gfm.ReqContext) Response {
 	connId := c.ParamsInt(":connId")
 

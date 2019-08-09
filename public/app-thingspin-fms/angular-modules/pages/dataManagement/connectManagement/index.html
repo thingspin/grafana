@@ -36,6 +36,7 @@
                   <th>이름</th>
                   <th>최근 변경 날짜</th>
                   <th>상태 표시</th>
+                  <th>MQTT 배포</th>
                   <th>동작</th>
               </tr>
             </thead>
@@ -51,12 +52,36 @@
                   <td>{{ item.name }}</td>
                   <td>{{ item.updated | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                   <td>
-                    <div ng-switch="item.color" class="connect">
-                        <i ng-switch-when="red" class="connect-red tsi icon-ts-connection_off"></i>
-                        <i ng-switch-when="yellow" class="connect-yellow tsi icon-ts-connection-loding"></i>
-                        <i ng-switch-when="green"class="connect-blue tsi icon-ts-power"></i>
-                        <i ng-switch-default class="connect-default tsi icon-ts-power"></i>
+                    <div style="display:flex">
+                      <div ng-if="!item.status.connect && item.color" ng-switch="item.color" class="connect">
+                          <i ng-switch-when="red" class="connect-red tsi icon-ts-connection_off"></i>
+                          <i ng-switch-when="yellow" class="connect-yellow tsi icon-ts-connection-loding"></i>
+                          <i ng-switch-when="green"class="connect-blue tsi icon-ts-power"></i>
+                          <i ng-switch-default class="connect-default tsi icon-ts-power"></i>
+                      </div>
+
+                      <div ng-if="item.status.connect" ng-switch="item.status.connect.fill" class="connect">
+                          <i ng-switch-when="red" class="connect-red tsi icon-ts-connection_off"></i>
+                          <i ng-switch-when="yellow" class="connect-yellow tsi icon-ts-connection-loding"></i>
+                          <i ng-switch-when="green"class="connect-blue tsi icon-ts-power"></i>
+                          <i ng-switch-default class="connect-default fa icon-ts-power"></i>
+                      </div>
+                      <div ng-if="item.status.INFLUXDB" ng-switch="item.status.INFLUXDB.fill" class="connect">
+                          <i ng-switch-when="red" class="connect-red fa fa-database"></i>
+                          <i ng-switch-when="yellow" class="connect-yellow fa fa-database"></i>
+                          <i ng-switch-when="green"class="connect-blue fa fa-database"></i>
+                          <i ng-switch-default class="connect-default fa fa-database"></i>
+                      </div>
+                      <div ng-if="item.status.MQTT" ng-switch="item.status.MQTT.fill" class="connect">
+                          <i ng-switch-when="red" class="connect-red fa fa-paper-plane"></i>
+                          <i ng-switch-when="yellow" class="connect-yellow fa fa-paper-plane"></i>
+                          <i ng-switch-when="green"class="connect-blue fa fa-paper-plane"></i>
+                          <i ng-switch-default class="connect-default fa fa-paper-plane"></i>
+                      </div>
                     </div>
+                  </td>
+                  <td>
+                    <gf-form-switch class="gf-form" checked="item.publish" on-change="ctrl.updatePublish(item)"></gf-form-switch>
                   </td>
                   <td>
                       <button class="btn" ng-if="!ctrl.list[$index].enable" ng-click="ctrl.asyncRun(item.id, true)">
