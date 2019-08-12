@@ -18,6 +18,7 @@ func init() {
 	bus.AddHandler("thingspin-sql", DelelteTsConnect)
 	bus.AddHandler("thingspin-sql", GetAllTsConnectType)
 	bus.AddHandler("thingspin-sql", UpdatePublishTsConnect)
+	bus.AddHandler("thingspin-sql", UpdateConnect)
 }
 
 type InsertTsConnect struct {
@@ -77,6 +78,12 @@ func AddTsConnect(cmd *m.AddTsConnectQuery) error {
 
 	_, err := x.Table(m.TsFmsConnectTbl).Insert(q)
 	cmd.Result = q.Id
+
+	return err
+}
+
+func UpdateConnect(cmd *m.TsConnectField) (err error) {
+	_, err = x.Table(m.TsFmsConnectTbl).Where("id = ?", cmd.Id).AllCols().Update(cmd)
 
 	return err
 }
