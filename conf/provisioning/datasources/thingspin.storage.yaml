@@ -11,4 +11,5 @@ datasources:
   version: 1
   editable: false
 - name: 사이트 태그
+  type: thingspin
   editable: false
