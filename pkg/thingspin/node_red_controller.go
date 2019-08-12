@@ -15,6 +15,7 @@ import (
 	// "log"
 
 	"github.com/fatih/structs"
+	"github.com/grafana/grafana/pkg/components/simplejson"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/setting"
 )
@@ -171,7 +172,7 @@ func RemoveFlowNode(flow_id string) (*m.NodeRedResponse, error) {
 	}, nil
 }
 
-func UpdateFlowNode(flow_id string, target string, info interface{}) (*m.NodeRedResponse, error) {
+func UpdateFlowNode(flowId string, target string, info interface{}) (*m.NodeRedResponse, error) {
 	templateStr, err := LoadNodeRedTemplate(target, info)
 	if err != nil {
 		return nil, err
@@ -181,7 +182,7 @@ func UpdateFlowNode(flow_id string, target string, info interface{}) (*m.NodeRed
 	if err != nil {
 		return nil, err
 	}
-	u.Path = path.Join(u.Path, "flow", flow_id)
+	u.Path = path.Join(u.Path, "flow", flowId)
 	byteStr := bytes.NewBufferString(templateStr)
 
 	req, err := http.NewRequest(http.MethodPut, u.String(), byteStr)
@@ -207,6 +208,30 @@ func UpdateFlowNode(flow_id string, target string, info interface{}) (*m.NodeRed
 	}, nil
 }
 
+func GetFlows() (*m.NodeRedResponse, error) {
+	u, err := url.Parse(setting.Thingspin.NodeRedHost)
+	if err != nil {
+		return nil, err
+	}
+	u.Path = path.Join(u.Path, "flows")
+
+	rsp, err := http.Get(u.String())
+	if err != nil {
+		return nil, err
+	}
+
+	rspBody, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return &m.NodeRedResponse{
+		StatusCode: rsp.StatusCode,
+		Body:       rspBody,
+	}, nil
+
+}
+
 func GetNodeRedModules() (*m.NodeRedResponse, error) {
 	u, err := url.Parse(setting.Thingspin.NodeRedHost)
 	if err != nil {
@@ -224,9 +249,14 @@ func GetNodeRedModules() (*m.NodeRedResponse, error) {
 		return nil, err
 	}
 
+	body, err := simplejson.NewJson(rspBody)
+	if err != nil {
+		return nil, err
+	}
+
 	return &m.NodeRedResponse{
 		StatusCode: rsp.StatusCode,
-		Body:       string(rspBody),
+		Body:       body,
 	}, nil
 
 }
