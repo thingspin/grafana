@@ -102,7 +102,12 @@
                                         <input data-drag-enabled type="checkbox" ng-click="ctrl.checked(pnode3)" ng-checked="pnode3.ischecked" />
                                         -->
                                         <i class="left-tree-three-item-arrow tsi icon-ts-tag"></i>
-                                        <div class="left-three-title-text-content">{{pnode.tag_name}}</div>
+                                        <div ng-if="pnode.isValid" class="left-three-title-text-content">
+                                            {{pnode.tag_name}}
+                                        </div>
+                                        <div ng-if="!pnode.isValid" class="left-three-historic-title-text-content">
+                                            {{pnode.tag_name}}
+                                        </div>
                                     </div>
                                 
                                     <!--
