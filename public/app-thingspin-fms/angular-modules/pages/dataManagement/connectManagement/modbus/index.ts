@@ -323,14 +323,14 @@ editPtagList() {
     if ( this.tableList[i].quantity > 1) {
       for ( let j = 0; j < this.tableList[i].quantity; j++) {
         const TagData = {} as TagList;
-        TagData.name = this.tableList[i].name+'_'+j;
+        TagData.name = this.tableList[i].name+'_'+j+'th';
         //TagData.type = this.tableList[i].dataType;
         TagData.type = "";
         this.PtagList.push(TagData);
       }
     }else {
       const TagData = {} as TagList;
-      TagData.name = this.tableList[i].name;
+      TagData.name = this.tableList[i].name+'_0th';
       //TagList.type = this.tableList[i].dataType;
       TagData.type = "";
       this.PtagList.push(TagData);

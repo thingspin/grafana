@@ -227,6 +227,118 @@
             "name": "",
             "usetls": false,
             "tls": ""
+        },
+        {
+            "id": "TS-MODBUS-MQTT-FUNCTION-{{.Params.FlowId}}",
+            "type": "function",
+            "z": "87a95871.2b6618",
+            "name": "",
+            "func": "msg.qos = 2;\n//msg.topic = `thingspin/opcua/${msg.id}/data`;\nmsg.retain = true;\n\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 1310,
+            "y": 320,
+            "wires": [
+                [
+                    "TS-MODBUS-MQTT-EXPORT-{{.Params.FlowId}}"
+                ]
+            ]
+        },
+        {
+            "id": "TS-MODBUS-MQTT-EXPORT-{{.Params.FlowId}}",
+            "type": "mqtt out",
+            "z": "87a95871.2b6618",
+            "name": "MQTT",
+            "topic": "/thingspin/modbus/{{.Params.influxID}}/data",
+            "qos": "",
+            "retain": "",
+            "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+            "x": 1430,
+            "y": 320,
+            "wires": []
+        },
+        {
+            "id": "TS-MODBUS-STATUS-INJECT-{{.Params.FlowId}}",
+            "type": "inject",
+            "z": "d55018cc.35f148",
+            "name": "init inject",
+            "topic": "",
+            "payload": "",
+            "payloadType": "date",
+            "repeat": "",
+            "crontab": "",
+            "once": true,
+            "onceDelay": 0,
+            "x": 560,
+            "y": 120,
+            "wires": [
+                [
+                    "TS-MODBUS-STATUS-FLOW-INIT-{{.Params.FlowId}}"
+                ]
+            ]
+        },
+        {
+            "id": "TS-MODBUS-STATUS-FLOW-INIT-{{.Params.FlowId}}",
+            "type": "function",
+            "z": "d55018cc.35f148",
+            "name": "flow init",
+            "func": "msg.payload = flow.get('status');\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 700,
+            "y": 120,
+            "wires": [
+                [
+                    "TS-MODBUS-STATUS2-MQTT-OUT-{{.Params.FlowId}}"
+                ]
+            ]
+        },
+        {
+            "id": "TS-MODBUS-STATUS2-MQTT-OUT-{{.Params.FlowId}}",
+            "type": "mqtt out",
+            "z": "d55018cc.35f148",
+            "name": "",
+            "topic": "/thingspin/modbus/{{.Params.influxID}}/status",
+            "qos": "2",
+            "retain": "true",
+            "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
+            "x": 910,
+            "y": 60,
+            "wires": []
+        },
+        {
+            "id": "TS-MODBUS-STATUS2-{{.Params.FlowId}}",
+            "type": "status",
+            "z": "d55018cc.35f148",
+            "name": "",
+            "scope": [
+                "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}",
+                "TS-MODBUS-MQTT-EXPORT-{{.Params.FlowId}}"
+            ],
+            "x": 560,
+            "y": 160,
+            "wires": [
+                [
+                    "TS-MODBUS-STATUS2-PROCESSING-{{.Params.FlowId}}"
+                ]
+            ]
+        },
+        {
+            "id": "TS-MODBUS-STATUS2-PROCESSING-{{.Params.FlowId}}",
+            "type": "function",
+            "z": "d55018cc.35f148",
+            "name": "status processing",
+            "func": "const { status } = msg;\nconst stat = flow.get('status') || {\n    id: '{{.Params.FlowId}}',\n};\n\nstat[status.source.name] = status;\n\nflow.set('status', stat);\n\nmsg.payload = stat;\n\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 730,
+            "y": 160,
+            "wires": [
+                [
+                    "TS-MODBUS-STATUS2-MQTT-OUT-{{.Params.FlowId}}"
+                ]
+            ]
         }
+        
     ]
 }
