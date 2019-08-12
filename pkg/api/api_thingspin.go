@@ -54,6 +54,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsFnRoute.Patch("/:connId", Wrap(activeTsConnect))
 			tsFnRoute.Delete("/:connId", Wrap(deleteTsConnect))
 			tsFnRoute.Patch("/:connId/enable", bind(tsm.EnableTsConnectReq{}), Wrap(enableTsConnect))
+			tsFnRoute.Patch("/:connId/publish", Wrap(toggleMqttPublishTsConnect))
 		})
 
 		// 사이트 관리 동작 API
@@ -71,7 +72,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 				tsFacilitesRoute.Post("/", bind(tsm.AddTsFacilityQuery{}), Wrap(addTsFacility))
 				tsFacilitesRoute.Put("/", bind(tsm.UpdateTsFacilityQuery{}), Wrap(updateTsFacility))
 				tsFacilitesRoute.Delete("/:facilityId", Wrap(deleteTsFacility))
-	
+
 				tsFacilitesRoute.Group("/tree", func(tsFacilitytree routing.RouteRegister) {
 					tsFacilitytree.Get("/", Wrap(getAllTsFacilityTree))
 					tsFacilitytree.Get("/sample", Wrap(getSampleTsFacilityTree))
@@ -79,7 +80,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 					tsFacilitytree.Put("/", bind(tsm.UpdateTsFacilityTreePathQuery{}), Wrap(updateTsFacilityTree))
 					tsFacilitytree.Delete("/", bind(tsm.DeleteTsFacilityTreePathQuery{}), Wrap(deleteTsFacilityTree))
 				})
-								
+
 				tsFacilitesRoute.Group("/:facilityId/tag", func(tsFacilityTag routing.RouteRegister) {
 					tsFacilityTag.Get("/", Wrap(getAllTsFacilityTag))
 					tsFacilityTag.Put("/:tagId", bind(tsm.UpdateTsFacilityTagNameQuery{}), Wrap(updateTsFacilityTagName))

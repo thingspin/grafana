@@ -232,8 +232,10 @@
       "y": 240,
       "wires": [[
         {{if .Enable }} 
-          "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
-          "TS-CONV-MQTT-PAYLOAD-FUNC-ID-{{.Params.FlowId}}"
+          "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}"
+          {{if .Publish }}
+          ,"TS-CONV-MQTT-PAYLOAD-FUNC-ID-{{.Params.FlowId}}"
+          {{end}}
         {{end}}
       ]]
     },

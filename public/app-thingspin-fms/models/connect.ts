@@ -12,6 +12,7 @@ export interface TsConnect {
     updated: string;
 
     status?: any;
+    publish?: boolean;
     [name: string]: any;
 }
 

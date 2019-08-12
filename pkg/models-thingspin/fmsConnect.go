@@ -21,6 +21,7 @@ type TsConnectField struct {
 	Active    bool                   `json:"active"`
 	Enable    bool                   `json:"enable"`
 	Intervals int64                  `json:"intervals"`
+	Publish   bool                   `json:"publish"`
 	Created   time.Time              `json:"created"`
 	Updated   time.Time              `json:"updated"`
 }
@@ -66,6 +67,15 @@ type UpdateActiveTsConnectQuery struct {
 	FlowId string                 `xorm:"'flow_id'"`
 	Params map[string]interface{} `xorm:"'params'"`
 	Result int
+}
+
+type UpdateToggleMqttPublishTsConnectQuery struct {
+	Id      int                    `xorm:"'id'"`
+	Publish bool                   `xorm:"bool 'publish'"`
+	Enable  bool                   `xorm:"bool"`
+	FlowId  string                 `xorm:"'flow_id'"`
+	Params  map[string]interface{} `xorm:"'params'"`
+	Result  int
 }
 
 type DeleteTsConnectQuery struct {

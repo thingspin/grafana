@@ -82,8 +82,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     recvMqttMessage(topic: string, payload: string | object): void {
         const topics = topic.split("/");
-        const target = topics[topics.length - 3];
         const id = topics[topics.length - 2];
+        const target = topics[topics.length - 3];
         let isChange = false;
 
         switch (target) {
@@ -91,7 +91,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 for (const item of this.list) {
                     if (item.params.FlowId === id) {
                         item.color = payload;
-                        item.status[target] = payload;
+                        item.status['old'] = payload;
                         isChange = true;
                     }
                 }
@@ -100,8 +100,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 const num = parseInt(id, 10);
                 for (const item of this.list) {
                     if (item.id === num) {
-                        isChange = true;
                         item.status = payload;
+                        isChange = true;
                     }
                 }
         }
@@ -134,6 +134,23 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     changePage(type: string): void {
         this.$location.path(`${this.pageBathPath}/${type}`);
+    }
+
+    async updatePublish(item: TsConnect) {
+        if (!confirm("동작하시겠습니까?")) {
+            item.publish = !item.publish;
+            this.$scope.$applyAsync();
+            return;
+        }
+
+        try {
+            await this.backendSrv.patch(`thingspin/connect/${item.id}/publish`, item);
+        } catch (e) {
+            item.publish = !item.publish;
+            console.error(e);
+        }
+
+        this.$scope.$applyAsync();
     }
 
     async asyncRun(id: number, enable: boolean): Promise<void> {
