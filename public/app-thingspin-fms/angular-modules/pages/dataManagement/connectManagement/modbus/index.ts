@@ -29,6 +29,11 @@ interface ModbusTableData {
     datatype: any;
 }
 
+interface TagList{
+  name: any;
+  type: any;
+}
+
 export class TsModbusConnectCtrl {
   static template = require("./index.html");
   selectObj: any;
@@ -83,6 +88,7 @@ export class TsModbusConnectCtrl {
   FlowId: any;
   timeout: any;
 
+  PtagList: any[];
   //for test
   getterparserArray: any;
 
@@ -212,6 +218,7 @@ export class TsModbusConnectCtrl {
     this.nodeInjectWiresList = getParams.InjectWires;
 
     this.tableList = getParams.Tabledata;
+    this.PtagList = getParams.PtagList;
     if (getParams.AddressListCount > 0) {
       this.editIdx = getParams.AddressListCount;
       this.list = (Array.from(this.tableList));
@@ -295,6 +302,7 @@ resetEditData() {
           tableData.functioncode = this.editFC;
           tableData.quantity = this.editQuantity;
           tableData.datatype =  this.editType;
+
           this.tableList.push(tableData);
           this.list = Array.from(this.tableList);
 
@@ -307,6 +315,29 @@ resetEditData() {
           this.resetEditData();
       }
  }
+
+editPtagList() {
+  console.log("editPtagList");
+  this.PtagList = [];
+  for (let i = 0; i < this.tableList.length; i++) {
+    if ( this.tableList[i].quantity > 1) {
+      for ( let j = 0; j < this.tableList[i].quantity; j++) {
+        const TagData = {} as TagList;
+        TagData.name = this.tableList[i].name+'_'+j;
+        //TagData.type = this.tableList[i].dataType;
+        TagData.type = "";
+        this.PtagList.push(TagData);
+      }
+    }else {
+      const TagData = {} as TagList;
+      TagData.name = this.tableList[i].name;
+      //TagList.type = this.tableList[i].dataType;
+      TagData.type = "";
+      this.PtagList.push(TagData);
+    }
+  }
+
+}
 
 editAddressList() {
   //console.log(this.editAddress, this.editName);
@@ -513,6 +544,8 @@ testCreate() {
     this.nodeModbusGetteritem = "";
     this.nodeInjectWiresList = "";
    if (this.tableList.length > 0) {
+    this.editPtagList();
+
     for (let i = 0; i < this.tableList.length; i++) {
       // tslint:disable-next-line:max-line-length
       this.addModbusGETTER(this.tableList[i].name,this.tableList[i].address,this.tableList[i].quantity,this.tableList[i].functioncode,this.FlowId,i*20,this.modbusReadIntervals);
@@ -536,6 +569,7 @@ testCreate() {
         InjectWires : this.nodeInjectWiresList,
         Tabledata : this.tableList,
         influxID : this.modbusinfluxID,
+        PtagList : this.PtagList,
       },
       intervals: this.modbusReadIntervals
     };
