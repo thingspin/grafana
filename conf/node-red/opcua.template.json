@@ -25,9 +25,7 @@
         "x": 320,
         "y": 60,
         "wires": [
-            [
-                "TS-OPC-UA-INIT-FUNC-{{.Params.FlowId}}"
-            ]
+            [ "TS-OPC-UA-INIT-FUNC-{{.Params.FlowId}}" ]
         ]
     },
     {
@@ -103,15 +101,6 @@
       "wires": [["TS-OPC-UA-READ-PARSER-FUNC-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-READ-STAT-ID-{{.Params.FlowId}}",
-      "type": "status",
-      "name": "",
-      "scope": ["TS-OPC-UA-READ-ID-{{.Params.FlowId}}"],
-      "x": 100,
-      "y": 160,
-      "wires": [["TS-OPC-UA-STATUS-FUNC-ID-{{.Params.FlowId}}"]]
-    },
-    {
       "id": "TS-OPC-UA-BROWSER-HTTP-GET-ID-{{.Params.FlowId}}",
       "type": "http in",
       "name": "",
@@ -165,17 +154,6 @@
       "wires": [["TS-OPC-UA-BROWSER-ID-{{.Params.FlowId}}"]]
     },
     {
-      "id": "TS-OPC-UA-STATUS-FUNC-ID-{{.Params.FlowId}}",
-      "type": "function",
-      "name": "",
-      "func": "const { status } = msg;\nconst stat = global.get('ts-status') || {};\nif(stat[status.source.name] !== status.fill) {\n    msg.payload = status.fill;\n}\nstat[status.source.name] = status.fill;\nglobal.set('ts-status', stat);\nreturn msg;",
-      "outputs": 1,
-      "noerr": 0,
-      "x": 290,
-      "y": 160,
-      "wires": [["TS-OPC-UA-STATUS-MQTT-OUT-ID-{{.Params.FlowId}}"]]
-    },
-    {
       "id": "TS-OPC-UA-STATUS-HTTP-GET-ID-{{.Params.FlowId}}",
       "type": "http in",
       "name": "",
@@ -206,19 +184,6 @@
       "headers": {},
       "x": 870,
       "y": 440,
-      "wires": []
-    },
-    {
-      "id": "TS-OPC-UA-STATUS-MQTT-OUT-ID-{{.Params.FlowId}}",
-      "type": "mqtt out",
-      "z": "9d5a2adb.d70968",
-      "name": "",
-      "topic": "/thingspin/connect/{{.Params.FlowId}}/status",
-      "qos": "2",
-      "retain": "true",
-      "broker": "TS-MQTT-LISTENER-ID-{{.Params.FlowId}}",
-      "x": 970,
-      "y": 160,
       "wires": []
     },
     {
@@ -314,7 +279,7 @@
         "id": "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
         "type": "function",
         "name": "INFLUXDB",
-        "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif(newStatus.text !== INFLUXDB.text) {\n    node.status(newStatus);\n}\n",
+        "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif (!INFLUXDB || \n    newStatus.text !== INFLUXDB.text) {\n    node.status(newStatus);\n}\n",
         "outputs": 1,
         "noerr": 0,
         "x": 870,
