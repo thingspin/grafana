@@ -1,14 +1,16 @@
 import React, { PureComponent } from 'react';
-import { auto } from 'angular';
-import { FMDashboardModel } from '../models/index';
-import { FMVizTypeSelector } from './FMVIzTypeSelector';
-import { SelectableValue } from '@grafana/data';
-import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 
+import { SelectableValue } from '@grafana/data';
+
+import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
+
+import { FMDashboardModel } from '../models/index';
+import { FMVizTypeSelector } from './FMVIzTypeSelector';
+
 interface Props {
-    $injector: auto.IInjectorService;
+    $injector: angular.auto.IInjectorService;
     dashboard: FMDashboardModel;
     onChangeFacilityTree: (site: any, tags: any) => void;
     onPanelTypeChange: (item: SelectableValue<string>) => void;

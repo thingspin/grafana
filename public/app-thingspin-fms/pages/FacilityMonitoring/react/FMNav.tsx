@@ -1,4 +1,3 @@
-import { auto } from 'angular';
 import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -10,6 +9,7 @@ import { DashNavTimeControls } from 'app/features/dashboard/components/DashNav/D
 import { StoreState } from 'app/types';
 
 // Grafana State
+import { store } from 'app/store/store';
 import { updateLocation } from 'app/core/actions';
 
 // ThingSPIN Angular Services
@@ -18,14 +18,13 @@ import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/
 // Thingspin component libs
 import { FMNavButton } from './FMNavButton';
 import { updateFmMetaToggleTreeView } from '../redux/actions/FMAction';
-import { store } from 'app/store/store';
 
 // Facaility Monitoring Navigation Component
 // (Customized grafana react component: iiHOC)
 export class FMNavComp extends DashNav {
     // Override
     onSave = (): void => {
-        const { $injector }: { $injector: auto.IInjectorService } = this.props;
+        const { $injector }: { $injector: angular.auto.IInjectorService } = this.props;
         const dashboardSrv: TsDashboardSrv = $injector.get('dashboardSrv');
         dashboardSrv.fmSaveFM();
     };

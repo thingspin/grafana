@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { QueriesTab } from 'app/features/dashboard/panel_editor/QueriesTab';
 
 export default class FMQueriesTab extends QueriesTab {

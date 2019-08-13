@@ -1,4 +1,4 @@
-import angular, { ITimeoutService, ILocationService, IRootScopeService, IWindowService } from "angular";
+import angular from "angular";
 import { ChangeTracker } from "app/features/dashboard/services/ChangeTracker";
 import { ContextSrv } from 'app/core/services/context_srv';
 import { DashboardModel } from 'app/features/dashboard/state';
@@ -12,13 +12,13 @@ export interface FmUnsavedChangesSrv {
 
 class FmChangeTracker extends ChangeTracker {
     protected $rc: any; // $rootScope
-    protected $to: ITimeoutService; // $timeout
+    protected $to: angular.ITimeoutService; // $timeout
 
     constructor(
         dashboard: DashboardModel,
         scope: any,
         originalCopyDelay: any,
-        $location: ILocationService,
+        $location: angular.ILocationService,
         $window: any,
         $timeout: any,
         contextSrv: ContextSrv,
@@ -47,11 +47,11 @@ class FmChangeTracker extends ChangeTracker {
 angular.module('grafana.services').decorator('unsavedChangesSrv',
     /** @ngInject */
     ($delegate: any,
-        $location: ILocationService,
-        $window: IWindowService,
-        $timeout: ITimeoutService,
+        $location: angular.ILocationService,
+        $window: angular.IWindowService,
+        $timeout: angular.ITimeoutService,
         contextSrv: ContextSrv,
-        $rootScope: IRootScopeService
+        $rootScope: angular.IRootScopeService
     ) => {
     const self = $delegate as FmUnsavedChangesSrv;
 

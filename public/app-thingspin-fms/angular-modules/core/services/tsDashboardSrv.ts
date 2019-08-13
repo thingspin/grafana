@@ -1,5 +1,4 @@
 // 3rd party libs
-import { ILocationService } from 'angular';
 
 // grafana libs
 import { DashboardSrv } from 'app/features/dashboard/services/DashboardSrv';
@@ -10,7 +9,6 @@ import { store } from 'app/store/store';
 import { updateTsMenu } from 'app-thingspin-fms/react/redux/dispayches/tsMenu';
 import { appEvents } from 'app/core/app_events';
 import { DashboardModel } from 'app/features/dashboard/state';
-// import location_util from 'app/core/utils/location_util';
 
 // Define Thingspin DashboardService interface
 export interface TsDashboardSrv extends DashboardSrv {
@@ -31,7 +29,7 @@ export interface TsDashboardSrv extends DashboardSrv {
 coreModule.decorator('dashboardSrv',
 /** @ngInject */
 ($delegate: DashboardSrv, $rootScope: any,
-  backendSrv: BackendSrv, $location: ILocationService): TsDashboardSrv => {
+  backendSrv: BackendSrv, $location: angular.ILocationService): TsDashboardSrv => {
   const self: TsDashboardSrv = $delegate as TsDashboardSrv; //force type assertion
 
   // Add class method

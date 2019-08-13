@@ -20,76 +20,65 @@ export interface Props extends TsBaseProps {
 
 interface State {
   open: boolean;
-  maxChild: number;
   pin: boolean;
 }
 
 class TsMenuLv1 extends PureComponent<Props, State> {
   state: State = {
     open: this.props.pinned,
-    maxChild: 8,
     pin: this.props.pinned,
   };
-  pins: any;
-  async componentWillMount() {
-    this.pins = await this.props.getUserPins();
-    const { menu } = this.props;
-    if ( this.pins !== null) {
-      for ( let _i = 0; _i < this.pins.length; _i++) {
-        if ( this.pins[_i] === menu.id) {
-          this.setState( {
-            pin: true,
-            open: true
-          });
-          break;
-        }
-      }
+
+  async UNSAFE_componentWillMount() {
+    const { menu, getUserPins } = this.props;
+    const pins: any = await getUserPins();
+
+    if (Array.isArray(pins)
+      && pins.filter((pin) => pin === menu.id).length) {
+      this.setState({
+        pin: true,
+        open: true,
+      });
     }
   }
-  async componentDidMount() {
-
-  }
-  componentWillUnmount() {}
-  componentDidUpdate(prevProps: Props) {}
 
   arrowClickEvt = () => {
-    const { open } = this.state;
-    const pin = open ? false : this.state.pin;
+    const { open, pin } = this.state;
 
     this.setState({
       open: !open,
-      pin,
+      pin: open ? false : pin,
     });
   };
 
   pinClickEvt = () => {
-    const { menu } = this.props;
-    this.props.savePinState({
-      menuID: menu.id,
-      Pinned: !this.state.pin
+    const { pin } = this.state;
+    const { menu: { id }, savePinState, notifyApp} = this.props;
+
+    savePinState({
+      menuID: id,
+      Pinned: !pin,
     });
-    this.setState({ pin: !this.state.pin });
-    this.props.notifyApp(createSuccessNotification(`메뉴`, this.state.pin ? `메뉴를 닫아 둡니다.` : `메뉴를 열어 둡니다.`));
+    this.setState({ pin: !pin });
+
+    notifyApp(createSuccessNotification(`메뉴`, pin ? `메뉴를 닫아 둡니다.` : `메뉴를 열어 둡니다.`));
   };
 
   get arrowDOM() {
-    const { menu } = this.props, { pin, open } = this.state;
-    //const { pinned } = this.props;
+    const { menu } = this.props;
+    const { pin, open } = this.state;
     const arrowIcon = (pin || open) ? 'fa fa-caret-down' : 'fa fa-caret-up';
 
-    return (
-      <div className="fms-menu-header-controls-arrow" onClick={this.arrowClickEvt}>
-        <span>
-          <i className={menu.children ? (pin ? null : arrowIcon) : null} />
-        </span>
-      </div>
-    );
+    return <div className="fms-menu-header-controls-arrow" onClick={this.arrowClickEvt}>
+      <span>
+        <i className={menu.children ? (pin ? null : arrowIcon) : null} />
+      </span>
+    </div>;
   }
 
   get pinDOM() {
     const { open, pin } = this.state;
-    //const { pinned } = this.props;
-    const pinIcon = (pin) ? 'ts-leftsidebar-icons ts-left-icon-pin-on' : 'ts-leftsidebar-icons ts-left-icon-pin-off';
+    const pinIcon = `ts-leftsidebar-icons ${pin ? 'ts-left-icon-pin-on' : 'ts-left-icon-pin-off'}`;
 
     return (pin || open) ? (
       <div className="fms-menu-header-controls-pin" onClick={this.pinClickEvt}>
@@ -101,24 +90,16 @@ class TsMenuLv1 extends PureComponent<Props, State> {
   }
 
   get childrenDOM() {
-    const { menu } = this.props, { /*maxChild,*/ open, pin } = this.state;
+    const { menu: { children } } = this.props;
+    const { open, pin } = this.state;
 
-    // const bodyStyle =
-    //   menu.children && menu.children.length >= maxChild
-    //     ? {
-    //         height: `${maxChild * 28}px`,
-    //       }
-    //     : {};
-
-    const DOM = menu.children ? (
+    const DOM = children ? (
       <div key="menulv2" className="fms-menu-body" /*style={bodyStyle}*/>
         {' '}
-        {menu.children
-          .filter((item: any) => !item.hideFromMenu)
-          .filter((item: any) => !item.divider)
-          .map((item: any, idx: number) => (
-            <TsMenuLv2 key={idx} menu={item} />
-          ))}{' '}
+        {children
+          .filter(({ hideFromMenu, divider }: any) => !hideFromMenu && !divider)
+          .map((item: any, idx: number) => (<TsMenuLv2 key={idx} menu={item} />))
+        }{' '}
       </div>
     ) : null;
 
@@ -127,6 +108,7 @@ class TsMenuLv1 extends PureComponent<Props, State> {
 
   render() {
     const { menu } = this.props;
+
     return [
       <div className="fms-menu-lv1" key="ts-menu-lv1">
         <div className="fms-menu-header" key="menulv1">
@@ -161,5 +143,3 @@ const mapDispatchToProps = {
 const mapStateToProps = () => ({});
 
 export default connectWithStore(TsMenuLv1, mapStateToProps, mapDispatchToProps);
-
-// export default hot(module)(connect(mapStateToProps,mapDispatchToProps)(TsMenuLv1));

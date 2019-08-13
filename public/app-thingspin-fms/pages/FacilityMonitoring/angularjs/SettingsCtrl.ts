@@ -3,24 +3,23 @@ import _ from 'lodash';
 
 // Grafana Modules
 import { coreModule, } from 'app/core/core';
+import { BackendSrv } from 'app/core/services/backend_srv';
 import { SettingsCtrl } from 'app/features/dashboard/components/DashboardSettings';
 
 // ThingSPIN Modules
 import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
-import { BackendSrv } from 'app/core/services/backend_srv';
-import { route, IRootScopeService } from 'angular';
 
 // customize Grafana SettingsCtrl angular controller
 export class TsSettingsCtrl extends SettingsCtrl {
   protected dbSrv: TsDashboardSrv;
-  protected ngRoute: route.IRouteService;
+  protected ngRoute: angular.route.IRouteService;
 
   /** @ngInject */
   constructor(
     $scope: angular.IScope,
     $route: angular.route.IRouteService,
     $location: angular.ILocationService,
-    $rootScope: IRootScopeService,
+    $rootScope: angular.IRootScopeService,
     backendSrv: BackendSrv,
     dashboardSrv: TsDashboardSrv) {
     super($scope, $route, $location, $rootScope, backendSrv, dashboardSrv);
