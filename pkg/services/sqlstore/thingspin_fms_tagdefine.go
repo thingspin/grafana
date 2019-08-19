@@ -10,6 +10,16 @@ import (
 
 func init() {
 	bus.AddHandler("sql", GetFmsConnect)
+	bus.AddHandler("sql", GetAllTsConnectName)
+}
+
+func GetAllTsConnectName(cmd *m.GetAllTsConnectNameQuery) error {
+	var res []m.TsConnectName
+	err := x.Table(m.TsFmsConnectTbl).Find(&res)
+
+	cmd.Result = res
+
+	return err
 }
 
 func GetFmsConnect(cmd *m.GetFmsConnectCommand) error {

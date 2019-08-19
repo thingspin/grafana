@@ -26,6 +26,11 @@ type TsConnectField struct {
 	Updated   time.Time              `json:"updated"`
 }
 
+type TsConnectName struct {
+	Id        int     `json:"id"`
+	Name    string    `json:"name"`
+}
+
 type TsConnectType struct {
 	Id      string    `json:"id"`
 	Name    string    `json:"name"`
@@ -85,6 +90,10 @@ type DeleteTsConnectQuery struct {
 
 type GetAllTsConnectTypeQuery struct {
 	Result []TsConnectType
+}
+
+type GetAllTsConnectNameQuery struct {
+	Result []TsConnectName
 }
 
 type EnableTsConnectReq struct {

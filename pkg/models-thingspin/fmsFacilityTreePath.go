@@ -46,6 +46,7 @@ type TsFacilityTreeItem struct {
 	Label             string               `json:"label"`
 	Value             string               `json:"value"`
 	IsValid           bool                 `json:"isValid"`
+	IsPtag            bool                 `json:"isPtag"`
 	IsChecked         bool                 `json:"isChecked"`
 	IsEditing         bool                 `json:"isEditing"`	
 	FacilityId        int                  `json:"facility_id"`

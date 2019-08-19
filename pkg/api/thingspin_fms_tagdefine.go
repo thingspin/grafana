@@ -7,13 +7,25 @@ import (
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/bus"
 	"strconv"
-	c "github.com/influxdata/influxdb1-client/v2"
+	influx "github.com/influxdata/influxdb1-client/v2"
 	"github.com/grafana/grafana/pkg/setting"
 	"sort"
 	//m "github.com/grafana/grafana/pkg/models-thingspin"
 	//"reflect"
 )
 
+func getAllTsConnectName(c *gfm.ReqContext) Response {
+	q := m.GetAllTsConnectNameQuery{}
+
+	if err := bus.Dispatch(&q); err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	return JSON(200, q.Result)
+}
+
+
+// For tree
 func getAllTsConnectInfo(c *gfm.ReqContext) Response {
 	// Get all measurements from FMS_connect
 	cmd := m.GetFmsConnectCommand{}
@@ -31,7 +43,7 @@ func getAllTsConnectInfo(c *gfm.ReqContext) Response {
 func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDefineQuery) {
 	var influxHost = "http://" + setting.Thingspin.Influx.Host + ":" + strconv.Itoa(setting.Thingspin.Influx.Port)
 
-	cli, err := c.NewHTTPClient(c.HTTPConfig{
+	cli, err := influx.NewHTTPClient(influx.HTTPConfig{
 		Addr: influxHost,
 	})
 	if err != nil {
@@ -87,6 +99,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 					lv2 := lev2Map[cnode.Name]
 					
 					lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+						IsPtag : true,
 						IsValid : true,
 						TagTableName : msname,
 						TagColumnName : ptagMap["name"].(string),
@@ -102,6 +115,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 					forder = forder + 1
 					tags := []m.TsFacilityTreeItem{}
 					tags = append(tags,  m.TsFacilityTreeItem {
+						IsPtag : true,
 						IsValid : true,
 						TagTableName : msname,
 						TagColumnName : ptagMap["name"].(string),
@@ -112,6 +126,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 					})
 
 					lev2Map[cnode.Name] = m.TsFacilityTreeItem{
+						IsPtag : true,
 						FacilityName : cnode.Name,
 						Children : tags,
 						Label : cnode.Type,
@@ -125,7 +140,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 	// level2 with level3 from influxDB to get the historical data
 	for _, ms := range conInfo {
 		msName := ms.Type + "_" + strconv.Itoa(ms.Id)
-		q := c.NewQuery("SHOW FIELD KEYS ON thingspin from " + msName, "thingspin", "")
+		q := influx.NewQuery("SHOW FIELD KEYS ON thingspin from " + msName, "thingspin", "")
 		if response, err := cli.Query(q); err == nil && response.Error() == nil {
 			if len(response.Results) > 0 {
 				result := response.Results[0]
@@ -145,6 +160,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 							// 히스토리 태그
 							if !hasCheck {
 								lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+									IsPtag : true,
 									IsValid : false,
 									TagTableName : msName,
 									TagColumnName : v[0].(string),
