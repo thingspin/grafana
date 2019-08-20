@@ -64,7 +64,7 @@ export class FMDashboardPanel extends DashboardPanel {
                         plugin={plugin}
                         dashboard={dashboard}
                         angularPanel={angularPanel}
-                        onTypeChanged={this.onPluginTypeChanged}
+                        onPluginTypeChange={this.onPluginTypeChange}
                     />
                 )}
             </div>
