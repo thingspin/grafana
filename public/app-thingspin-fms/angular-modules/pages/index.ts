@@ -1,4 +1,5 @@
 import './alarmManagement';
+import './alarmManagement/notification';
 
 import './analysisManagement';
 import './analysisManagement/correlationAnalysis';

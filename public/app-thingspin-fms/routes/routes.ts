@@ -37,6 +37,12 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
       icon: 'fa fa-bell',
     },
   })
+  //.when('/thingspin/manage/alarm/new', { template: '<ts-alarm-new />', })
+  //.when('/thingspin/manage/alarm/management', { template: '<ts-alarm-management />', })
+  .when('/thingspin/manage/alarm/notification', { template: '<ts-alarm-notification />', })
+  //.when('/thingspin/manage/alarm/setting', { template: '<ts-alarm-setting />', })
+  //.when('/thingspin/manage/alarm/history', { template: '<ts-alarm-history />', })
+
 
   .when('/thingspin/manage/analysis', { template: '<ts-analysis-management />', })
   .when('/thingspin/manage/analysis/correlation', { template: '<ts-corr-analysis />', })
