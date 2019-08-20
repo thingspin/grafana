@@ -5,8 +5,7 @@ import { getBackendSrv } from '@grafana/runtime';
 import { auto, ILocationService, IRootScopeService } from 'angular';
 import FilterTree from './filterTree';
 //import { Item } from 'app-thingspin-fms/react/views/system/configs/types';
-
-
+import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 export type facilityTreeProps = {
     click?: Function;
     inject: auto.IInjectorService; // for route
@@ -31,6 +30,7 @@ export interface facilityItem {
     filterPlaceholder: string;
 
     checkedSave: [];
+    connectionList: connectData[];
 }
 
 //for select--------
@@ -40,6 +40,13 @@ interface siteData {
     label: any;
 }
 //-----------------select
+// tslint:disable-next-line:class-name
+interface connectData {
+    flowId: any;
+    connId: any;
+    connState: any;
+    influxState: any;
+}
 
 class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     _isMounted = true;
@@ -57,10 +64,16 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         sitesListinfo: [],
         siteOptions: [],
         filterPlaceholder: " 태그 검색 ...",
+        connectionList: [],
     };
 
     $location: ILocationService; // for route
     $rootScope: IRootScopeService;
+
+    // MQTT
+    //readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
+    //readonly listenerTopic: string = "/thingspin/+/+/status" as string;
+    mqttClient: TsMqttController; // mqtt client instance
 
     constructor(props: facilityTreeProps) {
         super(props);
@@ -76,8 +89,6 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         this.restoreFacilityData = this.restoreFacilityData.bind(this);
 
         this.customSingleValue = this.customSingleValue.bind(this);
-
-
         //console.log("constructor");
     }
 
@@ -100,6 +111,8 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         //console.log("componentWillMount");
         this._isMounted = true;
         this.getSiteList();
+        this.initMqtt();
+        this.getConnectInfo();
         //console.log(this.props);
         if (this.props.taginfo && this.props.taginfo.length > 0) {
             //console.log("data exist");
@@ -133,8 +146,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             const elements = [];
             let idx;
             if (result && result.length > 0 && this._isMounted) {
-                this.setState({ sitesListinfo: result });
-
+                //this.setState({ sitesListinfo: result });
                 for (let i = 0; i < result.length; i++) {
                     if (result[i].id === selectedOption.value) {
                         idx = i;
@@ -209,8 +221,10 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         try {
             const elements = [];
             const result = await getBackendSrv().get("/thingspin/sites");
-            //console.log(result);
-
+            const resultPTag = await getBackendSrv().get("/thingspin/tagdefine/graph"); //19-0820/PtagList 얻기
+            console.log(result);
+            console.log(resultPTag);
+            /*
             if (result && result.length > 0 && this._isMounted) {
                 this.setState({ sitesListinfo: result });
 
@@ -229,6 +243,36 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
                 this.getTreeinfo(this.state.selectedOption.value);
             } else {
                 console.log("** sites list empty **");
+            }*/
+            //19-0820 PTaglist
+            if (result && result.length > 0 && this._isMounted) {
+                for (let i = 0; i < result.length; i++) {
+                    elements.push({
+                        value: result[i].id,
+                        label: result[i].name,
+                        icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
+                    } as any);
+                }
+            } else {
+                console.log("** sites list empty **");
+            }
+
+            if (resultPTag && resultPTag.length > 0 && this._isMounted) {
+                for (let i = 0; i < resultPTag.length; i++) {
+                    elements.push({
+                        value: resultPTag[i].id,
+                        label: resultPTag[i].name,
+                        icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
+                    } as any);
+                }
+            } else {
+                console.log("** sites list empty **");
+            }
+
+            if (elements.length > 0) {
+                this.setState({ siteOptions: elements });
+                this.setState({ selectedOption: elements[0] });
+                this.getTreeinfo(this.state.selectedOption.value);
             }
         } catch (err) {
             console.log("get Sites, error!");
@@ -240,7 +284,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         //console.log('url',url);
         try {
             const result = await getBackendSrv().get(url);
-
+            console.log("getreeinfo:",result);
             if (result && result.length > 0 && this._isMounted) {
                 this.setState({ nodes: result });
                 this.setState({ nodesCount: result.length });
@@ -250,6 +294,53 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             console.log("get Treeinfo, error!");
             console.log(err);
        }
+    }
+
+    //0814
+    async getConnectInfo() {
+        try {
+            //const elements = [];
+            const result = await getBackendSrv().get("/thingspin/connect");
+            if (result && result.length > 0 && this._isMounted) {
+                console.log("getConnectInfo: ",result);
+                //this.setState({ sitesListinfo: result });
+                for (let i = 0; i < result.length; i++) {
+                    console.log("getconnectinfo:",result[i].params.FlowId);
+                }
+            } else {
+                console.log("** connect info empty **");
+            }
+        } catch (err) {
+            console.log("get Connects, error!");
+            console.log(err);
+        }
+    }
+
+    async initMqtt(): Promise<void> {
+        const mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
+        const listenerTopic: string = "/thingspin/+/+/status" as string;
+
+        this.mqttClient = new TsMqttController(mqttUrl, listenerTopic);
+        try {
+            await this.mqttClient.run(this.recvMqttMessage.bind(this));
+            console.log("MQTT Connected");
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    recvMqttMessage(topic: string, payload: string | object): void {
+        const topics = topic.split("/");
+        const id = topics[topics.length - 2];
+        const target = topics[topics.length - 3];
+        //let isChange = false;
+        console.log("topics: ",topic," id: ",id," target:",target," payload: ",payload);
+        //console.log(isChange);
+        switch (target){
+            case 'connect':
+                break;
+
+            default:
+        }
     }
 
     //page move
@@ -276,6 +367,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     }
     //SITE SELECTION
     handleChange = (selectedOption: any) => {
+        console.log("handleChange");
         this.setState({ selectedOption });
         this.getTreeinfo(selectedOption.value);
     };

@@ -73,7 +73,7 @@ class FilterTree extends Component<Props,State> {
     }
 
     putNodeIcon(node: any[]) {
-        //console.log("parent check");
+        console.log("parent check");
         if (node && node.length > 0) {
             for (let i = 0; i < node.length; i++) {
                 if (node[i].tag_id === 0) {
