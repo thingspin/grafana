@@ -1,21 +1,15 @@
 // 3rd party libs
-import React, { PureComponent, ReactNode } from 'react';
-
-// grafana libs
-import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
+import React, { PureComponent, ReactNode, useContext } from 'react';
 
 // thingspin libs
 import TsMenuLv1 from './MenuLv1';
-import { TsBaseProps } from 'app-thingspin-fms/models/common';
+import { ThingspinContext, TsPrivderCtrl } from 'app-thingspin-fms/react/thingspinProvider';
 
-export interface Props extends TsBaseProps {
-  menu: any[];
+export interface Props {
+  ctx: TsPrivderCtrl;
 }
 
 export class TsMenu extends PureComponent<Props> {
-  constructor(props: Props) {
-    super(props);
-  }
 
   render() {
     const menu = this.filteredMenu();
@@ -34,20 +28,24 @@ export class TsMenu extends PureComponent<Props> {
   }
 
   private filteredMenu(): any[] {
-    const { menu } = this.props;
+    const { menu } = this.props.ctx.thingspinMenu;
 
-    return menu
+    return Array.isArray(menu)
       ? menu.filter(item => !item.hideFromMenu && item.icon && !item.divider)
       : [];
   }
 
   private renderMenuLv1 = (item: any): ReactNode => (<TsMenuLv1 key={item.id} menu={item} pinned={item.pinned} />);
 
-  private top = (menu: any[]): ReactNode => (menu.filter(({ placeBottom }) => !placeBottom).map(this.renderMenuLv1));
+  private top = (menu: any[]): ReactNode => (
+    menu.filter(({ placeBottom }) => !placeBottom)
+      .map(this.renderMenuLv1)
+  );
 
-  private bottom = (menu: any[]): ReactNode => (menu.filter(({ placeBottom }) => placeBottom).map(this.renderMenuLv1));
+  private bottom = (menu: any[]): ReactNode => (
+    menu.filter(({ placeBottom }) => placeBottom)
+      .map(this.renderMenuLv1)
+  );
 }
 
-const mapStateToProps = ({ thingspinMenu: { menu }}: any) => ({ menu });
-
-export default connectWithStore(TsMenu, mapStateToProps);
+export default () => (<TsMenu ctx={useContext(ThingspinContext)}></TsMenu>);
