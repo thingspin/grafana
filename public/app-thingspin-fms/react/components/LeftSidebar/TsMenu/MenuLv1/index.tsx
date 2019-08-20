@@ -112,21 +112,26 @@ class TsMenuLv1 extends PureComponent<Props, State> {
     return [
       <div className="fms-menu-lv1" key="ts-menu-lv1">
         <div className="fms-menu-header" key="menulv1">
+
           <div className="fms-menu-header-icon">
             <i className={menu.icon} />
           </div>
+
           <div className="fms-menu-header-name">
             <a href={menu.url} target={menu.target}>
               {menu.text}
             </a>
           </div>
+
           <div className="fms-menu-header-controls">
             {this.pinDOM}
             {this.arrowDOM}
           </div>
         </div>
+
         {this.childrenDOM}
       </div>,
+
       <div className="fms-menu-dividers" key="ts-dividers">
         <hr className="fms-menu-dividers-divider" key="ts-divider" />
       </div>,

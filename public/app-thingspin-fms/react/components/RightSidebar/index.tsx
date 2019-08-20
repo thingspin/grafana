@@ -18,9 +18,6 @@ export interface States {
 }
 
 export class TsRightSidebar extends PureComponent<Props, States> {
-  async componentWillMount() {
-  }
-
   state: States = {
     filters: [],
     date: new Date(),

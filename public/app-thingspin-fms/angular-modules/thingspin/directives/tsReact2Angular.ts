@@ -1,6 +1,6 @@
 // import angular from 'angular';
-import { provideTheme } from 'app/core/utils/ConfigProvider';
 import { coreModule } from 'app/core/core';
+import thingspinProvider from 'app-thingspin-fms/react/thingspinProvider';
 
 export function tsReact2AngularDirective(name: string, component: any, options: any) {
   coreModule.directive(name, [
@@ -9,7 +9,7 @@ export function tsReact2AngularDirective(name: string, component: any, options: 
     '$route',
     '$rootScope',
     (reactDirective, $injector, $route, $rootScope) => {
-      return reactDirective(provideTheme(component), options, null, { $injector, $route, $rootScope });
+      return reactDirective(thingspinProvider(component), options, null, { $injector, $route, $rootScope });
     },
   ]);
 }

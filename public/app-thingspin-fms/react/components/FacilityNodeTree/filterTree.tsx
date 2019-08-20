@@ -42,7 +42,7 @@ class FilterTree extends Component<Props,State> {
         //console.log("react/filter: ",this.props.nodes);
     }
 
-    componentWillReceiveProps(nextProps: Props) {
+    UNSAFE_componentWillReceiveProps(nextProps: Props) {
         // this.props 는 아직 바뀌지 않은 상태
         //console.log("componentWillReceive");
         //console.log("prev -node: ",this.props.nodes);
@@ -67,7 +67,7 @@ class FilterTree extends Component<Props,State> {
             //console.log("props same");
         }
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         //console.log("componentWillMount");
         this.putNodeIcon(this.props.nodes);
     }

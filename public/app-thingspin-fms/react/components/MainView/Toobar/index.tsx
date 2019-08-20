@@ -19,14 +19,15 @@ export class TsToolbarComponent extends PureComponent<Props> {
 
   // common event Methods
 
+  onCompressEvt = () => {
+    appEvents.emit('ts-change-viewmode', 0);
+  };
+
   // get render splitted virtual DOM Methods
 
   get renderCompressButton(): JSX.Element {
-    const onCompressEvt = () => {
-      appEvents.emit('ts-change-viewmode', 0);
-    };
     return (
-      <button className={`btn reduct-btn`} onClick={onCompressEvt}>
+      <button className={`btn reduct-btn`} onClick={this.onCompressEvt}>
         <i className={`fa fa-compress`} />
       </button>
     );
@@ -35,16 +36,16 @@ export class TsToolbarComponent extends PureComponent<Props> {
     const { list }: TsToolbarPayload = this.props.thingspinToolbar;
 
     return (
-      <div className={`ts-toolbar-component`}>
-        <div className={`ts-toolbar-wrap`}>
-          <div className={`ts-toolbar-items`}>
+      <div className="ts-toolbar-component">
+        <div className="ts-toolbar-wrap">
+          <div className="ts-toolbar-items">
             {list.map(({ link, icon, title }: ToolbarItem, index: number) => {
               const onClickEvt = () => {
                 this.props.updateLocation({ path: link });
               };
 
               return (
-                <button className={`ts-toobar-link`} key={`ts-toolbar-item-${index}`} onClick={onClickEvt}>
+                <button className="ts-toobar-link" key={`ts-toolbar-item-${index}`} onClick={onClickEvt}>
                   <i className={icon} /> {title}
                 </button>
               );

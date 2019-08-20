@@ -14,7 +14,7 @@ import FMQueriesTab from './FMQueriesTab';
 export class FMPanelEditor extends PanelEditor {
     // Override
     renderCurrentTab(activeTab: string) {
-        const { panel, dashboard, onTypeChanged, plugin, angularPanel } = this.props;
+        const { panel, dashboard, onPluginTypeChange, plugin, angularPanel } = this.props;
 
         switch (activeTab) {
             case 'advanced':
@@ -29,7 +29,7 @@ export class FMPanelEditor extends PanelEditor {
                         panel={panel}
                         dashboard={dashboard}
                         plugin={plugin}
-                        onTypeChanged={onTypeChanged}
+                        onPluginTypeChange={onPluginTypeChange}
                         angularPanel={angularPanel}
                     />
                 );
