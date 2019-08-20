@@ -132,7 +132,8 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         //site selected
         const selectedOption = item.siteinfo;
         const taginfo = item.taginfo;
-
+        this.findSiteinfo(selectedOption.value);
+        /*
         getBackendSrv().get("/thingspin/sites").then((result: any) => {
             const elements = [];
             let idx;
@@ -158,54 +159,20 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             console.log("get Sites, error!");
             console.log(err);
         });
-        // tag selected
-        const elements = [];
-
-        if (taginfo && taginfo.length > 0) {
-            for (let i = 0; i < taginfo.length; i++) {
-                const data = taginfo[i].value;
-                elements.push(data);
-            }
-            this.setState({ checkedSave: elements as any });
-        } else {
-            this.setState({ checkedSave: [] });
-        }
-    }
-
-    //TEST SAMPLE
-    /*
-    testGetList() {
-        getBackendSrv().get("/thingspin/sites/sample").then((result: any) => {
-            //console.log(result);
+        */
+             // tag selected
             const elements = [];
-            if (result && result.length > 0) {
-              this.setState({sitesListinfo: []}); // initialize
-              this.setState({sitesListinfo: result});
-
-              for (let i = 0; i < result.length; i++) {
-                  elements.push({value: result[i].id,label: result[i].name});
-              }
-
-              //copy elemenets to select options
-              //init set first index
-              this.setState({siteOptions: elements });
-              this.setState({selectedOption: elements[0]});
-              this.testGetTree(this.state.selectedOption.value);
+            if (taginfo && taginfo.length > 0) {
+                for (let i = 0; i < taginfo.length; i++) {
+                    const data = taginfo[i].value;
+                    console.log('tagselected',data);
+                    elements.push(data);
+                }
+                this.setState({ checkedSave: elements as any });
             } else {
-              console.log("** sites list empty **");
+                this.setState({ checkedSave: [] });
             }
-          });
     }
-    testGetTree(siteid) {
-        const url = "/thingspin/sites/"+siteid+"/facilities/tree/sample";
-        //console.log('url',url);
-        getBackendSrv().get(url).then((result: any) => {
-
-            this.setState({nodes: result});
-            this.setState({nodesCount: result.length});
-          });
-    }
-*/
 
     //BACKEND SRV
     async getSiteList() {
@@ -213,8 +180,6 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             const elements = [];
             const result = await getBackendSrv().get("/thingspin/sites");
             const resultPTag = await getBackendSrv().get("/thingspin/tagdefine/graph"); //19-0820/PtagList 얻기
-            console.log(result);
-            console.log(resultPTag);
             /*
             if (result && result.length > 0 && this._isMounted) {
                 this.setState({ sitesListinfo: result });
@@ -251,9 +216,9 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             if (resultPTag && resultPTag.length > 0 && this._isMounted) {
                 for (let i = 0; i < resultPTag.length; i++) {
                     elements.push({
-                        value: resultPTag[i].id,
+                        value: resultPTag[i].id + 50000,
                         label: resultPTag[i].name,
-                        icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
+                        icon: <i className="fa fa-plug">&nbsp;&nbsp;</i>
                     } as any);
                 }
             } else {
@@ -270,23 +235,83 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             console.log(err);
         }
     }
-    async getTreeinfo(siteid: any) {
-        const url = `/thingspin/sites/${siteid}/facilities/tree`;
-        //console.log('url',url);
+    async findSiteinfo(siteid: any) {
         try {
-            const result = await getBackendSrv().get(url);
-            console.log("getreeinfo:",result);
-            if (result && result.length > 0 && this._isMounted) {
-                this.setState({ nodes: result });
-                this.setState({ nodesCount: result.length });
-                //console.log("getTreeinfo: ",this.state.nodes);
+            const elements = [];
+            const result = await getBackendSrv().get("/thingspin/sites");
+            const resultPTag = await getBackendSrv().get("/thingspin/tagdefine/graph"); //19-0820/PtagList 얻기
+            let findId = siteid;
+            if (findId > 50000) {
+                findId = findId - 50000;
             }
+
+            let idx;
+            if (result && result.length > 0 && this._isMounted) {
+                for (let i = 0; i < result.length; i++) {
+                    if (result[i].id === findId) {
+                        idx = i;
+                    }
+                    elements.push({
+                        value: result[i].id,
+                        label: result[i].name,
+                        icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
+                    } as any);
+                }
+            } else {
+                console.log("** sites list empty **");
+            }
+
+            if (resultPTag && resultPTag.length > 0 && this._isMounted) {
+                for (let i = 0; i < resultPTag.length; i++) {
+                    if (resultPTag[i].id === findId) {
+                        if (result && result.length > 0) {
+                            idx = i+result.length;
+                        }else {
+                            idx = i;
+                        }
+                    }
+                    elements.push({
+                        value: resultPTag[i].id + 50000,
+                        label: resultPTag[i].name,
+                        icon: <i className="fa fa-plug">&nbsp;&nbsp;</i>
+                    } as any);
+                }
+            } else {
+                console.log("** sites list empty **");
+            }
+
+            if (elements.length > 0) {
+                console.log('findsiteinfo',idx);
+                this.setState({ siteOptions: elements });
+                this.setState({ selectedOption: elements[idx] });
+                this.getTreeinfo(this.state.selectedOption.value);
+            }
+        } catch (err) {
+            console.log("get Sites, error!");
+            console.log(err);
+        }
+    }
+    async getTreeinfo(siteid: any) {
+        const urlOrigin = `/thingspin/sites/${siteid}/facilities/tree`;
+        const urlPtag = `/thingspin/tagdefine/graph/${siteid - 50000}`;
+        let url = urlOrigin;
+        try {
+                if (siteid > 50000) {
+                    url = urlPtag;
+                }
+                //console.log(url);
+                const result = await getBackendSrv().get(url);
+                //console.log("getreeinfo:",result);
+                if (result && result.length > 0 && this._isMounted) {
+                    this.setState({ nodes: result });
+                    this.setState({ nodesCount: result.length });
+                    //console.log("getTreeinfo: ",this.state.nodes);
+                }
         } catch (err) {
             console.log("get Treeinfo, error!");
             console.log(err);
        }
     }
-
     //0814
     async getConnectInfo() {
         try {
@@ -348,12 +373,13 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
 
     //CHECK TREE
     onCheck2(checked: any) {
-        console.log(checked);
+        //console.log(checked);
         const siteData = this.state.selectedOption;
         const Taginfo = checked.Taginfo;
         this.setState({ Taginfo: Taginfo });
         this.setState({ checked: checked.checked });
 
+        console.log('Taginfo: ',Taginfo,'siteData: ', siteData);
         this.props.click({ Taginfo, siteData });
     }
     //SITE SELECTION
