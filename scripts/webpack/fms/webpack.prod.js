@@ -1,14 +1,12 @@
 'use strict';
 
 const merge = require('webpack-merge');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./webpack.common.js');
 const gfProd = require("../webpack.prod.js");
 const path = require('path');
 const ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 //Override (module, plugins) Written by JGW
 let fmsProd = merge(common, {

@@ -8,10 +8,12 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 //Override (entry, output, plugins) Written by JGW
 let fmsDev = merge(common, {
+  devtool: "cheap-module-source-map",
+  mode: 'development',
+
   entry: {
     app: './public/app-thingspin-fms/index.ts',
     dark: './public/sass/fms.dark.scss',
@@ -78,15 +80,12 @@ let fmsDev = merge(common, {
         'NODE_ENV': JSON.stringify('development')
       }
     }),
-    // new BundleAnalyzerPlugin({
-    //   analyzerPort: 8889
-    // })
   ]
 });
 
 //Copy already used Grafana webpack.dev.js
 const { devtool, mode, } = gfDev;
-fmsDev = Object.assign(fmsDev, {
+module.exports = Object.assign(fmsDev, {
   devtool,
   mode,
   module: {
@@ -97,5 +96,3 @@ fmsDev = Object.assign(fmsDev, {
     }]),
   },
 });
-
-module.exports = fmsDev;

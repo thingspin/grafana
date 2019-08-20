@@ -17,15 +17,15 @@ let fmsHot = merge(common, {
     app: ['webpack-dev-server/client?http://0.0.0.0:3333', './public/app-thingspin-fms/dev.ts'],
   },
 
-  resolve: {
-    extensions: ['.scss', '.css', '.ts', '.tsx', '.es6', '.js', '.json', '.svg', '.woff2', '.png', '.html'],
-  },
-  
   output: {
     path: path.resolve(__dirname, '../../../public/build'),
     filename: 'fms-[name].[hash].js',
     publicPath: '/public/build/',
     pathinfo: false,
+  },
+
+  resolve: {
+    extensions: ['.scss', '.css', '.ts', '.tsx', '.es6', '.js', '.json', '.svg', '.woff2', '.png', '.html'],
   },
 
   devServer: {
