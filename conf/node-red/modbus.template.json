@@ -179,7 +179,15 @@
             "noerr": 0,
             "x": 1060,
             "y": 280,
-            "wires": {{if .Enable}} [["TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}"]] {{else}} [[]] {{end}}
+            "wires": [[
+                {{if .Enable }} 
+                  "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}",
+                  "TS-MODBUS-INFLUX-CHECK-{{.Params.FlowId}}"
+                  {{if .Publish }}
+                  ,"TS-MODBUS-MQTT-FUNCTION-{{.Params.FlowId}}"
+                  {{end}}
+                {{end}}
+              ]]
         },
         {
             "id": "TS-MODBUS-SERVER-ID-{{.Params.FlowId}}",
@@ -312,7 +320,7 @@
             "z": "d55018cc.35f148",
             "name": "",
             "scope": [
-                "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}",
+                "TS-MODBUS-INFLUX-CHECK-{{.Params.FlowId}}",
                 "TS-MODBUS-MQTT-EXPORT-{{.Params.FlowId}}"
             ],
             "x": 560,
@@ -338,7 +346,37 @@
                     "TS-MODBUS-STATUS2-MQTT-OUT-{{.Params.FlowId}}"
                 ]
             ]
+        },
+        {
+            "id": "TS-MODBUS-INFLUX-CHECK-{{.Params.FlowId}}",
+            "type": "function",
+            "z": "87a95871.2b6618",
+            "name": "INFLUXDB",
+            "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif (!INFLUXDB || \n    newStatus.text !== INFLUXDB.text) {\n    node.status(newStatus);\n}\n",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 1330,
+            "y": 240,
+            "wires": [
+                []
+            ]
+        },
+        {
+            "id": "TS-MODBUS-CATCH-INFLUX-CHECK-{{.Params.FlowId}}",
+            "type": "catch",
+            "z": "87a95871.2b6618",
+            "name": "",
+            "scope": [
+                "TS-MODBUS-INFLUXDB-BATCH-{{.Params.FlowId}}"
+            ],
+            "uncaught": false,
+            "x": 1150,
+            "y": 240,
+            "wires": [
+                [
+                    "TS-MODBUS-INFLUX-CHECK-{{.Params.FlowId}}"
+                ]
+            ]
         }
-        
     ]
 }

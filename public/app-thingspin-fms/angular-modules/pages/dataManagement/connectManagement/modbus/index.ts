@@ -137,7 +137,8 @@ export class TsModbusConnectCtrl {
     this.modbusParams = {
       quantity: ['1','2','3','4','5','6','7','8','9'],
       functioncodes: ['Coil Status','Input Status','Holding Registers','Input Registers'],
-      datatypes: ['decimal','Hex','String']
+      datatypes: ['decimal']
+      //datatypes: ['decimal','Hex','String']
     };
 
     this.getterparserArray = [];
