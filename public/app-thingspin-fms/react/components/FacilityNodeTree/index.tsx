@@ -130,9 +130,10 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     restoreFacilityData(item: facilityTreeProps) {
         //console.log("restore");
         //site selected
+        console.log(item.siteinfo);
         const selectedOption = item.siteinfo;
         const taginfo = item.taginfo;
-        this.findSiteinfo(selectedOption.value);
+        this.findSiteinfo(selectedOption.value, selectedOption.isCustom);
         /*
         getBackendSrv().get("/thingspin/sites").then((result: any) => {
             const elements = [];
@@ -206,6 +207,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
                     elements.push({
                         value: result[i].id,
                         label: result[i].name,
+                        isCustom: true,
                         icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
                     } as any);
                 }
@@ -216,8 +218,9 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             if (resultPTag && resultPTag.length > 0 && this._isMounted) {
                 for (let i = 0; i < resultPTag.length; i++) {
                     elements.push({
-                        value: resultPTag[i].id + 50000,
+                        value: resultPTag[i].id,
                         label: resultPTag[i].name,
+                        isCustom: false,
                         icon: <i className="fa fa-plug">&nbsp;&nbsp;</i>
                     } as any);
                 }
@@ -228,22 +231,20 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             if (elements.length > 0) {
                 this.setState({ siteOptions: elements });
                 this.setState({ selectedOption: elements[0] });
-                this.getTreeinfo(this.state.selectedOption.value);
+                this.getTreeinfo(this.state.selectedOption.value,this.state.selectedOption.isCustom);
             }
         } catch (err) {
             console.log("get Sites, error!");
             console.log(err);
         }
     }
-    async findSiteinfo(siteid: any) {
+    async findSiteinfo(siteid: any, isCustom: boolean) {
+        console.log('findsiteinfo: ',siteid,isCustom);
         try {
             const elements = [];
             const result = await getBackendSrv().get("/thingspin/sites");
             const resultPTag = await getBackendSrv().get("/thingspin/tagdefine/graph"); //19-0820/PtagList 얻기
-            let findId = siteid;
-            if (findId > 50000) {
-                findId = findId - 50000;
-            }
+            const findId = siteid;
 
             let idx;
             if (result && result.length > 0 && this._isMounted) {
@@ -254,6 +255,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
                     elements.push({
                         value: result[i].id,
                         label: result[i].name,
+                        isCustom: true,
                         icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
                     } as any);
                 }
@@ -271,8 +273,9 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
                         }
                     }
                     elements.push({
-                        value: resultPTag[i].id + 50000,
+                        value: resultPTag[i].id,
                         label: resultPTag[i].name,
+                        isCustom: false,
                         icon: <i className="fa fa-plug">&nbsp;&nbsp;</i>
                     } as any);
                 }
@@ -284,19 +287,21 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
                 console.log('findsiteinfo',idx);
                 this.setState({ siteOptions: elements });
                 this.setState({ selectedOption: elements[idx] });
-                this.getTreeinfo(this.state.selectedOption.value);
+                this.getTreeinfo(this.state.selectedOption.value,this.state.selectedOption.isCustom);
             }
         } catch (err) {
             console.log("get Sites, error!");
             console.log(err);
         }
     }
-    async getTreeinfo(siteid: any) {
+    async getTreeinfo(siteid: any, isCustom: boolean) {
         const urlOrigin = `/thingspin/sites/${siteid}/facilities/tree`;
-        const urlPtag = `/thingspin/tagdefine/graph/${siteid - 50000}`;
+        const urlPtag = `/thingspin/tagdefine/graph/${siteid}`;
         let url = urlOrigin;
         try {
-                if (siteid > 50000) {
+                if (isCustom) {
+                    url = urlOrigin;
+                }else {
                     url = urlPtag;
                 }
                 //console.log(url);
@@ -386,7 +391,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     handleChange = (selectedOption: any) => {
         console.log("handleChange");
         this.setState({ selectedOption });
-        this.getTreeinfo(selectedOption.value);
+        this.getTreeinfo(selectedOption.value, selectedOption.isCustom);
     };
 
     //TEST
