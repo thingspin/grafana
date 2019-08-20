@@ -93,6 +93,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 		tsRoute.Group("/tagdefine", func(tsTypeRoute routing.RouteRegister) {
 			tsTypeRoute.Get("/", Wrap(getAllTsConnectInfo))
 			tsTypeRoute.Get("/graph",Wrap(getAllTsConnectName))
+			tsTypeRoute.Get("/graph/:id",Wrap(getTsPtag))
 		})
 
 		tsRoute.Group("/type", func(tsTypeRoute routing.RouteRegister) {
