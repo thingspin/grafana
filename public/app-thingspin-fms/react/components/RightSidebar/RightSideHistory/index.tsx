@@ -40,7 +40,7 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     checked: false,
   };
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     await liveSrv.getConnection();
 
     this.source = liveSrv.subscribe('ts-alarm');
@@ -76,7 +76,7 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     }
   }
 
-  componentWillReceiveProps(next: Props) {
+  UNSAFE_componentWillReceiveProps(next: Props) {
     this.setState({ enable: next.play });
   }
 

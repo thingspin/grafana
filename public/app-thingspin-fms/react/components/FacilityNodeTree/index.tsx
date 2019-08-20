@@ -82,7 +82,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     }
 
     //props check
-    componentWillReceiveProps(nextProps: facilityTreeProps) {
+    UNSAFE_componentWillReceiveProps(nextProps: facilityTreeProps) {
         //test.
         console.log("props-tag: ", nextProps.taginfo);
         console.log("props-site: ", nextProps.siteinfo);
@@ -96,7 +96,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         }
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         //console.log("componentWillMount");
         this._isMounted = true;
         this.getSiteList();
@@ -109,15 +109,6 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         }
     }
 
-    componentDidMount() {
-        //console.log('componentDidMount');
-    }
-    componentWillUpdate() {
-        //console.log('componentWillUpdate');
-    }
-    componentDidUpdate() {
-        //console.log('componentDidUpdate');
-    }
     componentWillUnmount() {
         this._isMounted = false;
         //console.log('componentWillUnmount');
