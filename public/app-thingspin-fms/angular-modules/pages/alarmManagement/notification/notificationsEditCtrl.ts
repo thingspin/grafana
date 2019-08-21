@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import { appEvents, coreModule, NavModelSrv } from 'app/core/core';
+import { appEvents, coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
 export class TsAlarmNotiEditCtrl {
   theForm: any;
-  navModel: any;
+  //navModel: any;
   testSeverity = 'critical';
   notifiers: any;
   notifierTemplateId: string;
@@ -30,9 +30,9 @@ export class TsAlarmNotiEditCtrl {
     private backendSrv: BackendSrv,
     private $location: any,
     private $templateCache: any,
-    navModelSrv: NavModelSrv
+    //navModelSrv: NavModelSrv
   ) {
-    this.navModel = navModelSrv.getNav('alerting', 'channels', 0);
+   // this.navModel = navModelSrv.getNav('alerting', 'channels', 0);
     this.isNew = !this.$routeParams.id;
 
     this.getFrequencySuggestion = () => {
@@ -50,14 +50,14 @@ export class TsAlarmNotiEditCtrl {
         }
 
         if (!this.$routeParams.id) {
-          this.navModel.breadcrumbs.push({ text: 'New channel' });
-          this.navModel.node = { text: 'New channel' };
+          //this.navModel.breadcrumbs.push({ text: 'New channel' });
+          //this.navModel.node = { text: 'New channel' };
           return _.defaults(this.model, this.defaults);
         }
 
         return this.backendSrv.get(`/api/alert-notifications/${this.$routeParams.id}`).then((result: any) => {
-          this.navModel.breadcrumbs.push({ text: result.name });
-          this.navModel.node = { text: result.name };
+          //this.navModel.breadcrumbs.push({ text: result.name });
+          //this.navModel.node = { text: result.name };
           result.settings = _.defaults(result.settings, this.defaults.settings);
           return result;
         });
