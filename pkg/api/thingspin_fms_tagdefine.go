@@ -270,7 +270,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 						Label : ptagMap["name"].(string),
 						Children : []m.TsFacilityTreeItem{},
 					})
-
+					uid = uid + 1
 					lev2Map[cnode.Name] = m.TsFacilityTreeItem{
 						SiteId: cnode.Id,
 						IsPtag : true,
@@ -280,6 +280,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 						FacilityTreeOrder : forder,
 						Value: strconv.Itoa(uid),
 					}
+					uid = uid + 1
 				}
 			}
 		}
@@ -321,6 +322,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 									Label : v[0].(string),
 									Children : []m.TsFacilityTreeItem{},
 								})
+								uid = uid + 1
 							}
 							lev2Map[ms.Name] = lv2
 		

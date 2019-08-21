@@ -1,20 +1,29 @@
-import angular from 'angular';
+import { coreModule, NavModelSrv } from 'app/core/core';
+import { BackendSrv } from 'app/core/services/backend_srv';
 
 export class TsAlarmNotiManagementCtrl {
+  notifications: any;
+  navModel: any;
+
   /** @ngInject */
-  constructor() {}
+  constructor(private backendSrv: BackendSrv, navModelSrv: NavModelSrv) {
+    this.loadNotifications();
+    this.navModel = navModelSrv.getNav('alerting', 'channels', 0);
+  }
+
+  loadNotifications() {
+    this.backendSrv.get(`/api/alert-notifications`).then((result: any) => {
+      this.notifications = result;
+    });
+  }
+
+  deleteNotification(id: number) {
+    this.backendSrv.delete(`/api/alert-notifications/${id}`).then(() => {
+      this.notifications = this.notifications.filter((notification: any) => {
+        return notification.id !== id;
+      });
+    });
+  }
 }
 
-/** @ngInject */
-export function tsAlarmNotiDirective() {
-  return {
-    restrict: 'E',
-    templateUrl: require("./index.html"),
-    controller: TsAlarmNotiManagementCtrl,
-    bindToController: true,
-    controllerAs: 'ctrl',
-    scope: {},
-  };
-}
-
-angular.module('thingspin.directives').directive('tsAlarmNotification', tsAlarmNotiDirective);
+coreModule.controller('TsAlarmNotiManagementCtrl', TsAlarmNotiManagementCtrl);

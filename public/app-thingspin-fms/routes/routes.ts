@@ -37,9 +37,36 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
       icon: 'fa fa-bell',
     },
   })
+  .when('/thingspin/manage/alarm/notification', {
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/alarmManagement/notification/index.html',
+    routeInfo: {
+      menupath: [UserSettingInfo.Alarm],
+      icon: 'fa fa-bell',
+    },
+    controller: 'TsAlarmNotiManagementCtrl',
+    controllerAs: 'ctrl',
+  })
+  .when('/thingspin/manage/alarm/notification/new', {
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/alarmManagement/notification/notification_edit.html',
+    routeInfo: {
+      menupath: [UserSettingInfo.Alarm],
+      icon: 'fa fa-bell',
+    },
+    controller: 'TsAlarmNotiEditCtrl',
+    controllerAs: 'ctrl',
+  })
+  .when('/thingspin/manage/alarm/notification/:id/edit', {
+    templateUrl: 'public/app-thingspin-fms/angular-modules/pages/alarmManagement/notification/notification_edit.html',
+    routeInfo: {
+      menupath: [UserSettingInfo.Alarm],
+      icon: 'fa fa-bell',
+    },
+    controller: 'TsAlarmNotiEditCtrl',
+    controllerAs: 'ctrl',
+  })
   //.when('/thingspin/manage/alarm/new', { template: '<ts-alarm-new />', })
   //.when('/thingspin/manage/alarm/management', { template: '<ts-alarm-management />', })
-  .when('/thingspin/manage/alarm/notification', { template: '<ts-alarm-notification />', })
+  //.when('/thingspin/manage/alarm/notification', { template: '<ts-alarm-notification />', })
   //.when('/thingspin/manage/alarm/setting', { template: '<ts-alarm-setting />', })
   //.when('/thingspin/manage/alarm/history', { template: '<ts-alarm-history />', })
 
