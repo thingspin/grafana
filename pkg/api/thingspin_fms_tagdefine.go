@@ -49,6 +49,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 			lv2 := lev2Map[conn.Result.Name]
 			
 			lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+				SiteId: connId,
 				IsPtag : true,
 				IsValid : true,
 				TagId: tid,
@@ -68,6 +69,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 		} else {
 			tags := []m.TsFacilityTreeItem{}
 			tags = append(tags,  m.TsFacilityTreeItem {
+				SiteId: connId,
 				IsPtag : true,
 				IsValid : true,
 				TagId: tid,
@@ -83,6 +85,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 			uid = uid + 1
 			tid = tid - 1
 			lev2Map[conn.Result.Name] = m.TsFacilityTreeItem{
+				SiteId: connId,
 				IsPtag : true,
 				IsValid : true,
 				FacilityName : conn.Result.Name,
@@ -116,6 +119,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 						// 히스토리 태그
 						if !hasCheck {
 							lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+								SiteId: connId,
 								IsPtag : true,
 								IsValid : false,
 								TagId: tid,
@@ -172,6 +176,8 @@ func getAllTsConnectInfo(c *gfm.ReqContext) Response {
 }
 
 func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDefineQuery) {
+	uid := 1
+	tid := -1
 	var influxHost = "http://" + setting.Thingspin.Influx.Host + ":" + strconv.Itoa(setting.Thingspin.Influx.Port)
 
 	cli, err := influx.NewHTTPClient(influx.HTTPConfig{
@@ -228,40 +234,51 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 				if _, ok := lev2Map[cnode.Name]; ok {
 					// 이미 존재하는 것은 추가하지 않는다.
 					lv2 := lev2Map[cnode.Name]
-					
+			
 					lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+						SiteId: cnode.Id,
 						IsPtag : true,
 						IsValid : true,
+						TagId: tid,
 						TagTableName : msname,
 						TagColumnName : ptagMap["name"].(string),
 						TagColumnType : ptagMap["type"].(string),
 						TagName : ptagMap["name"].(string),
 						FacilityTreeOrder : len(lv2.Children) + 1,
+						Value: strconv.Itoa(uid),
+						Label : ptagMap["name"].(string),
 						Children : []m.TsFacilityTreeItem{},
 					})
-
+					tid = tid - 1
+					uid = uid + 1
 					lev2Map[cnode.Name] = lv2
 					
 				} else {
 					forder = forder + 1
 					tags := []m.TsFacilityTreeItem{}
 					tags = append(tags,  m.TsFacilityTreeItem {
+						SiteId: cnode.Id,
 						IsPtag : true,
 						IsValid : true,
+						TagId: tid,
 						TagTableName : msname,
 						TagColumnName : ptagMap["name"].(string),
 						TagColumnType : ptagMap["type"].(string),
 						TagName : ptagMap["name"].(string),
 						FacilityTreeOrder : 1,
+						Value: strconv.Itoa(uid),
+						Label : ptagMap["name"].(string),
 						Children : []m.TsFacilityTreeItem{},
 					})
 
 					lev2Map[cnode.Name] = m.TsFacilityTreeItem{
+						SiteId: cnode.Id,
 						IsPtag : true,
 						FacilityName : cnode.Name,
 						Children : tags,
 						Label : cnode.Type,
 						FacilityTreeOrder : forder,
+						Value: strconv.Itoa(uid),
 					}
 				}
 			}
@@ -291,13 +308,17 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 							// 히스토리 태그
 							if !hasCheck {
 								lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+									SiteId: ms.Id,
 									IsPtag : true,
 									IsValid : false,
+									TagId: tid,
 									TagTableName : msName,
 									TagColumnName : v[0].(string),
 									TagColumnType : v[1].(string),
 									TagName : v[0].(string),
 									FacilityTreeOrder : len(lv2.Children) + 1,
+									Value: strconv.Itoa(uid),
+									Label : v[0].(string),
 									Children : []m.TsFacilityTreeItem{},
 								})
 							}
