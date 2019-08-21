@@ -24,37 +24,31 @@ import { tsInitDashboard } from './initDashboard';
 import { FMDashboardModel } from '../models';
 import FMLeftTree from './FMLeftTree';
 
-interface FmPanelFilter {
-    removes: any;
-    adds: any;
-}
-
 // Facility Monitoring Component
 // (Customized grafana react component: iiHOC)
 export class FMDashboardPage extends DashboardPage {
     panelType = 'graph';
-    oldPanel: any = {}; // panel cache data
 
     // add thingspin method
-    updateFmPanel(newPanel: any, { removes, adds }: FmPanelFilter): void {
+    updateFmPanel(newPanel: any[]): void {
         const { dashboard } = this.props;
 
-        // remove panels
+        // remove panels(non diff check)
+        const removes = dashboard.panels.map(({ id }) => (id));
         for (const remove of removes) {
-            const { id } = this.oldPanel[remove]; // auto generated in dashboardModel class
+            // const id = this.oldPanel[remove].id || remove ; // auto generated in dashboardModel class
 
             // find PanelModel Object
-            const p = dashboard.getPanelById(id);
+            const p = dashboard.getPanelById(remove);
 
             // remove phase
             dashboard.removePanel(p);
-            delete this.oldPanel[remove];
+            // delete this.oldPanel[remove];
         }
 
         // add panels
-        for (const add of adds) {
-            dashboard.addPanel(newPanel[add]);
-            this.oldPanel[add] = newPanel[add];
+        for (const add of newPanel) {
+            dashboard.addPanel(add);
         }
     }
 
@@ -80,37 +74,32 @@ export class FMDashboardPage extends DashboardPage {
         });
 
         // local method
+        /*
         const getDiffPanel = (aPanel: object, bPanel: object): FmPanelFilter => {
             // local method
-            // const diffKeys = (A: any[], B: any[]) => (A.filter(x => !B.includes(x)));
+            const diffKeys = (A: any[], B: any[]) => (A.filter(x => !B.includes(x)));
 
             const oldKeys = Object.keys(aPanel);
             const newKeys = Object.keys(bPanel);
 
-            // const removes = diffKeys(oldKeys, newKeys);
-            // const adds = diffKeys(newKeys, oldKeys);
-            const removes = oldKeys;
-            const adds = newKeys;
-
+            const removes = diffKeys(oldKeys, newKeys);
+            const adds = diffKeys(newKeys, oldKeys);
             return {
                 removes,
                 adds,
             };
         };
+        */
 
 
-        const newPanel: any = {};
-        if (Array.isArray(tags)) {
-            for (const tag of tags) {
-                newPanel[tag.tag_id] = generatePanelData(tag.label,
-                    this.panelType || 'graph', {
-                    tagNodes: [tag],
-                    checked: [tag.value],
-                });
+        const newPanels = tags.map((tag: any) => (generatePanelData(tag.label,
+            this.panelType || 'graph', {
+                tagNodes: [tag],
+                checked: [tag.value],
             }
-        }
+        )));
 
-        this.updateFmPanel(newPanel, getDiffPanel(this.oldPanel, newPanel));
+        this.updateFmPanel(newPanels);
     }
 
     onClickFacilityTree(site: any, tags: any) {

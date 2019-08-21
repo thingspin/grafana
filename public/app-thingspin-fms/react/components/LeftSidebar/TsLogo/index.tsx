@@ -12,28 +12,10 @@ interface Props {
 }
 
 class TsLogo extends PureComponent<Props> {
-  title: string;
-  fullLogoPath: string;
+  title = `ThingSPIN`;
+  fullLogoPath = `public/img/thingspin/thingspin_logo.svg`;
   smallLogoPath: string;
-  viewMode: EViewModeState;
-
-  constructor(props: Props) {
-    super(props);
-    this.title = `ThingSPIN`;
-    this.fullLogoPath = `public/img/thingspin/thingspin_logo.svg`;
-    this.viewMode = props.viewMode;
-  }
-
-  changeLogo() {
-    // ignore if we just made a location change, stops hiding sidemenu on double clicks of back button
-    const timeSinceLocationChanged = new Date().getTime() - store.getState().location.lastUpdated;
-    if (timeSinceLocationChanged < 1000) {
-      return;
-    }
-
-    this.viewMode = this.viewMode === EViewModeState.Mode2 ? 0 : this.viewMode + 1;
-    this.setState({ key: `viewMode${this.viewMode}` });
-  }
+  viewMode: EViewModeState = this.props.viewMode;
 
   toggleMenu() {
     // ignore if we just made a location change, stops hiding sidemenu on double clicks of back button
