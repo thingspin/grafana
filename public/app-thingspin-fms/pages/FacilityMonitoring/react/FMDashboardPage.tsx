@@ -82,13 +82,15 @@ export class FMDashboardPage extends DashboardPage {
         // local method
         const getDiffPanel = (aPanel: object, bPanel: object): FmPanelFilter => {
             // local method
-            const diffKeys = (A: any[], B: any[]) => (A.filter(x => !B.includes(x)));
+            // const diffKeys = (A: any[], B: any[]) => (A.filter(x => !B.includes(x)));
 
             const oldKeys = Object.keys(aPanel);
             const newKeys = Object.keys(bPanel);
 
-            const removes = diffKeys(oldKeys, newKeys);
-            const adds = diffKeys(newKeys, oldKeys);
+            // const removes = diffKeys(oldKeys, newKeys);
+            // const adds = diffKeys(newKeys, oldKeys);
+            const removes = oldKeys;
+            const adds = newKeys;
 
             return {
                 removes,
@@ -100,13 +102,11 @@ export class FMDashboardPage extends DashboardPage {
         const newPanel: any = {};
         if (Array.isArray(tags)) {
             for (const tag of tags) {
-                const panelType = this.panelType || 'graph';
-
-                const panelData = generatePanelData(tag.label, panelType, {
+                newPanel[tag.tag_id] = generatePanelData(tag.label,
+                    this.panelType || 'graph', {
                     tagNodes: [tag],
                     checked: [tag.value],
                 });
-                newPanel[tag.tag_id] = panelData;
             }
         }
 
@@ -118,8 +118,8 @@ export class FMDashboardPage extends DashboardPage {
         this.onCheckedChange(site.value, tags);
     }
 
-    onPanelTypeChange(item: SelectableValue<string>) {
-        this.panelType = item.value;
+    onPanelTypeChange({ value }: SelectableValue<string>) {
+        this.panelType = value;
     }
 
 
@@ -186,10 +186,7 @@ export class FMDashboardPage extends DashboardPage {
         const { isSettingsOpening, isEditing, isFullscreen, updateScrollTop } = this.state;
 
         if (!dashboard) {
-            if (isInitSlow) {
-                return this.renderSlowInitState();
-            }
-            return null;
+            return isInitSlow ? this.renderSlowInitState() : null;
         }
 
         const classes: string = classNames({
