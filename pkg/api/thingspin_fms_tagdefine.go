@@ -17,6 +17,7 @@ import (
 // For graph
 func getTsPtag(c *gfm.ReqContext) Response {
 	uid := 1
+	tid := -1
 	connId := c.ParamsInt(":id")
 
 	var influxHost = "http://" + setting.Thingspin.Influx.Host + ":" + strconv.Itoa(setting.Thingspin.Influx.Port)
@@ -50,7 +51,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 			lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
 				IsPtag : true,
 				IsValid : true,
-				TagId: 1,
+				TagId: tid,
 				TagTableName : msname,
 				TagColumnName : ptagMap["name"].(string),
 				TagColumnType : ptagMap["type"].(string),
@@ -61,6 +62,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 				Children : []m.TsFacilityTreeItem{},
 			})
 			uid = uid + 1
+			tid = tid - 1
 			lev2Map[conn.Result.Name] = lv2
 			
 		} else {
@@ -68,7 +70,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 			tags = append(tags,  m.TsFacilityTreeItem {
 				IsPtag : true,
 				IsValid : true,
-				TagId: 1,
+				TagId: tid,
 				TagTableName : msname,
 				TagColumnName : ptagMap["name"].(string),
 				TagColumnType : ptagMap["type"].(string),
@@ -79,6 +81,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 				Children : []m.TsFacilityTreeItem{},
 			})
 			uid = uid + 1
+			tid = tid - 1
 			lev2Map[conn.Result.Name] = m.TsFacilityTreeItem{
 				IsPtag : true,
 				IsValid : true,
@@ -115,7 +118,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 							lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
 								IsPtag : true,
 								IsValid : false,
-								TagId: 1,
+								TagId: tid,
 								TagTableName : msName,
 								TagColumnName : v[0].(string),
 								TagColumnType : v[1].(string),
@@ -125,6 +128,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 								Children : []m.TsFacilityTreeItem{},
 							})
 							uid = uid + 1
+							tid = tid - 1
 						}
 						lev2Map[conn.Result.Name] = lv2
 	
