@@ -4,8 +4,8 @@ import { Select } from '@grafana/ui';
 import { getBackendSrv } from '@grafana/runtime';
 import { auto, ILocationService, IRootScopeService } from 'angular';
 import FilterTree from './filterTree';
-//import { Item } from 'app-thingspin-fms/react/views/system/configs/types';
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
+//import { resultsAriaMessage } from 'react-select/lib/accessibility';
 export type facilityTreeProps = {
     click?: Function;
     inject: auto.IInjectorService; // for route
@@ -71,8 +71,6 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     $rootScope: IRootScopeService;
 
     // MQTT
-    //readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
-    //readonly listenerTopic: string = "/thingspin/+/+/status" as string;
     mqttClient: TsMqttController; // mqtt client instance
 
     constructor(props: facilityTreeProps) {
@@ -128,48 +126,23 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     }
     //restore checked item
     restoreFacilityData(item: facilityTreeProps) {
-        //console.log("restore");
+        console.log("restore");
         //site selected
+        console.log("restore item:",item);
         console.log(item.siteinfo);
         const selectedOption = item.siteinfo;
         const taginfo = item.taginfo;
         this.findSiteinfo(selectedOption.value, selectedOption.isCustom);
-        /*
-        getBackendSrv().get("/thingspin/sites").then((result: any) => {
-            const elements = [];
-            let idx;
-            if (result && result.length > 0 && this._isMounted) {
-                //this.setState({ sitesListinfo: result });
-                for (let i = 0; i < result.length; i++) {
-                    if (result[i].id === selectedOption.value) {
-                        idx = i;
-                    }
-                    elements.push({
-                        value: result[i].id,
-                        label: result[i].name,
-                        icon: <i className="tsi icon-ts-site">&nbsp;&nbsp;</i>
-                    } as any);
-                }
-                this.setState({ siteOptions: elements });
-                this.setState({ selectedOption: elements[idx] });
-                this.getTreeinfo(selectedOption.value);
-            } else {
-                console.log("** sites list empty **");
-            }
-        }).catch((err: any) => {
-            console.log("get Sites, error!");
-            console.log(err);
-        });
-        */
              // tag selected
             const elements = [];
             if (taginfo && taginfo.length > 0) {
                 for (let i = 0; i < taginfo.length; i++) {
                     const data = taginfo[i].value;
-                    console.log('tagselected',data);
+                    //console.log('tagselected',data);
                     elements.push(data);
                 }
                 this.setState({ checkedSave: elements as any });
+                this.setState({ Taginfo: taginfo });
             } else {
                 this.setState({ checkedSave: [] });
             }
@@ -181,27 +154,14 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             const elements = [];
             const result = await getBackendSrv().get("/thingspin/sites");
             const resultPTag = await getBackendSrv().get("/thingspin/tagdefine/graph"); //19-0820/PtagList 얻기
-            /*
-            if (result && result.length > 0 && this._isMounted) {
-                this.setState({ sitesListinfo: result });
-
-                for (let i = 0; i < result.length; i++) {
-                    elements.push({
-                        value: result[i].id,
-                        label: result[i].name,
-                        icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
-                    } as any);
-                }
-
-                //copy elemenets to select options
-                //init set first index
-                this.setState({ siteOptions: elements });
-                this.setState({ selectedOption: elements[0] });
-                this.getTreeinfo(this.state.selectedOption.value);
-            } else {
-                console.log("** sites list empty **");
-            }*/
             //19-0820 PTaglist
+            elements.push({
+                value: -1,
+                label: "ALL Tags",
+                isCustom: true,
+                icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
+            } as any);
+
             if (result && result.length > 0 && this._isMounted) {
                 for (let i = 0; i < result.length; i++) {
                     elements.push({
@@ -229,6 +189,7 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             }
 
             if (elements.length > 0) {
+                console.log("sitelist: ",elements);
                 this.setState({ siteOptions: elements });
                 this.setState({ selectedOption: elements[0] });
                 this.getTreeinfo(this.state.selectedOption.value,this.state.selectedOption.isCustom);
@@ -239,19 +200,27 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         }
     }
     async findSiteinfo(siteid: any, isCustom: boolean) {
-        console.log('findsiteinfo: ',siteid,isCustom);
+        //console.log('findsiteinfo: ',siteid,isCustom);
+        //console.log("findSiteinfo sites: ",this.state.siteOptions);
+
         try {
             const elements = [];
             const result = await getBackendSrv().get("/thingspin/sites");
             const resultPTag = await getBackendSrv().get("/thingspin/tagdefine/graph"); //19-0820/PtagList 얻기
             const findId = siteid;
+            let idx = 0;
 
-            let idx;
+            console.log("findSiteinfo sites: ",this.state.siteOptions);
+
+            elements.push({
+                value: -1,
+                label: "ALL Tags",
+                isCustom: true,
+                icon: <i className="fa fa-industry">&nbsp;&nbsp;</i>
+            } as any);
+
             if (result && result.length > 0 && this._isMounted) {
                 for (let i = 0; i < result.length; i++) {
-                    if (result[i].id === findId) {
-                        idx = i;
-                    }
                     elements.push({
                         value: result[i].id,
                         label: result[i].name,
@@ -265,13 +234,6 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
 
             if (resultPTag && resultPTag.length > 0 && this._isMounted) {
                 for (let i = 0; i < resultPTag.length; i++) {
-                    if (resultPTag[i].id === findId) {
-                        if (result && result.length > 0) {
-                            idx = i+result.length;
-                        }else {
-                            idx = i;
-                        }
-                    }
                     elements.push({
                         value: resultPTag[i].id,
                         label: resultPTag[i].name,
@@ -284,6 +246,12 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             }
 
             if (elements.length > 0) {
+                for ( let i = 0; i < elements.length; i++) {
+                    if (elements[i].value === findId) {
+                        idx = i;
+                        break;
+                    }
+                }
                 console.log('findsiteinfo',idx);
                 this.setState({ siteOptions: elements });
                 this.setState({ selectedOption: elements[idx] });
@@ -293,24 +261,35 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
             console.log("get Sites, error!");
             console.log(err);
         }
+
     }
     async getTreeinfo(siteid: any, isCustom: boolean) {
         const urlOrigin = `/thingspin/sites/${siteid}/facilities/tree`;
         const urlPtag = `/thingspin/tagdefine/graph/${siteid}`;
+        const urlAll = `/thingspin/tagdefine`;
         let url = urlOrigin;
         try {
-                if (isCustom) {
-                    url = urlOrigin;
-                }else {
-                    url = urlPtag;
-                }
-                //console.log(url);
-                const result = await getBackendSrv().get(url);
-                //console.log("getreeinfo:",result);
-                if (result && result.length > 0 && this._isMounted) {
-                    this.setState({ nodes: result });
-                    this.setState({ nodesCount: result.length });
-                    //console.log("getTreeinfo: ",this.state.nodes);
+                if (siteid === -1) {
+                    url = urlAll;
+                    console.log("getAll tag");
+                    let result = await getBackendSrv().get(url);
+                    result = result.Result;
+                    //console.log(result);
+                    if (result && result.length > 0 && this._isMounted) {
+                        this.setState({ nodes: result });
+                        this.setState({ nodesCount: result.length });
+                    }
+                } else {
+                    if (isCustom) {
+                        url = urlOrigin;
+                    }else {
+                        url = urlPtag;
+                    }
+                    const result = await getBackendSrv().get(url);
+                    if (result && result.length > 0 && this._isMounted) {
+                        this.setState({ nodes: result });
+                        this.setState({ nodesCount: result.length });
+                    }
                 }
         } catch (err) {
             console.log("get Treeinfo, error!");
@@ -351,10 +330,10 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
     }
     recvMqttMessage(topic: string, payload: string | object): void {
         const topics = topic.split("/");
-        const id = topics[topics.length - 2];
+        //const id = topics[topics.length - 2];
         const target = topics[topics.length - 3];
         //let isChange = false;
-        console.log("topics: ",topic," id: ",id," target:",target," payload: ",payload);
+        //console.log("topics: ",topic," id: ",id," target:",target," payload: ",payload);
         //console.log(isChange);
         switch (target){
             case 'connect':
@@ -384,7 +363,36 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         this.setState({ Taginfo: Taginfo });
         this.setState({ checked: checked.checked });
 
-        console.log('Taginfo: ',Taginfo,'siteData: ', siteData);
+        this.sendTagData(Taginfo,siteData);
+        //this.props.click({ Taginfo, siteData });
+    }
+
+    sendTagData(TagData: any, siteData: any) {
+        const Taginfo = [];
+        if (siteData.value === -1 ) {
+            //All Tags
+            for (let i = 0; i < TagData.length; i++) {
+                if (TagData[i].tag_id < 0) {
+                    Taginfo.push(TagData[i]);
+                }
+            }
+        } else {
+            if (siteData.isCustom) {
+                for (let i = 0; i < TagData.length; i++) {
+                    if (siteData.value === TagData[i].site_id) {
+                        Taginfo.push(TagData[i]);
+                    }
+                }
+            } else {
+                for (let i = 0; i < TagData.length; i++) {
+                    if (siteData.value === TagData[i].site_id) {
+                        Taginfo.push(TagData[i]);
+                    }
+                }
+            }
+        }
+        console.log('sendTagData: ',TagData,siteData);
+        console.log('sendTagData filtered: ',Taginfo);
         this.props.click({ Taginfo, siteData });
     }
     //SITE SELECTION
@@ -392,6 +400,10 @@ class FacilityTree extends React.Component<facilityTreeProps, facilityItem> {
         console.log("handleChange");
         this.setState({ selectedOption });
         this.getTreeinfo(selectedOption.value, selectedOption.isCustom);
+        console.log("handleChange checked: ", this.state.checked);
+        console.log("handleChange Tag: ",this.state.Taginfo);
+        //console.log("handleChange: ",selectedOption);
+        this.sendTagData(this.state.Taginfo, selectedOption);
     };
 
     //TEST
