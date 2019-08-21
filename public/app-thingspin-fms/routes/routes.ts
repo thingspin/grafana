@@ -12,8 +12,8 @@ import { setupAngularRoutes } from 'app/routes/routes';
 import 'app-thingspin-fms/angular-modules/pages';
 import { UserSettingInfo } from 'app-thingspin-fms/types';
 import FMComponent from 'app-thingspin-fms/pages/FacilityMonitoring/react';
-// import TsAlarmRuleList from 'app-thingspin-fms/pages/alarm/tsAlarmRuleList';
-// import TsAlarmSettingComponent from 'app-thingspin-fms/pages/alarm/tsAlarmSetting';
+import TsAlarmRuleList from 'app-thingspin-fms/pages/alarm/tsAlarmRuleList';
+import TsAlarmSettingComponent from 'app-thingspin-fms/pages/alarm/tsAlarmSetting';
 import { TsLoginPage } from 'app-thingspin-fms/pages/login/TsLoginPage';
 
 /** @ngInject */
@@ -33,7 +33,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
   .when('/thingspin/manage/alarm', {
     template: '<ts-alarm-management />',
     routeInfo: {
-      menupath: [UserSettingInfo.Alarm],
+      menupath: [ UserSettingInfo.Alarm ],
       icon: 'fa fa-bell',
     },
   })
@@ -101,7 +101,6 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
 
   .when('/thingspin/manage/view-edit-management', { template: '<ts-view-edit-management />', })
   // Alarm Management
-  /*
   .when('/thingspin/alarm/new', {
     template: '<react-container />',
     pageClass: 'page-dashboard',
@@ -118,7 +117,6 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
       component: () => TsAlarmRuleList,
     },
   })
-  */
   // Right Navbar
   .when('/thingspin/user/profile', {
     templateUrl: 'public/app/features/profile/partials/profile.html',
