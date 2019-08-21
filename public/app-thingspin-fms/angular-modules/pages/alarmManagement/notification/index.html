@@ -1,11 +1,12 @@
 <div class="page-container page-body">
+    <h3 class="page-sub-heading" ng-hide="ctrl.isNew">알림 발송 관리</h3>
     <div ng-if="ctrl.notifications.length">
         <div class="page-action-bar">
             <div class="page-action-bar__spacer">
             </div>
 
             <a href="thingspin/manage/alarm/notification/new" class="btn btn-primary">
-            New channel
+            새 채널
             </a>
         </div>      
 
@@ -20,12 +21,12 @@
             <tbody>
             <tr ng-repeat="notification in ctrl.notifications">
                 <td class="link-td">
-                <a href="'thingspin/manage/alarm/notification/{{notification.id}}/edit">
+                <a href="thingspin/manage/alarm/notification/{{notification.id}}/edit">
                     {{notification.name}}
                 </a>
                 </td>
                 <td class="link-td">
-                <a href="'thingspin/manage/alarm/notification/{{notification.id}}/edit">
+                <a href="thingspin/manage/alarm/notification/{{notification.id}}/edit">
                     {{notification.type}}
                 </a>
                 </td>

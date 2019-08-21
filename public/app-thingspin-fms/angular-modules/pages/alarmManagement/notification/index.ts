@@ -1,6 +1,6 @@
 import { coreModule, NavModelSrv } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
-
+import './notificationsEditCtrl';
 export class TsAlarmNotiManagementCtrl {
   notifications: any;
   navModel: any;
