@@ -90,7 +90,7 @@ export class TsAlarmNotiEditCtrl {
         .post(`/api/alert-notifications`, this.model)
         .then((res: any) => {
           appEvents.emit('alert-success', ['Notification created', '']);
-          this.$location.path('thingspin/manage/alarm/notification');
+          this.$location.path('thingspin/alarm/notification');
         })
         .catch((err: any) => {
           if (err.data && err.data.error) {

@@ -56,38 +56,24 @@
         {
           "text": "알람 추가",
           "icon": "fa fa-bell",
-          "url": "/thingspin/manage/alarm/new",
+          "url": "/thingspin/alarm/new",
           "canDelete": false,
           "children": []
         },
         {
           "text": "알람 관리",
           "icon": "fa fa-bell",
-          "url": "/thingspin/manage/alarm/management",
+          "url": "/thingspin/alarm",
           "canDelete": false,
           "children": []
         },
         {
           "text": "알람 발송 관리",
           "icon": "fa fa-bell",
-          "url": "/thingspin/manage/alarm/notification",
+          "url": "/thingspin/alarm/notification",
           "canDelete": false,
           "children": []
-        },
-        {
-          "text": "알람 조치 설정",
-          "icon": "fa fa-bell",
-          "url": "/thingspin/manage/alarm/setting",
-          "canDelete": false,
-          "children": []
-        },
-        {
-          "text": "알람 처리 이력",
-          "icon": "fa fa-bell",
-          "url": "/thingspin/manage/alarm/history",
-          "canDelete": false,
-          "children": []
-        }     
+        }
       ]
     },    
     {
