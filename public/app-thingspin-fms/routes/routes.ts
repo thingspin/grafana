@@ -120,7 +120,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
   .when('/thingspin/alarm/notification', {
     templateUrl: 'public/app-thingspin-fms/angular-modules/pages/alarmManagement/notification/index.html',
     routeInfo: {
-      menupath: [UserSettingInfo.Alarm],
+      menupath: [UserSettingInfo.Alarm, "알람 발송 관리"],
       icon: 'fa fa-bell',
     },
     controller: 'TsAlarmNotiManagementCtrl',
@@ -129,7 +129,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
   .when('/thingspin/alarm/notification/new', {
     templateUrl: 'public/app-thingspin-fms/angular-modules/pages/alarmManagement/notification/notification_edit.html',
     routeInfo: {
-      menupath: [UserSettingInfo.Alarm],
+      menupath: [UserSettingInfo.Alarm, "알람 발송 관리"],
       icon: 'fa fa-bell',
     },
     controller: 'TsAlarmNotiEditCtrl',
@@ -138,7 +138,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
   .when('/thingspin/alarm/notification/:id/edit', {
     templateUrl: 'public/app-thingspin-fms/angular-modules/pages/alarmManagement/notification/notification_edit.html',
     routeInfo: {
-      menupath: [UserSettingInfo.Alarm],
+      menupath: [UserSettingInfo.Alarm, "알람 발송 관리"],
       icon: 'fa fa-bell',
     },
     controller: 'TsAlarmNotiEditCtrl',
