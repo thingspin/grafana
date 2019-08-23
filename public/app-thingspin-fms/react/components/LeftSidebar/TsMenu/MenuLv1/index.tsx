@@ -131,10 +131,6 @@ class TsMenuLv1 extends PureComponent<Props, State> {
 
         {this.childrenDOM}
       </div>,
-
-      <div className="fms-menu-dividers" key="ts-dividers">
-        <hr className="fms-menu-dividers-divider" key="ts-divider" />
-      </div>,
     ];
   }
 }

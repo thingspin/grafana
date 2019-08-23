@@ -1,18 +1,22 @@
 .fms-menu-lv2 {
   // layer size
   //height: 28px;
+  font-family: Roboto;
   font-size: 13px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
 
   // events
   &:hover {
     //border-left: 4px solid #00b2e3;
     background-color: rgba(0, 0, 0, 0.3);
   }
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.01);
   //margin-left: 4px;
   padding-top: 1px;
   padding-bottom: 1px;
-  padding-left: 24px;
+  padding-left: 32px;
 }
 
 .fms-menu-lv2-divider {

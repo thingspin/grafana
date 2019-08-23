@@ -22,13 +22,13 @@ ts-left-sidebar {
     height: 100%;
 
     // 삭제 필요...
-    background-color: #1976d2;
+    background-color: #0039ff;
 
     .fms-menu-dividers {
       &-divider {
-        border-top: 1px solid rgba(176, 190, 197, 0.3);
+        border-top: 1px solid rgb(49, 0, 255);
         width: 196px;
-        margin-bottom: 0px;
+        margin-bottom: 16px;
         margin-top: 0px;
       }
     }
