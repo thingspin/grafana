@@ -18,16 +18,12 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     state: FacilityItem = {
         Taginfo: [],
         checked: [],
-        testChecked: [],
+        // testChecked: [],
         checkedSave: [],
 
-        expanded: [],
-
         nodes: [],
-        nodesCount: 0,
         sitesListinfo: [],
         siteOptions: [],
-        filterPlaceholder: " 태그 검색 ...",
         connectionList: [],
     };
 
@@ -67,13 +63,17 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     }
 
     private async componentInit() {
+        const { taginfo } = this.props;
         let updateState = await this.getSiteList();
         this.initMqtt();
         siteModel.getConnectInfo();
         //console.log(this.props);
-        if (this.props.taginfo && this.props.taginfo.length) {
+
+        if (taginfo && taginfo.length) {
             //console.log("data exist");
             const fdState = await this.restoreFacilityData(this.props);
+
+            // rewrite
             updateState = {
                 ...updateState,
                 ...fdState,
@@ -102,17 +102,17 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         //site selected
         console.log("restore item:", item);
         console.log(item.siteinfo);
-        const { siteinfo, taginfo } = item;
-        const siteInfoState = await this.findSiteinfo(siteinfo.value, siteinfo.isCustom);
+        const { siteinfo: { value, isCustom }, taginfo } = item;
+        const siteInfoState = await this.findSiteinfo(value, isCustom);
         // tag selected
 
         const updateState: any = (taginfo && taginfo.length)
             ? {
-                checkedSave: taginfo.map( (info: any) => (info.value) ),
-                Taginfo: taginfo
+                checkedSave: taginfo.map((info: any) => (info.value)),
+                Taginfo: taginfo,
             }
             : {
-                checkedSave: []
+                checkedSave: [],
             };
 
         return {
@@ -122,9 +122,8 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     }
 
     async getSiteList(): Promise<TreeInfo> {
-        let result: TreeInfo = null;
         if (!this._isMounted) {
-            return result;
+            return null;
         }
 
         try {
@@ -135,30 +134,27 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             const { value, isCustom } = selectedOption;
 
             const siteOptions: any[] = [selectedOption].concat(sites, ptags);
-            if (siteOptions.length) {
-                console.log("sitelist: ", siteOptions);
-                const updateState: TreeInfo = await this.getTreeinfo(value, isCustom);
+            console.log("sitelist: ", siteOptions);
+            const updateState: TreeInfo = await this.getTreeinfo(value, isCustom);
 
-                result = {
-                    ...updateState,
-                    selectedOption,
-                    siteOptions,
-                } as any;
-            }
+            return {
+                ...updateState,
+                selectedOption,
+                siteOptions,
+            } as any;
         } catch (err) {
             console.error("get Sites, error!");
             console.error(err);
         }
 
-        return result;
+        return null;
     }
 
     async findSiteinfo(siteid: any, isCustom: boolean) {
         //console.log('findsiteinfo: ',siteid,isCustom);
         //console.log("findSiteinfo sites: ",this.state.siteOptions);
-        let updateState: TreeInfo = null;
         if (!this._isMounted) {
-            return updateState;
+            return null;
         }
 
         try {
@@ -167,40 +163,36 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
 
             const siteOptions: SiteOptions[] = [siteModel.generateSiteOpts(-1, "ALL Tags", FacilityTreeType.Site)]
                 .concat(sites, ptags);
-            if (siteOptions.length > 0) {
-                const i: number = siteOptions.findIndex(({ value }) => (value === siteid));
-                const target: number = i > 0 ? i : 0;
-                const selectedOption = siteOptions[target];
-                const { value, isCustom } = selectedOption;
+            const i: number = siteOptions.findIndex(({ value }) => (value === siteid));
+            const target: number = i > 0 ? i : 0;
+            const selectedOption = siteOptions[target];
+            const { value, isCustom } = selectedOption;
 
-                const treeState = await this.getTreeinfo(value, isCustom);
+            const treeState = await this.getTreeinfo(value, isCustom);
 
-                updateState = {
-                    ...treeState,
-                    siteOptions,
-                    selectedOption,
-                } as any;
-            }
+            return {
+                ...treeState,
+                siteOptions,
+                selectedOption,
+            } as any;
         } catch (err) {
             console.error("get Sites, error!");
             console.error(err);
         }
 
-        return updateState;
+        return null;
     }
 
     private async getTreeinfo(siteid: any, isCustom: boolean): Promise<TreeInfo> {
-        let updateState: TreeInfo = null;
         if (!this._isMounted) {
-            return updateState;
+            return null;
         }
 
         try {
             const nodes: any[] = await siteModel.getTreeinfo(siteid, isCustom);
             if (nodes && nodes.length) {
-                updateState = {
+                return {
                     nodes,
-                    nodesCount: nodes.length,
                 } as any;
             }
         } catch (err) {
@@ -208,7 +200,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             console.error(err);
         }
 
-        return updateState;
+        return null;
     }
 
 
@@ -325,8 +317,8 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     );
 
     render() {
-        const { siteOptions, nodesCount, checkedSave, nodes, selectedOption } = this.state;
-        const isdataEmpty = (nodesCount === 0 || siteOptions.length === 0) ? true : false;
+        const { siteOptions, checkedSave, nodes, selectedOption } = this.state;
+        const isDataEmpty = (nodes.length === 0 || siteOptions.length === 0) ? true : false;
 
         //console.log("render:",checkedSave);
 
@@ -344,18 +336,17 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
                 </div>
 
                 <div className="facility-section-line" />
-                {isdataEmpty ?
-                    null
-                    :
-                    <FilterTree
+                {!isDataEmpty
+                    ? <FilterTree
                         nodes={nodes}
                         nodesChecked={checkedSave}
                         click={(checked: any, Taginfo: any) => this.onCheck2(checked)}
                     />
+                    : null
                 }
                 <div>
-                    {isdataEmpty ?
-                        <div>
+                    {isDataEmpty
+                        ? <div>
                             <div className="facility-warning-facility-empty"><i className="fa fa-exclamation-triangle">&nbsp;</i> WARNING</div>
                             <div className="facility-warning-facility-empty">설정된 데이터가 없습니다.</div>
                             <button className="facility-siteManage-page-btn2" onClick={this.siteManagePage}>사이트 관리 이동</button>

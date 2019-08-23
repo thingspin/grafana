@@ -10,7 +10,6 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
         filterText: '',
         nodesFiltered: this.props.nodes,
         nodes: this.props.nodes,
-        nodesCount: null,
         filterPlaceholder: " 태그 검색 ..."
     };
 
@@ -35,12 +34,11 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
             const updateState: any = {
                 nodes,
                 nodesFiltered: nodes,
-                nodesCount: nodes.length,
             };
             //console.log(nextProps.nodes);
             this.putNodeIcon(nodes);
 
-            if (nChecked > 0) {
+            if (nChecked) {
                 updateState.checked = nodesChecked;
             }
             this.setState(updateState);
@@ -57,7 +55,7 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
 
     putNodeIcon(node: any[]) {
         //console.log("parent check");
-        if (node && node.length > 0) {
+        if (node && node.length) {
             for (const n of node) {
                 n.icon = (n.tag_id === 0)
                     ? <span className="icon-facility"><i className="fa fa-steam fa-1x" /></span>
@@ -71,7 +69,7 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
         //console.log("FT-oncheck tag: ",Taginfo);
         //console.log("FT-oncheck checked: ",checked);
         let checkedSize = checked.length;
-        if (checked && checked.length > 0) {
+        if (checked && checked.length) {
             //console.log("TEST_CHECKED");
             for (let i = 0; i < checkedSize; i += 1) {
                 if (Taginfo[i].tag_id === 0) {

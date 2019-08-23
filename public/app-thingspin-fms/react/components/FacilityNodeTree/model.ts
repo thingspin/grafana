@@ -25,7 +25,6 @@ export interface FilterTreeState {
   filterText: any;
   nodesFiltered: any;
   nodes: any;
-  nodesCount: any;
 
   filterPlaceholder: any;
 }
@@ -40,17 +39,13 @@ export type facilityTreeProps = {
 export interface FacilityItem {
   Taginfo: any[];
   checked: any[];
-  testChecked: any[];
-  expanded: any[];
+  testChecked?: any[];
 
   nodes: any[];
-  nodesCount: number;
   selectedOption?: SiteOptions;
 
   sitesListinfo: any[];
   siteOptions: siteData[];
-
-  filterPlaceholder: string;
 
   checkedSave: any[];
   connectionList: connectData[];
