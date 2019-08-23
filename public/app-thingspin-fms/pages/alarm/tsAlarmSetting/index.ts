@@ -1,7 +1,5 @@
 // AngularJs Libs
-import './angularjs/tsAlertTab';
-import './angularjs/tsAlarmPanel';
-import './angularjs/alarmPluginComponent';
+import './angularjs';
 
 // React Libs
 import TsAlarmSettingComponent from './react';

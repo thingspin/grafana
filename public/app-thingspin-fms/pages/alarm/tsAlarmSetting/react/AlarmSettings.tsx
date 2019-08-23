@@ -8,7 +8,7 @@ export default class extends DashboardSettings {
     componentDidMount(): void {
         const loader = getAngularLoader();
 
-        const template = '<fm-dashboard-settings dashboard="dashboard" class="dashboard-settings" />';
+        const template = '<alarm-dashboard-settings dashboard="dashboard" class="dashboard-settings" />';
         const scopeProps = { dashboard: this.props.dashboard };
 
         this.angularCmp = loader.load(this.element, scopeProps, template);

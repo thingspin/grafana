@@ -11,19 +11,19 @@ import { StoreState } from 'app/types';
 import { updateLocation } from 'app/core/actions';
 
 // ThingSPIN Angular Services
-import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
+import { AlarmDashboardSrv } from '../angularjs/services/tsDashboardSrv';
 
 // Thingspin component libs
 import { AlarmNavButton } from './AlarmNavButton';
 
 // Facaility Monitoring Navigation Component
 // (Customized grafana react component: iiHOC)
-export class FMNavComp extends DashNav {
+export class AlarmNavComp extends DashNav {
     // Override
     onSave = (): void => {
         const { $injector }: { $injector: angular.auto.IInjectorService } = this.props;
-        const dashboardSrv: TsDashboardSrv = $injector.get('dashboardSrv');
-        dashboardSrv.fmSaveFM();
+        const dashboardSrv: AlarmDashboardSrv = $injector.get('dashboardSrv');
+        dashboardSrv.alarmSaveDashboard();
     };
 
     // Override
@@ -77,8 +77,8 @@ export class FMNavComp extends DashNav {
 
                 <div className="navbar-buttons navbar-buttons--actions">
                     {canSave &&  (
-                        <AlarmNavButton tooltip="설비 모니터링 저장" classSuffix="save" onClick={this.onSave} >
-                            {meta.isNew ? '메뉴에 저장' : '저장'}
+                        <AlarmNavButton tooltip="알람 저장" classSuffix="save" onClick={this.onSave} >
+                            {meta.isNew ? '신규 저장' : '저장'}
                         </AlarmNavButton>
                     )}
 
@@ -144,4 +144,4 @@ const mapDispatchToProps = {
     updateLocation,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(FMNavComp);
+export default connect(mapStateToProps, mapDispatchToProps)(AlarmNavComp);

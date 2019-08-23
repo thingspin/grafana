@@ -25,8 +25,8 @@ import { DashboardRouteInfo, StoreState, ThunkDispatch, ThunkResult, DashboardDT
 import { InitDashboardArgs } from 'app/features/dashboard/state/initDashboard';
 
 // ThingSPIN
-import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
-import { FmUnsavedChangesSrv } from 'app-thingspin-fms/angular-modules/core/services/UnsavedChangesSrv';
+import { AlarmDashboardSrv } from '../angularjs/services/tsDashboardSrv';
+import { AlarmUnsavedChangesSrv } from '../angularjs/services/UnsavedChangesSrv';
 
 async function redirectToNewUrl(slug: string, dispatch: ThunkDispatch, currentPath: string) {
   const res = await getBackendSrv().getDashboardBySlug(slug);
@@ -159,8 +159,8 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
     const annotationsSrv: AnnotationsSrv = args.$injector.get('annotationsSrv');
     const variableSrv: VariableSrv = args.$injector.get('variableSrv');
     const keybindingSrv: KeybindingSrv = args.$injector.get('keybindingSrv');
-    const unsavedChangesSrv: FmUnsavedChangesSrv = args.$injector.get('unsavedChangesSrv');
-    const dashboardSrv: TsDashboardSrv = args.$injector.get('dashboardSrv');
+    const unsavedChangesSrv: AlarmUnsavedChangesSrv = args.$injector.get('unsavedChangesSrv');
+    const dashboardSrv: AlarmDashboardSrv = args.$injector.get('dashboardSrv');
 
     timeSrv.init(dashboard);
     annotationsSrv.init(dashboard);
@@ -185,7 +185,7 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
       }
 
       // init unsaved changes tracking
-      unsavedChangesSrv.fmInit(dashboard, args.$scope);
+      unsavedChangesSrv.alarmInit(dashboard, args.$scope);
       keybindingSrv.setupDashboardBindings(args.$scope, dashboard);
     } catch (err) {
       dispatch(notifyApp(createErrorNotification('Dashboard init failed', err)));
@@ -209,7 +209,7 @@ function getNewDashboardModelData(urlFolderId?: string): any {
       folderId: 0,
     },
     dashboard: {
-      title: '신규 설비 모니터링',
+      title: '신규 알람',
       panels: [
         {
           datasource: "사이트 태그",

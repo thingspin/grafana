@@ -1,10 +1,11 @@
+// 3rd party libs
 import React, { ReactNode } from 'react';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Grafana React Components
-import { DashboardPage, mapStateToProps } from 'app/features/dashboard/containers/DashboardPage';
+import { DashboardPage, mapStateToProps, Props } from 'app/features/dashboard/containers/DashboardPage';
 import { SubMenu } from 'app/features/dashboard/components/SubMenu';
 import { CustomScrollbar } from '@grafana/ui';
 import { SelectableValue } from '@grafana/data';
@@ -17,17 +18,24 @@ import { notifyApp } from 'app/core/actions';
 // ThingSPIN React Components
 import FMNav from './FMNav';
 import FMSettings from './FMSettings';
+import FMLeftTree from './FMLeftTree';
 import { FMDashboardGrid } from './FMDashboardGrid';
 
 // ThingSPIN Utils
 import { tsInitDashboard } from './initDashboard';
 import { FMDashboardModel } from '../models';
-import FMLeftTree from './FMLeftTree';
 
 // Facility Monitoring Component
 // (Customized grafana react component: iiHOC)
 export class FMDashboardPage extends DashboardPage {
     panelType = 'graph';
+
+    constructor(props: Props) {
+        super(props);
+
+        this.onClickFacilityTree = this.onClickFacilityTree.bind(this);
+        this.onPanelTypeChange = this.onPanelTypeChange.bind(this);
+    }
 
     // add thingspin method
     updateFmPanel(newPanel: any[]): void {
@@ -116,12 +124,10 @@ export class FMDashboardPage extends DashboardPage {
         const dashboard = this.props.dashboard as FMDashboardModel;
         const { $injector } = this.props;
 
-        return (<>
-            <FMLeftTree $injector={$injector} dashboard={dashboard}
-                onChangeFacilityTree={this.onClickFacilityTree.bind(this)}
-                onPanelTypeChange={this.onPanelTypeChange.bind(this)}
-            />
-        </>);
+        return (<FMLeftTree $injector={$injector} dashboard={dashboard}
+            onChangeFacilityTree={this.onClickFacilityTree}
+            onPanelTypeChange={this.onPanelTypeChange}
+        />);
     }
 
     // add thingspin method
