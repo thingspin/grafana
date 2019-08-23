@@ -336,22 +336,18 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
                 </div>
 
                 <div className="facility-section-line" />
-                {!isDataEmpty
-                    ? <FilterTree
+                {!isDataEmpty && <FilterTree
                         nodes={nodes}
                         nodesChecked={checkedSave}
                         click={(checked: any, Taginfo: any) => this.onCheck2(checked)}
                     />
-                    : null
                 }
                 <div>
-                    {isDataEmpty
-                        ? <div>
+                    {isDataEmpty && <div>
                             <div className="facility-warning-facility-empty"><i className="fa fa-exclamation-triangle">&nbsp;</i> WARNING</div>
                             <div className="facility-warning-facility-empty">설정된 데이터가 없습니다.</div>
                             <button className="facility-siteManage-page-btn2" onClick={this.siteManagePage}>사이트 관리 이동</button>
                         </div>
-                        : null
                     }
                 </div>
             </div>

@@ -38,16 +38,22 @@ export class FMLeftTree extends PureComponent<Props, States> {
     }
 
     render() {
-        const dashboard = this.props.dashboard as FMDashboardModel;
+        const dashboard: FMDashboardModel = this.props.dashboard as FMDashboardModel;
         const { $injector, isTreeView } = this.props;
 
-        return (<>{isTreeView ? <div className="fm-left-tree">
-            <div className="fm-left-type-selector">
-                <FMVizTypeSelector onChange={this.props.onPanelTypeChange.bind(this)} />
-            </div>
-            <FacilityTree taginfo={dashboard.facilityTags} siteinfo={dashboard.site}
-                inject={$injector} click={this.onClickFacilityTree.bind(this)} />
-        </div> : ''}</>);
+        return <>
+            {isTreeView && <div className="fm-left-tree">
+                <div className="fm-left-type-selector">
+                    <FMVizTypeSelector onChange={this.props.onPanelTypeChange.bind(this)} />
+                </div>
+
+                <FacilityTree taginfo={dashboard.facilityTags}
+                    siteinfo={dashboard.site}
+                    inject={$injector}
+                    click={this.onClickFacilityTree.bind(this)}
+                />
+            </div>}
+        </>;
     }
 }
 

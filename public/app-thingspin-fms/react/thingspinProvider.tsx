@@ -7,9 +7,7 @@ import { provideTheme } from 'app/core/utils/ConfigProvider';
 export const ThingspinContext = React.createContext(config.bootData.thingspin);
 
 export interface TsPrivderCtrl {
-  thingspinMenu: {
-    menu: any[];
-  };
+    tsMenu: any[];
 
   savePinState: (args: any) => Promise<any>;
   getUserPins: () => Promise<any>;
@@ -21,10 +19,15 @@ class TsProvider extends Component<{}, TsPrivderCtrl> {
 
   getUserPins = async () => (await getBackendSrv().get(`/thingspin/menu/pin`));
 
+  updateTsMenu = async (orgId: number) => {
+    const result = await getBackendSrv().get(`/thingspin/menu/${orgId}`);
+    this.setState({
+      tsMenu: result,
+    });
+  };
+
   state = {
-    thingspinMenu: {
-      menu: config.bootData.thingspin.menu,
-    },
+    tsMenu: config.bootData.thingspin.menu,
 
     savePinState: this.savePinState,
     getUserPins: this.getUserPins,

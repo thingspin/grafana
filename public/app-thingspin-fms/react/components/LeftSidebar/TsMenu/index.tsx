@@ -28,7 +28,7 @@ export class TsMenu extends PureComponent<Props> {
   }
 
   private filteredMenu(): any[] {
-    const { menu } = this.props.ctx.thingspinMenu;
+    const { tsMenu: menu } = this.props.ctx;
 
     return Array.isArray(menu)
       ? menu.filter(item => !item.hideFromMenu && item.icon && !item.divider)

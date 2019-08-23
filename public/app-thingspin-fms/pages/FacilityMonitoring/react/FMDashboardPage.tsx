@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 // Grafana React Components
-import { DashboardPage, mapStateToProps, Props } from 'app/features/dashboard/containers/DashboardPage';
+import { DashboardPage, mapStateToProps } from 'app/features/dashboard/containers/DashboardPage';
 import { SubMenu } from 'app/features/dashboard/components/SubMenu';
 import { CustomScrollbar } from '@grafana/ui';
 import { SelectableValue } from '@grafana/data';
@@ -29,13 +29,6 @@ import { FMDashboardModel } from '../models';
 // (Customized grafana react component: iiHOC)
 export class FMDashboardPage extends DashboardPage {
     panelType = 'graph';
-
-    constructor(props: Props) {
-        super(props);
-
-        this.onClickFacilityTree = this.onClickFacilityTree.bind(this);
-        this.onPanelTypeChange = this.onPanelTypeChange.bind(this);
-    }
 
     // add thingspin method
     updateFmPanel(newPanel: any[]): void {
@@ -110,50 +103,55 @@ export class FMDashboardPage extends DashboardPage {
         this.updateFmPanel(newPanels);
     }
 
-    onClickFacilityTree(site: any, tags: any) {
+    onClickFacilityTree = (site: any, tags: any) => {
         this.setFacilityInfo(site, tags);
         this.onCheckedChange(site.value, tags);
-    }
+    };
 
-    onPanelTypeChange({ value }: SelectableValue<string>) {
+    onPanelTypeChange = ({ value }: SelectableValue<string>) => {
         this.panelType = value;
-    }
-
+    };
 
     renderFacilityTree(): ReactNode {
         const dashboard = this.props.dashboard as FMDashboardModel;
         const { $injector } = this.props;
 
-        return (<FMLeftTree $injector={$injector} dashboard={dashboard}
+        return <FMLeftTree
+            $injector={$injector}
+            dashboard={dashboard}
             onChangeFacilityTree={this.onClickFacilityTree}
             onPanelTypeChange={this.onPanelTypeChange}
-        />);
+        />;
     }
 
     // add thingspin method
     renderGridNode(): ReactNode {
         const { editview } = this.props;
-        const dashboard = this.props.dashboard as FMDashboardModel;
         const { isFullscreen, scrollTop } = this.state;
+        const dashboard = this.props.dashboard as FMDashboardModel;
+        const { submenuEnabled, isEditing } = dashboard.meta;
 
         const gridClassName = classNames({
-            'ts-fm-dg': !dashboard.meta.isEditing,
-            'ts-fm-edit': !!dashboard.meta.isEditing,
+            'ts-fm-dg': !isEditing,
+            'ts-fm-edit': !!isEditing,
         });
 
         const gridWrapperClasses: string = classNames({
             'dashboard-container': true,
-            'dashboard-container--has-submenu': dashboard.meta.submenuEnabled,
+            'dashboard-container--has-submenu': submenuEnabled,
         });
 
         // Only trigger render when the scroll has moved by 25
         const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
         return (<div className={gridClassName}>
 
-            {!dashboard.meta.isEditing && !editview ? this.renderFacilityTree() : ''}
+            {!isEditing
+                && !editview
+                && this.renderFacilityTree()
+            }
 
             <div className={gridWrapperClasses}>
-                {dashboard.meta.submenuEnabled && <SubMenu dashboard={dashboard} />}
+                {submenuEnabled && <SubMenu dashboard={dashboard} />}
 
                 <FMDashboardGrid
                     dashboard={dashboard}
