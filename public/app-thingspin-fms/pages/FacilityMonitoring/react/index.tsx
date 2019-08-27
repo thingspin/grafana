@@ -1,5 +1,5 @@
 // 3rd party libs
-import React, { PureComponent, ReactNode } from 'react';
+import React from 'react';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 
@@ -19,14 +19,8 @@ export interface Props extends GfDPProps {
 
 }
 
-export interface State {
-
-}
-
-export class FMComponent extends PureComponent<Props, State> {
-    render(): ReactNode {
-        return (<FMDashboardPage {...this.props}></FMDashboardPage>);
-    }
-}
+export const FMComponent: React.FC<Props> = (props: Props) => (
+    <FMDashboardPage {...props}></FMDashboardPage>
+);
 
 export default hot(module)(connect( mapStateToProps, )(FMComponent));
