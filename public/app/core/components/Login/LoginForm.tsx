@@ -18,7 +18,7 @@ interface State {
 }
 
 export class LoginForm extends PureComponent<Props, State> {
-  userInput: HTMLInputElement; // Thingspin edit code (written by jgw)
+  private userInput: HTMLInputElement;
   constructor(props: Props) {
     super(props);
     this.state = {

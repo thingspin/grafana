@@ -10,7 +10,12 @@ import { LoginForm } from 'app/core/components/Login/LoginForm';
 import { TsUserSignup } from './TsUserSignup';
 
 export class TsLoginForm extends LoginForm {
-  disableUserSignUp = false;
+  tsUserInput: HTMLInputElement;
+
+  // Override
+  componentDidMount() {
+    this.tsUserInput.focus();
+  }
 
   // Override
   render() {
@@ -20,7 +25,7 @@ export class TsLoginForm extends LoginForm {
       <form name="loginForm" className="login-form-group gf-form-group">
         <div className="login-form">
           <input
-            ref={input => { this.userInput = input; }}
+            ref={input => { this.tsUserInput = input; }}
             type="text"
             name="user"
             className="gf-form-input login-form-input"
