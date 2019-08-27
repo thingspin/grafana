@@ -9,7 +9,7 @@ import { LoginServiceButtons } from 'app/core/components/Login/LoginServiceButto
 import { ChangePassword } from 'app/core/components/Login/ChangePassword';
 
 // ThingSPIN Libs
-import { TsUserSignup } from './TsUserSignup';
+//import { TsUserSignup } from './TsUserSignup';
 
 // Customize LoginPage Function Component(app/core/components/Login/LoginPage.tsx)
 export const TsLoginPage: FC = () => {
@@ -17,8 +17,7 @@ export const TsLoginPage: FC = () => {
     <div className="login container">
       <div className="login-content">
         <div className="login-branding">
-          <img className="logo-icon" src="public/img/thingspin_icon.svg" alt="ThingSPIN" />
-          <div className="logo-wordmark" />
+          <img className="logo-icon" src="public/img/thingspin/thingspin_icon.svg" alt="ThingSPIN" />
         </div>
         <LoginCtrl>
           {({
@@ -28,7 +27,7 @@ export const TsLoginPage: FC = () => {
             ldapEnabled,
             authProxyEnabled,
             disableLoginForm,
-            disableUserSignUp,
+            //disableUserSignUp,
             login,
             isLoggingIn,
             changePassword,
@@ -36,9 +35,12 @@ export const TsLoginPage: FC = () => {
             isChangingPassword,
           }) => (
             <div className="login-outer-box">
+              <div className={`login-inner-box login-small-logo`}><img className={`login-small-logo`}
+                      src="public/img/thingspin/thingspin_logo.svg" alt="ThingSPIN" /></div>
               <div className={`login-inner-box ${isChangingPassword ? 'hidden' : ''}`} id="login-view">
                 {!disableLoginForm ? (
                   <LoginForm
+                    disableUserSignUp={false}
                     displayForgotPassword={!(ldapEnabled || authProxyEnabled)}
                     onSubmit={login}
                     loginHint={loginHint}
@@ -46,7 +48,6 @@ export const TsLoginPage: FC = () => {
                     isLoggingIn={isLoggingIn}
                   />
                 ) : null}
-
                 {isOauthEnabled ? (
                   <>
                     <div className="text-center login-divider">
@@ -61,11 +62,9 @@ export const TsLoginPage: FC = () => {
                       </div>
                     </div>
                     <div className="clearfix" />
-
                     <LoginServiceButtons />
                   </>
                 ) : null}
-                {!disableUserSignUp ? <TsUserSignup /> : null}
               </div>
               <CSSTransition
                 appear={true}

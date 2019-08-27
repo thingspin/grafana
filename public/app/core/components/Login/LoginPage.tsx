@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { UserSignup } from './UserSignup';
+//import { UserSignup } from './UserSignup';
 import { LoginServiceButtons } from './LoginServiceButtons';
 import LoginCtrl from './LoginCtrl';
 import { LoginForm } from './LoginForm';
@@ -33,6 +33,7 @@ export const LoginPage: FC = () => {
               <div className={`login-inner-box ${isChangingPassword ? 'hidden' : ''}`} id="login-view">
                 {!disableLoginForm ? (
                   <LoginForm
+                    disableUserSignUp={false}
                     displayForgotPassword={!(ldapEnabled || authProxyEnabled)}
                     onSubmit={login}
                     loginHint={loginHint}
@@ -59,7 +60,6 @@ export const LoginPage: FC = () => {
                     <LoginServiceButtons />
                   </>
                 ) : null}
-                {!disableUserSignUp ? <UserSignup /> : null}
               </div>
               <CSSTransition
                 appear={true}

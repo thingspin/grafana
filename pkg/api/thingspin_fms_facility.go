@@ -106,7 +106,7 @@ func addTsFacility(c *gfm.ReqContext, req m.AddTsFacilityQuery) Response {
 	}
 
 	returnList := []m.TsFacilityTreeItem{}
-	getFacilityTreeData(req.SiteId, &returnList)
+	GetFacilityTreeData(req.SiteId, &returnList)
 	sort.Slice(returnList, func(i, j int) bool {
         return returnList[i].FacilityTreeOrder < returnList[j].FacilityTreeOrder
 	})	
@@ -315,7 +315,7 @@ func createFacilityTreeData(tree *[]m.TsFacilityTreeItem, treeMap map[string]m.T
 	}
 }
 
-func getFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
+func GetFacilityTreeData(siteId int, data *[]m.TsFacilityTreeItem) error {
 	treeMap := make(map[string]m.TsFacilityTreeItem)
 
 	treeList := m.GetAllTsFacilityTreeQuery {
@@ -443,7 +443,7 @@ func sortReturnTreeData(data []m.TsFacilityTreeItem) {
 func getAllTsFacilityTree(c *gfm.ReqContext) Response {
 	returnList := []m.TsFacilityTreeItem{}
 	siteId := c.ParamsInt(":siteId")
-	getFacilityTreeData(siteId, &returnList)
+	GetFacilityTreeData(siteId, &returnList)
 	sort.Slice(returnList, func(i, j int) bool {
         return returnList[i].FacilityTreeOrder < returnList[j].FacilityTreeOrder
 	})

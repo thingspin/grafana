@@ -1,6 +1,6 @@
 import React, { PureComponent, SyntheticEvent, ChangeEvent } from 'react';
 import { FormModel } from './LoginCtrl';
-
+import { UserSignup } from './UserSignup';
 interface Props {
   displayForgotPassword: boolean;
   onChange?: (valid: boolean) => void;
@@ -8,6 +8,7 @@ interface Props {
   isLoggingIn: boolean;
   passwordHint: string;
   loginHint: string;
+  disableUserSignUp: boolean;
 }
 
 interface State {
@@ -60,6 +61,8 @@ export class LoginForm extends PureComponent<Props, State> {
   }
 
   render() {
+    console.log("his");
+    console.log(this.props.disableUserSignUp);
     return (
       <form name="loginForm" className="login-form-group gf-form-group">
         <div className="login-form">
@@ -90,29 +93,31 @@ export class LoginForm extends PureComponent<Props, State> {
           />
         </div>
         <div className="login-button-group">
+          {this.props.displayForgotPassword ? (
+            <div className="small login-button-forgot-password">
+              <a href="user/password/send-reset-email">비밀번호를 잊으셨나요?</a>
+            </div>
+          ) : null}
+          {!this.props.disableUserSignUp ? <UserSignup /> : null}
+
           {!this.props.isLoggingIn ? (
             <button
               type="submit"
               aria-label="Login button"
-              className={`btn btn-large p-x-2 ${this.state.valid ? 'btn-primary' : 'btn-inverse'}`}
+              className="btn btn-medium btn-signup btn-p-x-2"
               onClick={this.onSubmit}
               disabled={!this.state.valid}
             >
-              Log In
+              로그인
             </button>
           ) : (
             <button type="submit" className="btn btn-large p-x-2 btn-inverse btn-loading">
-              Logging In<span>.</span>
+              로그인중<span>.</span>
               <span>.</span>
               <span>.</span>
             </button>
           )}
 
-          {this.props.displayForgotPassword ? (
-            <div className="small login-button-forgot-password">
-              <a href="user/password/send-reset-email">Forgot your password?</a>
-            </div>
-          ) : null}
         </div>
       </form>
     );

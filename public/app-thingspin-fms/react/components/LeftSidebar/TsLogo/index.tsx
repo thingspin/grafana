@@ -13,7 +13,7 @@ interface Props {
 
 class TsLogo extends PureComponent<Props> {
   title = `ThingSPIN`;
-  fullLogoPath = `public/img/thingspin/thingspin_logo.svg`;
+  fullLogoPath = `public/img/thingspin/thingspin_logo_gray.svg`;
   smallLogoPath: string;
   viewMode: EViewModeState = this.props.viewMode;
 
