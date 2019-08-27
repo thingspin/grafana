@@ -91,13 +91,13 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 
 		// 물리적 태그 트리
 		tsRoute.Group("/tag", func(tsTypeRoute routing.RouteRegister) {
-			tsTypeRoute.Get("/", Wrap(getAllTsTag))
+			// tsTypeRoute.Get("/", Wrap(getAllTsTag))
 		})
 
 		tsRoute.Group("/tagdefine", func(tsTypeRoute routing.RouteRegister) {
 			tsTypeRoute.Get("/", Wrap(getAllTsConnectInfo))
-			tsTypeRoute.Get("/graph",Wrap(getAllTsConnectName))
-			tsTypeRoute.Get("/graph/:id",Wrap(getTsPtag))
+			tsTypeRoute.Get("/graph", Wrap(getAllTsConnectName))
+			tsTypeRoute.Get("/graph/:id", Wrap(getTsPtag))
 		})
 
 		tsRoute.Group("/type", func(tsTypeRoute routing.RouteRegister) {
