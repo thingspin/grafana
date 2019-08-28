@@ -91,7 +91,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 
 		// 물리적 태그 트리
 		tsRoute.Group("/tag", func(tsTypeRoute routing.RouteRegister) {
-			// tsTypeRoute.Get("/", Wrap(getAllTsTag))
+			tsTypeRoute.Get("/", Wrap(getAllTsTag))
 		})
 
 		tsRoute.Group("/tagdefine", func(tsTypeRoute routing.RouteRegister) {

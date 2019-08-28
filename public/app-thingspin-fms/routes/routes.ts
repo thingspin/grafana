@@ -37,6 +37,33 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
       icon: 'fa fa-bell',
     },
   })
+  .when('/signup', {
+    templateUrl: 'public/app/partials/signup_step2.html',
+    controller: 'SignUpCtrl',
+    pageClass: 'sidemenu-hidden',
+    routeInfo: {
+      menupath: [ "회원가입" ],
+      icon: 'fa fa-user',
+    },
+  })
+  .when('/user/password/send-reset-email', {
+    templateUrl: 'public/app/partials/reset_password.html',
+    controller: 'ResetPasswordCtrl',
+    pageClass: 'sidemenu-hidden',
+    routeInfo: {
+      menupath: [ "비밀번호 초기화" ],
+      icon: 'fa fa-refresh',
+    },
+  })
+  .when('/user/password/reset', {
+    templateUrl: 'public/app/partials/reset_password.html',
+    controller: 'ResetPasswordCtrl',
+    pageClass: 'sidemenu-hidden',
+    routeInfo: {
+      menupath: [ "비밀번호 초기화" ],
+      icon: 'fa fa-refresh',
+    },
+  })
   //.when('/thingspin/manage/alarm/new', { template: '<ts-alarm-new />', })
   //.when('/thingspin/manage/alarm/management', { template: '<ts-alarm-management />', })
   //.when('/thingspin/manage/alarm/notification', { template: '<ts-alarm-notification />', })

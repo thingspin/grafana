@@ -14,6 +14,180 @@ import (
 	//"reflect"
 )
 
+
+func getAllTsTag(c *gfm.ReqContext) Response {
+	returnList := []m.TsFacilityTreeItem{}
+
+	// Get all site information
+	result := m.GetAllTsSiteQuery{}
+	if err := bus.Dispatch(&result); err != nil {
+		return Error(500, "ThingSPIN Server Error", err)
+	}
+
+	// Get all site data
+	for _, siteInfo := range result.Result {
+		GetFacilityTreeData(siteInfo.Id, &returnList)
+	}
+	
+	// Sort all site data by facility order
+	sortReturnTreeData(returnList)	
+
+	///////////////////////////////////////////////////////////////////////
+	//
+	//             Get All physical data
+	///////////////////////////////////////////////////////////////////////
+	var influxHost = "http://" + setting.Thingspin.Influx.Host + ":" + strconv.Itoa(setting.Thingspin.Influx.Port)
+
+	cli, err := influx.NewHTTPClient(influx.HTTPConfig{
+		Addr: influxHost,
+	})
+	if err != nil {
+		return Error(500, "Get ts connect query Error", err)
+	}
+	defer cli.Close()
+	
+
+	// measurements
+	lev2Map := make(map[string]m.TsFacilityTreeItem)
+
+	// Query Ptaglist from Connect table
+	q := m.GetAllTsConnectQuery{}
+	if err := bus.Dispatch(&q); err != nil {
+		return Error(500, "Get ts connect query Error", err)
+	}
+	
+	forder := -1
+	tid := -1
+	for _, cnode := range q.Result {
+		if val, ok := cnode.Params["PtagList"]; ok {
+			for _, ptag := range val.([]interface{}) {
+				ptagMap := ptag.(map[string]interface{})
+				//fmt.Println(ptagMap["name"])
+				msname := cnode.Type + "_" + strconv.Itoa(cnode.Id)
+				if _, ok := lev2Map[cnode.Name]; ok {
+					// 이미 존재하는 것은 추가하지 않는다.
+					lv2 := lev2Map[cnode.Name]
+			
+					lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+						SiteId: -cnode.Id,
+						IsPtag : true,
+						IsValid : true,
+						TagId: tid,
+						TagTableName : msname,
+						TagColumnName : ptagMap["name"].(string),
+						TagColumnType : ptagMap["type"].(string),
+						TagName : ptagMap["name"].(string),
+						FacilityTreeOrder : len(lv2.Children) + 1,
+						Value: strconv.Itoa(tid),
+						Label : ptagMap["name"].(string),
+						Children : []m.TsFacilityTreeItem{},
+					})
+					lev2Map[cnode.Name] = lv2
+					tid = tid - 1
+					
+				} else {
+					
+					tags := []m.TsFacilityTreeItem{}
+					tags = append(tags,  m.TsFacilityTreeItem {
+						SiteId: -cnode.Id,
+						IsPtag : true,
+						IsValid : true,
+						TagId: tid,
+						TagTableName : msname,
+						TagColumnName : ptagMap["name"].(string),
+						TagColumnType : ptagMap["type"].(string),
+						TagName : ptagMap["name"].(string),
+						FacilityTreeOrder : 1,
+						Value: strconv.Itoa(tid),
+						Label : ptagMap["name"].(string),
+						Children : []m.TsFacilityTreeItem{},
+					})
+
+					tid = tid - 1
+
+					lev2Map[cnode.Name] = m.TsFacilityTreeItem{
+						SiteId: -cnode.Id,
+						IsPtag : true,
+						FacilityName : cnode.Name,
+						Children : tags,
+						Label : cnode.Name,
+						FacilityTreeOrder : forder,
+						Value: strconv.Itoa(tid),
+					}
+					forder = forder - 1
+					tid = tid - 1
+				}
+			}
+		}
+	}
+
+	// Get all measurements from FMS_connect
+	cmd := m.GetFmsConnectCommand{}
+	if err := bus.Dispatch(&cmd); err != nil {
+		return Error(500, "[thingspin] Tagdefine get command failed", err)
+	}
+
+	// level2 with level3 from influxDB to get the historical data
+	for _, ms := range cmd.Result {
+		msName := ms.Type + "_" + strconv.Itoa(ms.Id)
+		q := influx.NewQuery("SHOW FIELD KEYS ON thingspin from " + msName, "thingspin", "")
+		if response, err := cli.Query(q); err == nil && response.Error() == nil {
+			if len(response.Results) > 0 {
+				result := response.Results[0]
+				if  len(result.Series) > 0 {
+					serie := result.Series[0]
+					values := serie.Values
+					for _, v := range values {
+						if _, ok := lev2Map[ms.Name]; ok {
+							lv2 := lev2Map[ms.Name]
+							hasCheck := false
+							for _, lv2Ch := range lv2.Children {
+								if lv2Ch.TagColumnName == v[0].(string) {
+									hasCheck = true
+									break
+								}
+							}
+							// 히스토리 태그
+							if !hasCheck {
+								lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+									SiteId: -ms.Id,
+									IsPtag : true,
+									IsValid : false,
+									TagId: tid,
+									TagTableName : msName,
+									TagColumnName : v[0].(string),
+									TagColumnType : v[1].(string),
+									TagName : v[0].(string),
+									FacilityTreeOrder : len(lv2.Children) + 1,
+									Value: strconv.Itoa(tid),
+									Label : v[0].(string),
+									Children : []m.TsFacilityTreeItem{},
+								})
+								tid = tid - 1
+				
+							}
+							lev2Map[ms.Name] = lv2
+		
+						}
+					}	
+				}
+			}			
+		}else {
+			return Error(500, "Get ts connect query Error", err)
+		}
+	}
+
+	for _, node := range lev2Map {
+		returnList = append(returnList, node)
+	}
+
+	sort.Slice(returnList, func(i, j int) bool {
+        return returnList[i].FacilityTreeOrder < returnList[j].FacilityTreeOrder
+	})
+	
+	return JSON(200, returnList)
+}
+
 // For graph
 func getTsPtag(c *gfm.ReqContext) Response {
 	uid := 1
