@@ -1,5 +1,6 @@
 import * as graphitePlugin from 'app/plugins/datasource/graphite/module';
 import * as cloudwatchPlugin from 'app/plugins/datasource/cloudwatch/module';
+import * as dashboardDSPlugin from 'app/plugins/datasource/dashboard/module';
 import * as elasticsearchPlugin from 'app/plugins/datasource/elasticsearch/module';
 import * as opentsdbPlugin from 'app/plugins/datasource/opentsdb/module';
 import * as grafanaPlugin from 'app/plugins/datasource/grafana/module';
@@ -42,6 +43,7 @@ import { thingspinBuiltInPlugins } from 'app-thingspin-fms/plugins/built_in_plug
 const builtInPlugins: any = {
   'app/plugins/datasource/graphite/module': graphitePlugin,
   'app/plugins/datasource/cloudwatch/module': cloudwatchPlugin,
+  'app/plugins/datasource/dashboard/module': dashboardDSPlugin,
   'app/plugins/datasource/elasticsearch/module': elasticsearchPlugin,
   'app/plugins/datasource/opentsdb/module': opentsdbPlugin,
   'app/plugins/datasource/grafana/module': grafanaPlugin,
