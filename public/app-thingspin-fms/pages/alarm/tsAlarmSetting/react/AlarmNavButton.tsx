@@ -1,7 +1,8 @@
-// Libraries
+// 3rd party libs
 import React, { FunctionComponent } from 'react';
 
-// Components
+// Grafana libs
+// Views
 import { Tooltip } from '@grafana/ui';
 
 interface Props {

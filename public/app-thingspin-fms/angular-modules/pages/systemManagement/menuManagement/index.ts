@@ -4,7 +4,6 @@ import config from 'app/core/config';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
 export class TsMenuManagementCtrl {
-  static template = require("./index.html");
   data: any;
   //dataTmp: any;
   options: any;

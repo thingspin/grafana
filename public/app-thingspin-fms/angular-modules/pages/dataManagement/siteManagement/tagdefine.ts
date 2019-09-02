@@ -7,7 +7,6 @@ import "./tagdefine.scss";
 //import appEvents from 'app/core/app_events';
 
 export class TsTagDefineCtrl {
-  static template = require("./tagdefine.html");
   // tree
   source: any;
   dataList: any;

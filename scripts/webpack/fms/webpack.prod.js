@@ -5,6 +5,7 @@ const common = require('./webpack.common.js');
 const gfProd = require("../webpack.prod.js");
 const path = require('path');
 const ngAnnotatePlugin = require('ng-annotate-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -52,6 +53,9 @@ let fmsProd = merge(common, {
   },
 
   plugins: [
+    new ForkTsCheckerWebpackPlugin({
+      checkSyntacticErrors: true,
+    }),
     new MiniCssExtractPlugin({
       filename: "fms.[name].[hash].css"
     }),

@@ -1,6 +1,7 @@
 // 3rd party libs
 
 // grafana libs
+// Models
 import { DashboardSrv } from 'app/features/dashboard/services/DashboardSrv';
 import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
@@ -9,7 +10,7 @@ import { DashboardModel } from 'app/features/dashboard/state';
 
 // Define Thingspin DashboardService interface
 export interface AlarmDashboardSrv extends DashboardSrv {
-  // [ 설비 모니터링 ] customize methods
+  // [ 알람 ] customize methods
   alarmSaveDashboard(options?: { overwrite?: any; folderId?: any; makeEditable?: any },
     clone?: DashboardModel): any;// customized 'saveDashboard' method
   alarmSave(clone: any, options: any, isMenuSave?: boolean, parentMenuName?: string, ): any; // customized 'save' method

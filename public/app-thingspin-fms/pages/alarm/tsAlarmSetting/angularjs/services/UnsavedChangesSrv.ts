@@ -1,4 +1,7 @@
+// 3rd party libs
 import angular from "angular";
+
+// Grafana libs
 import { ChangeTracker } from "app/features/dashboard/services/ChangeTracker";
 import { ContextSrv } from 'app/core/services/context_srv';
 import { DashboardModel } from 'app/features/dashboard/state';
