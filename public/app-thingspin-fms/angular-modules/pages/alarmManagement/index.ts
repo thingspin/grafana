@@ -1,4 +1,5 @@
 import angular from 'angular';
+import "./index.scss";
 
 export class TsAlarmManagementCtrl {
   /** @ngInject */

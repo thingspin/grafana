@@ -1,0 +1,209 @@
+.ts-noti-table-button {
+    display: flex;
+}
+.ts-noti-button {
+    width: 80px;
+    height: 36px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    color: white;
+    background-color: #0039ff;
+    span {
+        width: 44px;
+        height: 16px;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: 500;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.14;
+        letter-spacing: normal;
+        text-align: center;
+        color: #ffffff;
+    }
+}
+
+.ts-noti-remove-button {
+    display: table;
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #5a0dff;
+    i {
+        width: 20px;
+        height: 20px;
+        color:#ffffff;
+        display:table-cell;
+        text-align: center;
+        vertical-align: middle;
+    }
+}
+
+.ts-noti-button-contents {
+    width: 40px;
+    height: 17px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    text-align: center;
+    color: #ffffff;
+}
+
+.ts-noti-title{
+    width: 91px;
+    height: 20px;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.19;
+    letter-spacing: normal;
+    text-align: left;
+    color: #0039ff;
+}
+
+.ts-noti-channel-title{
+    width: 129px;
+    height: 16px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #0039ff;
+}
+
+#ts-new-noti-btn-area {
+    //float: right;
+    width: 80px;
+    height: 36px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #0039ff;
+    
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+}
+
+.ts-site-table-container {
+    margin-top: 21.5px;
+    margin-bottom: 28px;
+    color: #1e1e1e;
+    
+    .connect-table-header {
+        height: 15px;
+        font-size: 12px;
+        opacity: 0.6;
+    }
+    .connect-page-rows {
+        display: inline-block;
+        .connect-table-select {
+            font-size: 12px;
+            height:16px;
+            width: 100%;
+            border: 0;
+        }
+    }
+    .connect-table-body {
+        width: 100%;
+        margin: 8px 0;
+        table {
+            width: 100%;
+            tr {
+                border-bottom: solid 1px #dcdbdc;
+                &:first {
+                    margin-left: 16px;
+                }
+            }
+            th {
+                font-size:12px;
+                height: 28px;
+                padding: 4px 0 5px 0;
+                padding-left: 16px;
+            }
+            td {
+                font-size:14px;
+                padding-left: 16px;
+                color: rgba(#1e1e1e, 0.8);
+                button {
+                    font-size: 20px;
+                }
+            }
+            .ts-table-row {
+                &:hover {
+                    background-color: #e3f2fd;
+                }
+                .connect { 
+                    font-size: 20px;
+                }
+            }
+            .ts-site-id {
+                font-size: 14px;
+                width: fit-content;
+                padding: 5px 16px 5px 16px;
+                border-radius: 4px;
+                border: solid 1px #1e88e5;
+                color: #1e88e5;
+                margin-top: 4px;
+                margin-bottom: 4px;
+            }
+            .th-site-id {
+                width:16.86%
+            }
+            .th-site-name {
+                width:25.30%
+            }
+            .th-site-desc {
+                width:42.17%
+            }
+            .ts-table-header {
+                background-color: #ecebeb;
+            }
+            .selected {
+                background-color: #e3f2fd;
+            }
+            .btn-padding {
+                font-size: 17.5px;
+                padding: 4px 4px 4px 4px;
+            }
+            .btn-padding-margin {
+                margin-left: 20px;
+                font-size: 17.5px;
+                padding: 4px 4px 4px 4px;
+            }                
+        }
+    }
+    .connect-table-footer {
+        width: 100%;
+        display: inline-flex;
+        .table-page-range {
+            font-size: 12px;
+            opacity: 0.6;
+        }
+        .table-paging {
+            margin-left: auto;
+            display: inline-block;
+        }
+        button {
+            opacity: 0.3;
+            &.blue {
+                opacity: 1;
+            }
+        }
+    }
+}    
+

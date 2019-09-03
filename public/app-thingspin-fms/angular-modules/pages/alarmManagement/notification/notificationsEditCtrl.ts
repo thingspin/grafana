@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { appEvents, coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
-
+import "./index.scss";
 export class TsAlarmNotiEditCtrl {
   theForm: any;
   //navModel: any;

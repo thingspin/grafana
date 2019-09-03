@@ -107,7 +107,7 @@ export const getTitle = (list: NavModelItem[] | undefined) => {
 
 export const mapStateToProps = (state: any, { $route }: {$route: angular.route.IRouteParamsService}) => {
   let titleObj: any = getTitle(undefined);
-  console.log($route);
+  //console.log($route);
   if ($route.current) {
     const { $$route } = $route.current;
     const originalPath = $$route.keys.length > 0
