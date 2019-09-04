@@ -25,7 +25,7 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
 
     UNSAFE_componentWillReceiveProps({nodes, nodesChecked}: FilterTreeProps) {
         // this.props 는 아직 바뀌지 않은 상태
-        //console.log("componentWillReceive");
+        console.log("componentWillReceive");
         //console.log("prev -node: ",this.props.nodes);
         //console.log("prev: ",this.props.nodesChecked);
         //console.log("next: ",nextProps.nodesChecked);
@@ -49,18 +49,45 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
     }
 
     UNSAFE_componentWillMount() {
-        //console.log("componentWillMount");
-        this.putNodeIcon(this.props.nodes);
+        console.log("componentWillMount: ",this.props);
+        //this.putNodeIcon(this.props.nodes);
+        if (this.props.nodes && this.props.nodesChecked) {
+            const nChecked = this.props.nodesChecked.length || 0;
+            const updateState: any = {
+                nodes: this.props.nodes,
+                checked: this.props.nodesChecked,
+            };
+
+            this.putNodeIcon(this.props.nodes);
+
+            if (nChecked) {
+                this.setState(updateState);
+            }
+            //console.log("props change: ",nChecked)
+        }
     }
 
     putNodeIcon(node: any[]) {
         //console.log("parent check");
         if (node && node.length) {
+            /*
             for (const n of node) {
                 n.icon = (n.tag_id === 0)
                     ? <span className="icon-facility"><i className="fa fa-steam fa-1x" /></span>
                     : <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>;
             }
+            */
+           for (const n of node) {
+            if (n.tag_id === 0) {
+                if (n.site_id < 0) {
+                    n.icon = <span className="icon-connection"><i className="fa fa-plug" /></span>;
+                }else {
+                    n.icon = <span className="icon-facility"><i className="fa fa-steam fa-1x" /></span>;
+                }
+            }else {
+                n.icon = <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>;
+            }
+        }
         }
     }
 
@@ -127,7 +154,7 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
 
     render() {
         const { filterText, filterPlaceholder, nodesFiltered, checked, expanded } = this.state;
-        //console.log("filterTree Render");
+        console.log("filterTree Render:",checked);
         return (
             <div>
                 <div className="facility-filter-pos">

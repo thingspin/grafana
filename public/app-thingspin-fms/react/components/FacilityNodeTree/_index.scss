@@ -107,7 +107,7 @@
 
 .facility-section-line {
     height: 0;
-    border: solid 0.5px #ecebeb;
+    //border: solid 0.5px #ecebeb;
     margin-top: 9px;//16.5
     margin-left: 16px;
     margin-right: 16px;
@@ -116,8 +116,11 @@
 }
 
 .icon-tag{
-    color: #009688;
+    color: #5a0dff;
 }
 .icon-facility{
-    color:#03A9F4
+    color:#0039ff;
+}
+.icon-connection{
+    color:#313030;
 }

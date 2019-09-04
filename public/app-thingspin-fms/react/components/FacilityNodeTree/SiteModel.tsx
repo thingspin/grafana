@@ -50,32 +50,34 @@ export class SiteModel {
     }
 
     async getTreeinfo(siteid: any, isCustom: boolean): Promise<any[]> {
+        console.log('getTreeinfo');
         const urlOrigin = `/thingspin/sites/${siteid}/facilities/tree`;
         const urlPtag = `/thingspin/tagdefine/graph/${siteid}`; //siteid === connectionId
-        const urlAll = `/thingspin/tagdefine`;
+        //const urlAll = `/thingspin/tagdefine`;
+        const urlAll = `/thingspin/tag`;// get all tags include Custom tag
 
         let result: any[];
         if (siteid === -1) {
-            console.log("getAll tag");
-            const { Result } = await getBackendSrv().get(urlAll);
-
-            result = Result;
+            console.log("getAll tag : ",urlAll);
+            //const { Result } = await getBackendSrv().get(urlAll);
+            //result = Result;
+            result = await getBackendSrv().get(urlAll);
         } else {
             const url = isCustom ? urlOrigin : urlPtag;
 
             result = await getBackendSrv().get(url);
         }
-
+        console.log('getTreeinfo: ',result);
         return (result && result.length) ? result : null;
     }
 
     //0814
     async getConnectInfo() {
         //const elements = [];
-        const result = await getBackendSrv().get("/thingspin/connect");
-
+        //const result = await getBackendSrv().get("/thingspin/connect");
+    /*
         if (result && result.length > 0) {
-            console.log("getConnectInfo: ", result);
+            //console.log("getConnectInfo: ", result);
             //this.setState({ sitesListinfo: result });
             for (const { params } of result) {
                 console.log("getconnectinfo:", params.FlowId);
@@ -83,6 +85,7 @@ export class SiteModel {
         } else {
             console.log("** connect info empty **");
         }
+    */
     }
 }
 

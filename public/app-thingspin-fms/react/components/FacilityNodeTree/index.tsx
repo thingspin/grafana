@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Grafana libs
-import { Select } from '@grafana/ui';
+//import { Select } from '@grafana/ui';
 
 // Thingspin libs
 import FilterTree from './filterTree';
@@ -98,7 +98,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
 
     //restore checked item
     async restoreFacilityData(item: facilityTreeProps): Promise<TreeInfo> {
-        console.log("restore");
+        //console.log("restore");
         //site selected
         console.log("restore item:", item);
         console.log(item.siteinfo);
@@ -255,7 +255,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             checked: checked,
         });
         this.sendTagData(Taginfo, selectedOption);
-        //this.props.click({ Taginfo, siteData });
+        //this.props.click({ Taginfo, selectedOption });
     }
 
     sendTagData(TagData: any[], siteData: any) {
@@ -264,17 +264,19 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             return;
         }
 
+        //console.log("sendTagData: ",TagData);
+        /*
         const Taginfo = (siteData.value === -1)
             //All Tags
             ? TagData.filter(({ tag_id }) => (tag_id < 0))
             : TagData.filter(({ site_id }) => (siteData.value === site_id));
-
+        */
         console.log('sendTagData: ', TagData, siteData);
-        console.log('sendTagData filtered: ', Taginfo);
+        //console.log('sendTagData filtered: ', Taginfo);
 
         click({
             siteData,
-            Taginfo: Taginfo || [],
+            Taginfo: TagData || [],
         });
     }
 
@@ -317,13 +319,15 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     );
 
     render() {
-        const { siteOptions, checkedSave, nodes, selectedOption } = this.state;
+        //const { siteOptions, checkedSave, nodes, selectedOption } = this.state;
+        const { siteOptions, checkedSave, nodes } = this.state;
         const isDataEmpty = (nodes.length === 0 || siteOptions.length === 0) ? true : false;
 
-        //console.log("render:",checkedSave);
+        console.log("render-checkedsave:",checkedSave," DataEmpty:",isDataEmpty);
 
         return (
             <div className="facility-tree-container">
+            {/*
                 <div className="facility-site-pos">
                     <Select
                         value={selectedOption}
@@ -334,8 +338,9 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
                         components={{ SingleValue: this.customSingleValue }}
                     />
                 </div>
-
+            */}
                 <div className="facility-section-line" />
+
                 {!isDataEmpty && <FilterTree
                         nodes={nodes}
                         nodesChecked={checkedSave}
