@@ -3,66 +3,15 @@
     "label": "{{.Params.FlowId}}",
     "info": "",
     "nodes": [
-        {{if .Enable}}
-            {{.Params.AddTopicList | convJsonStr}},
+        {{if .Publish}}
+            {{.Params.publishTopicList | convJsonStr}},
         {{else}}
-            {{.Params.AddDisTopicList | convJsonStr}},
+            {{if .Enable}}
+                {{.Params.AddTopicList | convJsonStr}},
+            {{else}}
+                {{.Params.AddDisTopicList | convJsonStr}},
+            {{end}}
         {{end}}
-        {
-            "id":"TS-MQTT-HTTPIN-STATUS-{{.Params.UUID}}",
-            "type":"http in",
-            "name":"",
-            "url":"/mqtt/{{.Params.UUID}}/status",
-            "method":"get",
-            "upload":false,
-            "swaggerDoc":"",
-            "x":270,
-            "y":140,
-            "wires":[  
-               [  
-                  "TS-MQTT-HTTPIN-PARSE-{{.Params.UUID}}"
-               ]
-            ]
-        },
-        {  
-            "id":"TS-MQTT-HTTPIN-PARSE-{{.Params.UUID}}",
-            "type":"function",
-            "name":"",
-            "func":"const {url} = msg.req;\nconst list = url.split(\"/\");\nconst id = list[list.length-2];\nconst status = global.get('ts-status');\nmsg.payload = status[id];\nreturn msg;",
-            "outputs":1,
-            "noerr":0,
-            "x":490,
-            "y":140,
-            "wires":[  
-               [  
-                  "TS-MQTT-HTTPIN-MQTT-{{.Params.UUID}}",
-                  "TS-MQTT-HTTPIN-RESPONSE-{{.Params.UUID}}"
-               ]
-            ]
-        },
-        {  
-            "id":"TS-MQTT-HTTPIN-RESPONSE-{{.Params.UUID}}",
-            "type":"http response",
-            "name":"",
-            "statusCode":"",
-            "headers":{
-            },
-            "x":670,
-            "y":160,
-            "wires":[[]]
-        },
-        {  
-            "id":"TS-MQTT-HTTPIN-MQTT-{{.Params.UUID}}",
-            "type":"mqtt out",
-            "name":"",
-            "topic":"/thingspin/connect/{{.Params.UUID}}/status",
-            "qos":"2",
-            "retain":"true",
-            "broker":"TS-MQTT-TSBROKER-{{.Params.UUID}}",
-            "x":950,
-            "y":140,
-            "wires":[[]]
-         },
         {  
             "id":"TS-MQTT-COMMENT-{{.Params.UUID}}",
             "type":"comment",
@@ -105,6 +54,61 @@
             "y": 60,
             "wires": []
         }, {
+            "id":"TS-MQTT-HTTPIN-STATUS-{{.Params.UUID}}",
+            "type":"http in",
+            "name":"",
+            "url":"/mqtt/{{.Params.UUID}}/status",
+            "method":"get",
+            "upload":false,
+            "swaggerDoc":"",
+            "x":270,
+            "y":140,
+            "wires":[  
+               [  
+                  "TS-MQTT-HTTPIN-PARSE-{{.Params.UUID}}"
+               ]
+            ]
+        },
+        {  
+            "id":"TS-MQTT-HTTPIN-PARSE-{{.Params.UUID}}",
+            "type":"function",
+            "name":"",
+            "func":"const {url} = msg.req;\nconst list = url.split(\"/\");\nconst id = list[list.length-2];\nconst status = global.get('ts-status');\nmsg.payload = status[id];\nreturn msg;",
+            "outputs":1,
+            "noerr":0,
+            "x":490,
+            "y":140,
+            "wires":[  
+               [  
+                  "TS-MQTT-HTTPIN-MQTT-{{.Params.UUID}}",
+                  "TS-MQTT-HTTPIN-RESPONSE-{{.Params.UUID}}"
+               ]
+            ]
+        },
+        {
+            "id":"TS-MQTT-HTTPIN-MQTT-{{.Params.UUID}}",
+            "type":"mqtt out",
+            "name":"",
+            "topic":"/thingspin/connect/{{.Params.UUID}}/status",
+            "qos":"2",
+            "retain":"true",
+            "broker":"TS-MQTT-TSBROKER-{{.Params.UUID}}",
+            "x":950,
+            "y":140,
+            "wires":[[]]
+        },
+        {  
+            "id":"TS-MQTT-HTTPIN-RESPONSE-{{.Params.UUID}}",
+            "type":"http response",
+            "name":"",
+            "statusCode":"",
+            "headers":{
+            },
+            "x":670,
+            "y":160,
+            "wires":[[]]
+        },
+        {
             "id":"TS-MQTT-INJECT-{{.Params.UUID}}",
             "type":"inject",
             "name":"",
@@ -121,7 +125,7 @@
                [  
                   "TS-MQTT-PARSING-INJECT-{{.Params.UUID}}"
                ]
-            ]            
+            ]
         }, {  
             "id":"TS-MQTT-PARSING-INJECT-{{.Params.UUID}}",
             "type":"function",
@@ -136,11 +140,154 @@
                   "TS-MQTT-CHECKNODE-{{.Params.UUID}}"
                ]
             ]
-         }, {
+        }, {
+            "id": "TS-OPC-UA-INJECT-INIT-{{.Params.FlowId}}",
+            "type": "inject",
+            "name": "init inject",
+            "topic": "",
+            "payload": "",
+            "payloadType": "date",
+            "repeat": "",
+            "crontab": "",
+            "once": true,
+            "onceDelay": 0,
+            "x": 200,
+            "y": 200,
+            "wires": [
+                [ "TS-OPC-UA-INIT-FUNC-{{.Params.FlowId}}" ]
+            ]
+        }, {
+            "id": "TS-OPC-UA-INIT-FUNC-{{.Params.FlowId}}",
+            "type": "function",
+            "name": "flow init",
+            "func": "msg.payload = flow.get('status');\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 490,
+            "y": 200,
+            "wires": [
+                [ "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}" ]
+            ]
+        }, {
+          "id": "TS-FLOW-STATUS-LISTENER-{{.Params.FlowId}}",
+          "type": "status",
+          "name": "",
+          "scope": [
+              "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
+              "TS-ADD-MQTT-ID-{{.Params.FlowId}}",
+              "TS-MQTT-CHECKNODE-{{.Params.FlowId}}"
+          ],
+          "x": 200,
+          "y": 240,
+          "wires": [
+              [
+                  "TS-FLOW-STATUS-FUNC-ID-{{.Params.FlowId}}"
+              ]
+          ]
+        }, {
+            "id": "TS-FLOW-STATUS-FUNC-ID-{{.Params.FlowId}}",
+            "type": "function",
+            "name": "status processing",
+            "func": "const { status } = msg;\nconst stat = flow.get('status') || {\n    id: '{{.Params.FlowId}}',\n};\n\nstat[status.source.name] = status;\n\nflow.set('status', stat);\n\nmsg.payload = stat;\n\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 490,
+            "y": 240,
+            "wires": [
+              [ "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}" ]
+            ]
+        }, {
+          "id": "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}",
+          "type": "mqtt out",
+          "name": "",
+          "topic": "/thingspin/mqtt/{{.Id}}/status",
+          "qos": "2",
+          "retain": "true",
+          "broker": "TS-MQTT-TSBROKER-{{.Params.UUID}}",
+          "x": 830,
+          "y": 240,
+          "wires": []
+        }, {
+            "id": "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
+            "type": "function",
+            "name": "",
+            "func": "const { payload, id } = msg;\n\nconst result = [];\nif (Array.isArray(payload)) {\n    for(const item of payload) {\n        result.push({\n            measurement: 'mqtt_' + id,\n            fields: {\n                ...item,\n            },\n        });\n    }\n} else {\n    result.push({\n        measurement: 'mqtt_' + id,\n        fields: {\n            ...payload,\n        },\n    });\n}\nmsg.payload = result;\n\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 790,
+            "y": 500,
+            "wires": [
+                [
+                    "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}",
+                    "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}"
+                ]
+            ]
+          },
+          {
+            "id": "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}",
+            "type": "influxdb batch",
+            "influxdb": "TS-MQTT-INFLUXD-{{.Params.UUID}}",
+            "precision": "",
+            "retentionPolicy": "",
+            "name": "",
+            "x": 1050,
+            "y": 500,
+            "wires": []
+          },
+          {
+            "id": "TS-CONV-MQTT-PAYLOAD-FUNC-ID-{{.Params.FlowId}}",
+            "type": "function",
+            "name": "",
+            "func": "msg.qos = 2;\nmsg.topic = `thingspin/mqtt/${msg.id}/data`;\nmsg.retain = true;\n\nreturn msg;",
+            "outputs": 1,
+            "noerr": 0,
+            "x": 790,
+            "y": 600,
+            "wires": [
+              [ "TS-ADD-MQTT-ID-{{.Params.FlowId}}" ]
+            ]
+        },
+        {
+              "id": "TS-ADD-INFLUXDB-CATCH-{{.Params.FlowId}}",
+              "type": "catch",
+              "name": "",
+              "scope": [
+                "TS-ADD-INFLUXDB-ID-{{.Params.FlowId}}"
+              ],
+              "uncaught": false,
+              "x": 790,
+              "y": 550,
+              "wires": [
+                  [ "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}" ]
+              ]
+        },
+        {
+              "id": "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
+              "type": "function",
+              "name": "INFLUXDB",
+              "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif (!INFLUXDB || \n    newStatus.text !== INFLUXDB.text) {\n    node.status(newStatus);\n}\n",
+              "outputs": 1,
+              "noerr": 0,
+              "x": 970,
+              "y": 550,
+              "wires": [
+                  []
+              ]
+        },
+        {
+            "id": "TS-ADD-MQTT-ID-{{.Params.FlowId}}",
+            "type": "mqtt out",
+            "name": "MQTT",
+            "topic": "/thingspin/mqtt/{{.Id}}/data",
+            "broker": "TS-MQTT-TSBROKER-{{.Params.UUID}}",
+            "x": 1030,
+            "y": 600,
+            "wires": []
+        }, {
             "id": "TS-MQTT-TSBROKER-{{.Params.UUID}}",
             "type": "mqtt-broker",
-            "broker": "localhost",
-            "port": "1883",
+            "broker": "{{.TsSettings.Mqtt.Host}}",
+            "port": "{{.TsSettings.Mqtt.Port}}",
             "clientid": "",
             "usetls": false,
             "compatmode": true,
@@ -155,19 +302,7 @@
             "willTopic": "",
             "willQos": "0",
             "willPayload": ""
-        },
-        {
-            "id": "TS-MQTT-OUTPUT-{{.Params.UUID}}",
-            "type": "influxdb batch",
-            "influxdb": "TS-MQTT-INFLUXD-{{.Params.UUID}}",
-            "precision": "",
-            "retentionPolicy": "",
-            "name": "",
-            "x": 830,
-            "y": 220,
-            "wires": []
-        },
-        {
+        }, {
             "id": "TS-MQTT-CONNECT-{{.Params.UUID}}",
             "type": "mqtt-broker",
             "name": "{{.Params.Host}}",

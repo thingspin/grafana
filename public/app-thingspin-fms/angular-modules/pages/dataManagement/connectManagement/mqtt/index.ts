@@ -66,6 +66,7 @@ export class TsMqttConnectCtrl {
   increaseYPos: any;
   topicListArrayString: string;
   topicDisListArrayString: string;
+  topicListPublishArrayString: string;
 
   timeout: any;
   // MQTT
@@ -118,6 +119,7 @@ export class TsMqttConnectCtrl {
       };
       this.topicListArrayString = "";
       this.topicDisListArrayString = "";
+      this.topicListPublishArrayString = "";
       this.increaseYPos = 60;
       this.indexID = -1;
       // this.tableList = new Map<string, MqttTableData>();
@@ -446,6 +448,7 @@ export class TsMqttConnectCtrl {
     if (this.tableList.size > 0) {
       this.topicListArrayString += ",";
       this.topicDisListArrayString += ",";
+      this.topicListPublishArrayString += ",";
 
       this.tableList.forEach((value: any, key: any, mapObject: any) => {
         const topicNode = {
@@ -457,7 +460,7 @@ export class TsMqttConnectCtrl {
           "datatype": "auto",
           "broker": "TS-MQTT-CONNECT-" + this.uuid,
           "x": 200,
-          "y": 220 + (this.increaseYPos * count),
+          "y": 300 + (this.increaseYPos * count),
           "wires": [
               [
                   "TS-MQTT-PARSE-" + value.type + "_" + value.id
@@ -473,10 +476,27 @@ export class TsMqttConnectCtrl {
           "outputs": 1,
           "noerr": 0,
           "x": 500,
-          "y": 220 + (this.increaseYPos * count),
+          "y": 300 + (this.increaseYPos * count),
           "wires": [
               [
-                  "TS-MQTT-OUTPUT-" + this.uuid
+                "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-" + this.uuid
+              ]
+          ]
+        };
+        const topicPublishParse = {
+          "id": "TS-MQTT-PARSE-" + value.type + "_" + value.id,
+          "type": "function",
+          "name": value.type + "_" + value.id + "::" + "Parse",
+          // "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
+          "func": this.onJsonParseWithInfluxTagCreate(value.type, value.value, value.viewStr),
+          "outputs": 1,
+          "noerr": 0,
+          "x": 500,
+          "y": 300 + (this.increaseYPos * count),
+          "wires": [
+              [
+                "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-" + this.uuid,
+                "TS-CONV-MQTT-PAYLOAD-FUNC-ID-" + this.uuid
               ]
           ]
         };
@@ -489,16 +509,22 @@ export class TsMqttConnectCtrl {
           outputs: 1,
           noerr: 0,
           x: 500,
-          y: 220 + (this.increaseYPos * count++),
-          wires: [[]],
+          y: 300 + (this.increaseYPos * count++),
+          wires: [[]]
         };
         if (count === this.tableList.size) {
+          this.topicListPublishArrayString += JSON.stringify(topicNode) + ",";
+          this.topicListPublishArrayString += JSON.stringify(topicPublishParse);
+
           this.topicListArrayString += JSON.stringify(topicNode) + ",";
           this.topicListArrayString += JSON.stringify(topicParse);
 
           this.topicDisListArrayString += JSON.stringify(topicNode) + ",";
           this.topicDisListArrayString += JSON.stringify(topicDisParse);
         } else {
+          this.topicListPublishArrayString += JSON.stringify(topicNode) + ",";
+          this.topicListPublishArrayString += JSON.stringify(topicPublishParse) + ",";
+
           this.topicListArrayString += JSON.stringify(topicNode) + ",";
           this.topicListArrayString += JSON.stringify(topicParse) + ",";
 
@@ -536,18 +562,18 @@ export class TsMqttConnectCtrl {
     let returnValue = "";
     if (type === this.defMqtt.values[0]) {
       //String
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "mqtt_" + this.indexID + "\",\n    \"fields\": {\n        \""
-      + value + "\": msg.payload\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
+      returnValue = "var influxPayload = {\n    \"" + value + "\": msg.payload\n\}\n\nmsg.payload = influxPayload;\n\n"
+        + "msg.id = " + this.indexID + "\;\n\nreturn msg;\n";
     } else if (type === this.defMqtt.values[3]) {
       //Boolean
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "mqtt_" + this.indexID + "\",\n    \"fields\": {\n        \""
-      + value + "\":" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
-      + "msg.payload = influxPayload;\n\nreturn msg;\n";
+      returnValue = "var influxPayload = {\n    \"" + value + "\":parse" + this.defMqtt.values[index] +
+      "(msg.payload)\n\}\n\nmsg.payload = influxPayload;\n\n" + "msg.id = " + this.indexID + "\;\n\nreturn msg;\n";
+
     } else {
-      returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + "mqtt_" + this.indexID + "\",\n    \"fields\": {\n        \""
-      + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n},\n    \"tags\": {\n        \"Topic\":\"" + topic + "\"}\n}]\n\n"
-      + "msg.payload = influxPayload;\n\nreturn msg;\n";
+      returnValue = "var influxPayload = {\n    \"" + value + "\":parse" + this.defMqtt.values[index] +
+      "(msg.payload)\n\}\n\nmsg.payload = influxPayload;\n\n" + "msg.id = " + this.indexID + "\;\n\nreturn msg;\n";
     }
+    console.log("String:" + returnValue);
     return returnValue;
   }
 
@@ -566,6 +592,7 @@ export class TsMqttConnectCtrl {
     };
     this.topicListArrayString += JSON.stringify(connectNode);
     this.topicDisListArrayString += JSON.stringify(connectNode);
+    this.topicListPublishArrayString += JSON.stringify(connectNode);
   }
 
   // Generate OBJECT to send over HTTP Parameter
@@ -582,7 +609,8 @@ export class TsMqttConnectCtrl {
         "Session" : this.connection.session,
         "TopicList" : Array.from(this.tableList.values()),
         "AddTopicList" : this.topicListArrayString,
-        "AddDisTopicList" : this.topicDisListArrayString
+        "AddDisTopicList" : this.topicDisListArrayString,
+        "publishTopicList": this.topicListPublishArrayString
       }
     };
     return data;
@@ -670,6 +698,7 @@ export class TsMqttConnectCtrl {
           this.indexID = result;
           this.topicListArrayString = "";
           this.topicDisListArrayString = "";
+          this.topicListPublishArrayString = "";
           this.onJsonCreatSender(value);
         })
         .catch((err: any) => {
