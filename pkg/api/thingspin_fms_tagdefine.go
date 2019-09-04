@@ -17,7 +17,8 @@ import (
 
 func getAllTsTag(c *gfm.ReqContext) Response {
 	returnList := []m.TsFacilityTreeItem{}
-
+	forder := -1
+	tid := -1
 	// Get all site information
 	result := m.GetAllTsSiteQuery{}
 	if err := bus.Dispatch(&result); err != nil {
@@ -25,12 +26,38 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 	}
 
 	// Get all site data
+	lev2Map := make(map[string]m.TsFacilityTreeItem)
+
 	for _, siteInfo := range result.Result {
+		lev2Map[strconv.Itoa(siteInfo.Id)] = m.TsFacilityTreeItem{
+			SiteId: siteInfo.Id,
+			IsPtag : false,
+			FacilityName : siteInfo.Name,
+			Children : []m.TsFacilityTreeItem{},
+			Label : siteInfo.Name,
+			FacilityTreeOrder : forder,
+			Value: strconv.Itoa(tid),
+		}
+		forder = forder -1
+		tid = tid -1
+		// site with map 
 		GetFacilityTreeData(siteInfo.Id, &returnList)
 	}
 	
 	// Sort all site data by facility order
 	sortReturnTreeData(returnList)	
+
+	// append facility to site with map
+	for _, facility := range returnList {
+		c := lev2Map[strconv.Itoa(facility.SiteId)]
+		c.Children = append(c.Children,facility)
+		lev2Map[strconv.Itoa(facility.SiteId)] = c
+	}
+
+	returnList = []m.TsFacilityTreeItem{}
+	for _, node := range lev2Map {
+		returnList = append(returnList, node)
+	}
 
 	///////////////////////////////////////////////////////////////////////
 	//
@@ -48,7 +75,7 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 	
 
 	// measurements
-	lev2Map := make(map[string]m.TsFacilityTreeItem)
+	lev2Map = make(map[string]m.TsFacilityTreeItem)
 
 	// Query Ptaglist from Connect table
 	q := m.GetAllTsConnectQuery{}
@@ -56,8 +83,6 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 		return Error(500, "Get ts connect query Error", err)
 	}
 	
-	forder := -1
-	tid := -1
 	for _, cnode := range q.Result {
 		if val, ok := cnode.Params["PtagList"]; ok {
 			for _, ptag := range val.([]interface{}) {
