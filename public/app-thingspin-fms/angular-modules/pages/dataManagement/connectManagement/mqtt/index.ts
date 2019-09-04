@@ -24,6 +24,11 @@ interface Topic {
   viewStr: string;
 }
 
+interface TagList{
+  name: any;
+  type: any;
+}
+
 // interface MqttTableData {
 //   name: string;
 //   topic: string;
@@ -67,6 +72,7 @@ export class TsMqttConnectCtrl {
   topicListArrayString: string;
   topicDisListArrayString: string;
   topicListPublishArrayString: string;
+  PtagList: any[];
 
   timeout: any;
   // MQTT
@@ -317,6 +323,7 @@ export class TsMqttConnectCtrl {
     this.connection.port = getParams.Port;
     this.connection.keep_alive = getParams.KeepAlive;
     this.connection.session = getParams.Session;
+    this.PtagList = getParams.PtagList;
     const getTopicList = getParams.TopicList;
     for (let i = 0; i< getTopicList.length; i++) {
       // const tableData = {} as MqttTableData;
@@ -577,6 +584,16 @@ export class TsMqttConnectCtrl {
     return returnValue;
   }
 
+  makePtagList() {
+    this.PtagList = [];
+    this.tableList.forEach((value: any, key: any, mapObject: any) => {
+      const TagData = {} as TagList;
+      TagData.name = value.type;
+      TagData.type = value.value;
+      this.PtagList.push(TagData);
+    });
+    console.log(this.PtagList);
+  }
   createConnectNode() {
     const connectNode: any = {
       id: "TS-MQTT-CHECKNODE-" + this.uuid,
@@ -597,6 +614,7 @@ export class TsMqttConnectCtrl {
 
   // Generate OBJECT to send over HTTP Parameter
   createHttpObject() {
+    this.makePtagList();
     const data = {
       "name": this.collector,
       "params": {
@@ -610,7 +628,8 @@ export class TsMqttConnectCtrl {
         "TopicList" : Array.from(this.tableList.values()),
         "AddTopicList" : this.topicListArrayString,
         "AddDisTopicList" : this.topicDisListArrayString,
-        "publishTopicList": this.topicListPublishArrayString
+        "publishTopicList": this.topicListPublishArrayString,
+        "PtagList": this.PtagList
       }
     };
     return data;
