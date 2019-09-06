@@ -11,18 +11,17 @@ common.output = {
     // Keep publicPath relative for host.com/grafana/ deployments
     publicPath: 'public/build/',
   },
-common.module.rules = [{
+common.module.rules [{
   test: require.resolve('jquery'),
-  use: [
-    {
+  use: [{
       loader: 'expose-loader',
-      query: 'jQuery'
+      query: 'jQuery',
     },
     {
       loader: 'expose-loader',
-      query: '$'
-    }
-  ]
+      query: '$',
+    },
+  ],
 },
 {
   test: /\.html$/,

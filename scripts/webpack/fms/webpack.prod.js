@@ -12,7 +12,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 //Override (module, plugins) Written by JGW
 let fmsProd = merge(common, {
   entry: {
-    app: './public/app-thingspin-fms/index.ts',
     dark: './public/sass/fms.dark.scss',
     light: './public/sass/fms.light.scss',
   },
@@ -42,7 +41,8 @@ let fmsProd = merge(common, {
         },
       },
       require('../sass.rule.js')({
-        sourceMap: false, preserveUrl: false
+        sourceMap: false,
+        preserveUrl: false
       }),
       {
         test: /\.css$/,  
@@ -64,12 +64,15 @@ let fmsProd = merge(common, {
       filename: path.resolve(__dirname, '../../../public/views/error.html'),
       template: path.resolve(__dirname, '../../../public/views/fms-error-template.html'),
       inject: false,
+      excludeChunks: ['dark', 'light'],
+      chunksSortMode: 'none'
     }),
     new HtmlWebpackPlugin({
       filename: path.resolve(__dirname, '../../../public/views/index.html'),
       template: path.resolve(__dirname, '../../../public/views/fms-index-template.html'),
       inject: 'body',
-      chunks: ['vendor', 'app'],
+      excludeChunks: ['manifest', 'dark', 'light'],
+      chunksSortMode: 'none'
     }),
     function () {
       this.hooks.done.tap('Done', function (stats) {

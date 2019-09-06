@@ -24,10 +24,6 @@ let fmsHot = merge(common, {
     pathinfo: false,
   },
 
-  resolve: {
-    extensions: ['.scss', '.css', '.ts', '.tsx', '.es6', '.js', '.json', '.svg', '.woff2', '.png', '.html'],
-  },
-
   devServer: {
     publicPath: '/public/build/',
     hot: true,
@@ -52,6 +48,7 @@ let fmsHot = merge(common, {
       template: path.resolve(__dirname, '../../../public/views/fms-index-template.html'),
       inject: 'body',
       alwaysWriteToDisk: true,
+      chunksSortMode: 'none',
     }),
     new HtmlWebpackHarddiskPlugin(),
     new webpack.NamedModulesPlugin(),
@@ -68,10 +65,11 @@ let fmsHot = merge(common, {
 });
 
 //Copy already used Grafana webpack.hot.js
-const { resolve, devtool, optimization, } = gfHot;
+const { mode, resolve, devtool, optimization, } = gfHot;
 fmsHot = Object.assign(fmsHot, {
+  mode,
+  devtool: false,
   resolve,
-  devtool,
   optimization,
   module: {
     rules: (gfHot.module.rules.concat([{

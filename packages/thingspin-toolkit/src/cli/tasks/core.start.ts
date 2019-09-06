@@ -18,16 +18,15 @@ export const startTaskRunner: TaskRunner<StartTaskOptions> = async ({ watchTheme
       command: 'nodemon -e ts -w ./packages/grafana-ui/src/themes -x yarn run themes:generate',
       name: 'SASS variables generator',
     },
-    hot
-      ? {
-          command:
-            'webpack-dev-server --progress --colors --host 0.0.0.0 --config scripts/webpack/fms/webpack.hot.js',
-          name: 'Dev server',
-        }
-      : {
-          command: `webpack --progress --colors --watch --env.noTsCheck=${noTsCheckArg} --config scripts/webpack/fms/webpack.dev.js`,
-          name: 'Webpack',
-        },
+
+    hot ? {
+      command: 'cross-env NODE_OPTIONS=--max_old_space_size=8192 \
+webpack-dev-server --progress --colors --host 0.0.0.0 --config scripts/webpack/fms/webpack.hot.js',
+      name: 'Dev server',
+    } : {
+      command: `webpack --progress --colors --watch --env.noTsCheck=${noTsCheckArg} --config scripts/webpack/fms/webpack.dev.js`,
+      name: 'Webpack',
+    },
   ];
 
   try {
