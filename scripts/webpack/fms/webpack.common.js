@@ -5,13 +5,15 @@ const path = require('path');
 common.entry = {
   app: './public/app-thingspin-fms/index.ts',
 };
+
 common.output = {
-    path: path.resolve(__dirname, '../../../public/build'),
-    filename: '[name].[hash].js',
-    // Keep publicPath relative for host.com/grafana/ deployments
-    publicPath: 'public/build/',
-  },
-common.module.rules [{
+  path: path.resolve(__dirname, '../../../public/build'),
+  filename: 'fms-[name].[hash].js',
+  // Keep publicPath relative for host.com/grafana/ deployments
+  publicPath: '/public/build/',
+};
+
+common.module.rules[{
   test: require.resolve('jquery'),
   use: [{
       loader: 'expose-loader',
@@ -26,8 +28,9 @@ common.module.rules [{
 {
   test: /\.html$/,
   exclude: /fms\-(index|error)\-template\.html/,
-  use: [
-    { loader: 'ngtemplate-loader?relativeTo=' + (path.resolve(__dirname, '../../../public')) + '&prefix=public' },
+  use: [{
+      loader: 'ngtemplate-loader?relativeTo=' + path.resolve(__dirname, '../../../public') + '&prefix=public'
+    },
     {
       loader: 'html-loader',
       options: {
