@@ -106,3 +106,5 @@ theOutput/
 
 # ThingSPIN ADD ignore code
 !data/plugins/sys/svg/node_modules
+# Ignore compilation stats from `yarn stats`
+compilation-stats.json
