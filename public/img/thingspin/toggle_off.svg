@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="39.5" height="29" viewBox="0 0 39.5 29">
+  <defs>
+    <filter id="타원_48" x="0" y="0" width="29" height="29" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feFlood flood-opacity="0.212"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="그룹_6664" data-name="그룹 6664" transform="translate(546.5 442.5) rotate(180)" opacity="0.8">
+    <g id="Selection_Control_Switch_On_Enabled" data-name="Selection Control / Switch / On / Enabled" transform="translate(507 419)">
+      <rect id="사각형_576" data-name="사각형 576" width="34" height="14" rx="7" transform="translate(0 3)" fill="#1e1e1e" opacity="0.4"/>
+      <g transform="matrix(-1, 0, 0, -1, 39.5, 23.5)" filter="url(#타원_48)">
+        <ellipse id="타원_48-2" data-name="타원 48" cx="10" cy="10" rx="10" ry="10" transform="translate(24.5 23.5) rotate(180)" fill="#1e1e1e"/>
+      </g>
+    </g>
+  </g>
+</svg>

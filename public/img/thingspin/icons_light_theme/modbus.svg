@@ -1,0 +1,14 @@
+<svg id="modbus" xmlns="http://www.w3.org/2000/svg" width="42" height="42" viewBox="0 0 42 42">
+  <rect id="사각형_18972" data-name="사각형 18972" width="42" height="42" rx="4" fill="#f3e5f5"/>
+  <g id="사각형_18973" data-name="사각형 18973" transform="translate(2.1 2.1)" fill="#8e24aa" stroke="#7b1fa2" stroke-width="1">
+    <rect width="37.8" height="37.8" rx="4" stroke="none"/>
+    <rect x="-0.5" y="-0.5" width="38.8" height="38.8" rx="4.5" fill="none"/>
+  </g>
+  <path id="빼기_18" data-name="빼기 18" d="M32.57,36.57H2.77A3.975,3.975,0,0,1-.059,35.4L35.4-.059A3.974,3.974,0,0,1,36.57,2.77v29.8A4,4,0,0,1,32.57,36.57Z" transform="translate(3.33 3.33)" fill="#9c27b0"/>
+  <g id="그룹_6057" data-name="그룹 6057" transform="translate(8.4 8.4)">
+    <g id="그룹_5528" data-name="그룹 5528" transform="translate(0 0)">
+      <rect id="사각형_18761" data-name="사각형 18761" width="25.2" height="25.2" fill="none"/>
+    </g>
+    <path id="패스_3152" data-name="패스 3152" d="M19.818,14.306a2.091,2.091,0,0,0-2.091,0L14.5,12.45l3.224-1.862a2.1,2.1,0,1,0-1.05-1.819L13.453,10.63V6.908a2.1,2.1,0,1,0-2.1,0v3.722L8.13,8.77a2.1,2.1,0,1,0-1.05,1.819L10.3,12.45,7.079,14.311A2.1,2.1,0,1,0,8.13,16.129l3.223-1.862v3.723a2.1,2.1,0,1,0,2.1,0V14.269l3.224,1.861a2.1,2.1,0,1,0,3.142-1.823Z" transform="translate(0.197 0.15)" fill="#f3e5f5"/>
+  </g>
+</svg>

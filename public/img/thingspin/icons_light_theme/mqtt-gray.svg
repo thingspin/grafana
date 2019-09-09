@@ -1,0 +1,23 @@
+<svg id="mqtt-gray" xmlns="http://www.w3.org/2000/svg" width="43" height="43" viewBox="0 0 43 43">
+  <rect id="사각형_18972" data-name="사각형 18972" width="43" height="43" rx="4" fill="#fafafa"/>
+  <g id="사각형_18973" data-name="사각형 18973" transform="translate(2.15 2.15)" fill="#6a6a6a" stroke="#565656" stroke-width="1">
+    <rect width="38.7" height="38.7" rx="4" stroke="none"/>
+    <rect x="-0.5" y="-0.5" width="39.7" height="39.7" rx="4.5" fill="none"/>
+  </g>
+  <path id="빼기_18" data-name="빼기 18" d="M33.5,37.5H2.8A3.973,3.973,0,0,1-.028,36.329L36.329-.028A3.973,3.973,0,0,1,37.5,2.8V33.5A4.005,4.005,0,0,1,33.5,37.5Z" transform="translate(3.349 3.349)" fill="#949394" opacity="0.5"/>
+  <g id="그룹_6073" data-name="그룹 6073" transform="translate(8.6 8.6)">
+    <g id="그룹_5537" data-name="그룹 5537" transform="translate(0 0)">
+      <g id="그룹_5536" data-name="그룹 5536">
+        <rect id="사각형_18764" data-name="사각형 18764" width="25.8" height="25.8" fill="none"/>
+      </g>
+    </g>
+    <g id="그룹_5538" data-name="그룹 5538" transform="translate(3.225 3.225)">
+      <path id="패스_3161" data-name="패스 3161" d="M5.8,5H5V7.994A14.393,14.393,0,0,1,17.057,20.05H20.05v-.8A17.487,17.487,0,0,0,5.8,5Z" transform="translate(-2.85 -2.85)" fill="none"/>
+      <path id="패스_3162" data-name="패스 3162" d="M5,9.3V19.727H15.428A12.785,12.785,0,0,0,5,9.3Z" transform="translate(-2.85 -2.528)" fill="none"/>
+      <path id="패스_3163" data-name="패스 3163" d="M14.824,5h-4.19a19.18,19.18,0,0,1,8.993,8.993V9.8A21.389,21.389,0,0,0,14.824,5Z" transform="translate(-2.427 -2.85)" fill="none"/>
+      <path id="패스_3164" data-name="패스 3164" d="M16.94,5a23.027,23.027,0,0,1,2.214,2.215V5Z" transform="translate(-1.954 -2.85)" fill="none"/>
+      <path id="패스_3165" data-name="패스 3165" d="M14.882,21h0Z" transform="translate(-2.109 -1.65)"/>
+      <path id="패스_3166" data-name="패스 3166" d="M20.2,3H5.15a2.125,2.125,0,0,0-1.114.321A2.147,2.147,0,0,0,3.027,4.882,2.213,2.213,0,0,0,3,5.15V20.2a2.156,2.156,0,0,0,2.15,2.15H20.2a2.213,2.213,0,0,0,.268-.027,2.147,2.147,0,0,0,1.561-1.009A2.125,2.125,0,0,0,22.35,20.2V5.15A2.156,2.156,0,0,0,20.2,3ZM5.15,20.2V9.773A12.785,12.785,0,0,1,15.578,20.2Zm15.05,0H17.207A14.393,14.393,0,0,0,5.15,8.144V5.15h.8A17.487,17.487,0,0,1,20.2,19.4Zm0-6.057A19.18,19.18,0,0,0,11.207,5.15H15.4a21.389,21.389,0,0,1,4.8,4.8Zm0-6.779A23.027,23.027,0,0,0,17.986,5.15H20.2Z" transform="translate(-3 -3)" fill="#fafafa"/>
+    </g>
+  </g>
+</svg>

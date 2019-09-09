@@ -1,250 +1,643 @@
 @import '~tabulator-tables/dist/css/bootstrap/tabulator_bootstrap.min.css';
 $OPCUA_COLOR: #fb8002;
-$MOSBUS_COLOR: #00897b;
-$MQTT_COLOR: #8e24aa;
+$MQTT_COLOR: #00897b;
+$MODBUS_COLOR: #8e24aa;
+$DISABLE_COLOR: #1e1e1e;
 $blue: #1e88e5;
 
 i {
-    &.connect-red {
-        color: #d81b60;
-    }
-    &.connect-blue {
-        color: #1e88e5;
-    }
-    &.connect-yellow {
-        color: #6a6a6a;
-    }
-    
-    &.connect-default {
-        color: #dcdbdc;
-    }
+  &.connect-red {
+    color: #d81b60;
+  }
+
+  &.connect-blue {
+    color: #1e88e5;
+  }
+
+  &.connect-yellow {
+    color: #6a6a6a;
+  }
+
+  &.connect-default {
+    color: #dcdbdc;
+  }
 }
 
 ts-connect-management {
+  width: 100%;
+  height: 100%;
+
+  font-family: Roboto;
+  color: #1e1e1e;
+
+  .ts-connect {
     width: 100%;
     height: 100%;
+  }
 
-    font-family: Roboto;
-    color: #1e1e1e;
+  .tabulator-cell {
+    font-size: 14px;
+    line-height: 1.14;
+  }
 
-    .ts-connect {
-        width: 100%;
-        height: 100%;
-    }
-
-    .tabulator-cell {
-        font-size: 14px;
-        line-height: 1.14;
-    }
-
-    .tabulator-col-title {
-        font-size: 12px;
-        line-height: 1.17;
-        font-weight: bold;
-    }
+  .tabulator-col-title {
+    font-size: 12px;
+    line-height: 1.17;
+    font-weight: bold;
+  }
 
 }
 
 .ts-blue {
-    color: $blue;
+  color: $blue;
 }
 
 .ts-btn {
-    @extend .btn;
+  @extend .btn;
 
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
-    border-radius: 4px;
-    color: #ffffff;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+  border-radius: 4px;
+  color: #ffffff;
 
-    margin-left: 15.9px;
+  margin-left: 15.9px;
 
-    &.opcua {
-        background-color: $OPCUA_COLOR;
-    }
-    &.modbus {
-        background-color: $MOSBUS_COLOR;
-    }
-    &.mqtt {
-        background-color: $MQTT_COLOR;
-    }
+  &.opcua {
+    background-color: $OPCUA_COLOR;
+  }
 
-    i {
-        font-size: 11.7px;
-        padding-right: 8.2px;
-    }
+  &.modbus {
+    background-color: $MODBUS_COLOR;
+  }
+
+  &.mqtt {
+    background-color: $MQTT_COLOR;
+  }
+
+  i {
+    font-size: 11.7px;
+    padding-right: 8.2px;
+  }
 }
 
 .ts-connect-banner {
-    width: 100%;
+  width: 100%;
 
-    background-color: white;
-    border-bottom: solid 1px #dcdbdc;
+  background-color: white;
+  border-bottom: solid 1px #dcdbdc;
 
-    &>div {
-        padding: 44px 20px 36px 20px;
+  &>div {
+    padding: 44px 20px 36px 20px;
 
-        .ts-connect-banner-title {
-            font-size: 16px;
-            font-weight: bold;
-            line-height: 1.19;
-            padding: 0 0 20px 0;
-        }
-        .ts-connect-banner-desc {
-            border-left: solid 1px #1e1e1e;
-            padding-left: 8px;
-        
-            font-size: 14px;
-            line-height: 1.71;
-        }
+    .ts-connect-banner-title {
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 1.19;
+      padding: 0 0 20px 0;
     }
+
+    .ts-connect-banner-desc {
+      border-left: solid 1px #1e1e1e;
+      padding-left: 8px;
+
+      font-size: 14px;
+      line-height: 1.71;
+    }
+  }
 }
 
-.ts-connect-container { 
-    padding: 36px 16px 0px 16px;
-    background-color: #ffffff;
+.ts-connect-container {
+  padding: 36px 16px 0px 16px;
+  background-color: #ffffff;
 }
 
 .ts-connect-title-container {
-    border-bottom: solid 1px #ecebeb;
+  border-bottom: solid 1px #ecebeb;
+  display: flex;
+
+  .title-img {
+    margin: 0;
+  }
+
+  .ts-connect-title {
+    margin-left: 8px;
+
+    color: #1976d2;
     display: flex;
+    align-items: center;
 
-    .title-img {
-        margin: 0;
-    }
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.19;
+    letter-spacing: normal;
+  }
 
-    .ts-connect-title {
-        margin-left: 8px;
-
-        color: #1976d2;
-        display:flex;
-        align-items: center;
-
-        font-family: Roboto;
-        font-size: 16px;
-        font-weight: bold;
-        font-style: normal;
-        font-stretch: normal;
-        line-height: 1.19;
-        letter-spacing: normal;
-    }
-
-    .ts-connect-buttons {
-        margin-left: auto;
-        margin-bottom: 12.5px;
-    }
+  .ts-connect-buttons {
+    margin-left: auto;
+    margin-bottom: 12.5px;
+  }
 }
 
 .ts-connect-table-container {
-    margin-top: 44.6px;
-    color: #1e1e1e;
+  margin-top: 44.6px;
+  color: #1e1e1e;
 
-    button {
-        border: 0;
-        background-color: rgba(#000,0);
+  button {
+    border: 0;
+    background-color: rgba(#000, 0);
+  }
+
+  .connect-table-header {
+    opacity: 0.6;
+  }
+
+  .connect-page-rows {
+    display: inline-block;
+
+    .connect-table-select {
+      width: 100%;
+
+      border: 0;
     }
+  }
 
-    .connect-table-header {
-        opacity: 0.6;
-    }
+  .connect-table-body {
+    width: 100%;
+    margin-top: -24px;
 
-    .connect-page-rows {
-        display: inline-block;
+    table {
+      border-collapse: separate;
+      border-spacing: 0 12px;
+      width: 100%;
+      table-layout: fixed;
 
-        .connect-table-select {
-            width: 100%;
+      thead {
+        height: 0px;
+        padding: 0px;
+        margin: 0px;
+        display: contents;
+      }
 
-            border: 0;
+      tr {
+        &:first {
+          margin-left: 16px;
         }
-    }
+      }
 
-    .connect-table-body {
-        width: 100%;
-        margin: 8px 0;
+      th {
+        padding: 0px;
+        margin: 0px;
+        height: 0px;
+      }
 
-        table {
-            width: 100%;
+      td {
+        height: 74px;
+        border: solid 0px #000;
+        // padding: 12px;
+        padding: 0px;
 
-            tr {
-                border-bottom: solid 1px #dcdbdc;
-
-                &:first {
-                    margin-left: 16px;
-                }
-            }
-
-            th {
-                padding: 7px 0;
-            }
-
-            td {
-                padding: 12px 0;
-
-                color: rgba(#1e1e1e, 0.8);
-                button {
-                    font-size: 20px;
-                }
-            }
-
-            .ts-table-row {
-                &:hover {
-                    background-color: #e3f2fd;
-                }
-
-                .connect { 
-                    font-size: 20px;
-                }
-            }
-
-            .ts-table-header {
-                background-color: #ecebeb;
-            }
-        }
-    }
-
-    .connect-table-footer {
-        width: 100%;
-        display: inline-flex;
-
-        .table-page-range {
-            opacity: 0.6;
-        }
-
-        .table-paging {
-            margin-left: auto;
-            display: inline-block;
-        }
+        color: rgba(#1e1e1e, 0.8);
 
         button {
-            opacity: 0.3;
-
-            &.blue {
-                opacity: 1;
-            }
+          font-size: 20px;
         }
+
+        .type-image {
+          width: 54px;
+          padding-left: 12px;
+        }
+
+        .title-padding {
+          margin: 0px;
+          padding-left: 37px;
+        }
+
+        .main-title-font {
+          font-family: Roboto;
+          font-size: 16px;
+          font-weight: bold;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.19;
+          letter-spacing: normal;
+        }
+
+        .main-title-opcua-color {
+          color: $OPCUA_COLOR;
+        }
+
+        .main-title-modbus-color {
+          color: $MODBUS_COLOR;
+        }
+
+        .main-title-mqtt-color {
+          color: $MQTT_COLOR;
+        }
+
+        .main-title-disable {
+          color: $DISABLE_COLOR;
+          opacity: 0.8;
+        }
+      }
+
+      td:first-child {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+
+      tr:first-child {
+        border-top-style: solid;
+      }
+
+      tr:first-child {
+        border-left-style: solid;
+      }
+
+      .ts-table-row {
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+
+        .opcua-enable {
+          width: 4px;
+          background-color: #fb8002;
+        }
+
+        .modbus-enable {
+          width: 4px;
+          background-color: #8e24aa;
+        }
+
+        .mqtt-enable {
+          width: 4px;
+          background-color: #00897b;
+        }
+
+        .disable {
+          width: 4px;
+          background-color: #1e1e1e;
+          opacity: 0.8;
+        }
+
+        .connect {
+          font-size: 20px;
+        }
+      }
+
+      .ts-table-header {
+        padding: 0px;
+        margin: 0px;
+        height: 0px;
+
+        .first-line-width {
+          width: 4px;
+        }
+
+        .second-type-image-width {
+          width: 54px;
+          margin-left: 12px;
+        }
+
+        .three-title-width {
+          width: 29.63%;
+        }
+
+        .four-iconlist-width {
+          width: 30.1%;
+        }
+
+        .five-setting-width {
+          width: 9.1%;
+        }
+
+        .six-publish-operation {
+          width: 3%;
+        }
+      }
     }
+  }
+
+  .connect-table-footer {
+    width: 100%;
+    display: inline-flex;
+
+    .table-page-range {
+      opacity: 0.6;
+    }
+
+    .table-paging {
+      margin-left: auto;
+      display: inline-block;
+    }
+
+    button {
+      opacity: 0.3;
+
+      &.blue {
+        opacity: 1;
+      }
+    }
+  }
 }
 
-.ts-connect-type {
-    font-size: 14px;
-    div {
-        width: fit-content;
-
-        padding: 8px 16px 8px 16px;
-        border-radius: 4px;
-
-        &.opcua {
-            border: solid 1px $OPCUA_COLOR;
-            color: $OPCUA_COLOR;
-        }
-        
-        &.modbus {
-            border: solid 1px $MOSBUS_COLOR;
-            color: $MOSBUS_COLOR;
-        }
-        
-        &.mqtt {
-            border: solid 1px $MQTT_COLOR;
-            color: $MQTT_COLOR;
-        }
-    }
+.row {
+  margin: 0px;
 }
+
+.status-width {
+  width: 36px;
+}
+
+.status-width-middle {
+  width: 36px;
+  margin-left: 15px;
+}
+
+.status-icon {
+  font-size: 20px;
+  margin-top: 9px;
+  margin-left: 7px;
+  color: $DISABLE_COLOR;
+}
+
+.status-icon-opcua {
+  font-size: 20px;
+  margin-top: 9px;
+  margin-left: 7px;
+  color: $OPCUA_COLOR;
+}
+
+.status-icon-mqtt {
+  font-size: 20px;
+  margin-top: 9px;
+  margin-left: 7px;
+  color: $MQTT_COLOR;
+}
+
+.status-icon-modbus {
+  font-size: 20px;
+  margin-top: 9px;
+  margin-left: 7px;
+  color: $MODBUS_COLOR;
+}
+
+.status-icon-btn {
+  padding: 0px;
+  font-size: 20px;
+  margin-top: 5px;
+  margin-left: 7px;
+}
+
+.status-icon-btn-opcua {
+  padding: 0px;
+  font-size: 20px;
+  margin-top: 5px;
+  margin-left: 7px;
+  color: $OPCUA_COLOR;
+}
+
+.status-icon-btn-mqtt {
+  padding: 0px;
+  font-size: 20px;
+  margin-top: 5px;
+  margin-left: 7px;
+  color: $MQTT_COLOR;
+}
+
+.status-icon-btn-modbus {
+  padding: 0px;
+  font-size: 20px;
+  margin-top: 5px;
+  margin-left: 7px;
+  color: $MODBUS_COLOR;
+}
+
+.status-line {
+  border-left: 1px solid #ecebeb;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.16);
+  margin-left: 47px;
+}
+
+.status-line-no-margin {
+  border-left: 1px solid #ecebeb;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.16);
+}
+
+.publish-operation-margin {
+  margin-top: 9px;
+}
+
+.icon-title-font {
+  font-family: Roboto;
+  font-size: 8px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.13;
+  letter-spacing: normal;
+  text-align: left;
+  color: #1e1e1e;
+  opacity: 0.8;
+}
+
+.setting-margin-left {
+  margin-left: 15px;
+}
+
+.setting-margin-left-icon {
+  margin-left: 15px;
+}
+
+.setting-margin-middle-icon {
+  margin-left: 12px;
+}
+
+.setting-width {
+  width: 100%;
+}
+
+.setting-icon-btn {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  font-size: 20px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 14px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider-opcua {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(164,164,164);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider-opcua:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: -3px;
+  bottom: -3px;
+  background-color: rgb(57,57,57);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+/* The slider */
+.slider-mqtt {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(164,164,164);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider-mqtt:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: -3px;
+  bottom: -3px;
+  background-color: rgb(57,57,57);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+/* The slider */
+.slider-modbus {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(164,164,164);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider-modbus:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: -3px;
+  bottom: -3px;
+  background-color: rgb(57,57,57);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider-opcua {
+  background-color: rgb(252,193,136);
+}
+input:focus + .slider-opcua {
+  box-shadow: 0 0 1px rgb(252,193,136);
+}
+input:checked + .slider-mqtt {
+  background-color: rgb(137,198,191);
+}
+input:focus + .slider-mqtt {
+  box-shadow: 0 0 1px rgb(137,198,191);
+}
+input:checked + .slider-modbus {
+  background-color: rgb(198,147,212);
+}
+input:focus + .slider-modbus {
+  box-shadow: 0 0 1px rgb(198,147,212);
+}
+
+input:checked + .slider-opcua:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+  background-color: $OPCUA_COLOR
+}
+input:checked + .slider-mqtt:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+  background-color: $MQTT_COLOR
+}
+input:checked + .slider-modbus:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+  background-color: $MODBUS_COLOR
+}
+
+/* Rounded sliders */
+.slider-opcua.round {
+  border-radius: 34px;
+}
+
+.slider-opcua.round:before {
+  border-radius: 50%;
+}
+/* Rounded sliders */
+.slider-mqtt.round {
+  border-radius: 34px;
+}
+
+.slider-mqtt.round:before {
+  border-radius: 50%;
+}
+/* Rounded sliders */
+.slider-modbus.round {
+  border-radius: 34px;
+}
+
+.slider-modbus.round:before {
+  border-radius: 50%;
+}
+
+
+// .ts-connect-type {
+//     font-size: 14px;
+//     div {
+//         width: fit-content;
+
+//         padding: 8px 16px 8px 16px;
+//         border-radius: 4px;
+
+//         &.opcua {
+//             border: solid 1px $OPCUA_COLOR;
+//             color: $OPCUA_COLOR;
+//         }
+
+//         &.modbus {
+//             border: solid 1px $MOSBUS_COLOR;
+//             color: $MOSBUS_COLOR;
+//         }
+
+//         &.mqtt {
+//             border: solid 1px $MQTT_COLOR;
+//             color: $MQTT_COLOR;
+//         }
+//     }
+// }

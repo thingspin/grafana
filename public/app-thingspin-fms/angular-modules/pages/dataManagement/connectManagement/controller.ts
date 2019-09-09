@@ -51,8 +51,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     /** @ngInject */
     constructor(private $scope: angular.IScope,
-    private $location: angular.ILocationService,
-    private backendSrv: BackendSrv,) { }// Dependency Injection
+        private $location: angular.ILocationService,
+        private backendSrv: BackendSrv, ) { }// Dependency Injection
 
     $onInit(): void {
 
@@ -138,6 +138,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     async updatePublish(item: TsConnect) {
         if (!confirm("동작하시겠습니까?")) {
+            console.log(item);
             item.publish = !item.publish;
             this.$scope.$applyAsync();
             return;
@@ -147,13 +148,26 @@ export default class TsConnectManagementCtrl implements angular.IController {
             await this.backendSrv.patch(`thingspin/connect/${item.id}/publish`, item);
         } catch (e) {
             item.publish = !item.publish;
-            console.error(e);
         }
 
+        if (item.publish) {
+            item.enable = true;
+            const index: number = this.list.findIndex((value: TsConnect) => {
+                return value.id === item.id;
+            });
+            this.list[index].enable = true;
+        } else {
+            item.enable = false;
+            const index: number = this.list.findIndex((value: TsConnect) => {
+                return value.id === item.id;
+            });
+            this.list[index].enable = false;
+        }
         this.$scope.$applyAsync();
     }
 
     async asyncRun(id: number, enable: boolean): Promise<void> {
+        console.log(id);
         if (!confirm(`데이터 수집을 ${enable ? '시작' : '중지'}하시겠습니까?`)) {
             return;
         }
