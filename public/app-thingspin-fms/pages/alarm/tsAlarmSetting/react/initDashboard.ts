@@ -142,6 +142,9 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
     let dashboard: FMDashboardModel;
     try {
       dashboard = new FMDashboardModel(dashDTO.dashboard, dashDTO.meta);
+      const [panel] = dashboard.panels;
+      panel.isEditing = true;
+      panel.fullscreen = true;
     } catch (err) {
       dispatch(dashboardInitFailed({ message: 'Failed create dashboard model', error: err }));
       console.log(err);
@@ -217,9 +220,6 @@ function getNewDashboardModelData(urlFolderId?: string): any {
           datasource: "사이트 태그",
           type: "graph",
           gridPos: { x: 0, y: 0, w: 24, h: 13 },
-
-          isEditing: true,
-          fullscreen: true,
 
           // default alarm
           alert: {
