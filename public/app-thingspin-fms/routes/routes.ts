@@ -38,8 +38,8 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
     },
   })
   .when('/signup', {
-    templateUrl: 'public/app/partials/signup_step2.html',
-    controller: 'SignUpCtrl',
+    templateUrl: 'public/app-thingspin-fms/partials/signup_step2.html',
+    controller: 'TsSignup',
     pageClass: 'sidemenu-hidden',
     routeInfo: {
       menupath: [ "회원가입" ],
@@ -47,8 +47,8 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
     },
   })
   .when('/user/password/send-reset-email', {
-    templateUrl: 'public/app/partials/reset_password.html',
-    controller: 'ResetPasswordCtrl',
+    templateUrl: 'public/app-thingspin-fms/partials/reset_password.html',
+    controller: 'TsResetPassword',
     pageClass: 'sidemenu-hidden',
     routeInfo: {
       menupath: [ "비밀번호 초기화" ],
@@ -56,8 +56,8 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
     },
   })
   .when('/user/password/reset', {
-    templateUrl: 'public/app/partials/reset_password.html',
-    controller: 'ResetPasswordCtrl',
+    templateUrl: 'public/app-thingspin-fms/partials/reset_password.html',
+    controller: 'TsResetPassword',
     pageClass: 'sidemenu-hidden',
     routeInfo: {
       menupath: [ "비밀번호 초기화" ],
