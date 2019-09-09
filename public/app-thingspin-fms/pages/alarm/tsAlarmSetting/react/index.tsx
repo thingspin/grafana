@@ -1,5 +1,5 @@
 // 3rd party libs
-import React, { PureComponent, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 
@@ -12,14 +12,10 @@ import AlarmDashboardPage from './AlarmDashboardPage';
 
 export interface Props extends GfDPProps { }
 
-export class AlarmSettingComponent extends PureComponent<Props> {
-    render(): ReactNode {
-        return (
-            <div className="panel-in-fullscreen">
-                <AlarmDashboardPage {...this.props} />
-            </div>
-        );
-    }
-}
+export const AlarmSettingComponent: FC<Props> = (props: Props): JSX.Element => (
+    <div className="panel-in-fullscreen">
+        <AlarmDashboardPage {...props} />
+    </div>
+);
 
-export default hot(module)(connect( mapStateToProps, )(AlarmSettingComponent));
+export default hot(module)(connect(mapStateToProps)(AlarmSettingComponent));

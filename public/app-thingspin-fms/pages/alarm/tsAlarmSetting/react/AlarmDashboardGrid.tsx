@@ -2,8 +2,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 import classNames from 'classnames';
-// @ts-ignore
-import sizeMe from 'react-sizeme';
 
 // Grafana Components
 import { DashboardGrid } from 'app/features/dashboard/dashgrid/DashboardGrid';
@@ -15,14 +13,16 @@ import { AlarmDashboardPanel } from './AlarmDashboardPanel';
 export class AlarmDashboardGrid extends DashboardGrid {
 
     // customize renderPanels method
+    // override
     renderPanels() {
-        const [panel] = this.props.dashboard.panels;
-        const { id } = panel;
-        const panelClasses = classNames({ 'react-grid-item--fullscreen': panel.fullscreen });
+        const { dashboard } = this.props;
+        const [ panel ] = dashboard.panels;
+        const { id, fullscreen, isEditing } = panel;
+        const panelClasses = classNames({ 'react-grid-item--fullscreen': fullscreen });
 
         panel.isInView = this.isInView(panel);
 
-        return [<div
+        return [ <div
             key={id}
             className={panelClasses}
             id={`panel-${id}`}
@@ -30,12 +30,12 @@ export class AlarmDashboardGrid extends DashboardGrid {
         >
             <AlarmDashboardPanel
                 panel={panel}
-                dashboard={this.props.dashboard}
-                isEditing={panel.isEditing}
-                isFullscreen={panel.fullscreen}
+                dashboard={dashboard}
+                isEditing={isEditing}
+                isFullscreen={fullscreen}
                 isInView={panel.isInView}
             />
-        </div>];
+        </div> ];
     }
 }
 

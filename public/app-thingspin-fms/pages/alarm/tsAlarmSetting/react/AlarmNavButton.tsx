@@ -14,26 +14,19 @@ interface Props {
 
 }
 
-// Facaility Monitoring Navigation Button Component
+// Alarm Monitoring Navigation Button Component
 // (Customized grafana react component)
-export const AlarmNavButton: FunctionComponent<Props> = ({ tooltip, classSuffix, onClick, href, children }) => {
-    if (onClick) {
-        return (
-            <Tooltip content={tooltip}>
-                <button className={`btn navbar-button navbar-button--${classSuffix}`}
-                    aria-label={`${tooltip} navbar button`}
-                    onClick={onClick}>
-                    {children}
-                </button>
-            </Tooltip>
-        );
-    }
-
-    return (
-        <Tooltip content={tooltip}>
-            <a className={`btn navbar-button navbar-button--${classSuffix}`} href={href}>
+export const AlarmNavButton: FunctionComponent<Props> = ({ tooltip, classSuffix, onClick, href, children }) => (
+    <Tooltip content={tooltip}>
+        {onClick
+            ? <button className={`btn navbar-button navbar-button--${classSuffix}`}
+                aria-label={`${tooltip} navbar button`}
+                onClick={onClick}>
+                {children}
+            </button>
+            : <a className={`btn navbar-button navbar-button--${classSuffix}`} href={href}>
                 {children}
             </a>
-        </Tooltip>
-    );
-};
+        }
+    </Tooltip>
+);

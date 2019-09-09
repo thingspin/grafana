@@ -1,3 +1,4 @@
+// 3rd party libs
 import React, { ReactNode } from 'react';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
@@ -12,13 +13,12 @@ import { notifyApp } from 'app/core/actions';
 
 // ThingSPIN React Components
 import AlarmDashNav from './AlarmDashNav';
-import AlarmSettings from './AlarmSettings';
 import { AlarmDashboardGrid } from './AlarmDashboardGrid';
 
 // ThingSPIN Utils
 import { tsInitDashboard as initDashboard } from './initDashboard';
 
-// Facility Monitoring Component
+// Alarm Monitoring Component
 // (Customized grafana react component: iiHOC)
 export class AlarmDashboardPage extends DashboardPage {
 
@@ -33,14 +33,14 @@ export class AlarmDashboardPage extends DashboardPage {
         });
 
         // Only trigger render when the scroll has moved by 25
-        return (<div className={gridWrapperClasses}>
+        return <div className={gridWrapperClasses}>
             <AlarmDashboardGrid
                 dashboard={dashboard}
                 isEditing={true}
                 isFullscreen={isFullscreen}
                 scrollTop={0}
             />
-        </div>);
+        </div>;
     }
 
     // Override
@@ -70,8 +70,6 @@ export class AlarmDashboardPage extends DashboardPage {
                 />
 
                 <div className="scroll-canvas scroll-canvas--dashboard">
-                    {editview && <AlarmSettings dashboard={dashboard} />}
-
                     {initError && this.renderInitFailedState()}
 
                     {this.renderGridNode()}

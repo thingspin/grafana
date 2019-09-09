@@ -5,7 +5,7 @@ import baron from 'baron';
 
 const module = angular.module('grafana.directives');
 
-const panelTemplate = `
+const template = /*html*/`
   <div class="panel-container" ng-class="{'panel-container--no-title': !ctrl.panel.title.length}">
       <div class="panel-content">
         <ng-transclude class="panel-height-helper"></ng-transclude>
@@ -14,13 +14,13 @@ const panelTemplate = `
   </div>
 `;
 
-module.directive('tsAlarmPanel', ($rootScope, $document, $timeout) => {
+module.directive('tsAlarmPanel', ($rootScope, $document, $timeout: angular.ITimeoutService): angular.IDirective => {
   return {
     restrict: 'E',
-    template: panelTemplate,
+    template,
     transclude: true,
     scope: { ctrl: '=' },
-    link: (scope: any, elem) => {
+    link: (scope: any, elem: angular.IAugmentedJQuery) => {
       const panelContainer = elem.find('.panel-container');
       const panelContent = elem.find('.panel-content');
       const cornerInfoElem = elem.find('.panel-info-corner');

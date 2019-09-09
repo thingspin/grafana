@@ -95,7 +95,7 @@ coreModule.decorator('dashboardSrv',
     $rootScope.appEvent('alert-success', ['알람이 저장되었습니다.']);
 
     const [, , uid, slug] = data.url.split("/");
-    const newUrl = `/thingspin/manage/monitoring/${uid}/${slug}`;
+    const newUrl = `/thingspin/alarm/${uid}/${slug}`;
     const currentPath = $location.path();
 
     if (newUrl !== currentPath) {

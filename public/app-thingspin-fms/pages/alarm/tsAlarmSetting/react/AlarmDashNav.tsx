@@ -1,22 +1,25 @@
+// 3rd party libs
 import React from 'react';
 import { connect } from 'react-redux';
 
-// Grafana React Components
+// Grafana libs
+// Models
+import { StoreState } from 'app/types';
+// Views
 import { DashNav } from 'app/features/dashboard/components/DashNav/DashNav';
 import { DashNavButton } from 'app/features/dashboard/components/DashNav/DashNavButton';
 import { DashNavTimeControls } from 'app/features/dashboard/components/DashNav/DashNavTimeControls';
-import { StoreState } from 'app/types';
-
-// Grafana State
+// Controllers
 import { updateLocation } from 'app/core/actions';
 
-// ThingSPIN Angular Services
+// ThingSPIN libs
+// Views
+// Angular Directives or Components
 import { AlarmDashboardSrv } from '../angularjs/services/tsDashboardSrv';
-
-// Thingspin component libs
+// React Components
 import { AlarmNavButton } from './AlarmNavButton';
 
-// Facaility Monitoring Navigation Component
+// Alarm Monitoring Navigation Component
 // (Customized grafana react component: iiHOC)
 export class AlarmNavComp extends DashNav {
     // Override
@@ -33,12 +36,6 @@ export class AlarmNavComp extends DashNav {
             <div className="navbar__spacer" />
         </>);
     }
-
-    openFacilityTree = (): void => {
-        const { dashboard } = this.props;
-        const meta: any = dashboard.meta;
-        meta.viewTree = !meta.viewTree;
-    };
 
     // Override
     render(): JSX.Element {
@@ -78,7 +75,7 @@ export class AlarmNavComp extends DashNav {
                 <div className="navbar-buttons navbar-buttons--actions">
                     {canSave &&  (
                         <AlarmNavButton tooltip="알람 저장" classSuffix="save" onClick={this.onSave} >
-                            {meta.isNew ? '신규 저장' : '저장'}
+                            {meta.isNew ? '신규 생성' : '수정'}
                         </AlarmNavButton>
                     )}
 

@@ -1,38 +1,41 @@
-// External Libraies
+// 3rd party libs
 import React from 'react';
 import classNames from 'classnames';
 
-// Grafana Components
+// Grafana libs
+// Views
 import { getAngularLoader } from '@grafana/runtime';
 import { DashboardPanel } from 'app/features/dashboard/dashgrid/DashboardPanel';
 import { PanelResizer } from 'app/features/dashboard/dashgrid/PanelResizer';
 
-// ThingSPIN Components
-import { AlarmPanelEditor } from './AlarmPanelEditor';
+// ThingSPIN libs
+// Views
+import TsAlertTab from './TsAlertTab';
 
 // (Customized grafana react component: iiHOC)
 export class AlarmDashboardPanel extends DashboardPanel {
 
     // @Override
     componentDidUpdate() {
-        if (this.state.isLazy && this.props.isInView) {
+        const { panel, dashboard, isInView } = this.props;
+        const { isLazy, angularPanel } = this.state;
+        if (isLazy && isInView) {
           this.setState({ isLazy: false });
         }
 
-        if (!this.element || this.state.angularPanel) {
+        if (!this.element || angularPanel) {
           return;
         }
 
         const loader = getAngularLoader();
-        const template = '<alarm-plugin-component type="panel" class="panel-height-helper"></alarm-plugin-component>';
-        const scopeProps = { panel: this.props.panel, dashboard: this.props.dashboard };
-        const angularPanel = loader.load(this.element, scopeProps, template);
+        const template = /*html*/`<alarm-plugin-component type="panel" class="panel-height-helper"></alarm-plugin-component>`;
+        const ngPanel = loader.load(this.element, { panel, dashboard }, template);
 
-        this.setState({ angularPanel });
+        this.setState({ angularPanel: ngPanel });
     }
 
     // Override
-    render() {
+    render(): JSX.Element {
         const { panel, dashboard, isFullscreen, isEditing } = this.props;
         const { plugin, angularPanel, isLazy } = this.state;
 
@@ -40,13 +43,9 @@ export class AlarmDashboardPanel extends DashboardPanel {
             return this.specialPanels[panel.type]();
         }
 
-        // if we have not loaded plugin exports yet, wait
-        if (!plugin) {
-            return null;
-        }
-
-        // If we are lazy state don't render anything
-        if (isLazy) {
+        if (!plugin // if we have not loaded plugin exports yet, wait
+            || isLazy // If we are lazy state don't render anything
+        ) {
             return null;
         }
 
@@ -63,7 +62,6 @@ export class AlarmDashboardPanel extends DashboardPanel {
 
         return (
             <div className={editorContainerClasses}>
-
                 <PanelResizer
                     isEditing={isEditing}
                     panel={panel}
@@ -79,15 +77,9 @@ export class AlarmDashboardPanel extends DashboardPanel {
                     )}
                 />
 
-                {panel.isEditing && (
-                    <AlarmPanelEditor
-                        panel={panel}
-                        plugin={plugin}
-                        dashboard={dashboard}
-                        angularPanel={angularPanel}
-                        onPluginTypeChange={this.onPluginTypeChange}
-                    />
-                )}
+                <div className="panel-editor-container__editor">
+                    <TsAlertTab angularPanel={angularPanel} dashboard={dashboard} panel={panel} />
+                </div>
             </div>
         );
     }

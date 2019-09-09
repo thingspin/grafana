@@ -20,11 +20,11 @@ import {
 } from 'app/features/dashboard/state/actions';
 
 // Types
-import { DashboardModel } from 'app/features/dashboard/state';
 import { DashboardRouteInfo, StoreState, ThunkDispatch, ThunkResult, DashboardDTO } from 'app/types';
 import { InitDashboardArgs } from 'app/features/dashboard/state/initDashboard';
 
 // ThingSPIN
+import { FMDashboardModel } from 'app-thingspin-fms/pages/FacilityMonitoring/models';
 import { AlarmDashboardSrv } from '../angularjs/services/tsDashboardSrv';
 import { AlarmUnsavedChangesSrv } from '../angularjs/services/UnsavedChangesSrv';
 
@@ -139,9 +139,9 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
     dispatch(dashboardInitServices());
 
     // create model
-    let dashboard: DashboardModel;
+    let dashboard: FMDashboardModel;
     try {
-      dashboard = new DashboardModel(dashDTO.dashboard, dashDTO.meta);
+      dashboard = new FMDashboardModel(dashDTO.dashboard, dashDTO.meta);
     } catch (err) {
       dispatch(dashboardInitFailed({ message: 'Failed create dashboard model', error: err }));
       console.log(err);
@@ -155,12 +155,13 @@ export function tsInitDashboard(args: InitDashboardArgs): ThunkResult<void> {
     }
 
     // init services
-    const timeSrv: TimeSrv = args.$injector.get('timeSrv');
-    const annotationsSrv: AnnotationsSrv = args.$injector.get('annotationsSrv');
-    const variableSrv: VariableSrv = args.$injector.get('variableSrv');
-    const keybindingSrv: KeybindingSrv = args.$injector.get('keybindingSrv');
-    const unsavedChangesSrv: AlarmUnsavedChangesSrv = args.$injector.get('unsavedChangesSrv');
-    const dashboardSrv: AlarmDashboardSrv = args.$injector.get('dashboardSrv');
+    const { $injector } = args;
+    const timeSrv: TimeSrv = $injector.get('timeSrv');
+    const annotationsSrv: AnnotationsSrv = $injector.get('annotationsSrv');
+    const variableSrv: VariableSrv = $injector.get('variableSrv');
+    const keybindingSrv: KeybindingSrv = $injector.get('keybindingSrv');
+    const unsavedChangesSrv: AlarmUnsavedChangesSrv = $injector.get('unsavedChangesSrv');
+    const dashboardSrv: AlarmDashboardSrv = $injector.get('dashboardSrv');
 
     timeSrv.init(dashboard);
     annotationsSrv.init(dashboard);
@@ -206,6 +207,7 @@ function getNewDashboardModelData(urlFolderId?: string): any {
       canShare: false,
       isNew: true,
       canEdit: false,
+      showSettings: true,
       folderId: 0,
     },
     dashboard: {
@@ -222,30 +224,12 @@ function getNewDashboardModelData(urlFolderId?: string): any {
           // default alarm
           alert: {
             alertRuleTags: {},
-            conditions: [
-              {
-                evaluator: {
-                  params: [],
-                  type: "gt",
-                },
-                operator: {
-                  type: "and",
-                },
-                query: {
-                  params: [ "A", "5m", "now" ],
-                },
-                reducer: {
-                  params: [],
-                  type: "avg"
-                },
-                type: "query"
-              }
-            ],
+            conditions: [],
             executionErrorState: "alerting",
             for: "5m",
             frequency: "1m",
             handler: 1,
-            name: "Panel Title alert",
+            name: "알람",
             noDataState: "no_data",
             notifications: []
           },
