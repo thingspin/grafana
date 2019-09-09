@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'tsi';
   src:
-    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.ttf?a55d1s') format('truetype'),
-    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.woff?a55d1s') format('woff'),
-    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.svg?a55d1s#tsi') format('svg');
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.ttf?vpycrf') format('truetype'),
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.woff?vpycrf') format('woff'),
+    url('/public/app-thingspin-fms/fonts/ts-fonts/tsi.svg?vpycrf#tsi') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -23,6 +23,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ts-savestatus-off:before {
+  content: "\e988";
+}
+.icon-ts-savestatus-on:before {
+  content: "\e989";
+}
+.icon-ts-occurrence-off:before {
+  content: "\e98a";
+}
+.icon-ts-card:before {
+  content: "\e986";
+}
+.icon-ts-list:before {
+  content: "\e987";
+}
+.icon-ts-occurrence:before {
+  content: "\e985";
+}
 .icon-ts-modbus:before {
   content: "\e951";
 }
@@ -75,7 +93,7 @@
   content: "\e92f";
 }
 .icon-ts-ballot:before {
-  content: "\e930";
+  content: "\e974";
 }
 .icon-ts-bookmark:before {
   content: "\e931";
@@ -126,7 +144,7 @@
   content: "\e940";
 }
 .icon-ts-view_headline:before {
-  content: "\e941";
+  content: "\e975";
 }
 .icon-ts-view_list:before {
   content: "\e942";
@@ -162,122 +180,268 @@
   content: "\e92d";
 }
 .icon-ts-check_circle-24px:before {
-  content: "\e900";
-}
-.icon-ts-power:before {
-  content: "\e901";
-}
-.icon-ts_systemloge:before {
-  content: "\e902";
-}
-.icon-ts-add_circle:before {
-  content: "\e903";
-}
-.icon-ts-add:before {
-  content: "\e904";
-}
-.icon-ts-alrm:before {
-  content: "\e905";
-}
-.icon-ts-check_box_outline_blank:before {
-  content: "\e906";
-}
-.icon-ts-check_box:before {
-  content: "\e907";
-}
-.icon-ts-check:before {
-  content: "\e908";
-}
-.icon-ts-chevron_left:before {
-  content: "\e909";
-}
-.icon-ts-chevron_right:before {
-  content: "\e90a";
-}
-.icon-ts-close:before {
-  content: "\e90b";
-}
-.icon-ts-connection_off:before {
-  content: "\e90c";
-}
-.icon-ts-connection-loding:before {
-  content: "\e90d";
-}
-.icon-ts-create:before {
-  content: "\e90e";
-}
-.icon-ts-delete:before {
-  content: "\e90f";
-}
-.icon-ts-fold:before {
-  content: "\e910";
-}
-.icon-ts-folder:before {
-  content: "\e911";
-}
-.icon-ts-foreknowledge:before {
-  content: "\e912";
-}
-.icon-ts-manuanalysis:before {
-  content: "\e913";
-}
-.icon-ts-manuarrow-drop-down:before {
-  content: "\e914";
-}
-.icon-ts-manucreate_new_folder:before {
-  content: "\e915";
-}
-.icon-ts-manudata-management:before {
-  content: "\e916";
-}
-.icon-ts-manudigitaltwin:before {
-  content: "\e917";
-}
-.icon-ts-manuequiment:before {
-  content: "\e918";
-}
-.icon-ts-manulibrary_add:before {
-  content: "\e919";
-}
-.icon-ts-manupin-off:before {
-  content: "\e91a";
-}
-.icon-ts-manupin-on:before {
-  content: "\e91b";
-}
-.icon-ts-manureplay:before {
-  content: "\e91c";
-}
-.icon-ts-manureport:before {
-  content: "\e91d";
-}
-.icon-ts-manuscada:before {
-  content: "\e91e";
-}
-.icon-ts-manusummary:before {
-  content: "\e91f";
-}
-.icon-ts-manusystem:before {
-  content: "\e920";
-}
-.icon-ts-manutoggle_off:before {
-  content: "\e921";
-}
-.icon-ts-manutoggle_on:before {
   content: "\e922";
 }
-.icon-ts-more_vert:before {
+.icon-ts-power:before {
   content: "\e923";
 }
-.icon-ts-pause_circle_filled:before {
+.icon-ts_systemloge:before {
   content: "\e924";
 }
-.icon-ts-play_circle_filled:before {
+.icon-ts-add_circle:before {
   content: "\e925";
 }
-.icon-ts-rule:before {
+.icon-ts-add:before {
   content: "\e926";
+}
+.icon-ts-alrm:before {
+  content: "\e976";
+}
+.icon-ts-check_box_outline_blank:before {
+  content: "\e930";
+}
+.icon-ts-check_box:before {
+  content: "\e941";
+}
+.icon-ts-check:before {
+  content: "\e956";
+}
+.icon-ts-chevron_left:before {
+  content: "\e957";
+}
+.icon-ts-chevron_right:before {
+  content: "\e958";
+}
+.icon-ts-close:before {
+  content: "\e959";
+}
+.icon-ts-connection_off:before {
+  content: "\e95a";
+}
+.icon-ts-connection-loding:before {
+  content: "\e95b";
+}
+.icon-ts-create:before {
+  content: "\e95c";
+}
+.icon-ts-delete:before {
+  content: "\e95d";
+}
+.icon-ts-fold:before {
+  content: "\e95e";
+}
+.icon-ts-folder:before {
+  content: "\e95f";
+}
+.icon-ts-foreknowledge:before {
+  content: "\e960";
+}
+.icon-ts-manuanalysis:before {
+  content: "\e961";
+}
+.icon-ts-manuarrow-drop-down:before {
+  content: "\e962";
+}
+.icon-ts-manucreate_new_folder:before {
+  content: "\e963";
+}
+.icon-ts-manudata-management:before {
+  content: "\e977";
+}
+.icon-ts-manudigitaltwin:before {
+  content: "\e964";
+}
+.icon-ts-manuequiment:before {
+  content: "\e965";
+}
+.icon-ts-manulibrary_add:before {
+  content: "\e966";
+}
+.icon-ts-manupin-off:before {
+  content: "\e967";
+}
+.icon-ts-manupin-on:before {
+  content: "\e968";
+}
+.icon-ts-manureplay:before {
+  content: "\e969";
+}
+.icon-ts-manureport:before {
+  content: "\e96a";
+}
+.icon-ts-manuscada:before {
+  content: "\e96b";
+}
+.icon-ts-manusummary:before {
+  content: "\e96c";
+}
+.icon-ts-manusystem:before {
+  content: "\e96d";
+}
+.icon-ts-manutoggle_off:before {
+  content: "\e96e";
+}
+.icon-ts-manutoggle_on:before {
+  content: "\e96f";
+}
+.icon-ts-more_vert:before {
+  content: "\e970";
+}
+.icon-ts-pause_circle_filled:before {
+  content: "\e971";
+}
+.icon-ts-play_circle_filled:before {
+  content: "\e972";
+}
+.icon-ts-rule:before {
+  content: "\e973";
 }
 .icon-ts-warning:before {
   content: "\e927";
+}
+.icon-delete:before {
+  content: "\e978";
+}
+.icon-create_new_folder:before {
+  content: "\e979";
+}
+.icon-library_add:before {
+  content: "\e97a";
+}
+.icon-replay:before {
+  content: "\e97b";
+}
+.icon-toggle_off:before {
+  content: "\e97c";
+  color: #d81b60;
+}
+.icon-toggle_on:before {
+  content: "\e97d";
+  color: #1e88e5;
+}
+.icon-ts-alrm-alerting:before {
+  content: "\e981";
+  color: #d81b60;
+}
+.icon-ts-alrm-nodata:before {
+  content: "\e982";
+  color: #fb8002;
+}
+.icon-ts-alrm-ok:before {
+  content: "\e983";
+  color: #00897b;
+}
+.icon-ts-off:before {
+  content: "\e984";
+}
+.icon-baseline-web-24px-01:before {
+  content: "\e97e";
+}
+.icon-baseline-web-24px-04:before {
+  content: "\e97f";
+}
+.icon-baseline-web-24px-05:before {
+  content: "\e980";
+}
+.icon--2216:before {
+  content: "\e90d";
+}
+.icon--2217:before {
+  content: "\e90e";
+}
+.icon-baseline-center_focus_strong-24px:before {
+  content: "\e90f";
+}
+.icon-baseline-check_box_outline_blank-1:before {
+  content: "\e910";
+}
+.icon-baseline-check_box_outline_blank-24px:before {
+  content: "\e911";
+}
+.icon-baseline-check_box-24px:before {
+  content: "\e912";
+}
+.icon-baseline-chevron_left-24px:before {
+  content: "\e913";
+}
+.icon-baseline-chevron_right-24px:before {
+  content: "\e914";
+}
+.icon-baseline-dvr-24px:before {
+  content: "\e915";
+}
+.icon-baseline-format_italic-24px:before {
+  content: "\e916";
+}
+.icon-baseline-fullscreen-24px:before {
+  content: "\e917";
+}
+.icon-baseline-image-24px:before {
+  content: "\e918";
+}
+.icon-baseline-last_page-24px:before {
+  content: "\e919";
+}
+.icon-baseline-more_horiz-24px:before {
+  content: "\e91a";
+}
+.icon-baseline-more_vert-24px:before {
+  content: "\e91b";
+}
+.icon-baseline-panorama_fish_eye-24px:before {
+  content: "\e91c";
+}
+.icon-baseline-person_pin-24px:before {
+  content: "\e91d";
+}
+.icon-baseline-remove-24px:before {
+  content: "\e91e";
+}
+.icon-baseline-subtitles-24px:before {
+  content: "\e91f";
+}
+.icon-baseline-title-24px:before {
+  content: "\e920";
+}
+.icon-ic_search_white:before {
+  content: "\e921";
+}
+.icon-summary:before {
+  content: "\e909";
+}
+.icon-pin-on:before {
+  content: "\e900";
+}
+.icon-pin-off:before {
+  content: "\e901";
+}
+.icon-data-management:before {
+  content: "\e902";
+}
+.icon-analysis:before {
+  content: "\e903";
+}
+.icon-digitaltwin:before {
+  content: "\e904";
+}
+.icon-report:before {
+  content: "\e905";
+}
+.icon-equiment:before {
+  content: "\e906";
+}
+.icon-system:before {
+  content: "\e907";
+}
+.icon-alrm:before {
+  content: "\e908";
+}
+.icon-summery:before {
+  content: "\e90c";
+}
+.icon-arrow-drop-down:before {
+  content: "\e90a";
+}
+.icon-scada:before {
+  content: "\e90b";
 }
