@@ -1,7 +1,14 @@
+// Icons
 @import 'base/icons';
 @import 'base/thingspin_icons';
+@import 'base/thingspin_leftsidebar_icons';
+// Page Layer
 @import 'layout/page';
 @import 'components/view_states';
+
+// Page
 @import 'pages/login';
 @import 'pages/alarm/index';
-@import 'base/thingspin_leftsidebar_icons';
+
+// React Components
+@import '../react/reactComponents';

@@ -35,22 +35,21 @@ export class FMDashboardPage extends DashboardPage {
         const { dashboard } = this.props;
 
         // remove panels(non diff check)
-        const removes = dashboard.panels.map(({ id }) => (id));
+        const removes = dashboard.panels.map(({ id }) => id);
         for (const remove of removes) {
-            // const id = this.oldPanel[remove].id || remove ; // auto generated in dashboardModel class
-
             // find PanelModel Object
             const p = dashboard.getPanelById(remove);
 
             // remove phase
             dashboard.removePanel(p);
-            // delete this.oldPanel[remove];
         }
 
         // add panels
-        for (const add of newPanel) {
-            dashboard.addPanel(add);
-        }
+        setTimeout(() => {
+            for (const add of newPanel) {
+                dashboard.addPanel(add);
+            }
+        }, 1);
     }
 
     // add thingspin method
@@ -74,32 +73,10 @@ export class FMDashboardPage extends DashboardPage {
             }],
         });
 
-        // local method
-        /*
-        const getDiffPanel = (aPanel: object, bPanel: object): FmPanelFilter => {
-            // local method
-            const diffKeys = (A: any[], B: any[]) => (A.filter(x => !B.includes(x)));
-
-            const oldKeys = Object.keys(aPanel);
-            const newKeys = Object.keys(bPanel);
-
-            const removes = diffKeys(oldKeys, newKeys);
-            const adds = diffKeys(newKeys, oldKeys);
-            return {
-                removes,
-                adds,
-            };
-        };
-        */
-
-
-        const newPanels = tags.map((tag: any) => (generatePanelData(tag.label,
-            this.panelType || 'graph', {
-                tagNodes: [tag],
-                checked: [tag.value],
-            }
-        )));
-
+        const newPanels = tags.map((tag: any) => generatePanelData(tag.label, this.panelType || 'graph', {
+            tagNodes: [tag],
+            checked: [tag.value],
+        }));
         this.updateFmPanel(newPanels);
     }
 
@@ -119,6 +96,7 @@ export class FMDashboardPage extends DashboardPage {
         return <FMLeftTree
             $injector={$injector}
             dashboard={dashboard}
+            // Events
             onChangeFacilityTree={this.onClickFacilityTree}
             onPanelTypeChange={this.onPanelTypeChange}
         />;

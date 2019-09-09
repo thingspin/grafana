@@ -5,10 +5,7 @@ const  nanoid = require('nanoid');
 
 import Button from './Button';
 import TreeNode from './TreeNode';
-import NodeModel, { TreeNodeShape, ListShape, IconsShape, LanguageShape } from './models';
-
-// load scss
-import './index.scss';
+import NodeModel, { TreeNodeShape, ListShape, IconsShape, LanguageShape, Check } from './models';
 
 export interface Props {
     nodes: TreeNodeShape[];
@@ -137,14 +134,11 @@ export default class CheckboxTree extends React.Component<Props, States> {
         model.toggleChecked(nodeInfo, nodeInfo.checked, noCascade);
 
         // thingspin add code ---
-        const checked: any[] = model.serializeList('checked');
-        const data: any[] = [];
-        for (const value of checked) {
-            data.push(model.getNode(value).origin);
-        }
+        const checked: string[] = model.serializeList(Check.Checked);
+        const originData: any[] = checked.map((value) => model.getNode(value).origin);
         // thingspin add code ---
 
-        onCheck(checked, { ...node, ...nodeInfo }, data);
+        onCheck([...checked], { ...node, ...nodeInfo }, [...originData]);
     }
 
     onExpand(nodeInfo: any) {
@@ -152,8 +146,8 @@ export default class CheckboxTree extends React.Component<Props, States> {
         const model = this.state.model.clone();
         const node = model.getNode(nodeInfo.value);
 
-        model.toggleNode(nodeInfo.value, 'expanded', nodeInfo.expanded);
-        onExpand(model.serializeList('expanded'), { ...node, ...nodeInfo });
+        model.toggleNode(nodeInfo.value, Check.Expanded, nodeInfo.expanded);
+        onExpand(model.serializeList(Check.Expanded), { ...node, ...nodeInfo });
     }
 
     onNodeClick(nodeInfo: any): void {
@@ -178,7 +172,7 @@ export default class CheckboxTree extends React.Component<Props, States> {
         onExpand(
             this.state.model.clone()
                 .expandAllNodes(expand)
-                .serializeList('expanded'),
+                .serializeList(Check.Expanded),
         );
     }
 
@@ -274,11 +268,9 @@ export default class CheckboxTree extends React.Component<Props, States> {
             );
         });
 
-        return (
-            <ol>
-                {treeNodes}
-            </ol>
-        );
+        return (<ol>
+            {treeNodes}
+        </ol>);
     }
 
     renderExpandAll(): ReactNode {
@@ -321,13 +313,11 @@ export default class CheckboxTree extends React.Component<Props, States> {
     }
 
     renderArrayHiddenInput(): ReactNode[] {
-        const { checked, name: inputName } = this.props;
+        const { checked, name } = this.props;
 
-        return checked.map((value: any): ReactNode => {
-            const name = `${inputName}[]`;
-
-            return <input key={value} name={name} type="hidden" value={value} />;
-        });
+        return checked.map((value: any): ReactNode => (
+            <input key={value} name={`${name}[]`} type="hidden" value={value} />
+        ));
     }
 
     renderJoinedHiddenInput(): ReactNode {

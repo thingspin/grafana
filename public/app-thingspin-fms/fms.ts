@@ -18,6 +18,8 @@ import addThingspinReducers from './react/redux/addReducers';
 import 'angular-ui-tree';
 
 import './angular-modules/core';
+import './pages/login/TsResetPassword';
+import './pages/login/TsSignup';
 
 addThingspinReducers();
 

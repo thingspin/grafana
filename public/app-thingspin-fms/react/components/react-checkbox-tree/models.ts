@@ -2,6 +2,11 @@ import { ReactNode } from 'react';
 
 import { Props } from './index';
 
+export enum Check {
+    Checked = 'checked',
+    Expanded = 'expanded',
+}
+
 export interface LanguageShape {
     collapseAll: string;
     expandAll: string;
@@ -21,7 +26,7 @@ export interface IconsShape {
     leaf: ReactNode;
 }
 
-export type ListShape = any[];
+export type ListShape = string[];
 
 export interface TreeNodeShape {
     // Required
@@ -41,8 +46,7 @@ export interface TreeNodeShape {
 }
 
 export default class NodeModel {
-    constructor(protected props: Props, protected flatNodes: any = {}) {
-    }
+    constructor(protected props: Props, protected flatNodes: any = {}) { }
 
     setProps(props: Props): void {
         this.props = props;
@@ -54,6 +58,7 @@ export default class NodeModel {
         // Re-construct nodes one level deep to avoid shallow copy of mutable characteristics
         Object.keys(this.flatNodes).forEach((value: string): void => {
             const node = this.flatNodes[value];
+            // Deep Copy(?)
             clonedNodes[value] = { ...node };
         });
 
@@ -61,6 +66,7 @@ export default class NodeModel {
     }
 
     getNode(value: string): any {
+        // shallow copy(Call by reference)
         return this.flatNodes[value];
     }
 
@@ -97,11 +103,8 @@ export default class NodeModel {
     }
 
     getDisabledState(node: TreeNodeShape, parent: TreeNodeShape, disabledProp: boolean, noCascade: boolean): boolean {
-        if (disabledProp) {
-            return true;
-        }
-
-        if (!noCascade && parent.disabled) {
+        if (disabledProp
+            || (!noCascade && parent.disabled)) {
             return true;
         }
 
@@ -109,7 +112,7 @@ export default class NodeModel {
     }
 
     deserializeLists(lists: any): void {
-        const listKeys: string[] = ['checked', 'expanded'];
+        const listKeys: Check[] = [Check.Checked, Check.Expanded];
 
         // Reset values to false
         Object.keys(this.flatNodes).forEach((value: string): void => {
@@ -128,16 +131,10 @@ export default class NodeModel {
         }
     }
 
-    serializeList(key: string): any[] {
-        const list: string[] = [];
-
-        Object.keys(this.flatNodes).forEach((value: string): void => {
-            if (this.flatNodes[value][key]) {
-                list.push(value);
-            }
-        });
-
-        return list;
+    serializeList(key: string): string[] {
+        return Object
+            .keys(this.flatNodes)
+            .filter( (value: string): string => (this.flatNodes[value][key]));
     }
 
     expandAllNodes(expand: any): NodeModel {
@@ -159,7 +156,7 @@ export default class NodeModel {
             }
 
             // Set the check status of a leaf node or an uncoupled parent
-            this.toggleNode(node.value, 'checked', isChecked);
+            this.toggleNode(node.value, Check.Checked, isChecked);
         } else {
             // Percolate check status down to all children
             flatNode.children.forEach((child: any): void => {

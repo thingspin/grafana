@@ -19,7 +19,7 @@ export interface SiteOptions {
 }
 
 export interface FilterTreeState {
-  checked: [];
+  checked: any[];
   prevChecked: [];
   expanded: [];
   filterText: any;

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 
@@ -18,44 +18,26 @@ interface Props {
     isTreeView?: boolean;
 }
 
-interface States {
-}
+// Presentational Component
+export const FMLeftTree: React.FC<Props> = (props: Props) => {
+    const dashboard: FMDashboardModel = props.dashboard as FMDashboardModel;
+    const { $injector, isTreeView } = props;
 
-export class FMLeftTree extends PureComponent<Props, States> {
-    setFacilityInfo(site: any, facilityTags: any) {
-        const { dashboard } = this.props;
-        if (!dashboard) {
-            return;
-        }
+    return <>
+        {isTreeView && <div className="fm-left-tree">
+            <div className="fm-left-type-selector">
+                <FMVizTypeSelector onChange={props.onPanelTypeChange} />
+            </div>
 
-        dashboard.site = site;
-        dashboard.facilityTags = facilityTags;
-    }
-
-    onClickFacilityTree(data: any) {
-        const { Taginfo: tags, siteData: site } = data;
-        this.props.onChangeFacilityTree(site, tags);
-    }
-
-    render() {
-        const dashboard: FMDashboardModel = this.props.dashboard as FMDashboardModel;
-        const { $injector, isTreeView } = this.props;
-
-        return <>
-            {isTreeView && <div className="fm-left-tree">
-                <div className="fm-left-type-selector">
-                    <FMVizTypeSelector onChange={this.props.onPanelTypeChange.bind(this)} />
-                </div>
-
-                <FacilityTree taginfo={dashboard.facilityTags}
-                    siteinfo={dashboard.site}
-                    inject={$injector}
-                    click={this.onClickFacilityTree.bind(this)}
-                />
-            </div>}
-        </>;
-    }
-}
+            <FacilityTree taginfo={dashboard.facilityTags}
+                siteinfo={dashboard.site}
+                inject={$injector}
+                // Events
+                click={ ({ siteData, Taginfo }: any) => props.onChangeFacilityTree(siteData, Taginfo) }
+            />
+        </div>}
+    </>;
+};
 
 export const mapStateToProps = (state: any) => ({
     isTreeView: state.thingspinFmMeta.isTreeView,
@@ -66,4 +48,3 @@ export default hot(module)(
         mapStateToProps, {}
     )(FMLeftTree)
 );
-
