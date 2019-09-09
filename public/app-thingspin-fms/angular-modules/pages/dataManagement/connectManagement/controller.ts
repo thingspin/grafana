@@ -156,12 +156,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 return value.id === item.id;
             });
             this.list[index].enable = true;
-        } else {
-            item.enable = false;
-            const index: number = this.list.findIndex((value: TsConnect) => {
-                return value.id === item.id;
-            });
-            this.list[index].enable = false;
         }
         this.$scope.$applyAsync();
     }
