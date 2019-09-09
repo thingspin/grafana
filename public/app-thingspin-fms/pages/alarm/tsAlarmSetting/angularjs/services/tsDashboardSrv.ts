@@ -32,7 +32,6 @@ coreModule.decorator('dashboardSrv',
 
   // Add class method
   self.alarmSaveDashboard = (options?, clone?) => {
-    console.log(self);
     if (clone) {
       self.setCurrent(self.create(clone, self.dashboard.meta));
     }

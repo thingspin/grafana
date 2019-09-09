@@ -27,6 +27,7 @@ export class TsAlertTabCtrl extends AlertTabCtrl implements angular.IController 
   protected _$q: any;
   protected _datasourceSrv: DatasourceSrv;
 
+  /** @ngInject */
   constructor(
     $scope: any,
     backendSrv: BackendSrv,

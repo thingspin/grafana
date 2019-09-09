@@ -82,7 +82,9 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             //console.log("data empty");
         }
 
-        this.setState(updateState);
+        if (this._isMounted) {
+            this.setState(updateState);
+        }
     }
 
     UNSAFE_componentWillMount() {

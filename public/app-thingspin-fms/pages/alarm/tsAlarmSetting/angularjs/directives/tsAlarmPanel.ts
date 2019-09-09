@@ -14,6 +14,7 @@ const template = /*html*/`
   </div>
 `;
 
+/** @ngInject */
 module.directive('tsAlarmPanel', ($rootScope, $document, $timeout: angular.ITimeoutService): angular.IDirective => {
   return {
     restrict: 'E',
