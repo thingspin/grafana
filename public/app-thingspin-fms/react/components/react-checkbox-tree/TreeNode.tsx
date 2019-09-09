@@ -125,11 +125,7 @@ class TreeNode extends React.Component<Props> {
     renderCollapseIcon(): ReactNode {
         const { expanded, icons: { expandClose, expandOpen } } = this.props;
 
-        if (!expanded) {
-            return expandClose;
-        }
-
-        return expandOpen;
+        return (!expanded) ? expandClose: expandOpen;
     }
 
     renderCheckboxIcon(): ReactNode {
@@ -162,11 +158,7 @@ class TreeNode extends React.Component<Props> {
             return leaf;
         }
 
-        if (!expanded) {
-            return parentClose;
-        }
-
-        return parentOpen;
+        return (!expanded) ? parentClose : parentOpen;
     }
 
     renderBareLabel(children: ReactNode): ReactNode {
@@ -190,7 +182,7 @@ class TreeNode extends React.Component<Props> {
         );
     }
 
-    renderCheckboxLabel(children: ReactNode): ReactNode[] {
+    renderCheckboxLabel(children: ReactNode): ReactNode {
         const {
             checked,
             disabled,
@@ -202,7 +194,7 @@ class TreeNode extends React.Component<Props> {
         const clickable = onClick !== null;
         const inputId = `${treeId}-${String(value).split(' ').join('_')}`;
 
-        const render = [(
+        const render = (<>
             <label key={0} htmlFor={inputId} title={title}>
                 <NativeCheckbox
                     checked={checked === 1}
@@ -217,52 +209,36 @@ class TreeNode extends React.Component<Props> {
                 </span>
                 {!clickable ? children : null}
             </label>
-        )];
 
-        if (clickable) {
-            render.push((
-                <span
+            {clickable && <span
                     key={1}
                     className="rct-node-clickable"
                     onClick={this.onClick}
                     onKeyPress={this.onClick}
                     role="link"
                     tabIndex={0}
-                >
-                    {children}
-                </span>
-            ));
-        }
+            >
+                {children}
+            </span>}
+        </>);
 
         return render;
     }
 
     renderLabel(): ReactNode {
         const { label, showCheckbox, showNodeIcon } = this.props;
-        const labelChildren = [
-            showNodeIcon ? (
-                <span key={0} className="rct-node-icon">
-                    {this.renderNodeIcon()}
-                </span>
-            ) : null,
-            <span key={1} className="rct-title">
-                {label}
-            </span>,
-        ];
+        const labelChildren: ReactNode = (<>
+            {showNodeIcon && <span className="rct-node-icon">{this.renderNodeIcon()}</span>}
+            <span className="rct-title">{label}</span>
+        </>);
 
-        if (!showCheckbox) {
-            return this.renderBareLabel(labelChildren);
-        }
-
-        return this.renderCheckboxLabel(labelChildren);
+        return (!showCheckbox)
+            ? this.renderBareLabel(labelChildren)
+            : this.renderCheckboxLabel(labelChildren);
     }
 
     renderChildren(): ReactNode {
-        if (!this.props.expanded) {
-            return null;
-        }
-
-        return this.props.children;
+        return (!this.props.expanded) ? null : this.props.children;
     }
 
     render(): ReactNode {
