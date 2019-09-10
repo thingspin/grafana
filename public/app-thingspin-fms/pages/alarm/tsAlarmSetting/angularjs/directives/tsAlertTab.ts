@@ -15,8 +15,22 @@ import { ThresholdMapper } from 'app/features/alerting/state/ThresholdMapper';
 // Modes
 import { tsEvalFunctions, tsReducerTypes, tsEvalOperators } from '../../utils';
 // Views
-import { TagTree } from '../../react/AlarmFacilityTree';
 import alertDef from 'app/features/alerting/state/alertDef';
+
+export interface Tag {
+  value: any;
+  label: any;
+  [v: string]: any;
+}
+
+export interface TagTree {
+  siteData: {
+    value: any;
+    label: any;
+    [v: string]: any;
+  };
+  Taginfo: Tag[];
+}
 
 export class TsAlertTabCtrl extends AlertTabCtrl implements angular.IController {
   // redefine AlertTabCtrl Constructor params

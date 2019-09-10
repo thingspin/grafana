@@ -1,5 +1,6 @@
 // 3rd party libs
-import React from "react";
+import angular from 'angular';
+import React, { ReactNode } from "react";
 
 // Grafana libs
 // Models
@@ -14,10 +15,11 @@ import { getAngularLoader } from '@grafana/runtime';
 // Models
 import { FMDashboardModel } from 'app-thingspin-fms/pages/FacilityMonitoring/models';
 // Views
-import AlarmFacilityTree from './AlarmFacilityTree';
-import { TreeInfo } from 'app-thingspin-fms/react/components/FacilityNodeTree/model';
+import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
 
-export default class TsAlertTab extends AlertTab {
+export default class AlarmSetting extends AlertTab {
+  // bind global Angularjs Injector
+  private $injector = angular.element(document).injector();
 
   // Override
   loadAlertTab() {
@@ -41,9 +43,9 @@ export default class TsAlertTab extends AlertTab {
   }
 
   // thingspin add func
-  onUpdatePanel = (params: TreeInfo) => {
+  onUpdatePanel = (params: any) => {
     const { Taginfo } = params;
-    const { panel } = this.props;
+    const { dashboard, panel } = this.props;
 
     // update target
     panel.targets = Taginfo.map( (node: any) => ({
@@ -56,24 +58,38 @@ export default class TsAlertTab extends AlertTab {
     // update alarm rule
     this.panelCtrl.events.emit("ts-update-alarm", params);
 
+    console.log(params);
+    // set FacilityTree in dashboard
+    (dashboard as FMDashboardModel).facilityTags = params.Taginfo;
+    (dashboard as FMDashboardModel).site = params.siteData;
+
+
     panel.refresh();
+  }
+
+  // thingspin add func
+  renderFacilityTree(): ReactNode {
+    console.log(this.props.dashboard);
+    const { facilityTags, site } = this.props.dashboard as FMDashboardModel;
+
+    return <div className="fm-left-tree">
+      <FacilityTree
+        siteinfo={site}
+        taginfo={facilityTags}
+        inject={this.$injector}
+        click={this.onUpdatePanel}
+      />
+    </div>;
   }
 
   // Override
   render() {
-    const { panel, dashboard } = this.props;
-    const { alert } = panel;
+    const { alert } = this.props.panel;
 
     const toolbarItems = alert ? [this.stateHistory(), this.testRule(), this.deleteAlert()] : [];
 
     return <>
-      <AlarmFacilityTree
-        // meta
-        panel={panel}
-        dashboard={dashboard as FMDashboardModel}
-        // events
-        onUpdatePanel={this.onUpdatePanel}
-      />
+      {this.renderFacilityTree()}
 
       <div className="ts-panel-editor__right">
         <EditorTabBody heading="알람" toolbarItems={toolbarItems}>

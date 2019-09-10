@@ -10,7 +10,7 @@ import { PanelResizer } from 'app/features/dashboard/dashgrid/PanelResizer';
 
 // ThingSPIN libs
 // Views
-import TsAlertTab from './TsAlertTab';
+import AlarmSetting from './AlarmSetting';
 
 // (Customized grafana react component: iiHOC)
 export class AlarmDashboardPanel extends DashboardPanel {
@@ -78,7 +78,7 @@ export class AlarmDashboardPanel extends DashboardPanel {
                 />
 
                 <div className="panel-editor-container__editor">
-                    <TsAlertTab angularPanel={angularPanel} dashboard={dashboard} panel={panel} />
+                    <AlarmSetting angularPanel={angularPanel} dashboard={dashboard} panel={panel} />
                 </div>
             </div>
         );

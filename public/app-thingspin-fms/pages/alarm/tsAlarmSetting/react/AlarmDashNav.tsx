@@ -1,5 +1,6 @@
 // 3rd party libs
 import React from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 
 // Grafana libs
@@ -11,6 +12,7 @@ import { DashNavButton } from 'app/features/dashboard/components/DashNav/DashNav
 import { DashNavTimeControls } from 'app/features/dashboard/components/DashNav/DashNavTimeControls';
 // Controllers
 import { updateLocation } from 'app/core/actions';
+import { appEvents } from 'app/core/core';
 
 // ThingSPIN libs
 // Views
@@ -18,10 +20,14 @@ import { updateLocation } from 'app/core/actions';
 import { AlarmDashboardSrv } from '../angularjs/services/tsDashboardSrv';
 // React Components
 import { AlarmNavButton } from './AlarmNavButton';
+import { BackendSrv } from 'app/core/services/backend_srv';
 
 // Alarm Monitoring Navigation Component
 // (Customized grafana react component: iiHOC)
 export class AlarmNavComp extends DashNav {
+    protected backendSrv: BackendSrv = this.props.$injector.get("backendSrv");
+    protected $location: angular.ILocationService = this.props.$injector.get("$location");
+
     // Override
     onSave = (): void => {
         const { $injector }: { $injector: angular.auto.IInjectorService } = this.props;
@@ -37,10 +43,47 @@ export class AlarmNavComp extends DashNav {
         </>);
     }
 
+    // Thingspin add func
+    deleteDashboard = () => {
+        const { dashboard } = this.props;
+        const text2 = dashboard.title;
+
+        if (dashboard.meta.provisioned) {
+            appEvents.emit('confirm-modal', {
+                title: 'Cannot delete provisioned dashboard',
+                text: `해당 알람은 초기 설정(프로비저닝)에서 관리되어 삭제할 수 없습니다. 자세한 내용은 시스템 관리자에게 문의바랍니다.`,
+                icon: 'fa-trash',
+                noText: '확인',
+            });
+            return;
+        }
+
+        appEvents.emit('confirm-modal', {
+            title: 'Delete',
+            text: '정말 해당 알람을 삭제시겠습니까?',
+            text2: text2,
+            icon: 'fa-trash',
+            yesText: '삭제',
+            onConfirm: () => {
+                dashboard.meta.canSave = false;
+                this.deleteDashboardConfirmed();
+            },
+        });
+    }
+
+    // thingspin add func
+    deleteDashboardConfirmed() {
+        const { dashboard } = this.props;
+        this.backendSrv.deleteDashboard(dashboard.uid, false).then(() => {
+            appEvents.emit('alert-success', ['Dashboard Deleted', dashboard.title + ' has been deleted']);
+            this.$location.url('/');
+        });
+    }
+
     // Override
     render(): JSX.Element {
         const { dashboard, location, $injector } = this.props;
-        const { snapshot, meta: { canStar, canSave, canShare, showSettings, isStarred } } = dashboard;
+        const { snapshot, meta: { canStar, canSave, canShare, isStarred } } = dashboard;
         const meta = dashboard.meta as any;
         const snapshotUrl = snapshot && snapshot.originalUrl;
 
@@ -79,6 +122,12 @@ export class AlarmNavComp extends DashNav {
                         </AlarmNavButton>
                     )}
 
+                    {!meta.isNew &&  (
+                        <AlarmNavButton tooltip="알람 저장" classSuffix="save" onClick={this.deleteDashboard} >
+                            삭제
+                        </AlarmNavButton>
+                    )}
+
                     {canStar && (
                         <DashNavButton
                             tooltip="Mark as favorite"
@@ -104,15 +153,6 @@ export class AlarmNavComp extends DashNav {
                             classSuffix="snapshot-origin"
                             icon="gicon gicon-link"
                             href={snapshotUrl}
-                        />
-                    )}
-
-                    {showSettings && (
-                        <DashNavButton
-                            tooltip="Dashboard settings"
-                            classSuffix="settings"
-                            icon="gicon gicon-cog"
-                            onClick={this.onOpenSettings}
                         />
                     )}
                 </div>
