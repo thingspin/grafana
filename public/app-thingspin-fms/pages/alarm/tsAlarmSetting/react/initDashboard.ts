@@ -81,7 +81,7 @@ async function fetchDashboard(
         if (args.fixUrl && dashDTO.meta.url) {
           // check if the current url is correct (might be old slug)
           const dashboardUrl = locationUtil.stripBaseFromUrl(dashDTO.meta.url)
-            .replace("/d/", "/thingspin/alarm/"); // convert dashboard Url -> thingspin 알람 Url
+            .replace("/d/", "/thingspin/alarm/edit/"); // convert dashboard Url -> thingspin 알람 Url
           const currentPath = getState().location.path;
 
           if (dashboardUrl !== currentPath) {
