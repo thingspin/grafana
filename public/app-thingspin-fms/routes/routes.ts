@@ -137,7 +137,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
       component: () => TsAlarmSettingComponent,
     },
   })
-  .when('/thingspin/alarm/:uid/:slug', {
+  .when('/thingspin/alarm/edit/:uid/:slug', {
     template: '<react-container />',
     pageClass: 'page-dashboard',
     routeInfo: DashboardRouteInfo.Normal,
