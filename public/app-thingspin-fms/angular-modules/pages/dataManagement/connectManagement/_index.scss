@@ -141,7 +141,7 @@ ts-connect-management {
 }
 
 .ts-connect-table-container {
-  margin-top: 44.6px;
+  margin-top: 20px;
   color: #1e1e1e;
 
   button {
@@ -164,20 +164,26 @@ ts-connect-management {
   }
 
   .connect-table-body {
-    width: 100%;
-    margin-top: -24px;
+    max-width: 100%;
+    overflow-x:scroll;
+    white-space: nowrap;
 
     table {
       border-collapse: separate;
       border-spacing: 0 12px;
       width: 100%;
-      table-layout: fixed;
+      overflow-x: auto;
+      min-width: 1316px;
 
       thead {
-        height: 0px;
+        height: 10px;
         padding: 0px;
         margin: 0px;
-        display: contents;
+        display: inline-block;
+      }
+
+      tbody {
+        overflow-x: auto;
       }
 
       tr {
@@ -189,13 +195,12 @@ ts-connect-management {
       th {
         padding: 0px;
         margin: 0px;
-        height: 0px;
+        height: 10px;
       }
 
       td {
         height: 74px;
         border: solid 0px #000;
-        // padding: 12px;
         padding: 0px;
 
         color: rgba(#1e1e1e, 0.8);
@@ -261,23 +266,62 @@ ts-connect-management {
 
         .opcua-enable {
           width: 4px;
-          background-color: #fb8002;
+          display: inline-table;
+          background-color: $OPCUA_COLOR;;
         }
 
         .modbus-enable {
           width: 4px;
-          background-color: #8e24aa;
+          display: inline-table;
+          background-color: $MODBUS_COLOR;
         }
 
         .mqtt-enable {
           width: 4px;
-          background-color: #00897b;
+          display: inline-table;
+          background-color: $MQTT_COLOR;
         }
 
         .disable {
           width: 4px;
-          background-color: #1e1e1e;
+          display: inline-table;
+          background-color: $DISABLE_COLOR;
           opacity: 0.8;
+        }
+
+        .second-type-image-width {
+          width: 54px;
+          display: inline-table;
+          height: 100%;
+          margin-left: 12px;
+        }
+
+        .three-title-width {
+          width: 29.63%;
+          display: inline-table;
+          height: 100%;
+        }
+
+        .four-iconlist-width {
+          max-width: 40.9%;
+          display: inline-table;
+          height: 100%;
+          min-width:538px;
+        }
+
+        .five-setting-width {
+          max-width: 10.1%;
+          display: inline-table;
+          height: 100%;
+          min-width: 124px;
+        }
+
+        .six-publish-operation {
+          max-width: 3%;
+          display: inline-table;
+          height: 100%;
+          margin-left: 8.66%;
+          min-width: 95px;
         }
 
         .connect {
@@ -285,36 +329,38 @@ ts-connect-management {
         }
       }
 
-      .ts-table-header {
-        padding: 0px;
-        margin: 0px;
-        height: 0px;
+      // .ts-table-header {
+      //   padding: 0px;
+      //   margin: 0px;
+      //   height: 0px;
+      //   display: block;
 
-        .first-line-width {
-          width: 4px;
-        }
+      //   .first-line-width {
+      //     width: 4px;
+      //   }
 
-        .second-type-image-width {
-          width: 54px;
-          margin-left: 12px;
-        }
+      //   .second-type-image-width {
+      //     width: 54px;
+      //     margin-left: 12px;
+      //   }
 
-        .three-title-width {
-          width: 29.63%;
-        }
+      //   .three-title-width {
+      //     width: 29.63%;
+      //   }
 
-        .four-iconlist-width {
-          width: 30.1%;
-        }
+      //   .four-iconlist-width {
+      //     width: 40.9%;
+      //   }
 
-        .five-setting-width {
-          width: 9.1%;
-        }
+      //   .five-setting-width {
+      //     width: 10.1%;
+      //   }
 
-        .six-publish-operation {
-          width: 3%;
-        }
-      }
+      //   .six-publish-operation {
+      //     width: 3%;
+      //     margin-left: 8.66%;
+      //   }
+      // }
     }
   }
 
@@ -415,13 +461,13 @@ ts-connect-management {
 
 .status-line {
   border-left: 1px solid #ecebeb;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.16);
-  margin-left: 47px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+  margin-left: 71px;
 }
 
 .status-line-no-margin {
   border-left: 1px solid #ecebeb;
-  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.16);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
 }
 
 .publish-operation-margin {
@@ -487,7 +533,7 @@ ts-connect-management {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgb(164,164,164);
+  background-color: rgb(164, 164, 164);
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -499,7 +545,7 @@ ts-connect-management {
   width: 20px;
   left: -3px;
   bottom: -3px;
-  background-color: rgb(57,57,57);
+  background-color: rgb(57, 57, 57);
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -512,7 +558,7 @@ ts-connect-management {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgb(164,164,164);
+  background-color: rgb(164, 164, 164);
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -524,10 +570,11 @@ ts-connect-management {
   width: 20px;
   left: -3px;
   bottom: -3px;
-  background-color: rgb(57,57,57);
+  background-color: rgb(57, 57, 57);
   -webkit-transition: .4s;
   transition: .4s;
 }
+
 /* The slider */
 .slider-modbus {
   position: absolute;
@@ -536,7 +583,7 @@ ts-connect-management {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgb(164,164,164);
+  background-color: rgb(164, 164, 164);
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -548,43 +595,50 @@ ts-connect-management {
   width: 20px;
   left: -3px;
   bottom: -3px;
-  background-color: rgb(57,57,57);
+  background-color: rgb(57, 57, 57);
   -webkit-transition: .4s;
   transition: .4s;
 }
 
-input:checked + .slider-opcua {
-  background-color: rgb(252,193,136);
-}
-input:focus + .slider-opcua {
-  box-shadow: 0 0 1px rgb(252,193,136);
-}
-input:checked + .slider-mqtt {
-  background-color: rgb(137,198,191);
-}
-input:focus + .slider-mqtt {
-  box-shadow: 0 0 1px rgb(137,198,191);
-}
-input:checked + .slider-modbus {
-  background-color: rgb(198,147,212);
-}
-input:focus + .slider-modbus {
-  box-shadow: 0 0 1px rgb(198,147,212);
+input:checked+.slider-opcua {
+  background-color: rgb(252, 193, 136);
 }
 
-input:checked + .slider-opcua:before {
+input:focus+.slider-opcua {
+  box-shadow: 0 0 1px rgb(252, 193, 136);
+}
+
+input:checked+.slider-mqtt {
+  background-color: rgb(137, 198, 191);
+}
+
+input:focus+.slider-mqtt {
+  box-shadow: 0 0 1px rgb(137, 198, 191);
+}
+
+input:checked+.slider-modbus {
+  background-color: rgb(198, 147, 212);
+}
+
+input:focus+.slider-modbus {
+  box-shadow: 0 0 1px rgb(198, 147, 212);
+}
+
+input:checked+.slider-opcua:before {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(18px);
   transform: translateX(18px);
   background-color: $OPCUA_COLOR
 }
-input:checked + .slider-mqtt:before {
+
+input:checked+.slider-mqtt:before {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(18px);
   transform: translateX(18px);
   background-color: $MQTT_COLOR
 }
-input:checked + .slider-modbus:before {
+
+input:checked+.slider-modbus:before {
   -webkit-transform: translateX(18px);
   -ms-transform: translateX(18px);
   transform: translateX(18px);
@@ -599,6 +653,7 @@ input:checked + .slider-modbus:before {
 .slider-opcua.round:before {
   border-radius: 50%;
 }
+
 /* Rounded sliders */
 .slider-mqtt.round {
   border-radius: 34px;
@@ -607,6 +662,7 @@ input:checked + .slider-modbus:before {
 .slider-mqtt.round:before {
   border-radius: 50%;
 }
+
 /* Rounded sliders */
 .slider-modbus.round {
   border-radius: 34px;

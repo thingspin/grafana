@@ -28,7 +28,7 @@
 
       <div class="connect-table-body">
         <table>
-          <thead>
+          <!-- <thead>
             <tr class="ts-table-header">
               <th class="first-line-width"></th>
               <th class="second-type-image-width"></th>
@@ -37,7 +37,7 @@
               <th class="five-setting-width"></th>
               <th class="six-publish-operation"></th>
             </tr>
-          </thead>
+          </thead> -->
 
           <tbody>
             <tr class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
@@ -49,7 +49,7 @@
               </td>
               <td ng-if="!item.enable" class="disable">
               </td>
-              <td>
+              <td class="second-type-image-width">
                 <div class="type-image">
                   <div ng-if="item.type === 'opcua'">
                     <div ng-if="item.enable">
@@ -77,7 +77,7 @@
                   </div>
                 </div>
               </td>
-              <td>
+              <td class="three-title-width">
                 <div class="row title-padding">
                   <div ng-if="item.type === 'opcua'" class="main-title-font">
                     <div ng-if="item.enable" class="main-title-opcua-color">
@@ -111,7 +111,7 @@
                   </div>
                 </div>
               </td>
-              <td>
+              <td class="four-iconlist-width">
                 <div style="display:flex">
                   <div class="status-width">
                     <div class="row icon-title-font">
@@ -219,36 +219,38 @@
                   </div>
                   <div class="status-line"></div>
                   <div class="status-width-middle">
-                    <div class="row icon-title-font">
-                      동작상태
+                    <div class="row">
+                      <div class="row icon-title-font">
+                        동작상태
+                      </div>
                     </div>
-                    <button class="status-icon-btn" ng-if="!ctrl.list[$index].enable"
-                      ng-click="ctrl.asyncRun(item.id, true)">
-                      <i class="tsi icon-ts-play_circle_filled"></i>
-                    </button>
-                    <button ng-if="item.type === 'opcua' && ctrl.list[$index].enable" class="status-icon-btn-opcua"
-                      ng-click="ctrl.asyncRun(item.id, false)">
-                      <i class="fa tsi icon-ts-pause_circle_filled"></i>
-                    </button>
-                    <button ng-if="item.type === 'mqtt' && ctrl.list[$index].enable" class="status-icon-btn-mqtt"
-                      ng-click="ctrl.asyncRun(item.id, false)">
-                      <i class="fa tsi icon-ts-pause_circle_filled"></i>
-                    </button>
-                    <button ng-if="item.type === 'modbus' && ctrl.list[$index].enable" class="status-icon-btn-modbus"
-                      ng-click="ctrl.asyncRun(item.id, false)">
-                      <i class="fa tsi icon-ts-pause_circle_filled"></i>
-                    </button>
+                    <div class="row">
+                      <button class="status-icon-btn" ng-if="!ctrl.list[$index].enable"
+                        ng-click="ctrl.asyncRun(item.id, true)">
+                        <i class="tsi icon-ts-play_circle_filled"></i>
+                      </button>
+                      <button ng-if="item.type === 'opcua' && ctrl.list[$index].enable" class="status-icon-btn-opcua"
+                        ng-click="ctrl.asyncRun(item.id, false)">
+                        <i class="fa tsi icon-ts-pause_circle_filled"></i>
+                      </button>
+                      <button ng-if="item.type === 'mqtt' && ctrl.list[$index].enable" class="status-icon-btn-mqtt"
+                        ng-click="ctrl.asyncRun(item.id, false)">
+                        <i class="fa tsi icon-ts-pause_circle_filled"></i>
+                      </button>
+                      <button ng-if="item.type === 'modbus' && ctrl.list[$index].enable" class="status-icon-btn-modbus"
+                        ng-click="ctrl.asyncRun(item.id, false)">
+                        <i class="fa tsi icon-ts-pause_circle_filled"></i>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </td>
-              <td>
+              <td class="five-setting-width">
                 <div style="display:flex">
                   <div class="status-line-no-margin"></div>
                   <div class="setting-width">
-                    <div class="row">
-                      <div class="row icon-title-font setting-margin-left">
-                        설정
-                      </div>
+                    <div class="row icon-title-font setting-margin-left">
+                      설정
                     </div>
                     <div class="row">
                       <button class="setting-icon-btn setting-margin-left-icon"
@@ -266,7 +268,7 @@
                   </div>
                 </div>
               </td>
-              <td>
+              <td class="six-publish-operation">
                 <div class="row icon-title-font">
                   발행동작
                 </div>
