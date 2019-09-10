@@ -7,13 +7,25 @@
       <div class="gf-form-group">
         <div class="gf-form-inline">
           <div class="gf-form">
-            <span class="gf-form-label width-6">이름</span>
+            <span class="gf-form-label width-10">이름</span>
             <input type="text" class="gf-form-input width-20" ng-model="ctrl.alert.name" placeholder="신규 알람 이름을 입력해주세요.">
           </div>
         </div>
+        <div class="gf-form max-width-16" ng-if="ctrl.conditionModels.length">
+            <span class="gf-form-label width-10">조건 검사 주기</span>
+            <input class="gf-form-input max-width-6" type="text" ng-model="ctrl.alert.frequency">
+            <info-popover mode="right-absolute">
+                <p>알람 조건을 주기적으로 검사를 수행할 주기를 설정합니다.</p>
+                <p>알람을 발생하는 주기는 숫자 + 기간의 조합으로 구성할 수 있습니다.</p>
+                <p>예를들어, 1분 단위로 알람을 검사하고자 하는 경우 1m(1Minute)을 입력하면 1분마다 알람을 검사를 수행합니다.</p>
+                <p>기간은 s(Second), m(Minute), h(hour)가 있습니다.</p>
+            </info-popover>
+          </div>
       </div>
 
-      <div class="gf-form-group">
+      <div class="gf-form-group" ng-if="ctrl.conditionModels.length">
+        <h4 class="section-heading">조건</h4>
+
         <div class="gf-form-inline" ng-repeat="conditionModel in ctrl.conditionModels">
 
           <!-- WHEN / operator -->
@@ -21,7 +33,6 @@
             <metric-segment-model css-class="query-keyword width-4" ng-if="$index"
               property="conditionModel.operator.type" options="ctrl.evalOperators" custom="false">
             </metric-segment-model>
-            <span class="gf-form-label width-4 query-keyword" ng-if="$index === 0">조건</span>
           </div>
 
           <!-- Query(From / To) -->
@@ -42,7 +53,7 @@
 
           <!-- evaluator -->
           <div class="gf-form">
-            <span class="gf-form-label query-keyword">조건</span>
+            <span class="gf-form-label query-keyword">비교</span>
 
             <input class="gf-form-input max-width-9" type="number" step="any"
               ng-hide="conditionModel.evaluator.params.length === 0" ng-model="conditionModel.evaluator.params[0]"
@@ -68,7 +79,7 @@
         </div>
 
         <!-- add condition button -->
-        <div class="gf-form" ng-if="ctrl.conditionModels.length">
+        <div class="gf-form">
           <label class="gf-form-label dropdown">
             <a class="pointer dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-plus"></i>
@@ -107,6 +118,55 @@
         <span class="gf-form-label width-8">내용</span>
         <textarea class="gf-form-input" rows="10" ng-model="ctrl.alert.message"
           placeholder="Notification message details..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-options-group">
+    <div class="panel-options-group__header">고급 설정</div>
+    <div class="panel-options-group__body">
+      
+      <div class="gf-form-group">
+        <div class="gf-form max-width-16">
+          <label class="gf-form-label width-10">경고 발생 시 검사 주기</label>
+          <input type="text" class="gf-form-input max-width-6 gf-form-input--has-help-icon" ng-model="ctrl.alert.for"
+                spellcheck='false' placeholder="5m">
+          <info-popover mode="right-absolute">
+            <p>'알람 조건'에 '경고 검사 주기'가 설정 된 경우 계산 값이 위반하면 상태 'OK'에서 'Pending'으로 변경됩니다.</p>
+            <p>단, 'OK'에서 'Pending'으로 변경되면 ThingSPIN은 알람 메세지를 발생하지 않습니다.</p>
+            <p>'Pending'상태에서 '알람 조건'이 '경고 검사 주기'가 설정 시간보다 오랫동안 계산 값이 위반되면 'Error'로 상태를 변경하고 알람 메세지를 발생합니다.</p>
+          </info-popover>
+        </div>
+      </div>
+
+      <div class="gf-form-group">
+        <h4 class="section-heading">빈 값 & 에러 상태 정의</h4>
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <span class="gf-form-label width-15">통합 계산 값이 빈 값인 경우</span>
+          </div>
+          <div class="gf-form">
+            <span class="gf-form-label query-keyword">상태 설정</span>
+            <div class="gf-form-select-wrapper">
+              <select class="gf-form-input" ng-model="ctrl.alert.noDataState"
+                                            ng-options="f.value as f.text for f in ctrl.noDataModes">
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="gf-form-inline">
+          <div class="gf-form">
+            <span class="gf-form-label width-15">실행 오류 또는 시간 초과 인 경우</span>
+          </div>
+          <div class="gf-form">
+            <span class="gf-form-label query-keyword">상태 설정</span>
+            <div class="gf-form-select-wrapper">
+              <select class="gf-form-input" ng-model="ctrl.alert.executionErrorState"
+                                            ng-options="f.value as f.text for f in ctrl.executionErrorModes">
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
