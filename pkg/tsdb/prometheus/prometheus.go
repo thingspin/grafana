@@ -113,8 +113,8 @@ func (e *PrometheusExecutor) Query(ctx context.Context, dsInfo *models.DataSourc
 		defer span.Finish()
 
 		// thingspin add code -----
-		// value, err := client.QueryRange(ctx, query.Expr, timeRange)
-		value, _, err := client.QueryRange(ctx, query.Expr, timeRange)
+		value, err := client.QueryRange(ctx, query.Expr, timeRange)
+		// value, _, err := client.QueryRange(ctx, query.Expr, timeRange)
 		// thingspin add code -----
 
 		if err != nil {
