@@ -63,11 +63,11 @@ export class TsAlertTabCtrl extends AlertTabCtrl implements angular.IController 
   }
 
   // Override
-  buildDefaultCondition(label = 'A', from = '5m') {
+  buildDefaultCondition(label = 'A', from = '5s') {
     return {
       type: 'query',
       query: { params: [label, from, 'now'] },
-      reducer: { type: 'avg', params: [] as any[] },
+      reducer: { type: 'last', params: [] as any[] },
       evaluator: { type: 'gt', params: [null] as any[] },
       operator: { type: 'or' },
     };

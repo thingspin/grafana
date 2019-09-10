@@ -23,7 +23,7 @@
           </div>
       </div>
 
-      <div class="gf-form-group">
+      <div class="gf-form-group" ng-if="ctrl.conditionModels.length">
         <h4 class="section-heading">조건</h4>
 
         <div class="gf-form-inline" ng-repeat="conditionModel in ctrl.conditionModels">
@@ -79,7 +79,7 @@
         </div>
 
         <!-- add condition button -->
-        <div class="gf-form" ng-if="ctrl.conditionModels.length">
+        <div class="gf-form">
           <label class="gf-form-label dropdown">
             <a class="pointer dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-plus"></i>
