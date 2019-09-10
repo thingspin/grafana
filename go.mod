@@ -38,6 +38,7 @@ require (
 	github.com/hashicorp/go-plugin v0.0.0-20190220160451-3f118e8ee104
 	github.com/hashicorp/go-version v1.1.0
 	github.com/inconshreveable/log15 v0.0.0-20180818164646-67afb5ed74ec
+	github.com/influxdata/influxdb1-client v0.0.0-20190809212627-fc22c7df067e
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 	github.com/jonboulle/clockwork v0.1.0 // indirect
 	github.com/jung-kurt/gofpdf v1.10.1
@@ -70,7 +71,7 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect
 	go.uber.org/atomic v1.3.2 // indirect
-	golang.org/x/net v0.0.0-20190613194153-d28f0bde5980
+	golang.org/x/net v0.0.0-20190724013045-ca1201d0de80
 	golang.org/x/oauth2 v0.0.0-20190319182350-c85d3e98c914
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58
 	golang.org/x/xerrors v0.0.0-20190410155217-1f06c39b4373

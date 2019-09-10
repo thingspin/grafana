@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	u "github.com/Unknwon/com"
+	u "github.com/unknwon/com"
 	. "github.com/grafana/grafana/pkg/models"
 	. "github.com/grafana/grafana/pkg/util"
 )
