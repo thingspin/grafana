@@ -237,6 +237,7 @@
 .ts-noti-body {
     margin-top: 40px;
     margin-left: 20px;
+    margin-right: 20px;
     .ts-noti-button {
         display: flex;
         float: right;
@@ -265,14 +266,41 @@
 }
 
 .ts-noti-form-area {
-    width: 1316px;
+    width: 100%;
     height: 385px;
+    margin-bottom: 16px;
     border-radius: 4px;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
     background-color: #ffffff;
 
-    .ts-noti-from-group{
-        padding-left: 36px;
+    .ts-noti-from-group {
+        label{
+            margin-bottom: 16px;
+        }
+        .gf-form{
+            margin-bottom: 16px;
+        }
+        .gf-form-group{
+            margin-left: 32px;
+            margin-bottom: 0px;
+        }
+        .gf-form-label{
+            background-color:white;
+            border: none;
+        }
+        .gf-form-switch{
+            border: none;
+        }
+    
+        input:checked + .gf-form-switch__slider {
+            border-radius: 20px;
+            background: rgba(0, 57, 255, 0.4);
+        }
+        
+        input:checked + .gf-form-switch__slider::before {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.21);
+            background: rgba(0, 57, 255, 1);  
+        }
     }
     .ts-noti-newchannel-title {
         padding-top: 20px;
@@ -293,6 +321,15 @@
     .ts-noti-form-email-area {
         margin-top: 16px
     }
+    .ts-noti-divider {
+        border-top: 1px solid rgba(0, 0, 0, 0.16);
+        width: 97%;
+    
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-bottom: 16px;
+        margin-top: 0px;
+    }
 }
 
 .ts-noti-switch{
@@ -308,20 +345,6 @@
     background-color: #ffffff;
 }
 
-.gf-form-switch__slider {
-    //background: black!important;
-}
-
-input:checked + .gf-form-switch__slider {
-    border-radius: 20px;
-    background: rgba(0, 57, 255, 0.4)!important;
-}
-
-input:checked + .gf-form-switch__slider::before {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.21);
-    background: rgba(0, 57, 255, 1)!important;  
-}
-
 .ts-noti-form-email-area{
     margin-top:16px;
     width: 1316px;
@@ -332,11 +355,49 @@ input:checked + .gf-form-switch__slider::before {
 }
 
 .ts-noti-form-email-form-area{
+    width: 100%;
+    height: 385px;
+    padding-top: 16px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    .ts-noti-newchannel-title {
+        padding-top: 20px;
+        padding-bottom: 16px;
+        padding-left: 16px;
+        //width: 160px;
+        //height: 16px;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.14;
+        letter-spacing: normal;
+        text-align: left;
+        color: #0039ff;
+    }
     textarea{
-        width: 649px!important;
-        height: 200px!important;
+        width: 649px;
+        height: 200px;
+        margin-left: 36px;
         //opacity: 0.07;
         border-radius: 4px;
-        background-color: rgba(30, 30, 30, 0.07)!important
+        background-color: rgba(30, 30, 30, 0.07)
+    }
+    .ts-noti-annotaion{
+        padding-left: 36px;
+    }
+    .ts-noti-divider {
+        border-top: 1px solid rgba(0, 0, 0, 0.16);
+        width: 97%;
+    
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-bottom: 16px;
+        margin-top: 16px;
     }
 }
+
+
+

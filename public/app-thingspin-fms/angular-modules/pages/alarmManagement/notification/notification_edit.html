@@ -19,8 +19,9 @@
   
 
   <div class = "ts-noti-form-area">
-      <div class="ts-noti-newchannel-title" ng-hide="ctrl.isNew">Edit Notification Channel</div>
-      <div class="ts-noti-newchannel-title" ng-show="ctrl.isNew">New Notification Channel</div>
+      <div class="ts-noti-newchannel-title" ng-hide="ctrl.isNew">채널 수정</div>
+      <div class="ts-noti-newchannel-title" ng-show="ctrl.isNew">새채널</div>
+      <div class="ts-noti-divider"></div>
     <form class = "ts-noti-from-group" name="ctrl.theForm" ng-if="ctrl.notifiers">
         <div class="gf-form-group">
             <div class="gf-form">
@@ -83,10 +84,16 @@
   </div>
 
 
-  <div class="ts-noti-form-email-area">
-    <form class="" name="ctrl.theForm" ng-if="ctrl.notifiers">
-      <div class="ts-noti-form-email-form-area gf-form-group" ng-include src="ctrl.notifierTemplateId">
+  <div class="ts-noti-form-email-form-area">
+      <span class="ts-noti-newchannel-title">Email addresses</span>
+      <div class="ts-noti-divider"></div>
+      <div class="gf-form">
+         <textarea rows="7" class="gf-form-input width-27 ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" ng-model="ctrl.model.settings.addresses"></textarea>
       </div>
-    </form>
+      <div class="gf-form">
+      <span class="ts-noti-annotaion">You can enter multiple email addresses using a ";" separator</span>
+      </div>
   </div>
 </div>
+
+
