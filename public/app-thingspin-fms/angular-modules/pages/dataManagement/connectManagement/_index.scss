@@ -33,6 +33,7 @@ ts-connect-management {
   .ts-connect {
     width: 100%;
     height: 100%;
+
   }
 
   .tabulator-cell {
@@ -44,6 +45,11 @@ ts-connect-management {
     font-size: 12px;
     line-height: 1.17;
     font-weight: bold;
+  }
+
+  .ts-connect-down-container {
+    padding: 36px 16px 0px 16px;
+    background-color: #f5f5f5;
   }
 
 }
@@ -143,6 +149,8 @@ ts-connect-management {
 .ts-connect-table-container {
   margin-top: 20px;
   color: #1e1e1e;
+  background-color: #f5f5f5;
+  height: 100%;
 
   button {
     border: 0;
@@ -158,13 +166,13 @@ ts-connect-management {
 
     .connect-table-select {
       width: 100%;
-
+      background-color: #f5f5f5;
       border: 0;
     }
   }
 
   .connect-table-body {
-    max-width: 100%;
+    max-width: 99.6%;
     overflow-x:scroll;
     white-space: nowrap;
 
@@ -190,6 +198,7 @@ ts-connect-management {
         &:first {
           margin-left: 16px;
         }
+        background-color: #f5f5f5;
       }
 
       th {
@@ -252,6 +261,11 @@ ts-connect-management {
         border-bottom-left-radius: 4px;
       }
 
+      td:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+
       tr:first-child {
         border-top-style: solid;
       }
@@ -260,68 +274,87 @@ ts-connect-management {
         border-left-style: solid;
       }
 
+      tr:last-child {
+        border-top-style: solid;
+      }
+
+      tr:last-child {
+        border-right-style: solid;
+      }
+
       .ts-table-row {
-        background-color: #ffffff;
+        background-color: #f5f5f5;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
 
         .opcua-enable {
           width: 4px;
-          display: inline-table;
+          height: 74px;
+          display: table-cell;
           background-color: $OPCUA_COLOR;;
         }
 
         .modbus-enable {
           width: 4px;
-          display: inline-table;
+          height: 74px;
+          display: table-cell;
           background-color: $MODBUS_COLOR;
         }
 
         .mqtt-enable {
           width: 4px;
-          display: inline-table;
+          height: 74px;
+          display: table-cell;
           background-color: $MQTT_COLOR;
         }
 
         .disable {
           width: 4px;
-          display: inline-table;
+          height: 74px;
+          display: table-cell;
           background-color: $DISABLE_COLOR;
           opacity: 0.8;
         }
 
         .second-type-image-width {
           width: 54px;
-          display: inline-table;
-          height: 100%;
+          display: table-cell;
+          height: 74px;
           margin-left: 12px;
+          background-color: #ffffff;
         }
 
         .three-title-width {
           width: 29.63%;
-          display: inline-table;
-          height: 100%;
+          display: table-cell;
+          height: 74px;
+          background-color: #ffffff;
         }
 
         .four-iconlist-width {
           max-width: 40.9%;
-          display: inline-table;
-          height: 100%;
+          display: table-cell;
+          height: 74px;
           min-width:538px;
+          background-color: #ffffff;
         }
 
         .five-setting-width {
           max-width: 10.1%;
-          display: inline-table;
-          height: 100%;
+          display: table-cell;
+          height: 74px;
           min-width: 124px;
+          background-color: #ffffff;
         }
 
         .six-publish-operation {
-          max-width: 3%;
-          display: inline-table;
-          height: 100%;
-          margin-left: 8.66%;
+          // max-width: 3%;
+          display: table-cell;
+          height: 74px;
+          padding-left: 2.6%;
+          // float: right;
+          // padding-right: 60px;
           min-width: 95px;
+          background-color: #ffffff;
         }
 
         .connect {
@@ -471,7 +504,7 @@ ts-connect-management {
 }
 
 .publish-operation-margin {
-  margin-top: 9px;
+  margin-top: 16px;
 }
 
 .icon-title-font {
@@ -506,7 +539,7 @@ ts-connect-management {
 .setting-icon-btn {
   width: 28px;
   height: 28px;
-  padding: 4px;
+  margin-top: 5px;
   font-size: 20px;
 }
 
@@ -516,6 +549,7 @@ ts-connect-management {
   display: inline-block;
   width: 34px;
   height: 14px;
+  margin-top: -4px;
 }
 
 /* Hide default HTML checkbox */
