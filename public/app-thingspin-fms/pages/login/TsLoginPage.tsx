@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 // Grafana Libs
-import LoginCtrl from 'app/core/components/Login/LoginCtrl';
+import TsLogin from 'app-thingspin-fms/pages/login/TsLogin';
 import { LoginServiceButtons } from 'app/core/components/Login/LoginServiceButtons';
 import { ChangePassword } from 'app/core/components/Login/ChangePassword';
 
@@ -18,7 +18,7 @@ export const TsLoginPage: FC = () => (
       <div className="login-branding">
         <img className="logo-icon" src="public/img/thingspin/thingspin_icon.svg" alt="ThingSPIN" />
       </div>
-      <LoginCtrl>
+      <TsLogin>
         {({
           loginHint,
           passwordHint,
@@ -75,7 +75,7 @@ export const TsLoginPage: FC = () => (
             </CSSTransition>
           </div>
         )}
-      </LoginCtrl>
+      </TsLogin>
 
       <div className="clearfix" />
     </div>
