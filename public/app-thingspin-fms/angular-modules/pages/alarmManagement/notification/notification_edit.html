@@ -25,11 +25,11 @@
     <form class = "ts-noti-from-group" name="ctrl.theForm" ng-if="ctrl.notifiers">
         <div class="gf-form-group">
             <div class="gf-form">
-              <span class="gf-form-label width-4 ts-noti-form-title">Name</span>
+              <span class="gf-form-label width-4 ts-noti-form-title">이름</span>
               <input type="text" required class="gf-form-input max-width-16 ts-noti-select" ng-model="ctrl.model.name" required></input>
             </div>
             <div class="gf-form">
-              <span class="gf-form-label width-4 ts-noti-form-title">Type</span>
+              <span class="gf-form-label width-4 ts-noti-form-title">종류</span>
               <div class="gf-form-select-wrapper width-16">
                 <select class="gf-form-input ts-noti-select" ng-model="ctrl.model.type" ng-options="t.type as t.name for t in ctrl.notifiers" ng-change="ctrl.typeChanged(notification, $index)">
                 </select>
@@ -37,29 +37,29 @@
             </div>
             <gf-form-switch
                 class="ts-noti-switch"
-                label="Default (send on all alerts)"
-                label-class="width-14"
+                label="모든 알람 발생시 발송"
+                label-class=""
                 checked="ctrl.model.isDefault"
                 tooltip="Use this notification for all alerts">
             </gf-form-switch>
             <gf-form-switch
                 class="ts-noti-switch"
-                label="Include image"
-                label-class="width-14"
+                label="이미지 포함"
+                label-class=""
                 checked="ctrl.model.settings.uploadImage"
                 tooltip="Captures an image and include it in the notification">
             </gf-form-switch>
             <gf-form-switch
                 class=""
-                label="Disable Resolve Message"
-                label-class="width-14"
+                label="Resolve 메시지 비활성"
+                label-class=""
                 checked="ctrl.model.disableResolveMessage"
                 tooltip="Disable the resolve message [OK] that is sent when alerting state returns to false">
             </gf-form-switch>
             <gf-form-switch
                 class=""
-                label="Send reminders"
-                label-class="width-14"
+                label="reminders 발송"
+                label-class=""
                 checked="ctrl.model.sendReminder"
                 tooltip="Send additional notifications for triggered alerts">
             </gf-form-switch>
@@ -85,13 +85,13 @@
 
 
   <div class="ts-noti-form-email-form-area">
-      <span class="ts-noti-newchannel-title">Email addresses</span>
+      <span class="ts-noti-newchannel-title">이메일 주소</span>
       <div class="ts-noti-divider"></div>
       <div class="gf-form">
          <textarea rows="7" class="gf-form-input width-27 ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" required="" ng-model="ctrl.model.settings.addresses"></textarea>
       </div>
       <div class="gf-form">
-      <span class="ts-noti-annotaion">You can enter multiple email addresses using a ";" separator</span>
+      <span class="ts-noti-annotaion">";"를 사용하여 여러개의 이메일 주소를 입력할 수 있습니다.</span>
       </div>
   </div>
 </div>
