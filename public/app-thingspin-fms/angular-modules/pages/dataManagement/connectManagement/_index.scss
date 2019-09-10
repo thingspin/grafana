@@ -48,7 +48,7 @@ ts-connect-management {
   }
 
   .ts-connect-down-container {
-    padding: 36px 16px 0px 16px;
+    padding: 0px 16px 0px 16px;
     background-color: #f5f5f5;
   }
 
@@ -112,7 +112,7 @@ ts-connect-management {
 }
 
 .ts-connect-container {
-  padding: 36px 16px 0px 16px;
+  padding: 24px 16px 20px 16px;
   background-color: #ffffff;
 }
 
@@ -127,7 +127,7 @@ ts-connect-management {
   .ts-connect-title {
     margin-left: 8px;
 
-    color: #1976d2;
+    color: #0039ff;
     display: flex;
     align-items: center;
 
@@ -147,7 +147,7 @@ ts-connect-management {
 }
 
 .ts-connect-table-container {
-  margin-top: 20px;
+  // margin-top: 20px;
   color: #1e1e1e;
   background-color: #f5f5f5;
   height: 100%;
@@ -706,6 +706,92 @@ input:checked+.slider-modbus:before {
   border-radius: 50%;
 }
 
+.ts-connect-card-container {
+  margin-top: 18px;
+  display: flex;
+
+  .card-info-layout {
+    width: 428px;
+    height: 156px;
+    border-radius: 4px;
+    border: solid 1px #dcdbdc;
+    display: flex;
+    text-align: center;
+
+    &.right-card {
+      margin-left: 16px;
+      text-align: center;
+    }
+  
+    .text-area {
+      width: 50%;
+      height: 100%;
+
+      .title-line {
+        width: 1px;
+        height: 12px;
+        background-color: #0039ff;
+        margin-left: 20px;
+        margin-top: 20px;
+        display: inline-block;
+      }
+
+      .card-title {
+        font-family: Roboto;
+        font-size: 12px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.17;
+        letter-spacing: normal;
+        text-align: left;
+        color: #565656;
+        display: inline-block;
+        padding-left: 4px;
+        margin-top: 20px
+      }
+
+      .card-main-area {
+        display: inline-block;
+        padding-top: 25px;
+      }
+
+      .card-content-main {
+        display:inline-block;
+        opacity: 0.8;
+        font-family: Roboto;
+        font-size: 56px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.18;
+        letter-spacing: normal;
+        text-align: left;
+        color: #0039ff;
+      }
+
+      .card-content-sub {
+        display:inline-block;
+        opacity: 0.8;
+        font-family: Roboto;
+        font-size: 17px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.18;
+        letter-spacing: normal;
+        text-align: left;
+        color: #1e1e1e;
+      }
+    }
+    
+    .graph-area {
+      width: 50%;
+      height: 100%;
+      background-color: #fafafa;
+    }
+  }  
+}
 
 // .ts-connect-type {
 //     font-size: 14px;
