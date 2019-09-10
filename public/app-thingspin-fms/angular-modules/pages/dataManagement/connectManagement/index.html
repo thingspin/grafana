@@ -15,7 +15,8 @@
       </div>
     </div>
     <!-- table -->
-
+  </div>
+  <div class="ts-connect-down-container">
     <div class="ts-connect-table-container">
       <div class="connect-table-header">
         <span>페이지당 행수 : </span>
@@ -273,12 +274,14 @@
                   발행동작
                 </div>
                 <div class="row publish-operation-margin">
-                  <label class="switch">
-                    <input type="checkbox" ng-model="item.publish" ng-change="ctrl.updatePublish(item)">
-                    <span ng-if="item.type === 'opcua'" class="slider-opcua round"></span>
-                    <span ng-if="item.type === 'mqtt'" class="slider-mqtt round"></span>
-                    <span ng-if="item.type === 'modbus'" class="slider-modbus round"></span>
-                  </label>
+                  <div class="row">
+                    <label class="switch">
+                      <input type="checkbox" ng-model="item.publish" ng-change="ctrl.updatePublish(item)">
+                      <span ng-if="item.type === 'opcua'" class="slider-opcua round"></span>
+                      <span ng-if="item.type === 'mqtt'" class="slider-mqtt round"></span>
+                      <span ng-if="item.type === 'modbus'" class="slider-modbus round"></span>
+                    </label>
+                  </div>
                 </div>
               </td>
             </tr>
