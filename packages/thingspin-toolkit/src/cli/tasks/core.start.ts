@@ -20,8 +20,7 @@ export const startTaskRunner: TaskRunner<StartTaskOptions> = async ({ watchTheme
     },
 
     hot ? {
-      command: 'cross-env NODE_OPTIONS=--max_old_space_size=8192 \
-webpack-dev-server --progress --colors --host 0.0.0.0 --config scripts/webpack/fms/webpack.hot.js',
+      command: 'webpack-dev-server --progress --colors --host 0.0.0.0 --config scripts/webpack/fms/webpack.hot.js',
       name: 'Dev server',
     } : {
       command: `webpack --progress --colors --watch --env.noTsCheck=${noTsCheckArg} --config scripts/webpack/fms/webpack.dev.js`,

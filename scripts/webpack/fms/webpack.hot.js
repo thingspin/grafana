@@ -19,7 +19,7 @@ let fmsHot = merge(common, {
 
   output: {
     path: path.resolve(__dirname, '../../../public/build'),
-    filename: 'fms-[name].[hash].js',
+    filename: '[name].[hash].js',
     publicPath: '/public/build/',
     pathinfo: false,
   },
@@ -68,9 +68,9 @@ let fmsHot = merge(common, {
 const { mode, resolve, devtool, optimization, } = gfHot;
 fmsHot = Object.assign(fmsHot, {
   mode,
-  devtool: false,
+  devtool,
   resolve,
-  optimization,
+  // optimization,
   module: {
     rules: (gfHot.module.rules.concat([{
       test: /\.css$/,  
