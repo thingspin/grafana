@@ -117,13 +117,13 @@ export class AlarmNavComp extends DashNav {
 
                 <div className="navbar-buttons navbar-buttons--actions">
                     {canSave &&  (
-                        <AlarmNavButton tooltip="알람 저장" classSuffix="save" onClick={this.onSave} >
+                        <AlarmNavButton tooltip="신규 알람 생성" classSuffix="save" onClick={this.onSave} >
                             {meta.isNew ? '신규 생성' : '수정'}
                         </AlarmNavButton>
                     )}
 
                     {!meta.isNew &&  (
-                        <AlarmNavButton tooltip="알람 저장" classSuffix="save" onClick={this.deleteDashboard} >
+                        <AlarmNavButton tooltip="알람 삭제" classSuffix="save" onClick={this.deleteDashboard} >
                             삭제
                         </AlarmNavButton>
                     )}
