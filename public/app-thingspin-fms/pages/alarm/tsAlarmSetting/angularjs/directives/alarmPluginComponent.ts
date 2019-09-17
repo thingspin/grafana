@@ -13,22 +13,24 @@ function alarmPluginDirectiveLoader( $compile: any, $q: angular.IQService, $http
     if (component.template) {
       return $q.when(component.template);
     }
+
     const cached = $templateCache.get(component.templateUrl);
     if (cached) {
       return $q.when(cached);
     }
-    return $http.get(component.templateUrl).then((res: any) => {
-      return res.data;
-    });
+
+    return $http.get(component.templateUrl).then(({ data }: any) => data);
   }
 
   function relativeTemplateUrlToAbs(templateUrl: string, baseUrl: string) {
     if (!templateUrl) {
       return undefined;
     }
+
     if (templateUrl.indexOf('public') === 0) {
       return templateUrl;
     }
+
     return baseUrl + '/' + templateUrl;
   }
 
@@ -78,9 +80,7 @@ function alarmPluginDirectiveLoader( $compile: any, $q: angular.IQService, $http
       }
 
       if (PanelCtrl.templatePromise) {
-        return PanelCtrl.templatePromise.then((res: any) => {
-          return componentInfo;
-        });
+        return PanelCtrl.templatePromise.then((res: any) => componentInfo );
       }
 
       if (panelInfo) {
@@ -103,6 +103,7 @@ function alarmPluginDirectiveLoader( $compile: any, $q: angular.IQService, $http
       case 'panel': {
         return loadPanelComponentInfo(scope, attrs);
       }
+
       default: {
         return $q.reject({
           message: 'Could not find component type: ' + attrs.type,
@@ -157,14 +158,14 @@ function alarmPluginDirectiveLoader( $compile: any, $q: angular.IQService, $http
 
   return {
     restrict: 'E',
-    link: (scope: any, elem: JQuery, attrs: any) => {
-      getModule(scope, attrs)
-        .then((componentInfo: any) => {
-          registerPluginComponent(scope, elem, attrs, componentInfo);
-        })
-        .catch((err: any) => {
-          console.log('Plugin component error', err);
-        });
+    link: async (scope: any, elem: JQuery, attrs: any) => {
+      try {
+        const cInfo = await getModule(scope, attrs);
+
+        registerPluginComponent(scope, elem, attrs, cInfo);
+      } catch (err) {
+        console.log('Plugin component error', err);
+      }
     },
   };
 }

@@ -6,7 +6,7 @@ import React, { ReactNode } from "react";
 // Models
 // Views
 import { AlertTab } from 'app/features/alerting/AlertTab';
-import { EditorTabBody } from 'app/features/dashboard/panel_editor/EditorTabBody';
+import { EditorTabBody, EditorToolbarView } from 'app/features/dashboard/panel_editor/EditorTabBody';
 import EmptyListCTA from 'app/core/components/EmptyListCTA/EmptyListCTA';
 // Controllers
 import { getAngularLoader } from '@grafana/runtime';
@@ -58,7 +58,6 @@ export default class AlarmSetting extends AlertTab {
     // update alarm rule
     this.panelCtrl.events.emit("ts-update-alarm", params);
 
-    console.log(params);
     // set FacilityTree in dashboard
     (dashboard as FMDashboardModel).facilityTags = params.Taginfo;
     (dashboard as FMDashboardModel).site = params.siteData;
@@ -69,7 +68,6 @@ export default class AlarmSetting extends AlertTab {
 
   // thingspin add func
   renderFacilityTree(): ReactNode {
-    console.log(this.props.dashboard);
     const { facilityTags, site } = this.props.dashboard as FMDashboardModel;
 
     return <div className="fm-left-tree">
@@ -86,7 +84,7 @@ export default class AlarmSetting extends AlertTab {
   render() {
     const { alert } = this.props.panel;
 
-    const toolbarItems = alert ? [this.stateHistory(), this.testRule(), this.deleteAlert()] : [];
+    const toolbarItems: EditorToolbarView[] = [];
 
     return <>
       {this.renderFacilityTree()}

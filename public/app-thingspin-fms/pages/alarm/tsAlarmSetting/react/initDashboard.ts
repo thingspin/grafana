@@ -228,7 +228,7 @@ function getNewDashboardModelData(urlFolderId?: string): any {
             executionErrorState: "alerting",
             frequency: "1s",
             handler: 1,
-            name: "알람",
+            name: "새 알람",
             noDataState: "no_data",
             notifications: []
           },

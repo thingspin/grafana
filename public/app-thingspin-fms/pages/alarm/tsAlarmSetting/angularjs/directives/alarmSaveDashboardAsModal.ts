@@ -4,27 +4,30 @@ import { SaveDashboardAsModalCtrl } from 'app/features/dashboard/components/Save
 
 // ThingSPIN Cutom Angular Modules
 import { AlarmDashboardSrv } from '../services/tsDashboardSrv';
+import { FMDashboardModel } from 'app-thingspin-fms/pages/FacilityMonitoring/models';
 
 // customize Grafana SaveDashboardAsModalCtrl angular controller
 export class AlarmSaveDashboardAsModalCtrl extends SaveDashboardAsModalCtrl {
-  protected tsDbSrv: AlarmDashboardSrv;
+  protected _dashboardSrv: AlarmDashboardSrv;
 
   /** @ngInject */
   constructor(dashboardSrv: AlarmDashboardSrv) {
     super(dashboardSrv);
-    this.tsDbSrv = dashboardSrv;
+    this._dashboardSrv = dashboardSrv;
   }
 
   // Override
   save(): any {
+    const dashboard: FMDashboardModel = this.clone;
     if (!this.copyTags) {
-      this.clone.tags = [];
+      dashboard.tags = [];
     }
+    dashboard.panels[0].alert.name = dashboard.title;
 
-    return this.tsDbSrv.alarmSave(this.clone,
+    return this._dashboardSrv.alarmSave(dashboard,
       { folderId: this.folderId },
       true,
-      '알람'
+      '알람',
     ).then(this.dismiss);
   }
 }

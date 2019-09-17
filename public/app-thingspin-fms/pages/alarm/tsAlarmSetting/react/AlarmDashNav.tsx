@@ -86,6 +86,7 @@ export class AlarmNavComp extends DashNav {
         const { snapshot, meta: { canStar, canSave, canShare, isStarred } } = dashboard;
         const meta = dashboard.meta as any;
         const snapshotUrl = snapshot && snapshot.originalUrl;
+        const { alert } = dashboard.panels[0];
 
         return (<>
             <div className="navbar">
@@ -116,13 +117,13 @@ export class AlarmNavComp extends DashNav {
                 )}
 
                 <div className="navbar-buttons navbar-buttons--actions">
-                    {canSave &&  (
+                    {canSave && alert && (
                         <AlarmNavButton tooltip="신규 알람 생성" classSuffix="save" onClick={this.onSave} >
                             {meta.isNew ? '신규 생성' : '수정'}
                         </AlarmNavButton>
                     )}
 
-                    {!meta.isNew &&  (
+                    {!meta.isNew && (
                         <AlarmNavButton tooltip="알람 삭제" classSuffix="save" onClick={this.deleteDashboard} >
                             삭제
                         </AlarmNavButton>

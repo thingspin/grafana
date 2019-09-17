@@ -2,16 +2,18 @@
   <div class="alert alert-error m-b-2" ng-show="ctrl.error">
     <i class="fa fa-warning"></i> {{ctrl.error}}
   </div>
-  <div class="panel-options-group">
+  <div class="panel-options-group" ng-if="ctrl.conditionModels.length">
     <div class="panel-options-group__body">
       <div class="gf-form-group">
-        <div class="gf-form-inline">
+        
+        <!-- <div class="gf-form-inline">
           <div class="gf-form">
             <span class="gf-form-label width-10">이름</span>
             <input type="text" class="gf-form-input width-20" ng-model="ctrl.alert.name" placeholder="신규 알람 이름을 입력해주세요.">
           </div>
-        </div>
-        <div class="gf-form max-width-16" ng-if="ctrl.conditionModels.length">
+        </div> -->
+
+        <div class="gf-form max-width-16" >
             <span class="gf-form-label width-10">조건 검사 주기</span>
             <input class="gf-form-input max-width-6" type="text" ng-model="ctrl.alert.frequency">
             <info-popover mode="right-absolute">
@@ -23,7 +25,7 @@
           </div>
       </div>
 
-      <div class="gf-form-group" ng-if="ctrl.conditionModels.length">
+      <div class="gf-form-group">
         <h4 class="section-heading">조건</h4>
 
         <div class="gf-form-inline" ng-repeat="conditionModel in ctrl.conditionModels">
@@ -95,7 +97,7 @@
     </div>
   </div>
 
-  <div class="panel-options-group">
+  <div class="panel-options-group" ng-if="ctrl.conditionModels.length">
     <div class="panel-options-group__header">발송 설정</div>
     <div class="panel-options-group__body">
       <div class="gf-form-inline">
@@ -122,7 +124,7 @@
     </div>
   </div>
 
-  <div class="panel-options-group">
+  <div class="panel-options-group" ng-if="ctrl.conditionModels.length">
     <div class="panel-options-group__header">고급 설정</div>
     <div class="panel-options-group__body">
       
