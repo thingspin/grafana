@@ -6,7 +6,7 @@ import { getBackendSrv } from 'app/core/services/backend_srv';
 import { ProjectInfoProps, ProjectInfoState } from '../types';
 import { loadProject } from '../state/actions';
 
-import * as mom from '@grafana/data/src/utils/moment_wrapper';
+import * as mom from '@grafana/data';
 
 import { DATETIME_DEFAULTFORMAT } from '../types';
 
