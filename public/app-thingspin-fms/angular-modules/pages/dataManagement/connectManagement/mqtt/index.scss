@@ -52,6 +52,7 @@
     margin-top: 21px;
     border: solid 1px #ecebeb;
     background-color: #ffffff;
+    overflow-x: scroll;
 }
 
 // MAIN VIEW CONTENTS COMMON ATTRIBUTE
@@ -453,7 +454,8 @@
     margin-top: 22px;
     border: solid 1px #ecebeb;
     margin-bottom: 22px;
-    height: 137px;    
+    height: 137px;
+    min-width: 1094px;
 }
 #mqtt-title-topic-add {
     margin-left: 1.27%;
@@ -687,6 +689,7 @@
     margin-top: 20px;
     vertical-align: top;
     display: inline-flex;
+    min-width: 234px;
 }
 
 .ts-mqtt-topic-input-group {
@@ -695,9 +698,11 @@
     padding-left: 16px;
     &.name {
         width: 13.34%;
+        min-width: 150px;
     }
     &.tag {
-        width: calc(100% - 570px);
+        width: 51%;
+        min-width: 400px;
     }
     .ts-input {
         // margin-left: 16px;
