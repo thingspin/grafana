@@ -560,6 +560,7 @@
     button {
         color: #6a6a6a;
         background-color: #ecebeb;
+        padding: 5px 5px 5px 5px;
         //width: 28px;
         //height: 28px;   
         &.green {
@@ -583,6 +584,7 @@
 
         i {
             font-size: 20px;
+            padding-right: 0px;
         }
     }
 }

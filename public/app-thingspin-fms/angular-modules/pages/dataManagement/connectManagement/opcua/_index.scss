@@ -108,6 +108,7 @@ ts-opcua-connect {
 
         .opcua-banner-buttons {
             margin-left: auto;
+            padding-right: 0px;
 
             .ts-btn-cancel {
                 background-color: #6a6a6a;
@@ -134,10 +135,12 @@ ts-opc-connect-info {
 
     .opcua-edit-buttons {
         margin-left: auto;
+        padding: 0px;
 
         button {
             color: #6a6a6a;
             background-color: #ecebeb;
+            padding: 5px 5px 5px 5px;
 
             &.green {
                 color: #ffffff;
@@ -150,6 +153,7 @@ ts-opc-connect-info {
 
             i {
                 font-size: 20px;
+                padding-right: 0px;
             }
         }
     }
