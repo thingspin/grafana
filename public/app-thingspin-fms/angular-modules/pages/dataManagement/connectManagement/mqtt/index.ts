@@ -62,6 +62,8 @@ export class TsMqttConnectCtrl {
   isTopicEditView: boolean;
   isTopicEditBtn: boolean;
   isEditMode: boolean;
+  isTopicEditMode: boolean;
+  isLoadTopic: string;
   connectStatus: string;
 
   defTabulatorOpts: object;
@@ -132,6 +134,8 @@ export class TsMqttConnectCtrl {
     this.tableList = new Map<number, Topic>();
     this.isTopicEditView = false;
     this.isTopicEditBtn = true;
+    this.isTopicEditMode = false;
+    this.isLoadTopic = "";
 
     this.initMqtt();
     if ($routeParams.id) {
@@ -317,6 +321,8 @@ export class TsMqttConnectCtrl {
     //   this.topicItem.topicViewList.push(topicItem.viewStr);
     // }
     // console.log(this.topicItem);
+    this.isTopicEditMode = true;
+    this.isLoadTopic = topicData.type;
     this.onShowTopicEditView(true);
   }
 
@@ -413,42 +419,57 @@ export class TsMqttConnectCtrl {
     }
   }
 
+  findCompareTopicName(name: any) {
+    const keys = Array.from(this.tableList.keys());
+    for (let count = 0; count < keys.length; count++) {
+      const item = this.tableList.get(keys[count]);
+      if (JSON.stringify(item.type.toLowerCase()) === JSON.stringify(name.toLowerCase())) {
+        if (!this.isTopicEditMode) {
+          this.openAlartNotification("Topic 이름이 같은 항목이 있습니다. 다른 이름을 입력해주세요.");
+          return false;
+        } else {
+          if (JSON.stringify(this.isLoadTopic.toLowerCase()) === JSON.stringify(item.type.toLowerCase())) {
+            continue;
+          } else {
+            this.openAlartNotification("Topic 이름이 같은 항목이 있습니다. 다른 이름을 입력해주세요.");
+            return false;
+          }
+        }
+      } else {
+        continue;
+      }
+    }
+    return true;
+  }
+
   onTopicListAdd(name: any) {
-    // console.log("onTopicListAdd");
     if (name !== -1 && this.topicItem.topicString.length > 0) {
       const inputData = this.tableList.get(name);
       if (inputData === null || inputData === undefined) {
-        const tableData = {} as Topic;
-        tableData.id = this.tableList.size;
-        tableData.type = this.topicItem.name;
-        tableData.value = this.topicItem.value;
-        tableData.viewStr = this.topicItem.topicString;
-        this.tableList.set(tableData.id, tableData);
-      } else {
-        inputData.type = this.topicItem.name;
-        inputData.value = this.topicItem.value;
-        inputData.viewStr = this.topicItem.topicString;
-        this.tableList.set(inputData.id, inputData);
-      }
-      // if (name && this.topicItem.topicList.length > 0) {
-      // const tableData = {} as MqttTableData;
-      // tableData.topicList = [];
-      /* --jwpark 19.07.04
-      for (let i = 0; i< this.topicItem.topicList.length; i++) {
-        if (i === this.topicItem.topicList.length-1) {
-          this.topicItem.topicString += this.topicItem.topicList[i].value;
-        } else {
-          this.topicItem.topicString += this.topicItem.topicList[i].value + "/";
+        if (this.findCompareTopicName(this.topicItem.name)) {
+          const tableData = {} as Topic;
+          tableData.id = this.tableList.size;
+          tableData.type = this.topicItem.name;
+          tableData.value = this.topicItem.value;
+          tableData.viewStr = this.topicItem.topicString;
+          this.tableList.set(tableData.id, tableData);
+          this.onDataResetTopic();
+          this.onShowTopicEditView(false);
         }
-        tableData.topicList.push(this.topicItem.topicList[i]);
-      } */
-      // this.table.setData(Array.from(this.tableList.values()));
+      } else {
+        if (this.findCompareTopicName(this.topicItem.name)) {
+          inputData.type = this.topicItem.name;
+          inputData.value = this.topicItem.value;
+          inputData.viewStr = this.topicItem.topicString;
+          this.tableList.set(inputData.id, inputData);
+          this.onDataResetTopic();
+          this.onShowTopicEditView(false);
+          this.isTopicEditMode = false;
+        }
+      }
       this.list = Array.from(this.tableList.values());
-      // console.log(this.list);
-      this.onDataResetTopic();
       this.setPageNodes();
       this.$scope.$applyAsync();
-      this.onShowTopicEditView(false);
     } else {
       if (!name) {
         this.openAlartNotification("토픽 이름을 입력해주세요.");
