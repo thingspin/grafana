@@ -90,17 +90,19 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     }
 
     inputChecker(): boolean {
-        if (this.input.name.length === 0) {
-            appEvents.emit('alert-warning', ['수집기 이름을 설정 하세요.']);
-            return false;
-        }
-        if (this.input.endpointUrl.length === 0) {
-            appEvents.emit('alert-warning', ['Endpoint URL을 입력 하세요.']);
-            return false;
-        } else if (this.input.endpointUrl.length > 0) {
-            if (this.input.endpointUrl.indexOf("://") === -1) {
-                appEvents.emit('alert-warning', ['Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.']);
+        if (this.input !== undefined) {
+            if (this.input.name.length === 0) {
+                appEvents.emit('alert-warning', ['수집기 이름을 설정 하세요.']);
                 return false;
+            }
+            if (this.input.endpointUrl.length === 0) {
+                appEvents.emit('alert-warning', ['Endpoint URL을 입력 하세요.']);
+                return false;
+            } else if (this.input.endpointUrl.length > 0) {
+                if (this.input.endpointUrl.indexOf("://") === -1) {
+                    appEvents.emit('alert-warning', ['Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.']);
+                    return false;
+                }
             }
         }
         return true;
