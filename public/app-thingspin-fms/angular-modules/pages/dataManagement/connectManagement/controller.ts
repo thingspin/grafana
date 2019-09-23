@@ -23,6 +23,7 @@ export interface TableModel {
     maxPageLen: number; // paging 최대 표시 개수
 }
 
+
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
     readonly pageBathPath: string = `/thingspin/manage/data/connect` as string;
@@ -33,6 +34,12 @@ export default class TsConnectManagementCtrl implements angular.IController {
     mqttClient: TsMqttController; // mqtt client instance
 
     // UI Data
+    runConnection: number;
+    runNodes: number;
+    totalConnection: number;
+    totalNodes: number;
+
+    license: any;
     // banner
     banner: Banner = {
         title: "산업용 프로토콜 및 기타 데이터소스에 대한 연결",
@@ -55,13 +62,12 @@ export default class TsConnectManagementCtrl implements angular.IController {
         private backendSrv: BackendSrv, ) { }// Dependency Injection
 
     $onInit(): void {
-
         this.asyncUpdateTypeList();
         this.asyncUpdateList().then(() => {
             this.initMqtt();
         });
-
         this.initTable();
+        this.getSetting();
     }
 
     $onDestroy(): void {
@@ -125,9 +131,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
     initTable(): void {
         this.$scope.$watch("list", () => {
             this.setPageNodes();
+            // this.drawCircleProgress();
         });
     }
-
     showEdit(type: string, id: number): void {
         this.$location.path(`${this.pageBathPath}/${type}/${id}`);
     }
@@ -136,9 +142,37 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.$location.path(`${this.pageBathPath}/${type}`);
     }
 
+    getSetting() {
+        this.backendSrv.get("api/frontend/settings").then((result: any) => {
+            this.totalConnection = Number(result.companions.license.Connect);
+            this.totalNodes = Number(result.companions.license.Nodes);
+        });
+    }
+
+    // drawCircleProgress() {
+    //     $('.progress-value').html(value + '%');
+    //     var $ppc = $('.progress-pie-chart'),
+    //         deg = 360 * value / 100;
+    //     if (value > 50) {
+    //         $ppc.addClass('gt-50');
+    //     }
+
+    //     $('.ppc-progress-fill').css('transform', 'rotate(' + deg + 'deg)');
+    //     $('.ppc-percents span').html(value + '%');
+    // }
+
+    enablePublish(item: TsConnect) {
+        // console.log(item);
+        if (item.enable) {
+            this.asyncRun(item.id, true);
+        } else {
+            this.asyncRun(item.id, false);
+        }
+    }
+
     async updatePublish(item: TsConnect) {
-        if (!confirm("동작하시겠습니까?")) {
-            console.log(item);
+        if (!confirm(`데이터 동시 발행을 ${item.publish ? '' : '정지'}하겠습니까?`)) {
+            // console.log(item);
             item.publish = !item.publish;
             this.$scope.$applyAsync();
             return;
@@ -150,13 +184,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
             item.publish = !item.publish;
         }
 
-        if (item.publish) {
-            item.enable = true;
-            const index: number = this.list.findIndex((value: TsConnect) => {
-                return value.id === item.id;
-            });
-            this.list[index].enable = true;
-        }
         this.$scope.$applyAsync();
     }
 
@@ -250,6 +277,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 currPage * rowCount,
                 (currPage * rowCount) + rowCount
             );
+
+            this.setCountValue();
         }
     }
 
@@ -295,5 +324,21 @@ export default class TsConnectManagementCtrl implements angular.IController {
     tOnSelectChange() {
         this.tCalcPaging();
         this.setPageNodes();
+    }
+
+    setCountValue() {
+        console.log(this.list.length);
+        if (this.list.length > 0) {
+            this.runConnection = 0;
+            this.runNodes = 0;
+
+            for (const item of this.list) {
+                console.log(item);
+                if (item.enable) {
+                    this.runNodes += item.params.PtagList.length;
+                    this.runConnection += 1;
+                }
+            }
+        }
     }
 }

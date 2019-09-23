@@ -26,14 +26,27 @@
           </div>
           <div class="row card-main-area">
             <div class="card-content-main">
-              7
+              {{ctrl.runConnection}}
             </div>
             <div class="card-content-sub">
-              /10 건
+              /{{ctrl.totalConnection}} 건
             </div>
           </div>
         </div>
         <div class="graph-area">
+          <div id="pbar" class="progress-pie-chart">
+            <div class="ppc-progress">
+              <div class="ppc-progress-fill"></div>
+            </div>
+            <div class="ppc-percents">
+              <div class="pcc-percents-wrapper" data-toggle="tooltip" title='{{ctrl.runConnection}}'
+                data-placement="right" data-original-title={{ctrl.runConnection}}>
+                <img src="public/img/thingspin/connect-icon.svg">
+              </div>
+            </div>
+          </div>
+          <progress style="display: none" id="progress_bar" value={{ctrl.runConnection}}
+            max={{ctrl.totalConnection}}></progress>
         </div>
       </div>
       <div class="card-info-layout right-card">
@@ -46,15 +59,28 @@
           </div>
           <div class="row card-main-area">
             <div class="card-content-main">
-              7
+              {{ctrl.runNodes}}
             </div>
             <div class="card-content-sub">
-              /10 건
+              /{{ctrl.totalNodes}} 건
             </div>
           </div>
         </div>
-      </div>
-      <div class="graph-area">
+        <div class="graph-area">
+          <div id="pbar" class="progress-pie-chart" data-percent="0">
+            <div class="ppc-progress">
+              <div class="ppc-progress-fill"></div>
+            </div>
+            <div class="ppc-percents">
+              <div class="pcc-percents-wrapper" data-toggle="tooltip" title='{{ctrl.runNodes}}' data-placement="right"
+                data-original-title={{ctrl.runNodes}}>
+                <img src="public/img/thingspin/total-node-icon.svg">
+              </div>
+            </div>
+          </div>
+
+          <progress style="display: none" id="progress_bar" value={{ctrl.runNodes}} max={{ctrl.totalNodes}}></progress>
+        </div>
       </div>
     </div>
   </div>
@@ -122,7 +148,7 @@
               </div>
             </td>
             <td class="three-title-width">
-              <div class="row title-padding">
+              <div class="row title-padding" id="title-margin-bottom">
                 <div ng-if="item.type === 'opcua'" class="main-title-font">
                   <div ng-if="item.enable" class="main-title-opcua-color">
                     {{ item.name }}
@@ -149,19 +175,32 @@
                 </div>
               </div>
               <div class="row title-padding">
-                <div
-                  ng-ifstyle="font-family: Roboto;font-size: 12px;font-weight: normal;font-style: normal;font-stretch: normal;line-height: 1.19;letter-spacing: normal;color:#1e1e1e">
+                <div id="icon-sub-title-font">
                   {{ item.updated | date:'yyyy-MM-dd HH:mm:ss'}}
                 </div>
               </div>
             </td>
+            <td class="url-title-width">
+              <div class="row icon-title-font" id="url-title-margin">
+                접속 정보
+              </div>
+              <div ng-if="item.type === 'opcua'">
+                {{ item.params.EndpointUrl}}
+              </div>
+              <div ng-if="item.type === 'modbus'">
+                {{ item.params.Host}}:{{item.params.Port}}
+              </div>
+              <div ng-if="item.type === 'mqtt'">
+                {{ item.params.Host}}:{{item.params.Port}}
+              </div>
+            </td>
             <td class="four-iconlist-width">
-              <div style="display:flex">
+              <div style="display:flex; float: right;">
                 <div class="status-width">
                   <div class="row icon-title-font">
                     연결상태
                   </div>
-                  <div class="row" ng-switch="item.color">
+                  <div class="row" ng-switch="item.status.connect.fill">
                     <div ng-switch-default>
                       <i ng-if="item.type === 'opcua' && item.enable"
                         class="fa tsi icon-ts-connection_off status-icon-opcua"></i>
@@ -225,7 +264,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="status-line"></div>
+                <!-- <div class="status-line"></div>
                 <div class="status-width-middle">
                   <div class="row icon-title-font">
                     발행상태
@@ -259,8 +298,8 @@
                       <i ng-if="!item.enable" class="fa tsi icon-ts-occurrence status-icon"></i>
                     </div>
                   </div>
-                </div>
-                <div class="status-line"></div>
+                </div> -->
+                <!-- <div class="status-line"></div>
                 <div class="status-width-middle">
                   <div class="row">
                     <div class="row icon-title-font">
@@ -285,11 +324,11 @@
                       <i class="fa tsi icon-ts-pause_circle_filled"></i>
                     </button>
                   </div>
-                </div>
+                </div> -->
               </div>
             </td>
             <td class="five-setting-width">
-              <div style="display:flex">
+              <div style="display:flex;float: right;">
                 <div class="status-line-no-margin"></div>
                 <div class="setting-width">
                   <div class="row icon-title-font setting-margin-left">
@@ -312,17 +351,37 @@
               </div>
             </td>
             <td class="six-publish-operation">
-              <div class="row icon-title-font">
-                발행동작
-              </div>
-              <div class="row publish-operation-margin">
-                <div class="row">
-                  <label class="switch">
-                    <input type="checkbox" ng-model="item.publish" ng-change="ctrl.updatePublish(item)">
-                    <span ng-if="item.type === 'opcua'" class="slider-opcua round"></span>
-                    <span ng-if="item.type === 'mqtt'" class="slider-mqtt round"></span>
-                    <span ng-if="item.type === 'modbus'" class="slider-modbus round"></span>
-                  </label>
+              <div style="display:flex;float: right;">
+                <div class="operation-width">
+                  <div class="row icon-title-font">
+                    동작처리
+                  </div>
+                  <div class="row publish-operation-margin">
+                    <div class="row">
+                      <label class="switch">
+                        <input type="checkbox" ng-model="ctrl.list[$index].enable"
+                          ng-change="ctrl.enablePublish(ctrl.list[$index])">
+                        <span ng-if="item.type === 'opcua'" class="slider-opcua round"></span>
+                        <span ng-if="item.type === 'mqtt'" class="slider-mqtt round"></span>
+                        <span ng-if="item.type === 'modbus'" class="slider-modbus round"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="operation-width">
+                  <div class="row icon-title-font">
+                    발행처리
+                  </div>
+                  <div class="row publish-operation-margin">
+                    <div class="row">
+                      <label class="switch">
+                        <input type="checkbox" ng-model="item.publish" ng-change="ctrl.updatePublish(item)">
+                        <span ng-if="item.type === 'opcua'" class="slider-opcua round"></span>
+                        <span ng-if="item.type === 'mqtt'" class="slider-mqtt round"></span>
+                        <span ng-if="item.type === 'modbus'" class="slider-modbus round"></span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </td>

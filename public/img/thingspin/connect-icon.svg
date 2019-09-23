@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="31.5" height="30.136" viewBox="0 0 31.5 30.136">
+  <g id="전체연결" transform="translate(0.75 0.75)">
+    <rect id="사각형_18962" data-name="사각형 18962" width="5.455" height="5.455" transform="translate(0 23.182)" stroke-width="1.5" stroke="#0039ff" stroke-linecap="round" stroke-linejoin="round" fill="#ccd7ff"/>
+    <rect id="사각형_18963" data-name="사각형 18963" width="5.455" height="5.455" transform="translate(11.143 11.591) rotate(-45)" stroke-width="1.5" stroke="#0039ff" stroke-linecap="round" stroke-linejoin="round" fill="#e5ebff"/>
+    <rect id="사각형_18964" data-name="사각형 18964" width="5.455" height="5.455" transform="translate(24.546 23.182)" stroke-width="1.5" stroke="#0039ff" stroke-linecap="round" stroke-linejoin="round" fill="#ccd7ff"/>
+    <path id="패스_3815" data-name="패스 3815" d="M802.348,253.561v-4.773h24.545v4.773" transform="translate(-799.62 -230.379)" fill="none" stroke="#0039ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    <line id="선_1185" data-name="선 1185" y1="7.5" transform="translate(15 15.682)" fill="none" stroke="#0039ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
+    <circle id="타원_792" data-name="타원 792" cx="2.727" cy="2.727" r="2.727" transform="translate(12.273 23.182)" stroke-width="1.5" stroke="#0039ff" stroke-linecap="round" stroke-linejoin="round" fill="#99afff"/>
+    <rect id="사각형_18965" data-name="사각형 18965" width="9.545" height="4.773" transform="translate(10.228)" stroke-width="1.5" stroke="#0039ff" stroke-linecap="round" stroke-linejoin="round" fill="#ccd7ff"/>
+  </g>
+</svg>
