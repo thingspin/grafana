@@ -3,14 +3,14 @@
     "label": "{{.Params.FlowId}}",
     "info": "",
     "nodes": [
-        {{if .Publish}}
-            {{.Params.publishTopicList | convJsonStr}},
-        {{else}}
-            {{if .Enable}}
-                {{.Params.AddTopicList | convJsonStr}},
+        {{if .Enable}}
+            {{if .Publish}}
+                {{.Params.publishTopicList | convJsonStr}},
             {{else}}
-                {{.Params.AddDisTopicList | convJsonStr}},
+                {{.Params.AddTopicList | convJsonStr}},
             {{end}}
+        {{else}}
+            {{.Params.AddDisTopicList | convJsonStr}},
         {{end}}
         {  
             "id":"TS-MQTT-COMMENT-{{.Params.UUID}}",
@@ -45,7 +45,7 @@
         }, {
             "id": "TS-MQTT-MQTTOUT-{{.Params.UUID}}",
             "type": "mqtt out",
-            "name": "",
+            "name": "connect",
             "topic": "/thingspin/connect/{{.Params.UUID}}/status",
             "qos": "2",
             "retain": "true",
