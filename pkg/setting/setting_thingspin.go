@@ -6,6 +6,7 @@ import (
 	"path"
 
 	"github.com/grafana/grafana/pkg/util"
+	jwt "github.com/dgrijalva/jwt-go"
 	ini "gopkg.in/ini.v1"
 )
 
@@ -31,7 +32,17 @@ type ThingspinSettings struct {
 	NodeRedModuleList []string
 	Mqtt              MqttSettings
 	Influx            InfluxSettings
-	JupyterHost       string	
+	JupyterHost       string
+	License           ThingspinLicense
+}
+
+type ThingspinLicense struct {
+	License           string
+	Company           string
+	Name              string
+	Connect           string
+	Nodes             string
+	User              string
 }
 
 func (cfg *Cfg) loadTsIniFile() error {
@@ -63,6 +74,24 @@ func (cfg *Cfg) readThingspinSettings() {
 
 	sec := TsRaw.Section("thingspin")
 	Thingspin.Enabled = sec.Key("enabled").MustBool(true)
+	
+	// License
+	token, err := jwt.Parse(sec.Key("license").String(), func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte("thingspin-hancom-mds"), nil
+	})
+	if items, ok := token.Claims.(jwt.MapClaims); ok {
+		Thingspin.License.License = items["license"].(string)
+		Thingspin.License.Company = items["company"].(string)
+		Thingspin.License.Name = items["name"].(string)
+		Thingspin.License.Connect = items["connect"].(string)
+		Thingspin.License.Nodes = items["nodes"].(string)
+		Thingspin.License.User = items["user"].(string)
+	} else {
+		fmt.Println(err)
+	}
 
 	// Node-Red
 	nrSec := TsRaw.Section("node-red")
