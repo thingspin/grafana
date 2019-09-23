@@ -335,8 +335,10 @@ export default class TsConnectManagementCtrl implements angular.IController {
             for (const item of this.list) {
                 console.log(item);
                 if (item.enable) {
-                    this.runNodes += item.params.PtagList.length;
-                    this.runConnection += 1;
+                    if (item.params.PtagList !== undefined) {
+                        this.runNodes += item.params.PtagList.length;
+                        this.runConnection += 1;
+                    }
                 }
             }
         }
