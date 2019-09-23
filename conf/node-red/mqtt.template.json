@@ -45,7 +45,7 @@
         }, {
             "id": "TS-MQTT-MQTTOUT-{{.Params.UUID}}",
             "type": "mqtt out",
-            "name": "connect",
+            "name": "",
             "topic": "/thingspin/connect/{{.Params.UUID}}/status",
             "qos": "2",
             "retain": "true",

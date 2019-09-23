@@ -619,7 +619,7 @@ export class TsMqttConnectCtrl {
     const connectNode: any = {
       id: "TS-MQTT-CHECKNODE-" + this.uuid,
       type: "mqtt out",
-      name: this.uuid,
+      name: "connect",
       topic: "#",
       qos: "0",
       datatype: "auto",
