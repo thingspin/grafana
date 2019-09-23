@@ -16,7 +16,7 @@ export interface InputModel {
     endpointUrl: string;
     name: string;
     securityPolicy: string;
-    securityMode: string ;
+    securityMode: string;
     auth: string;
     intervals?: number;
 }
@@ -89,26 +89,45 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         }
     }
 
+    inputChecker(): boolean {
+        if (this.input.name.length === 0) {
+            appEvents.emit('alert-warning', ['수집기 이름을 설정 하세요.']);
+            return false;
+        }
+        if (this.input.endpointUrl.length === 0) {
+            appEvents.emit('alert-warning', ['Endpoint URL을 입력 하세요.']);
+            return false;
+        } else if (this.input.endpointUrl.length > 0) {
+            if (this.input.endpointUrl.indexOf("://") === -1) {
+                appEvents.emit('alert-warning', ['Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.']);
+                return false;
+            }
+        }
+        return true;
+    }
+
     async updateData(connId: number) {
-        try {
-            this.connId = connId;
-            const result: OpcConnectModel = await this.backendSrv.get(`${baseApi}/${this.connId}`);
-
-            this.input = {
-                endpointUrl: result.params.EndpointUrl,
-                name: result.name,
-                auth: result.params.auth,
-                securityMode: result.params.securityMode,
-                securityPolicy: result.params.securityPolicy,
-                intervals: result.intervals,
-            };
-            this.FlowId = result.params.FlowId;
-            this.nodes = result.params.nodes;
-            this.enableNodeSet = true;
-
-            this.$scope.$applyAsync();
-        } catch (e) {
-            console.error(e);
+        if (this.inputChecker()) {
+            try {
+                this.connId = connId;
+                const result: OpcConnectModel = await this.backendSrv.get(`${baseApi}/${this.connId}`);
+    
+                this.input = {
+                    endpointUrl: result.params.EndpointUrl,
+                    name: result.name,
+                    auth: result.params.auth,
+                    securityMode: result.params.securityMode,
+                    securityPolicy: result.params.securityPolicy,
+                    intervals: result.intervals,
+                };
+                this.FlowId = result.params.FlowId;
+                this.nodes = result.params.nodes;
+                this.enableNodeSet = true;
+    
+                this.$scope.$applyAsync();
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
 
@@ -160,18 +179,19 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     async addConnect() {
         this.FlowId = uid.generate();
         this.setConnectStatus("yellow");
-
         this.timer = setTimeout(() => {
             this.setConnectStatus("red");
         }, this.connectTimeout);
 
-        try {
-            const connId = await this.sendBackend(!this.connId);
-            this.connId = connId;
-        } catch (e) {
-            console.error(e);
-            if (this.connId) {
-                this.FlowId = null;
+        if (this.inputChecker()) {
+            try {
+                const connId = await this.sendBackend(!this.connId);
+                this.connId = connId;
+            } catch (e) {
+                console.error(e);
+                if (this.connId) {
+                    this.FlowId = null;
+                }
             }
         }
     }
@@ -190,18 +210,20 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     }
 
     async save(): Promise<void> {
-        if (!this.FlowId) {
-            this.FlowId = uid.generate();
-        }
-
-        try {
-            const connId = await this.sendBackend(!this.connId);
-            this.connId = connId;
-
-            this.cancel();
-            this.$scope.$applyAsync();
-        } catch (e) {
-            console.error(e);
+        if (this.inputChecker()) {
+            if (!this.FlowId) {
+                this.FlowId = uid.generate();
+            }
+    
+            try {
+                const connId = await this.sendBackend(!this.connId);
+                this.connId = connId;
+    
+                this.cancel();
+                this.$scope.$applyAsync();
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
 
