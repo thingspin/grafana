@@ -44,15 +44,15 @@ const TsAlarmSearch: React.FC<AlarmSearchProps> = ({ onChange }) => {
 
     <div className={`${bcls}-r`}>
       <span className={`${bcls}-r-item ts-color-red`}>
-        <i className="fa fa-info-circle"></i> 위험
+        <i className="icon-gf icon-gf-critical"></i> 위험
       </span>
 
       <span className={`${bcls}-r-item ts-color-yellow`}>
-        <i className="fa fa-exclamation-triangle"></i> 경고
+        <i className="fa fa-exclamation"></i> 경고
       </span>
 
       <span className={`${bcls}-r-item ts-color-green`}>
-        <i className="fa fa-info"></i> 정상
+        <i className="icon-gf icon-gf-online"></i> 정상
       </span>
     </div>
   </div>;
