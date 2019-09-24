@@ -3,6 +3,7 @@
     <i class="fa fa-warning"></i> {{ctrl.error}}
   </div>
   <div class="panel-options-group" ng-if="ctrl.conditionModels.length">
+    <div class="panel-options-group__header">조건 설정</div>
     <div class="panel-options-group__body">
       <div class="gf-form-group">
         
@@ -170,6 +171,15 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="panel-options-group" ng-if="!ctrl.conditionModels.length">
+    <div class="panel-options-group__header">조건 정의</div>
+    <div class="panel-options-group__body">
+      <!-- empty message -->
+      <p align="center">알람으로 사용할 태그가 선택되지 않았습니다. </p>
+      <p align="center">왼쪽에서 태그를 선택하세요.</p>
     </div>
   </div>
 </div>

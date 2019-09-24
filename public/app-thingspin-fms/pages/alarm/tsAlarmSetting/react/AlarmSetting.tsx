@@ -111,16 +111,7 @@ export class AlarmSetting extends UnConnectedAlertTab {
 
       <div className="ts-panel-editor__right">
         <EditorTabBody heading="알람" toolbarItems={toolbarItems}>
-          <>
-            <div ref={element => (this.element = element)} />
-
-            {!alert && !validatonMessage && <EmptyListCTA
-              title='Panel has no alert rule defined'
-              buttonIcon='gicon gicon-alert'
-              onClick={this.onAddAlert}
-              buttonTitle='Create Alert'
-            />}
-          </>
+          <div ref={element => (this.element = element)} />
         </EditorTabBody>
       </div>
     </>;
