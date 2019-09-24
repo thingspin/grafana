@@ -27,39 +27,20 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         connectionList: [],
     };
 
-    $location: angular.ILocationService; // for route
-    $rootScope: angular.IRootScopeService;
+    $location: angular.ILocationService = this.props.inject.get('$location'); // for route
+    $rootScope: angular.IRootScopeService = this.props.inject.get('$rootScope');
 
     // MQTT
     mqttClient: TsMqttController; // mqtt client instance
 
-    constructor(props: facilityTreeProps) {
-        super(props);
-
-        this.$location = this.props.inject.get('$location'); // for route
-        this.$rootScope = this.props.inject.get('$rootScope');
-        this.siteManagePage = this.siteManagePage.bind(this);
-
-        this.handleChange = this.handleChange.bind(this);
-        this.customSingleValue = this.customSingleValue.bind(this);
-        //console.log("constructor");
-    }
-
     //props check
     UNSAFE_componentWillReceiveProps(nextProps: facilityTreeProps) {
-        //test.
         console.log("props-tag: ", nextProps.taginfo);
         console.log("props-site: ", nextProps.siteinfo);
 
         this.restoreFacilityData(nextProps).then((state) => {
             this.setState(state);
         });
-
-        if (this.props.taginfo !== nextProps.taginfo || this.props.siteinfo !== nextProps.siteinfo) {
-            console.log("props change");
-        } else {
-            console.log("props same");
-        }
     }
 
     private async componentInit() {
@@ -67,10 +48,8 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         let updateState = await this.getSiteList();
         this.initMqtt();
         siteModel.getConnectInfo();
-        //console.log(this.props);
 
-        if (taginfo && taginfo.length) {
-            //console.log("data exist");
+        if (taginfo) {
             const fdState = await this.restoreFacilityData(this.props);
 
             // rewrite
@@ -78,8 +57,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
                 ...updateState,
                 ...fdState,
             };
-        } else {
-            //console.log("data empty");
         }
 
         if (this._isMounted) {
@@ -88,19 +65,16 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     }
 
     UNSAFE_componentWillMount() {
-        //console.log("componentWillMount");
         this._isMounted = true;
         this.componentInit();
     }
 
     componentWillUnmount() {
         this._isMounted = false;
-        //console.log('componentWillUnmount');
     }
 
     //restore checked item
     async restoreFacilityData(item: facilityTreeProps): Promise<TreeInfo> {
-        //console.log("restore");
         //site selected
         console.log("restore item:", item);
         console.log(item.siteinfo);
@@ -108,7 +82,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         const siteInfoState = await this.findSiteinfo(value, isCustom);
         // tag selected
 
-        const updateState: any = (taginfo && taginfo.length)
+        const updateState: any = (taginfo)
             ? {
                 checkedSave: taginfo.map((info: any) => (info.value)),
                 Taginfo: taginfo,
@@ -129,8 +103,11 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         }
 
         try {
-            const sites: SiteOptions[] = await siteModel.getFactilitySite(FacilityTreeType.Site);
-            const ptags: SiteOptions[] = await siteModel.getFactilitySite(FacilityTreeType.Ptag);
+
+            const [ sites, ptags ] = await Promise.all([
+                siteModel.getFactilitySite(FacilityTreeType.Site),
+                siteModel.getFactilitySite(FacilityTreeType.Ptag),
+            ]);
 
             const selectedOption = siteModel.generateSiteOpts(-1, "ALL Tags", FacilityTreeType.Site);
             const { value, isCustom } = selectedOption;
@@ -153,8 +130,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     }
 
     async findSiteinfo(siteid: any, isCustom: boolean) {
-        //console.log('findsiteinfo: ',siteid,isCustom);
-        //console.log("findSiteinfo sites: ",this.state.siteOptions);
         if (!this._isMounted) {
             return null;
         }
@@ -224,8 +199,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         //const id = topics[topics.length - 2];
         const target = topics[topics.length - 3];
         //let isChange = false;
-        //console.log("topics: ",topic," id: ",id," target:",target," payload: ",payload);
-        //console.log(isChange);
         switch (target) {
             case 'connect':
                 break;
@@ -241,7 +214,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         this.$rootScope.$apply();
     }
 
-    siteManagePage() {
+    siteManagePage = () => {
         console.log('react/go Site Manage Page');
         this.$location.url(`/thingspin/manage/data/site`).replace();
         this.$rootScope.$apply();
@@ -249,7 +222,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
 
     //CHECK TREE
     onCheck2({ checked, Taginfo }: any) {
-        //console.log(checked);
         const { selectedOption } = this.state;
 
         this.setState({
@@ -274,7 +246,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             : TagData.filter(({ site_id }) => (siteData.value === site_id));
         */
         console.log('sendTagData: ', TagData, siteData);
-        //console.log('sendTagData filtered: ', Taginfo);
 
         click({
             siteData,
@@ -295,21 +266,8 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
 
         console.log("handleChange checked: ", checked);
         console.log("handleChange Tag: ", Taginfo);
-        //console.log("handleChange: ",selectedOption);
         this.sendTagData(Taginfo, selectedOption);
     };
-
-    //TEST
-    /*
-    testChecked() {
-        //refresh/
-        console.log("check: ",this.state.checked);
-        console.log("saved: ",this.state.testChecked);
-    }
-    testSave() {
-        this.setState({testChecked: this.state.checked});
-    }
-    */
 
     customSingleValue = ({ data }: { data: any }) => (
         <div className="input-select">
@@ -321,7 +279,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     );
 
     render() {
-        //const { siteOptions, checkedSave, nodes, selectedOption } = this.state;
         const { siteOptions, checkedSave, nodes } = this.state;
         const isDataEmpty = (nodes.length === 0 || siteOptions.length === 0) ? true : false;
 
@@ -343,7 +300,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             */}
                 <div className="facility-section-line" />
 
-                {!isDataEmpty && <FilterTree
+                {<FilterTree
                         nodes={nodes}
                         nodesChecked={checkedSave}
                         click={(checked: any, Taginfo: any) => this.onCheck2(checked)}

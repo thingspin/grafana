@@ -13,70 +13,35 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
         filterPlaceholder: " 태그 검색 ..."
     };
 
-    constructor(props: FilterTreeProps) {
-        super(props);
-
-        this.putNodeIcon = this.putNodeIcon.bind(this);
-        this.onFilterChange = this.onFilterChange.bind(this);
-        this.filterTree = this.filterTree.bind(this);
-        this.filterNodes = this.filterNodes.bind(this);
-        //console.log("react/filter: ",this.props.nodes);
-    }
-
     UNSAFE_componentWillReceiveProps({nodes, nodesChecked}: FilterTreeProps) {
-        // this.props 는 아직 바뀌지 않은 상태
         console.log("componentWillReceive");
-        //console.log("prev -node: ",this.props.nodes);
-        //console.log("prev: ",this.props.nodesChecked);
-        //console.log("next: ",nextProps.nodesChecked);
         if (this.props.nodes !== nodes || this.props.nodesChecked !== nodesChecked) {
-            const nChecked = nodesChecked.length || 0;
             const updateState: any = {
                 nodes,
                 nodesFiltered: nodes,
             };
-            //console.log(nextProps.nodes);
             this.putNodeIcon(nodes);
 
-            if (nChecked) {
-                updateState.checked = nodesChecked;
-            }
+            updateState.checked = nodesChecked;
             this.setState(updateState);
-            //console.log("props change: ",nChecked);
-        } else {
-            //console.log("props same");
         }
     }
 
     UNSAFE_componentWillMount() {
         console.log("componentWillMount: ",this.props);
-        //this.putNodeIcon(this.props.nodes);
         if (this.props.nodes && this.props.nodesChecked) {
-            const nChecked = this.props.nodesChecked.length || 0;
             const updateState: any = {
                 nodes: this.props.nodes,
                 checked: this.props.nodesChecked,
             };
 
             this.putNodeIcon(this.props.nodes);
-
-            if (nChecked) {
-                this.setState(updateState);
-            }
-            //console.log("props change: ",nChecked)
+            this.setState(updateState);
         }
     }
 
     putNodeIcon(node: any[]) {
-        //console.log("parent check");
         if (node && node.length) {
-            /*
-            for (const n of node) {
-                n.icon = (n.tag_id === 0)
-                    ? <span className="icon-facility"><i className="fa fa-steam fa-1x" /></span>
-                    : <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>;
-            }
-            */
            console.log("node length: ",node.length);
            for (const n of node) {
                 console.log(n.label," ",n.children.length);
@@ -99,7 +64,6 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
                     }
                 }else {
                     console.log(n.label);
-                    //n.icon = <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>;
                     if (n.tag_name ==="" && n.tag_table_name ==="") {
                         //empty tag
                         n.showCheckbox = false;
@@ -111,14 +75,10 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
 
     //CHECK TREE
     onCheck = (checked: any, a: any, Taginfo: any[]) => {
-        //console.log("FT-oncheck tag: ",Taginfo);
-        //console.log("FT-oncheck checked: ",checked);
         let checkedSize = checked.length;
         if (checked && checked.length) {
-            //console.log("TEST_CHECKED");
             for (let i = 0; i < checkedSize; i += 1) {
                 if (Taginfo[i].tag_id === 0) {
-                    //console.log("delete: ",i);
                     checked.splice(i, 1);
                     Taginfo.splice(i, 1);
                     checkedSize = checked.length;
@@ -126,21 +86,19 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
                 }
             }
         }
-        //console.log(checked.length);
-        //console.log(checked);
-        //console.log(Taginfo);
+
         this.setState({ checked });
         this.props.click({ checked, Taginfo }); //sending to parent component
     };
 
     //TAG FILTER
-    onFilterChange(e: ChangeEvent<HTMLInputElement>) {
+    onFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({
             filterText: e.target.value
         }, this.filterTree);
     }
 
-    filterTree() {
+    filterTree = () => {
         const updateState = (!this.state.filterText)
             ?
             ({ nodes }: any) => ({
@@ -154,8 +112,7 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
         this.setState(updateState);
     }
 
-    filterNodes(filtered: any, node: any) {
-        //console.log(this.state);
+    filterNodes = (filtered: any, node: any) => {
         const { filterText } = this.state;
         const children = (node.children || []).reduce(this.filterNodes, []);
         if (
