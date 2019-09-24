@@ -1,3 +1,5 @@
+import { getDefaultCondition } from 'app/features/alerting/getAlertingValidationMessage';
+
 // ref(alertDef.ts)
 
 export interface ConditionType {
@@ -30,3 +32,12 @@ export const tsEvalOperators: ConditionType[] = [
   { text: '또는', value: 'or' },
   { text: '그리고', value: 'and' }
 ];
+
+
+export const getDefaltCondition = (label = 'A', from = '5s') => {
+  const defaultCondition = getDefaultCondition();
+  defaultCondition.query.params[0] = label;
+  defaultCondition.query.params[1] = from;
+
+  return defaultCondition;
+};

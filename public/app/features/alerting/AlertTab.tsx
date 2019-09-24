@@ -31,7 +31,7 @@ interface State {
   validatonMessage: string;
 }
 
-class UnConnectedAlertTab extends PureComponent<Props, State> {
+export class UnConnectedAlertTab extends PureComponent<Props, State> {
   element: any;
   component: AngularComponent;
   panelCtrl: any;

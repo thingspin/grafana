@@ -1,15 +1,20 @@
 // 3rd party libs
 import angular from 'angular';
 import React, { ReactNode } from "react";
+import { hot } from 'react-hot-loader';
+import { connect } from 'react-redux';
 
 // Grafana libs
 // Models
+import { getAngularLoader, getDataSourceSrv } from '@grafana/runtime';
+import { getAlertingValidationMessage } from 'app/features/alerting/getAlertingValidationMessage';
+import { StoreState } from 'app/types';
 // Views
-import { AlertTab } from 'app/features/alerting/AlertTab';
+import { UnConnectedAlertTab } from 'app/features/alerting/AlertTab';
 import { EditorTabBody, EditorToolbarView } from 'app/features/dashboard/panel_editor/EditorTabBody';
 import EmptyListCTA from 'app/core/components/EmptyListCTA/EmptyListCTA';
 // Controllers
-import { getAngularLoader } from '@grafana/runtime';
+import { changePanelEditorTab } from 'app/features/dashboard/panel_editor/state/actions';
 
 // ThingSPIN libs
 // Models
@@ -17,13 +22,13 @@ import { FMDashboardModel } from 'app-thingspin-fms/pages/FacilityMonitoring/mod
 // Views
 import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
 
-export default class AlarmSetting extends AlertTab {
+export class AlarmSetting extends UnConnectedAlertTab {
   // bind global Angularjs Injector
   private $injector = angular.element(document).injector();
 
   // Override
-  loadAlertTab() {
-    const { angularPanel } = this.props;
+  async loadAlertTab() {
+    const { angularPanel, panel } = this.props;
     const { $$childHead } = angularPanel.getScope();
 
     // When full page reloading in edit mode the angular panel has on fully compiled & instantiated yet
@@ -39,7 +44,17 @@ export default class AlarmSetting extends AlertTab {
     const template = '<ts-alert-tab />';
 
     this.component = loader.load(this.element, scopeProps, template);
-    this.forceUpdate();
+
+    const validatonMessage = await getAlertingValidationMessage(
+      panel.transformations,
+      panel.targets,
+      getDataSourceSrv(),
+      panel.datasource
+    );
+
+    if (validatonMessage) {
+      this.setState({ validatonMessage });
+    }
   }
 
   // thingspin add func
@@ -83,8 +98,13 @@ export default class AlarmSetting extends AlertTab {
   // Override
   render() {
     const { alert } = this.props.panel;
+    const { validatonMessage } = this.state;
 
-    const toolbarItems: EditorToolbarView[] = [];
+    if (!alert && validatonMessage) {
+      return this.renderValidationMessage();
+    }
+
+    const toolbarItems: EditorToolbarView[] = [this.stateHistory()];
 
     return <>
       {this.renderFacilityTree()}
@@ -94,7 +114,7 @@ export default class AlarmSetting extends AlertTab {
           <>
             <div ref={element => (this.element = element)} />
 
-            {!alert && <EmptyListCTA
+            {!alert && !validatonMessage && <EmptyListCTA
               title='Panel has no alert rule defined'
               buttonIcon='gicon gicon-alert'
               onClick={this.onAddAlert}
@@ -106,3 +126,14 @@ export default class AlarmSetting extends AlertTab {
     </>;
   }
 }
+
+export const mapStateToProps = (state: StoreState) => ({});
+
+const mapDispatchToProps = { changePanelEditorTab };
+
+export default hot(module)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AlarmSetting)
+);

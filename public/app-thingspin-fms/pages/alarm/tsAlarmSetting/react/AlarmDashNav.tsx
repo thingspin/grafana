@@ -80,6 +80,10 @@ export class AlarmNavComp extends DashNav {
         });
     }
 
+    gotoBack = () => {
+        history.back();
+    }
+
     // Override
     render(): JSX.Element {
         const { dashboard, location, $injector } = this.props;
@@ -117,9 +121,16 @@ export class AlarmNavComp extends DashNav {
                 )}
 
                 <div className="navbar-buttons navbar-buttons--actions">
+                    <DashNavButton
+                        tooltip="Go to previous dashboard"
+                        classSuffix="tight"
+                        icon="fa fa-chevron-circle-left"
+                        onClick={this.gotoBack}
+                    />
+
                     {canSave && alert && (
                         <AlarmNavButton tooltip="신규 알람 생성" classSuffix="save" onClick={this.onSave} >
-                            {meta.isNew ? '신규 생성' : '수정'}
+                            저장
                         </AlarmNavButton>
                     )}
 

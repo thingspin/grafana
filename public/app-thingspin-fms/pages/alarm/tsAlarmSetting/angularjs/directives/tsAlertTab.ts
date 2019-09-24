@@ -13,7 +13,7 @@ import { ThresholdMapper } from 'app/features/alerting/state/ThresholdMapper';
 
 // ThingSPIN libs
 // Modes
-import { tsEvalFunctions, tsReducerTypes, tsEvalOperators } from '../../utils';
+import { tsEvalFunctions, tsReducerTypes, tsEvalOperators, getDefaltCondition } from '../../utils';
 // Views
 import alertDef from 'app/features/alerting/state/alertDef';
 
@@ -62,20 +62,9 @@ export class TsAlertTabCtrl extends AlertTabCtrl implements angular.IController 
     this.evalOperators = tsEvalOperators;
   }
 
-  // Override
-  buildDefaultCondition(label = 'A', from = '5s') {
-    return {
-      type: 'query',
-      query: { params: [label, from, 'now'] },
-      reducer: { type: 'last', params: [] as any[] },
-      evaluator: { type: 'gt', params: [null] as any[] },
-      operator: { type: 'or' },
-    };
-  }
-
   // Redefine addCondition()
   tsAddCondition(label: string) {
-    const condition = this.buildDefaultCondition(label);
+    const condition = getDefaltCondition(label);
     // add to persited model
     this.alert.conditions.push(condition);
     // add to view model
@@ -91,7 +80,7 @@ export class TsAlertTabCtrl extends AlertTabCtrl implements angular.IController 
 
     // add condition
     for (const { label } of Taginfo) {
-      const condition = this.buildDefaultCondition(label);
+      const condition = getDefaltCondition(label);
       // add to persited model
       this.alert.conditions.push(condition);
       // add to view model
