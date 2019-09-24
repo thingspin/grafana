@@ -77,17 +77,35 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
                     : <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>;
             }
             */
+           console.log("node length: ",node.length);
            for (const n of node) {
-            if (n.tag_id === 0) {
-                if (n.site_id < 0) {
-                    n.icon = <span className="icon-connection"><i className="fa fa-plug" /></span>;
+                console.log(n.label," ",n.children.length);
+                if (n.tag_id === 0) {
+                    if (n.site_id < 0) {
+                        n.icon = <span className="icon-connection"><i className="fa fa-plug" /></span>;
+                        if (n.children && n.children.length) {
+                            this.putNodeIcon(n.children);
+                        } else {
+                            n.showCheckbox = false;
+                        }
+                    }else {
+                        //n.icon = <span className="icon-facility"><i className="fa fa-steam fa-1x" /></span>;
+                        if (n.children && n.children.length) {
+                            this.putNodeIcon(n.children);
+                        } else {
+                            n.icon = <span className="icon-empty"><i className="fa fa-steam" /></span>;
+                            n.showCheckbox = false;
+                        }
+                    }
                 }else {
-                    n.icon = <span className="icon-facility"><i className="fa fa-steam fa-1x" /></span>;
+                    console.log(n.label);
+                    //n.icon = <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>;
+                    if (n.tag_name ==="" && n.tag_table_name ==="") {
+                        //empty tag
+                        n.showCheckbox = false;
+                    }
                 }
-            }else {
-                n.icon = <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>;
             }
-        }
         }
     }
 
@@ -176,8 +194,8 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
                             expandOpen: <span className="rct-icon rct-icon-expand-open" />,
                             expandAll: <span className="rct-icon rct-icon-expa nd-all" />,
                             collapseAll: <span className="rct-icon rct-icon-collapse-all" />,
-                            parentClose: <span className="icon-facility"><i className="fa fa-steam-square fa-1x" /></span>,
-                            parentOpen: <span className="icon-facility"><i className="fa fa-steam fa-1x" /></span>,
+                            parentClose: <span className="icon-facility"><i className="fa fa-steam-square fa-lg" /></span>,
+                            parentOpen: <span className="icon-facility"><i className="fa fa-steam fa-lg" /></span>,
                             leaf: <span className="icon-tag"><i className="tsi icon-ts-tag" /></span>,
                         }}
                         nodes={nodesFiltered}
