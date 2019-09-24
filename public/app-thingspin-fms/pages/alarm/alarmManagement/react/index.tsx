@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
 
 // Grafana libs
-import { StoreState } from 'app/types';
+import { StoreState, AlertRule } from 'app/types';
 
 import { getNavModel } from 'app/core/selectors/navModel';
 
@@ -21,9 +21,12 @@ import AlarmMgmtBaseLayer from './BaseLayer';
 import TsContainer from './TsContainer';
 import TopButton from './TopButton';
 import TsAlarmRuleItem from './TsAlarmRuleItem';
+import TsAlarmSearch from './TsAlarmSearch';
 
 // iiHOC(extended AlertRuleList)
 export class TsAlarmRuleList extends AlertRuleList {
+  search = "";
+  searchState = "";
 
   // Thingspin new method
   gotoAddPage = () => {
@@ -37,18 +40,35 @@ export class TsAlarmRuleList extends AlertRuleList {
     ];
   }
 
+  onChange = (search: string, state: string) => {
+    this.search = search;
+    this.searchState = state;
+    this.forceUpdate();
+  }
+
+  dataFiltering = (rule: AlertRule): boolean => {
+    if (!this.searchState
+      || this.searchState === rule.state) {
+      return true;
+    }
+
+    return false;
+  }
+
   // override(Render Hijacking)
   render() {
-    const { alertRules, search } = this.props;
+    const { alertRules } = this.props;
 
     return (<AlarmMgmtBaseLayer buttons={this.getButtons()} title="알람 관리" titleIcon="fa fa-info" >
       <TsContainer headerLeft={"알람 룰"}>
+        <TsAlarmSearch onChange={this.onChange}></TsAlarmSearch>
         <section>
             <ol className="alert-rule-list">
-              {alertRules.map(rule => (<TsAlarmRuleItem
+            {alertRules.filter(this.dataFiltering)
+              .map(rule => (<TsAlarmRuleItem
                   rule={rule}
                   key={rule.id}
-                  search={search}
+                  search={this.search}
                   onTogglePause={() => this.onTogglePause(rule)}
                 />
               ))}
