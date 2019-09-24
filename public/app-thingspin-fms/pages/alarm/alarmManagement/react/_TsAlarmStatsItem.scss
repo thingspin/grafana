@@ -31,6 +31,12 @@ $alarmMgmtItemStatHeight: 40px;
 
     // fonts
     line-height: $alarmMgmtItemStatHeight;
-    font-size: 12px;
+    font-size: 24px;
+
+    &-unit {
+      padding-left: 4px;
+      font-size: 12px;
+      color: #1e1e1e;
+    }
   }
 }

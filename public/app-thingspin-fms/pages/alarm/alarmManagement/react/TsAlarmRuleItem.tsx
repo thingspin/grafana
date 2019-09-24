@@ -96,8 +96,8 @@ export default class TsAlarmRuleItem extends PureComponent<TsAlarmRuleItemProps,
   renderStat(): React.ReactNode {
     const { stats: { warn, alert } } = this.state;
     return (<>
-      <TsAlarmStatsItem icon="fa fa-exclamation-triangle">경고 {warn} 회 발생</TsAlarmStatsItem>
-      <TsAlarmStatsItem icon="fa fa-info-circle">위험 {alert} 회 발생</TsAlarmStatsItem>
+      <TsAlarmStatsItem className="ts-color-yellow" icon="fa fa-exclamation-triangle" unit="건">{warn}</TsAlarmStatsItem>
+      <TsAlarmStatsItem className="ts-color-red" icon="fa fa-info-circle" unit="건">{alert}</TsAlarmStatsItem>
     </>);
   }
 

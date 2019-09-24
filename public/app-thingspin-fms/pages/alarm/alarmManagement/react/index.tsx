@@ -10,7 +10,7 @@ import { getNavModel } from 'app/core/selectors/navModel';
 
 import { getAlertRuleItems, getSearchQuery } from 'app/features/alerting/state/selectors';
 
-import { AlertRuleList } from "app/features/alerting/AlertRuleList";
+import { AlertRuleList } from 'app/features/alerting/AlertRuleList';
 
 import { getAlertRulesAsync, setSearchQuery, togglePauseAlertRule } from 'app/features/alerting/state/actions';
 import { updateLocation } from 'app/core/actions';
@@ -25,8 +25,8 @@ import TsAlarmSearch from './TsAlarmSearch';
 
 // iiHOC(extended AlertRuleList)
 export class TsAlarmRuleList extends AlertRuleList {
-  search = "";
-  searchState = "";
+  search = '';
+  searchState = '';
 
   // Thingspin new method
   gotoAddPage = () => {
@@ -47,23 +47,25 @@ export class TsAlarmRuleList extends AlertRuleList {
   }
 
   dataFiltering = (rule: AlertRule): boolean => {
-    if (!this.searchState
-      || this.searchState === rule.state) {
-      return true;
+    if (
+      (this.searchState && (this.searchState !== rule.state)) // state search
+      || (this.search && (!rule.name.includes(this.search))) // text search
+    ) {
+      return false;
     }
 
-    return false;
+    return true;
   }
 
   // override(Render Hijacking)
   render() {
     const { alertRules } = this.props;
 
-    return (<AlarmMgmtBaseLayer buttons={this.getButtons()} title="알람 관리" titleIcon="fa fa-info" >
-      <TsContainer headerLeft={"알람 룰"}>
+    return (<AlarmMgmtBaseLayer buttons={this.getButtons()} title='알람 관리' titleIcon='fa fa-info' >
+      <TsContainer headerLeft='알람 룰'>
         <TsAlarmSearch onChange={this.onChange}></TsAlarmSearch>
         <section>
-            <ol className="alert-rule-list">
+            <ol className='alert-rule-list'>
             {alertRules.filter(this.dataFiltering)
               .map(rule => (<TsAlarmRuleItem
                   rule={rule}
