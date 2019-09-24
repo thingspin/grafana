@@ -1,0 +1,26 @@
+.ts-top-button {
+  // position
+  position: relative;
+
+  // box
+  padding: 10px 12px 9px 12px;
+  border-radius: 4px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+
+  // fonts
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.14;
+  letter-spacing: normal;
+  text-align: left;
+
+  // button colors
+  &.ts-btn-blue {
+    color: #ffffff;
+    background-color: #0039ff;
+  }
+
+}

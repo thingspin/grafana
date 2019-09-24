@@ -104,6 +104,11 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsTypeRoute.Get("/connect", Wrap(getTsConnectType))
 		})
 
+		// Alarm
+		tsRoute.Group(`/annotations`, func(tsAnnoRoute routing.RouteRegister) {
+			tsAnnoRoute.Get("/count/newState", Wrap(GetAnnotaionStateCount))
+		})
+
 		// Grafana 데이터소스 REST API 커스텀마이징
 		tsRoute.Group(`/datasources`, func(tsDsRoute routing.RouteRegister) {
 			tsDsRoute.Get("/:id", Wrap(GetTsDataSourceById))

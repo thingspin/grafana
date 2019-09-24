@@ -12,7 +12,7 @@ import { setupAngularRoutes } from 'app/routes/routes';
 import 'app-thingspin-fms/angular-modules/pages';
 import { UserSettingInfo } from 'app-thingspin-fms/types';
 import FMComponent from 'app-thingspin-fms/pages/FacilityMonitoring/react';
-import TsAlarmRuleList from 'app-thingspin-fms/pages/alarm/tsAlarmRuleList';
+import AlarmManagement from 'app-thingspin-fms/pages/alarm/alarmManagement/react';
 import TsAlarmSettingComponent from 'app-thingspin-fms/pages/alarm/tsAlarmSetting';
 import { TsLoginPage } from 'app-thingspin-fms/pages/login/TsLoginPage';
 
@@ -149,8 +149,12 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
   .when('/thingspin/alarm', { // customized /alert/list in file app/routes/routes.ts
     template: '<react-container />',
     reloadOnSearch: false,
+    routeInfo: {
+      menupath: [UserSettingInfo.Alarm, "알람 관리"],
+      icon: 'fa fa-bell',
+    },
     resolve: {
-      component: () => TsAlarmRuleList,
+      component: () => AlarmManagement,
     },
   })
   .when('/thingspin/alarm/notification', {
