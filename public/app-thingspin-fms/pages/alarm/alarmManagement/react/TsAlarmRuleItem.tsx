@@ -51,7 +51,7 @@ export default class TsAlarmRuleItem extends PureComponent<TsAlarmRuleItemProps,
     const url = '/thingspin/annotations/count/newState';
 
     Promise.all([
-      getBackendSrv().get(url, { dashboardId, panelId, newState: 'no_data', }),
+      getBackendSrv().get(url, { dashboardId, panelId, newState: 'alerting', }),
       getBackendSrv().get(url, { dashboardId, panelId, newState: 'pending', }),
     ]).then(([alert, warn]) => {
       this.setState({ stats: { alert, warn } });
