@@ -68,7 +68,10 @@ export class TsAlertTabCtrl extends AlertTabCtrl implements angular.IController 
     // add to persited model
     this.alert.conditions.push(condition);
     // add to view model
-    this.conditionModels.push(this.buildConditionModel(condition));
+
+    const model = this.buildConditionModel(condition);
+    model.isAdd = true;
+    this.conditionModels.push(model);
   }
 
   // ThingSPIN new method
@@ -86,7 +89,6 @@ export class TsAlertTabCtrl extends AlertTabCtrl implements angular.IController 
       // add to view model
       this.conditionModels.push(this.buildConditionModel(condition));
 
-      //
       this.conditionTypes.push({
         text: label,
         value: label,

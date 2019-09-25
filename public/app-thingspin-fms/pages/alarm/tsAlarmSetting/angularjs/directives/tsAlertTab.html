@@ -72,7 +72,7 @@
           </div>
 
           <!-- Trash  -->
-          <div class="gf-form">
+          <div class="gf-form" ng-if="conditionModel.isAdd">
             <label class="gf-form-label">
               <a class="pointer" tabindex="1" ng-click="ctrl.removeCondition($index)">
                 <i class="fa fa-trash"></i>
@@ -175,10 +175,10 @@
   </div>
 
   <div class="panel-options-group" ng-if="!ctrl.conditionModels.length">
-    <div class="panel-options-group__header">조건 정의</div>
+    <div class="panel-options-group__header">조건 설정</div>
     <div class="panel-options-group__body">
       <!-- empty message -->
-      <p align="center">알람으로 사용할 태그가 선택되지 않았습니다. </p>
+      <p align="center">알람으로 사용할 대상(태그)이 선택되지 않았습니다. </p>
       <p align="center">왼쪽에서 태그를 선택하세요.</p>
     </div>
   </div>

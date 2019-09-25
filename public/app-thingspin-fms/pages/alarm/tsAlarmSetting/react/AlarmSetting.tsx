@@ -6,13 +6,13 @@ import { connect } from 'react-redux';
 
 // Grafana libs
 // Models
+import { appEvents } from 'app/core/core';
 import { getAngularLoader, getDataSourceSrv } from '@grafana/runtime';
 import { getAlertingValidationMessage } from 'app/features/alerting/getAlertingValidationMessage';
 import { StoreState } from 'app/types';
 // Views
 import { UnConnectedAlertTab } from 'app/features/alerting/AlertTab';
 import { EditorTabBody, EditorToolbarView } from 'app/features/dashboard/panel_editor/EditorTabBody';
-import EmptyListCTA from 'app/core/components/EmptyListCTA/EmptyListCTA';
 // Controllers
 import { changePanelEditorTab } from 'app/features/dashboard/panel_editor/state/actions';
 
@@ -37,13 +37,12 @@ export class AlarmSetting extends UnConnectedAlertTab {
       return;
     }
 
+    appEvents.on('ts-update-fac-tree', () => { this.forceUpdate(); });
+
     this.panelCtrl = $$childHead.ctrl;
 
-    const scopeProps = { ctrl: this.panelCtrl };
-    const loader = getAngularLoader();
-    const template = '<ts-alert-tab />';
-
-    this.component = loader.load(this.element, scopeProps, template);
+    this.component = getAngularLoader()
+      .load(this.element, { ctrl: this.panelCtrl }, '<ts-alert-tab />');
 
     const validatonMessage = await getAlertingValidationMessage(
       panel.transformations,
@@ -57,9 +56,9 @@ export class AlarmSetting extends UnConnectedAlertTab {
     }
   }
 
-  // thingspin add func
+  // thingspin new method
   onUpdatePanel = (params: any) => {
-    const { Taginfo } = params;
+    const { Taginfo, siteData } = params;
     const { dashboard, panel } = this.props;
 
     // update target
@@ -74,14 +73,14 @@ export class AlarmSetting extends UnConnectedAlertTab {
     this.panelCtrl.events.emit("ts-update-alarm", params);
 
     // set FacilityTree in dashboard
-    (dashboard as FMDashboardModel).facilityTags = params.Taginfo;
-    (dashboard as FMDashboardModel).site = params.siteData;
-
+    const db = dashboard as FMDashboardModel;
+    db.facilityTags = Taginfo;
+    db.site = siteData;
 
     panel.refresh();
   }
 
-  // thingspin add func
+  // thingspin new method
   renderFacilityTree(): ReactNode {
     const { facilityTags, site } = this.props.dashboard as FMDashboardModel;
 

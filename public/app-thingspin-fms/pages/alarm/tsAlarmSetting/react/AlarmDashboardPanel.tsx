@@ -15,7 +15,7 @@ import AlarmSetting from './AlarmSetting';
 // (Customized grafana react component: iiHOC)
 export class AlarmDashboardPanel extends DashboardPanel {
 
-    // @Override
+    // Override
     componentDidUpdate() {
         const { panel, dashboard, isInView } = this.props;
         const { isLazy, angularPanel } = this.state;
