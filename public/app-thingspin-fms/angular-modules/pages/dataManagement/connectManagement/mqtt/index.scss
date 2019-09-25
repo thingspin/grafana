@@ -1,9 +1,10 @@
 @import "../../../../../../../node_modules/tabulator-tables/dist/css/bootstrap/tabulator_bootstrap.min.css";
 
 .mqtt-body {
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-bottom: 20px;    
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    background-color: #fff;
 }
 
 // TOP TITLE
@@ -34,7 +35,7 @@
     height: 36px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
-    background-color: #1e88e5;
+    background-color: #0039ff;
     color: #ffffff;
 }
 #mqtt-cancel-btn {
@@ -116,14 +117,14 @@
     margin-top: 16.5px;
     display: inline-flex;
 
-    &.collect {
+    &.mqtt-collect {
         width: 30%;
     }
-    &.url {
+    &.mqtt-url {
         margin-left: 4.12%;
         width: 20%;
     }
-    &.port {
+    &.mqtt-port {
         margin-left: 4.12%;
         width: 20%;
     }
@@ -164,7 +165,7 @@
             &:focus + .separator {
                 opacity: 1;
                 height: 2px;
-                background: #1e88e5;
+                background: #0039ff;
                 transform: scaleX(1) translateY(-2px);   
             }
         }
@@ -214,7 +215,7 @@
 }
 
 .mqtt-state-connected {
-    background-color: #1e88e5;
+    background-color: #0039ff;
     color:#ffffff;
 }
 
@@ -316,7 +317,7 @@
     margin-right: 111px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
-    background-color: #1e88e5;
+    background-color: #0039ff;
     color:#ffffff;
     float: right;
 }
@@ -474,7 +475,7 @@
     line-height: 1.14;
     letter-spacing: normal;
     text-align: left;
-    color: #1e88e5;
+    color: #0039ff;
 }
 //TOPIC ADD VIEW - BTN AREA
 #mqtt-addview-right-button-area {
@@ -489,7 +490,7 @@
     height: 28px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
-    background-color: #1e88e5;
+    background-color: #0039ff;
     color:#ffffff;
 }
 //TOPIC ADD VIEW - TOPIC CANCEL BTN
@@ -628,7 +629,7 @@
     height: 28px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
-    background-color: #1e88e5;
+    background-color: #0039ff;
     color:#ffffff;
     margin-left: 16px;
 }
@@ -645,7 +646,7 @@
     line-height: 1.5;
     letter-spacing: normal;
     text-align: left;
-    color: #1e88e5;
+    color: #0039ff;
 }
 
 #topic-list-input .bootstrap-tagsinput input {
@@ -654,7 +655,7 @@
 
 #topic-list-input .bootstrap-tagsinput .label-tag {
     border-radius: 4px;
-    border: solid 1px #1e88e5;
+    border: solid 1px #0039ff;
     background-color: #ffffff;
     height: 28px;
 }
@@ -668,7 +669,7 @@
     line-height: 1.14;
     letter-spacing: normal;
     text-align: left;
-    color: #1e88e5;
+    color: #0039ff;
     padding-top: 6px;
     padding-left: 12px;
 }
@@ -719,7 +720,7 @@
             &:focus + .separator {
                 opacity: 1;
                 height: 2px;
-                background: #1e88e5;
+                background: #0039ff;
                 transform: scaleX(1) translateY(-2px);   
             }
         }

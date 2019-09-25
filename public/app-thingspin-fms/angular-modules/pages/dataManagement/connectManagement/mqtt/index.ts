@@ -105,9 +105,9 @@ export class TsMqttConnectCtrl {
     $timeout: ITimeoutService) {
     this.timeout = $timeout;
     this.connection = {
-      url: DEF_URL,
-      port: DEF_PORT,
-      keep_alive: DEF_ALIVE,
+      url: "",
+      port: "",
+      keep_alive: "",
       session: true
     };
     this.defMqtt = {
@@ -170,6 +170,24 @@ export class TsMqttConnectCtrl {
       console.log("MQTT Connected");
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  sampleHost() {
+    if (this.connection.url.length === 0) {
+      this.connection.url = DEF_URL;
+    }
+  }
+
+  samplePort() {
+    if (this.connection.port.length === 0) {
+      this.connection.port = DEF_PORT;
+    }
+  }
+
+  sampleKeep() {
+    if (this.connection.keep_alive.length === 0) {
+      this.connection.keep_alive = DEF_ALIVE;
     }
   }
 
@@ -257,6 +275,9 @@ export class TsMqttConnectCtrl {
         this.delTopicItemList(event.item);
       });
       */
+      this.timeout(() => {
+        $('#topic_name').focus();
+      });
     } else {
       this.onDataResetTopic();
       this.isTopicEditView = false;

@@ -21,24 +21,24 @@
         <div class="mqtt-content-line"></div>
         <div class="mqtt-connect-view">
             <div class="mqtt-edit-connect">
-                <div class="ts-input-group collect">
+                <div class="ts-input-group mqtt-collect">
                     <div class="ts-mqtt-collect-label">수집기 이름</div>
                     <div class="ts-input">
                         <input id="collector_input" type="text" ng-model="ctrl.collector"/>
                         <span ng-class="{separator: true, enable: ctrl.collector}"></span>
                     </div>
                 </div>
-                <div class="ts-input-group url">
+                <div class="ts-input-group mqtt-url">
                     <div class="ts-mqtt-url-label">Host</div>
                     <div class="ts-input">
-                        <input type="text" ng-model="ctrl.connection.url"/>
+                        <input type="text" ng-model="ctrl.connection.url" ng-click="ctrl.sampleHost()" placeholder="localhost"/>
                         <span ng-class="{separator: true, enable: ctrl.connection.url}"></span>
                     </div>
                 </div>
-                <div class="ts-input-group port">
+                <div class="ts-input-group mqtt-port">
                     <div class="ts-mqtt-port-label">Port</div>
                     <div class="ts-input">
-                        <input type="text" ng-model="ctrl.connection.port"/>
+                        <input type="text" ng-model="ctrl.connection.port" ng-click="ctrl.samplePort()" placeholder="1883"/>
                         <span ng-class="{separator: true, enable: ctrl.connection.port}"></span>
                     </div>
                 </div>       
@@ -52,7 +52,7 @@
             <div class="ts-input-group keep">
                 <div class="ts-mqtt-keep-label">Keep Alive</div>
                 <div class="ts-input">
-                    <input type="text" ng-model="ctrl.connection.keep_alive"/>
+                    <input type="text" ng-model="ctrl.connection.keep_alive" ng-click="ctrl.sampleKeep()" placeholder="60"/>
                     <span ng-class="{separator: true, enable: ctrl.connection.keep_alive}"></span>
                 </div>
             </div>
@@ -62,7 +62,7 @@
             <span class="mqtt-subtitle" id="mqtt-title-session">
                 세션 초기화
             </span>
-            <input id="mqtt-session-check" type="checkbox" ng-model="ctrl.connection.session">                       
+            <input id="mqtt-session-check" type="checkbox" ng-model="ctrl.connection.session">
         </div>
         <div class="mqtt-title" id="mqtt-title-topiclist">
             수집 Topic List
@@ -70,7 +70,52 @@
         <button id="mqtt-plus-topic-btn" className="btn" ng-click="ctrl.onShowTopicEditView(true)" ng-show="ctrl.isTopicEditBtn">
             + Topic
         </button>
-        <div class="mqtt-content-line"></div>        
+        <div class="mqtt-content-line"></div>
+        <div class="mqtt-topic-add-view" ng-show="ctrl.isTopicEditView">
+            <div class="mqtt-title" id="mqtt-title-topic-add">
+                Topic 추가
+            </div>
+            <span id="mqtt-title-topic-add-info">
+                Topic 아이템 구성하기
+            </span>
+            <div id="mqtt-addview-right-button-area">
+                <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView(false)">
+                    취소
+                </button>
+                <button id="mqtt-topic-add-plus-btn" className="btn" ng-click="ctrl.onTopicListAdd(ctrl.topicItem.id)">
+                    + Topic List
+                </button>
+            </div>
+            <div class="mqtt-add-topic-content-line"></div>
+            <div>
+                <span class="mqtt-subtitle" id="mqtt-topic-name-title">
+                    Name
+                </span>
+                <div class="ts-mqtt-topic-input-group name">
+                    <div class="ts-input">
+                        <input id="topic_name" data-nodrag type="text" ng-model="ctrl.topicItem.name" placeholder="Topic 이름 입력"/>
+                        <span ng-class="{separator: true, enable: ctrl.topicItem.name}"></span>
+                    </div>
+                </div>
+                <span class="mqtt-subtitle" id="mqtt-topic-subtopic-title">
+                    Topic
+                </span>
+                <div class="ts-mqtt-topic-input-group tag">
+                    <div class="ts-input">
+                        <input data-nodrag type="text" ng-model="ctrl.topicItem.topicString" placeholder="Topic 입력"/>
+                        <span ng-class="{separator: true, enable: ctrl.topicItem.topicString}"></span>
+                    </div>
+                </div>
+                <div class="ts-mqtt-topic-input-right-view">
+                    <span class="mqtt-subtitle" id="mqtt-topic-value-title">
+                        Value Type
+                    </span>
+                    <div class="mqtt-edit-bg" id="mqtt-topic-value-bg">
+                        <select id="mqtt-topic-value-combobox" ng-model="ctrl.topicItem.value" ng-options="opts for opts in ctrl.defMqtt.values"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="ts-mqtt-table-container mqtt-table-size">
             <div class="connect-table-header">
                 <span>페이지당 행수 : </span>
@@ -123,52 +168,6 @@
                         <span >{{ page + 1}}</span>
                     </button>
                     <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <div class="mqtt-topic-add-view" ng-show="ctrl.isTopicEditView">
-            <div class="mqtt-title" id="mqtt-title-topic-add">
-                Topic 추가
-            </div>
-            <span id="mqtt-title-topic-add-info">
-                Topic 아이템 구성하기
-            </span>
-            <div id="mqtt-addview-right-button-area">
-                <button id="mqtt-topic-add-cancel-btn" className="btn" ng-click="ctrl.onShowTopicEditView(false)">
-                    취소
-                </button>
-                <button id="mqtt-topic-add-plus-btn" className="btn" ng-click="ctrl.onTopicListAdd(ctrl.topicItem.id)">
-                    + Topic List
-                </button>
-            </div>
-            <div class="mqtt-add-topic-content-line"></div>
-            <div>
-                <span class="mqtt-subtitle" id="mqtt-topic-name-title">
-                    Name
-                </span>
-                <div class="ts-mqtt-topic-input-group name">
-                    <div class="ts-input">
-                        <input data-nodrag type="text" ng-model="ctrl.topicItem.name" placeholder="Topic 이름 입력"/>
-                        <span ng-class="{separator: true, enable: ctrl.topicItem.name}"></span>
-                    </div>
-                </div>
-                <span class="mqtt-subtitle" id="mqtt-topic-subtopic-title">
-                    Topic
-                </span>
-                <div class="ts-mqtt-topic-input-group tag">
-                    <div class="ts-input">
-                        <input data-nodrag type="text" ng-model="ctrl.topicItem.topicString" placeholder="Topic 입력"/>
-                        <span ng-class="{separator: true, enable: ctrl.topicItem.topicString}"></span>
-                    </div>
-                </div>
-                <div class="ts-mqtt-topic-input-right-view">
-                    <span class="mqtt-subtitle" id="mqtt-topic-value-title">
-                        Value Type
-                    </span>
-                    <div class="mqtt-edit-bg" id="mqtt-topic-value-bg">
-                        <select id="mqtt-topic-value-combobox" ng-model="ctrl.topicItem.value" ng-options="opts for opts in ctrl.defMqtt.values"></select>
-                    </div>
                 </div>
             </div>
         </div>
