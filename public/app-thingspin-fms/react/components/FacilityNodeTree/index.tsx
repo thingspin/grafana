@@ -44,23 +44,19 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     }
 
     private async componentInit() {
-        const { taginfo } = this.props;
-        let updateState = await this.getSiteList();
-        this.initMqtt();
-        siteModel.getConnectInfo();
+        // JGW( empty sequence )
+        // this.initMqtt();
 
-        if (taginfo) {
-            const fdState = await this.restoreFacilityData(this.props);
-
-            // rewrite
-            updateState = {
-                ...updateState,
-                ...fdState,
-            };
-        }
+        const [updateState, fdState] = await Promise.all([
+            this.getSiteList(),
+            this.restoreFacilityData(),
+        ]);
 
         if (this._isMounted) {
-            this.setState(updateState);
+            this.setState({
+                ...updateState,
+                ...fdState,
+            });
         }
     }
 
@@ -74,22 +70,16 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     }
 
     //restore checked item
-    async restoreFacilityData(item: facilityTreeProps): Promise<TreeInfo> {
+    async restoreFacilityData(item: facilityTreeProps = this.props): Promise<TreeInfo> {
         //site selected
-        console.log("restore item:", item);
-        console.log(item.siteinfo);
-        const { siteinfo: { value, isCustom }, taginfo } = item;
-        const siteInfoState = await this.findSiteinfo(value, isCustom);
+        const { siteinfo: { value, }, taginfo } = item;
+        const siteInfoState = await this.findSiteinfo(value);
         // tag selected
 
-        const updateState: any = (taginfo)
-            ? {
-                checkedSave: taginfo.map((info: any) => (info.value)),
-                Taginfo: taginfo,
-            }
-            : {
-                checkedSave: [],
-            };
+        const updateState: any = {
+            checkedSave: taginfo.map((info: any) => (info.value)),
+            Taginfo: taginfo,
+        };
 
         return {
             ...siteInfoState,
@@ -103,7 +93,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         }
 
         try {
-
             const [ sites, ptags ] = await Promise.all([
                 siteModel.getFactilitySite(FacilityTreeType.Site),
                 siteModel.getFactilitySite(FacilityTreeType.Ptag),
@@ -129,16 +118,18 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         return null;
     }
 
-    async findSiteinfo(siteid: any, isCustom: boolean) {
+    async findSiteinfo(siteid: any) {
         if (!this._isMounted) {
             return null;
         }
 
         try {
-            const sites: SiteOptions[] = await siteModel.getFactilitySite(FacilityTreeType.Site);
-            const ptags: SiteOptions[] = await siteModel.getFactilitySite(FacilityTreeType.Ptag);
+            const [ sites, ptags ] = await Promise.all([
+                siteModel.getFactilitySite(FacilityTreeType.Site),
+                siteModel.getFactilitySite(FacilityTreeType.Ptag),
+            ]);
 
-            const siteOptions: SiteOptions[] = [siteModel.generateSiteOpts(-1, "ALL Tags", FacilityTreeType.Site)]
+            const siteOptions: SiteOptions[] = [ siteModel.generateSiteOpts(-1, "ALL Tags", FacilityTreeType.Site) ]
                 .concat(sites, ptags);
             const i: number = siteOptions.findIndex(({ value }) => (value === siteid));
             const target: number = i > 0 ? i : 0;
@@ -202,7 +193,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         switch (target) {
             case 'connect':
                 break;
-
             default:
         }
     }
@@ -238,7 +228,6 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             return;
         }
 
-        //console.log("sendTagData: ",TagData);
         /*
         const Taginfo = (siteData.value === -1)
             //All Tags
