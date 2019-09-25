@@ -37,8 +37,6 @@ export class AlarmSetting extends UnConnectedAlertTab {
       return;
     }
 
-    appEvents.on('ts-update-fac-tree', () => { this.forceUpdate(); });
-
     this.panelCtrl = $$childHead.ctrl;
 
     this.component = getAngularLoader()
