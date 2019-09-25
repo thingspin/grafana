@@ -1,6 +1,6 @@
 // container common style
 .blue {
-    color: #1e88e5;
+    color: #0039ff;
 }
 .opcua-edit-container {
     font-size: 14px;
@@ -58,7 +58,7 @@
 
                 height: 2px;
 
-                background: #1e88e5;
+                background: #0039ff;
 
                 transform: scaleX(1) translateY(-2px);   
             }
@@ -111,11 +111,15 @@ ts-opcua-connect {
             padding-right: 0px;
 
             .ts-btn-cancel {
+                width: 80px;
+                height: 36px;
                 background-color: #6a6a6a;
             }
     
             .ts-btn-save {
-                background-color: #1e88e5;
+                width: 80px;
+                height: 36px;
+                background-color: #0039ff;
             }
         }
     }
@@ -243,7 +247,7 @@ ts-opc-node-set {
                     &:hover {
                         background-color: #e3f2fd;
                         button {
-                            color: #1e88e5;
+                            color: #0039ff;
                         }
                     }
                 }
