@@ -43,6 +43,7 @@ export class TsSiteListCtrl implements angular.IController {
     isEditView: boolean;
     isListView: boolean;
     isAddSiteBtn: boolean;
+    editName: string;
     name: string;
     desc: string;
     lat: string;
@@ -85,6 +86,7 @@ export class TsSiteListCtrl implements angular.IController {
     editSite(site: any) {
         this.onShowEditView(true);
         this.isEdit = true;
+        this.editName = site.name;
         this.data = site.id;
         this.name = site.name;
         this.desc = site.desc;
@@ -94,8 +96,6 @@ export class TsSiteListCtrl implements angular.IController {
         console.log(site);
     }
     removeSite(sid: any) {
-        console.log("Remove site");
-        console.log(sid);
         $.ajax({
             type: 'DELETE',
             url: `/thingspin/sites/${sid}`,
@@ -145,39 +145,43 @@ export class TsSiteListCtrl implements angular.IController {
     onSiteAdd(): void {
         if (this.isEdit) {
             // Edit
-            console.log("sid");
-            console.log(this.data);
-            this.backendSrv.put("/thingspin/sites", {
-                Id: this.data,
-                Name: this.name,
-                Desc: this.desc,
-                Lat: parseFloat(this.lat),
-                Lon: parseFloat(this.lon),
-            }).then((result: any) => {
-                appEvents.emit('alert-success', ['수정되었습니다.']);
-                this.onLoadData(result);
-            }).catch((err: any) => {
-                if (err.status === 500) {
-                    appEvents.emit('alert-error', [err.statusText]);
-                }
-            });
-        } else {
-            // Add
-            if (this.name) {
-                this.backendSrv.post("/thingspin/sites", {
+            if (this.checkCmpSiteName()) {
+                this.backendSrv.put("/thingspin/sites", {
+                    Id: this.data,
                     Name: this.name,
                     Desc: this.desc,
                     Lat: parseFloat(this.lat),
                     Lon: parseFloat(this.lon),
                 }).then((result: any) => {
-                appEvents.emit('alert-success', ['추가되었습니다.']);
-                this.onLoadData(result);
-                this.onShowEditView(false);
+                    appEvents.emit('alert-success', ['수정되었습니다.']);
+                    this.onLoadData(result);
+                    this.onShowEditView(false);
                 }).catch((err: any) => {
                     if (err.status === 500) {
                         appEvents.emit('alert-error', [err.statusText]);
                     }
                 });
+
+            }
+        } else {
+            // Add
+            if (this.name) {
+                if (this.checkCmpSiteName()) {
+                    this.backendSrv.post("/thingspin/sites", {
+                        Name: this.name,
+                        Desc: this.desc,
+                        Lat: parseFloat(this.lat),
+                        Lon: parseFloat(this.lon),
+                    }).then((result: any) => {
+                        appEvents.emit('alert-success', ['추가되었습니다.']);
+                        this.onLoadData(result);
+                        this.onShowEditView(false);
+                    }).catch((err: any) => {
+                        if (err.status === 500) {
+                            appEvents.emit('alert-error', [err.statusText]);
+                        }
+                    });
+                }
             } else {
                 if (!this.name) {
                     this.openAlartNotification("사이트에 이름을 입력해주세요.");
@@ -186,16 +190,28 @@ export class TsSiteListCtrl implements angular.IController {
         }
     }
 
-    siteAdd(): void {
-        console.log("siteAdd click");
-        this.data = "Site id test = 1";
+    checkCmpSiteName() {
+        for (let count = 0; count < this.list.length; count++) {
+            if (this.list[count].name.toLowerCase() === this.name.toLowerCase()) {
+                if (this.isEdit) {
+                    if (this.list[count].name.toLowerCase() === this.editName.toLowerCase()) {
+                        continue;
+                    } else {
+                        this.openAlartNotification("같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.");
+                        return false;
+                    }
+                } else {
+                    this.openAlartNotification("같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.");
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     async asyncDataLoader(): Promise<void> {
-        console.log("asyncDataLoader");
         try {
             const list = await this.backendSrv.get("/thingspin/sites");
-            console.log(list);
             this.onLoadData(list);
             this.$scope.$applyAsync();
         } catch (e) {
@@ -204,7 +220,6 @@ export class TsSiteListCtrl implements angular.IController {
     }
 
     siteNameCreate(value: any) {
-        console.log(value.length);
         let resultStr = "";
         for (let i = 0; i < 5 - value.length; i++) {
             resultStr += "0";
@@ -215,7 +230,6 @@ export class TsSiteListCtrl implements angular.IController {
     onLoadData(items: any) {
         this.list = [];
 
-        console.log(items);
         if (Array.isArray(items)) {
             for (const item of items) {
                 const { id, name, desc, lat, lon } = item;
@@ -235,7 +249,6 @@ export class TsSiteListCtrl implements angular.IController {
     }
     // TABLE Method
     tableClick(value: any, idx: any) {
-        console.log(idx);
         this.data = value;
         this.selIdx = idx;
         this.tableSelect(idx);
@@ -311,7 +324,6 @@ export class TsSiteListCtrl implements angular.IController {
     }
     // table event methods
     tOnSelectChange() {
-        console.log("click");
         this.tCalcPaging();
         this.setPageNodes();
     }
