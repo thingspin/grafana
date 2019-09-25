@@ -15,6 +15,9 @@ import (
 
 type resultHandler interface {
 	handle(evalContext *EvalContext) error
+
+	// thingspin add code
+	tsHandle(evalContext *EvalContext) error
 }
 
 type defaultResultHandler struct {

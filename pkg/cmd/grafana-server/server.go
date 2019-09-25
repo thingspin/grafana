@@ -43,7 +43,7 @@ import (
 	// thingspin add code ----
 	_ "github.com/grafana/grafana/pkg/thingspin/drone"
 	_ "github.com/grafana/grafana/pkg/thingspin/micro"
-	_ "github.com/grafana/grafana/pkg/services/thingspinSimulator"
+	_ "github.com/grafana/grafana/pkg/services/thingspinStream"
 	_ "github.com/grafana/grafana/pkg/services/thingspin"
 )
 

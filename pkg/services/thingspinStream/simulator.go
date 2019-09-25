@@ -1,44 +1,34 @@
-package thingspinSimulator
+package thingspinStream
 
 import (
 	"math/rand"
 	"time"
 
-	"github.com/grafana/grafana/pkg/api"
-	"github.com/grafana/grafana/pkg/infra/log"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
-	"github.com/grafana/grafana/pkg/registry"
 )
 
-type ThingspinSimulatorService struct {
-	log log.Logger
+var streamService *ThingspinStreamService
 
-	HttpServer *api.HTTPServer `inject:""`
-}
+func (stream *ThingspinStreamService) Init() error {
+	streamService = stream
 
-func init() {
-	registry.RegisterService(&ThingspinSimulatorService{
-		log: log.New("thingspin.simulator"),
-	})
-}
+	if stream.isRunSimulator {
+		go func() {
+			stream.log.Info("Run Thingspin Alarm Simulator")
 
-func (sim *ThingspinSimulatorService) Init() error {
+			for {
+				t := time.Duration(rand.Int31n(3)+1) * time.Second
+				time.Sleep(t)
 
-	go func() {
-		sim.log.Info("Run Thingspin Simulator")
-
-		for {
-			t := time.Duration(rand.Int31n(3)+1) * time.Second
-			time.Sleep(t)
-
-			sim.sendAlarmSimulator()
-		}
-	}()
+				stream.sendAlarmSimulator()
+			}
+		}()
+	}
 
 	return nil
 }
 
-func (sim *ThingspinSimulatorService) sendAlarmSimulator() {
+func (stream *ThingspinStreamService) sendAlarmSimulator() {
 	// generate simulator data
 	var alarmType string
 	typeRandom := rand.Intn(2)
@@ -65,5 +55,5 @@ func (sim *ThingspinSimulatorService) sendAlarmSimulator() {
 	}
 
 	// send data
-	sim.HttpServer.TsSendStream(&streamData)
+	stream.HttpServer.TsSendStream(&streamData)
 }
