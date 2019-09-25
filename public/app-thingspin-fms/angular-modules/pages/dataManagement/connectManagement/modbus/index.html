@@ -24,51 +24,62 @@
 
             <div class="modbus-conn-section-line"></div>
 
-            <div class = "modbus-edit-box">
-              
-                    <span class="modbus-subtitle" id="modbus-collector">수집기 이름</span>
-                    <div class="modbus-edit-bg" id="modbus-collector-name-position">
-                        <input id="modbus-edit" type="text" class="gf-form-input" ng-model="ctrl.connName" placeholder="수집기 이름">
+            <div class="modbus-edit-box">
+                <div class="ts-input-group collect">
+                    <div class="ts-modbus-collect-label">수집기 이름</div>
+                    <div class="ts-input">
+                        <input id="collector_input" type="text" ng-model="ctrl.connName">
+                        <span ng-class="{separator: true, enable: ctrl.connName}"></span>
                     </div>
-                
-                
-                    <span class="modbus-subtitle" id="modbus-host">Host</span>
-                    <div class="modbus-edit-bg" id="modbus-collector-host-position">
-                        <input id="modbus-edit" type="text" class="gf-form-input"  ng-click = "ctrl.sampleHost()" ng-model="ctrl.modbusHost" placeholder="127.0.0.1" >
+                </div>
+                <div class="ts-input-group url">
+                    <div class="ts-modbus-url-label">Host</div>
+                    <div class="ts-input">
+                        <input type="text" ng-model="ctrl.modbusHost" ng-click = "ctrl.sampleHost()" placeholder="127.0.0.1">
+                        <span ng-class="{separator: true, enable: ctrl.modbusHost}"></span>
                     </div>
-                
-                
-                    <span class="modbus-subtitle" id="modbus-port">Port</span>
-                    <div class="modbus-edit-bg" id="modbus-collector-port-position">
-                        <input id="modbus-edit" type="text" class="gf-form-input"   ng-click = "ctrl.samplePort()" ng-model="ctrl.modbusPort" placeholder="502" >
+                </div>
+                <div class="ts-input-group port">
+                    <div class="ts-modbus-port-label">Port</div>
+                    <div class="ts-input">
+                        <input type="text" ng-model="ctrl.modbusPort" ng-click = "ctrl.samplePort()" placeholder="502">
+                        <span ng-class="{separator: true, enable: ctrl.modbusPort}"></span>
                     </div>
-                
-            </div>   
-            
+                </div>
+            </div>
         <!--추가정보 -->
         <div class="modbus-title-conn-add">
             Modbus 추가 정보
         </div>
         <div class="modbus-conn-section-line"></div>
         <div class="modbus-edit-box">
-            <span class="modbus-subtitle" id="modbus-unit-id">Unit-id</span>
-            <div class="modbus-unitid-bg" id="modbus-unit-id-pos">
-                <input id="modbus-edit" type="number" class="gf-form-input" ng-click = "ctrl.sampleUnitID()"ng-model="ctrl.modbusUnitID" placeholder="1">
+            <div class="ts-input-group unit-id">
+                <span class="ts-modbus-collect-label-min">Unit-id</span>
+                <div class="ts-input">
+                    <input type="text" ng-click="ctrl.sampleUnitID()" ng-model="ctrl.modbusUnitID" placeholder="1">
+                    <span ng-class="{separator: true, enable: ctrl.connName}"></span>
+                </div>
             </div>
-
-            <span class="modbus-subtitle" id="modbus-time-out">Time out (ms)</span>
-            <div class="modbus-timeout-bg" id="modbus-time-out-pos">
-                <input id="modbus-edit" type="number" class="gf-form-input" ng-click = "ctrl.sampleTimeOut()"ng-model="ctrl.modbusTimeOut" placeholder="1000">
+            <div class="ts-input-group time-out">
+                <span class="ts-modbus-collect-label">Time out(ms)</span>
+                <div class="ts-input">
+                    <input type="text" ng-click = "ctrl.sampleTimeOut()"ng-model="ctrl.modbusTimeOut" placeholder="1000">
+                    <span ng-class="{separator: true, enable: ctrl.connName}"></span>
+                </div>
             </div>
-                    
-            <span class="modbus-subtitle" id="modbus-Reconnect">Reconnect (ms)</span>
-            <div class="modbus-reconnect-bg" id="modbus-Reconnect-pos">
-                <input id="modbus-edit" type="number" class="gf-form-input" ng-click = "ctrl.sampleReTimeOut()"ng-model="ctrl.modbusReTimeOut" placeholder="2000">
+            <div class="ts-input-group recoonect">
+                <span class="ts-modbus-collect-label">Reconnect(ms)</span>
+                <div class="ts-input">
+                    <input type="text" ng-click = "ctrl.sampleReTimeOut()"ng-model="ctrl.modbusReTimeOut" placeholder="2000">
+                    <span ng-class="{separator: true, enable: ctrl.connName}"></span>
+                </div>
             </div>
-
-            <span class="modbus-subtitle" id="modbus-Intervals">Read Intervals (sec)</span>
-            <div class="modbus-interval-bg" id="modbus-Intervals-pos">
-                <input id="modbus-edit" type="number" class="gf-form-input" ng-click = "ctrl.sampleInterval()"ng-model="ctrl.modbusReadIntervals" placeholder="1">
+            <div class="ts-input-group interval">
+                <span class="ts-modbus-collect-label-interval">Read Intervals(sec)</span>
+                <div class="ts-input">
+                    <input type="text" ng-click = "ctrl.sampleInterval()"ng-model="ctrl.modbusReadIntervals" placeholder="1">
+                    <span ng-class="{separator: true, enable: ctrl.connName}"></span>
+                </div>
             </div>
         </div>
         <!-- address list-->    
@@ -92,25 +103,40 @@
             </div>    
             <div class="modbus-address-add-section-line"></div> 
             <div class="modbus-address-add-edit">
-                <span class="modbus-subtitle" id="modbus-add-edit-name">이름</span>
-                <div class="modbus-edit-bg" id="modbus-add-edit-name-pos">
-                    <input id="modbus-edit" type="text" class="gf-form-input" ng-model="ctrl.editName" placeholder="name" >
+                <div class="ts-input-group input-name">
+                    <span class="ts-modbus-collect-label-input-min">이름</span>
+                    <div class="ts-input">
+                        <input id="address-name" type="text" ng-model="ctrl.editName" placeholder="name">
+                        <span ng-class="{separator: true, enable: ctrl.editName}"></span>
+                    </div>
                 </div>
-                <span class="modbus-subtitle" id="modbus-add-edit-address">Address</span>
-                <div class="modbus-edit-bg" id="modbu-add-edit-address-pos">
-                    <input id="modbus-edit" type="text" class="gf-form-input"  ng-model="ctrl.editAddress" placeholder="40001">
+                <div class="ts-input-group input-address">
+                    <span class="ts-modbus-collect-label-input-normal">Address</span>
+                    <div class="ts-input">
+                        <input type="text" ng-model="ctrl.editAddress" placeholder="40001">
+                        <span ng-class="{separator: true, enable: ctrl.editAddress}"></span>
+                    </div>
                 </div>
-                <span class="modbus-subtitle" id="modbus-add-edit-FC">FC</span>
-                <div class="modbus-edit-bg" id="modbu-add-edit-FC-pos">
-                    <select id="modbus-FC-combobox" ng-model="ctrl.fcSelected" ng-options="opts for opts in ctrl.modbusParams.functioncodes"></select>
+                <div class="ts-input-group input-fc">
+                    <span class="ts-modbus-collect-label-input-min">FC</span>
+                    <div class="ts-input">
+                        <select ng-model="ctrl.fcSelected" ng-options="opts for opts in ctrl.modbusParams.functioncodes"></select>
+                        <span ng-class="{separator: true, enable: ctrl.fcSelected}"></span>
+                    </div>
                 </div>
-                <span class="modbus-subtitle" id="modbus-add-edit-quantity">Quantity</span>
-                <div class="modbus-edit-bg" id="modbu-add-edit-quantity-pos">
-                    <select id="modbus-edit" style="width:50px;height:36px" ng-model="ctrl.quantitySelected" ng-options="opts for opts in ctrl.modbusParams.quantity"></select>
+                <div class="ts-input-group input-quantity">
+                    <span class="ts-modbus-collect-label-input-normal">Quantity</span>
+                    <div class="ts-input">
+                        <select ng-model="ctrl.quantitySelected" ng-options="opts for opts in ctrl.modbusParams.quantity"></select>
+                        <span ng-class="{separator: true, enable: ctrl.quantitySelected}"></span>
+                    </div>
                 </div>
-                <span class="modbus-subtitle" id="modbus-add-edit-datatype">Data Type</span>
-                <div class="modbus-edit-bg" id="modbu-add-edit-datatype-pos">
-                        <select id="modbus-type-combobox" ng-model="ctrl.typeSelected" ng-options="opts for opts in ctrl.modbusParams.datatypes"></select>
+                <div class="ts-input-group input-type">
+                    <span class="ts-modbus-collect-label-input-normal">Data Type</span>
+                    <div class="ts-input">
+                        <select ng-model="ctrl.typeSelected" ng-options="opts for opts in ctrl.modbusParams.datatypes"></select>
+                        <span ng-class="{separator: true, enable: ctrl.typeSelected}"></span>
+                    </div>
                 </div>
             </div>
         </div>

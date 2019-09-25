@@ -368,6 +368,9 @@ export class TsModbusConnectCtrl {
     } else {
       this.isAddressEditView = true;
       this.isAddressEditBtn = false;
+      this.timeout(() => {
+        $('#address-name').focus();
+      });
     }
   }
 
@@ -664,7 +667,7 @@ export class TsModbusConnectCtrl {
   }
 
   $onInit(): void {
-    this.timeout(() => { $('#modbus-edit').focus(); });
+    this.timeout(() => { $('#collector-input').focus(); });
   }
 }
 
