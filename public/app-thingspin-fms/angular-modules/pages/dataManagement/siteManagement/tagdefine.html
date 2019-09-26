@@ -11,6 +11,11 @@
             설비 추가
         </button>
     </div>
+    <div class="site-title-view">
+        <span class="site-title-desc-font">사이트 명 : </span>
+        <span class="site-title-main-font">{{ctrl.siteInfo.name}}</span>
+        <span class="site-title-desc-font">설명 : {{ctrl.siteInfo.desc}}</span>
+    </div>
     <div class="ts-site-input-area" ng-show="ctrl.isEditView">
         <div class="ts-site-input-title">
             설비 추가
@@ -64,7 +69,7 @@
                             Modbus
                         </span>
                     </div>
-                </div>                
+                </div>
             </span>
             <div class="ts-define-tree-title-right ts-define-tree-right-title">
                 설비 모델

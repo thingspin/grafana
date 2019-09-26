@@ -26,6 +26,8 @@ export class TsTagDefineCtrl {
   window: any;
   timeout: any;
   inputForm: any;
+  siteInfo: any;
+
   /** @ngInject */
   constructor(
     private backendSrv: BackendSrv,
@@ -49,6 +51,10 @@ export class TsTagDefineCtrl {
         lon: "",
         imgpath: "",
         tagName: ""
+    };
+    this.siteInfo = {
+      name: "",
+      desc: ""
     };
     this.editDataBackup = "";
     this.window = angular.element($window);
@@ -76,6 +82,19 @@ export class TsTagDefineCtrl {
 
     if ($routeParams.id !== undefined || $routeParams.id !== null) {
       this.data = +$routeParams.id;
+      backendSrv.get(`/thingspin/sites/${$routeParams.id}`,{}).then((result: any)=> {
+        console.log(result);
+        if (result !== null || result !== undefined) {
+          this.siteInfo.name = result.name;
+          this.siteInfo.desc = result.desc;
+        }
+      }).catch((err: any) => {
+        if (err.status === 500) {
+          appEvents.emit('alert-error', [err.statusText]);
+        }
+      });
+      console.log(this.siteInfo);
+
 
       backendSrv.get(`/thingspin/sites/${$routeParams.id}/facilities/tree`,{}).then((result: any)=> {
         if (result !== null || result !== undefined) {
