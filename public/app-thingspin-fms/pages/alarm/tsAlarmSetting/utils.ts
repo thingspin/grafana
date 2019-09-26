@@ -38,6 +38,7 @@ export const getDefaltCondition = (label = 'A', from = '5s') => {
   const defaultCondition = getDefaultCondition();
   defaultCondition.query.params[0] = label;
   defaultCondition.query.params[1] = from;
+  defaultCondition.reducer.type = 'last';
 
   return defaultCondition;
 };
