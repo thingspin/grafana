@@ -7,28 +7,25 @@ import (
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 )
 
-var streamService *ThingspinStreamService
-
-func (stream *ThingspinStreamService) Init() error {
-	streamService = stream
-
-	if stream.isRunSimulator {
-		go func() {
-			stream.log.Info("Run Thingspin Alarm Simulator")
-
-			for {
-				t := time.Duration(rand.Int31n(3)+1) * time.Second
-				time.Sleep(t)
-
-				stream.sendAlarmSimulator()
-			}
-		}()
+func runSimulator() {
+	if streamService == nil {
+		return
 	}
 
-	return nil
+	go func() {
+		streamService.log.Info("Run Thingspin Alarm Simulator")
+
+		for {
+			t := time.Duration(rand.Int31n(3)+1) * time.Second
+			time.Sleep(t)
+
+			streamData := generateStreamData()
+			streamService.HttpServer.TsSendStream(&streamData)
+		}
+	}()
 }
 
-func (stream *ThingspinStreamService) sendAlarmSimulator() {
+func generateStreamData() (streamData m.TsStreamPacket) {
 	// generate simulator data
 	var alarmType string
 	typeRandom := rand.Intn(2)
@@ -38,7 +35,7 @@ func (stream *ThingspinStreamService) sendAlarmSimulator() {
 		alarmType = "err"
 	}
 
-	streamData := m.TsStreamPacket{
+	streamData = m.TsStreamPacket{
 		Stream: "ts-alarm",
 		Data: map[string]interface{}{
 			"title":       "알람 발생",
@@ -53,7 +50,5 @@ func (stream *ThingspinStreamService) sendAlarmSimulator() {
 			},
 		},
 	}
-
-	// send data
-	stream.HttpServer.TsSendStream(&streamData)
+	return
 }
