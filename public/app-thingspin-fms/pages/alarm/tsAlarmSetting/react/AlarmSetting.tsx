@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 // Grafana libs
 // Models
-import { appEvents } from 'app/core/core';
+//import { appEvents } from 'app/core/core';
 import { getAngularLoader, getDataSourceSrv } from '@grafana/runtime';
 import { getAlertingValidationMessage } from 'app/features/alerting/getAlertingValidationMessage';
 import { StoreState } from 'app/types';

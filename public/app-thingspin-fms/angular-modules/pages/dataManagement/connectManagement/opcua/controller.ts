@@ -113,7 +113,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
             try {
                 this.connId = connId;
                 const result: OpcConnectModel = await this.backendSrv.get(`${baseApi}/${this.connId}`);
-    
+
                 this.input = {
                     endpointUrl: result.params.EndpointUrl,
                     name: result.name,
@@ -125,7 +125,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 this.FlowId = result.params.FlowId;
                 this.nodes = result.params.nodes;
                 this.enableNodeSet = true;
-    
+
                 this.$scope.$applyAsync();
             } catch (e) {
                 console.error(e);
@@ -216,11 +216,11 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
             if (!this.FlowId) {
                 this.FlowId = uid.generate();
             }
-    
+
             try {
                 const connId = await this.sendBackend(!this.connId);
                 this.connId = connId;
-    
+
                 this.cancel();
                 this.$scope.$applyAsync();
             } catch (e) {

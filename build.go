@@ -476,6 +476,7 @@ func gruntBuildArg(task string) []string {
 
 func setup() {
 	runPrint("go", "get", "-v", "github.com/influxdata/influxdb1-client/v2")
+	runPrint("go", "get", "-v", "github.com/dgrijalva/jwt-go")
 	runPrint("go", "install", "-v", "./pkg/cmd/grafana-server")
 }
 
