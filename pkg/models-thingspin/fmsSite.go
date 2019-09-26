@@ -14,6 +14,11 @@ type GetAllTsSiteQuery struct {
 	Result []TsSiteField
 }
 
+type GetTsSiteQuery struct {
+	Id     int
+	Result TsSiteField
+}
+
 type AddTsSiteQuery struct {
 	Name   string  `xorm:"'name'"`
 	Desc   string  `xorm:"'desc'"`

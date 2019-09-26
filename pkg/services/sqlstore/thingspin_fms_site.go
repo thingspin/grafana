@@ -1,7 +1,7 @@
 package sqlstore
 
 import (
-	// "errors"
+	"errors"
 	"fmt"
 	"time"
 
@@ -11,6 +11,7 @@ import (
 
 func init() {
 	bus.AddHandler("thingspin-sql", GetTsAllSite)
+	bus.AddHandler("thingspin-sql", GetTsSite)
 	bus.AddHandler("thingspin-sql", AddTsSite)
 	bus.AddHandler("thingspin-sql", UpdateTsSite)
 	bus.AddHandler("thingspin-sql", DelelteTsSite)
@@ -38,6 +39,20 @@ func GetTsAllSite(cmd *m.GetAllTsSiteQuery) error {
 
 	err := x.Table(m.TsFmsSiteTbl).Find(&res)
 	cmd.Result = res
+
+	return err
+}
+
+func GetTsSite(cmd *m.GetTsSiteQuery) error {
+	var res []m.TsSiteField
+
+	err := x.Table(m.TsFmsSiteTbl).Where("id=?", cmd.Id).Find(&res)
+	length := len(res)
+	if length == 0 {
+		return errors.New("Connect is not found")
+	}
+
+	cmd.Result = res[0]
 
 	return err
 }

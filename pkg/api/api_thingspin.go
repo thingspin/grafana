@@ -60,6 +60,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 		// 사이트 관리 동작 API
 		tsRoute.Group("/sites", func(tsFnRoute routing.RouteRegister) {
 			tsFnRoute.Get("/", Wrap(getAllTsSite))
+			tsFnRoute.Get("/:siteId", Wrap(getTsSite))
 			tsFnRoute.Get("/sample", Wrap(getSampleTsSite))
 			tsFnRoute.Post("/", bind(tsm.AddTsSiteQuery{}), Wrap(addTsSite))
 			tsFnRoute.Put("/", bind(tsm.UpdateTsSiteQuery{}), Wrap(updateTsSite))
