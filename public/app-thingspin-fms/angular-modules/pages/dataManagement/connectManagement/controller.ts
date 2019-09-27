@@ -1,8 +1,8 @@
-import _ from "lodash";
-import angular from "angular";
-const uid = require("shortid");
+import _ from 'lodash';
+import angular from 'angular';
+const uid = require('shortid');
 
-import { TsConnect } from "app-thingspin-fms/models/connect";
+import { TsConnect } from 'app-thingspin-fms/models/connect';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
@@ -26,11 +26,11 @@ export interface TableModel {
 
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
-    readonly pageBathPath: string = `/thingspin/manage/data/connect` as string;
+    readonly pageBathPath = '/thingspin/manage/data/connect';
 
     // MQTT
-    readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
-    readonly listenerTopic: string = "/thingspin/+/+/status" as string;
+    readonly mqttUrl = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt`;
+    readonly listenerTopic = '/thingspin/+/+/status';
     mqttClient: TsMqttController; // mqtt client instance
 
     // UI Data
@@ -42,7 +42,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     license: any;
     // banner
     banner: Banner = {
-        title: "산업용 프로토콜 및 기타 데이터소스에 대한 연결",
+        title: '산업용 프로토콜 및 기타 데이터소스에 대한 연결',
     };
     connectTypeList: string[] = [];
     // table
@@ -80,36 +80,34 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
         try {
             await this.mqttClient.run(this.recvMqttMessage.bind(this));
-            console.log("MQTT Connected");
+            console.log('MQTT Connected');
         } catch (e) {
             console.error(e);
         }
     }
 
     recvMqttMessage(topic: string, payload: string | object): void {
-        const topics = topic.split("/");
+        const topics = topic.split('/');
         const id = topics[topics.length - 2];
         const target = topics[topics.length - 3];
         let isChange = false;
 
         switch (target) {
             case 'connect':
-                for (const item of this.list) {
-                    if (item.params.FlowId === id) {
+                this.list.filter(({ params }) => (params.FlowId === id))
+                    .forEach((item) => {
                         item.color = payload;
                         item.status['old'] = payload;
                         isChange = true;
-                    }
-                }
+                    });
                 break;
             default:
                 const num = parseInt(id, 10);
-                for (const item of this.list) {
-                    if (item.id === num) {
+                this.list.filter(({ id }) => (id === num))
+                    .forEach((item) => {
                         item.status = payload;
                         isChange = true;
-                    }
-                }
+                    });
         }
 
         if (isChange) {
@@ -119,7 +117,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     publishMqtt(topic: string, message: string): Error {
         if (!this.mqttClient) {
-            const errMsg: string = "MQTT Client is not generated" as string;
+            const errMsg = 'MQTT Client is not generated';
             console.error(errMsg);
 
             return new Error(errMsg);
@@ -129,9 +127,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     initTable(): void {
-        this.$scope.$watch("list", () => {
+        this.$scope.$watch('list', () => {
             this.setPageNodes();
-            // this.drawCircleProgress();
         });
     }
     showEdit(type: string, id: number): void {
@@ -149,30 +146,12 @@ export default class TsConnectManagementCtrl implements angular.IController {
         });
     }
 
-    // drawCircleProgress() {
-    //     $('.progress-value').html(value + '%');
-    //     var $ppc = $('.progress-pie-chart'),
-    //         deg = 360 * value / 100;
-    //     if (value > 50) {
-    //         $ppc.addClass('gt-50');
-    //     }
-
-    //     $('.ppc-progress-fill').css('transform', 'rotate(' + deg + 'deg)');
-    //     $('.ppc-percents span').html(value + '%');
-    // }
-
-    enablePublish(item: TsConnect) {
-        // console.log(item);
-        if (item.enable) {
-            this.asyncRun(item.id, true);
-        } else {
-            this.asyncRun(item.id, false);
-        }
+    enablePublish({ id, enable }: TsConnect) {
+        this.asyncRun(id, enable);
     }
 
     async updatePublish(item: TsConnect) {
         if (!confirm(`데이터 동시 발행을 ${item.publish ? '' : '정지'}하겠습니까?`)) {
-            // console.log(item);
             item.publish = !item.publish;
             this.$scope.$applyAsync();
             return;
@@ -188,23 +167,21 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     async asyncRun(id: number, enable: boolean): Promise<void> {
-        console.log(id);
         if (!confirm(`데이터 수집을 ${enable ? '시작' : '중지'}하시겠습니까?`)) {
             return;
         }
 
-        const index: number = this.list.findIndex((value: TsConnect) => {
-            return value.id === id;
-        });
-
+        const index: number = this.list.findIndex((value) => (value.id === id));
         try {
             const flowId = uid.generate();
             await this.backendSrv.patch(`thingspin/connect/${id}/enable`, {
                 flowId,
                 enable,
             });
-            this.list[index].enable = enable;
-            this.list[index].params.FlowId = flowId;
+            const list = this.list[index];
+
+            list.enable = enable;
+            list.params.FlowId = flowId;
             this.setPageNodes();
             this.$scope.$applyAsync();
         } catch (e) {
@@ -214,9 +191,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     async asyncUpdateTypeList(): Promise<void> {
         try {
-            const list: any = await this.backendSrv.get("thingspin/type/connect");
-            this.connectTypeList = list;
-
+            this.connectTypeList = await this.backendSrv.get('thingspin/type/connect');
             this.$scope.$applyAsync();
         } catch (e) {
             console.error(e);
@@ -225,12 +200,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     async asyncUpdateList(): Promise<void> {
         try {
-            const list: TsConnect[] = await this.backendSrv.get("thingspin/connect");
+            const list: TsConnect[] = await this.backendSrv.get('thingspin/connect');
             if (list) {
-                this.list = list;
-                for (const item of this.list) {
-                    item.status = {};
-                }
+                this.list = list.map((item) => ({ ...item, status: {} }));
 
                 this.$scope.$applyAsync();
                 this.setPageNodes();
@@ -241,27 +213,25 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     async asyncRemoveConnect(id: number): Promise<void> {
-        if (!confirm("정말로 삭제하시겠습니까?")) {
+        if (!confirm('정말로 삭제하시겠습니까?')) {
             return;
         }
 
         try {
             await this.backendSrv.delete(`thingspin/connect/${id}`);
             // publish mqtt data
-            const list: TsConnect[] = this.list;
-            for (const index in list) {
-                const item: TsConnect = list[index];
+            const { list } = this;
 
-                if (item.id === id) {
-                    const baseTopic: string = `/thingspin/connect/${item.params.FlowId}` as string;
-                    // 싱크 문제 해결이 필요
-                    this.publishMqtt(`${baseTopic}/status`, '');
-                    this.publishMqtt(`${baseTopic}/data`, '');
+            const index = list.findIndex((item) => item.id === id);
+            if (index >= 0) {
+                const baseTopic = `/thingspin/connect/${list[index].params.FlowId}`;
+                // 싱크 문제 해결이 필요
+                this.publishMqtt(`${baseTopic}/status`, '');
+                this.publishMqtt(`${baseTopic}/data`, '');
 
-                    list.splice(parseInt(index, 10), 1);
-                    break;
-                }
+                list.splice(index, 1);
             }
+
             this.setPageNodes();
             this.$scope.$applyAsync();
         } catch (e) {
@@ -327,18 +297,14 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     setCountValue() {
-        console.log(this.list.length);
-        if (this.list.length > 0) {
+        if (this.list && this.list.length) {
             this.runConnection = 0;
             this.runNodes = 0;
 
-            for (const item of this.list) {
-                console.log(item);
-                if (item.enable) {
-                    if (item.params.PtagList !== undefined) {
-                        this.runNodes += item.params.PtagList.length;
-                        this.runConnection += 1;
-                    }
+            for (const { enable, params: { PtagList }, } of this.list) {
+                if ( enable && PtagList) {
+                    this.runNodes += PtagList.length;
+                    this.runConnection += 1;
                 }
             }
         }

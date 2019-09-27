@@ -40,10 +40,9 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
 
     // event methods
     onClickAddNodeTreeItem(item: OpcNodeItem): void {
-        for (const node of this.nodes) {
-            if (node.nodeId === item.key) {
-                return;
-            }
+        const check = this.nodes.findIndex(({ nodeId }) => (nodeId === item.key));
+        if (check >= 0) {
+            return;
         }
 
         this.nodes.push(item.item);
@@ -53,7 +52,6 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
 
     // table methods
     tNextPaging(): void {
-        console.log(this.nodes);
         if (this.currPage < this.maxPage) {
             this.currPage += 1;
             this.setPageNodes();
