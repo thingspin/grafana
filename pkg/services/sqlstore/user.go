@@ -331,6 +331,7 @@ func GetUserProfile(query *models.GetUserProfileQuery) error {
 		IsDisabled:     user.IsDisabled,
 		OrgId:          user.OrgId,
 		UpdatedAt:      user.Updated,
+		CreatedAt:      user.Created,
 	}
 
 	return err
