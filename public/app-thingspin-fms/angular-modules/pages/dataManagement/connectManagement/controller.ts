@@ -4,6 +4,7 @@ const uid = require('shortid');
 
 import { TsConnect } from 'app-thingspin-fms/models/connect';
 import { BackendSrv } from 'app/core/services/backend_srv';
+import appEvents from 'app/core/app_events';
 
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
@@ -151,42 +152,117 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     async updatePublish(item: TsConnect) {
-        if (!confirm(`데이터 동시 발행을 ${item.publish ? '' : '정지'}하겠습니까?`)) {
-            item.publish = !item.publish;
-            this.$scope.$applyAsync();
-            return;
+        this.modalPopupPublish(item);
+        if (item.publish) {
+            item.publish = false;
+        } else {
+            item.publish = true;
         }
-
-        try {
-            await this.backendSrv.patch(`thingspin/connect/${item.id}/publish`, item);
-        } catch (e) {
-            item.publish = !item.publish;
-        }
-
         this.$scope.$applyAsync();
     }
 
     async asyncRun(id: number, enable: boolean): Promise<void> {
-        if (!confirm(`데이터 수집을 ${enable ? '시작' : '중지'}하시겠습니까?`)) {
-            return;
-        }
+        // if (!confirm(`데이터 수집을 ${enable ? '시작' : '중지'}하시겠습니까?`)) {
+        //     return;
+        // }
+        const index: number = this.list.findIndex((item) => item.id === item.id);
 
-        const index: number = this.list.findIndex((value) => (value.id === id));
-        try {
-            const flowId = uid.generate();
-            await this.backendSrv.patch(`thingspin/connect/${id}/enable`, {
-                flowId,
-                enable,
-            });
+        if (enable) {
+            this.modalPopupRunning(id, enable);
             const list = this.list[index];
-
-            list.enable = enable;
-            list.params.FlowId = flowId;
-            this.setPageNodes();
-            this.$scope.$applyAsync();
-        } catch (e) {
-            console.error(e);
+            list.enable = false;
+        } else {
+            this.modalPopupRunning(id, enable);
+            const list = this.list[index];
+            list.enable = true;
         }
+    }
+
+    modalPopupPublish(item: TsConnect) {
+        const title = {
+            mainTitle: "데이터 발행",
+            detailFirst: " 데이터 발행을 ",
+            detailMiddle: "",
+            detailLast: " 하시겠습니까?",
+            successBtn: "",
+            cancelBtn: "취소",
+            icon: "",
+        };
+        if (item.publish) {
+            title.detailMiddle = "시작";
+            title.successBtn = "발행 시작";
+            title.icon = "tsi icon-ts-play_circle_filled";
+        } else {
+            title.detailMiddle = "종료";
+            title.successBtn = "발행 종료";
+            title.icon = "tsi icon-ts-pause_circle_filled";
+        }
+        appEvents.emit('confirm-modal', {
+            title: title.mainTitle,
+            text2: item.name + title.detailFirst + title.detailMiddle + title.detailLast,
+            icon: title.icon,
+            yesText: title.successBtn,
+            noText: title.cancelBtn,
+            onConfirm: () => {
+                try {
+                    this.backendSrv.patch(`thingspin/connect/${item.id}/publish`, item);
+                    if (!item.publish) {
+                        item.publish = true;
+                    } else {
+                        item.publish = false;
+                    }
+                } catch (e) {
+                    item.publish = !item.publish;
+                    console.error(e);
+                }
+            },
+        });
+    }
+
+    modalPopupRunning(id: number, enable: boolean) {
+        const index: number = this.list.findIndex((item) => item.id === item.id);
+        const title = {
+            mainTitle: "데이터 수집",
+            detailFirst: " 데이터 수집을 ",
+            detailMiddle: "",
+            detailLast: " 하시겠습니까?",
+            successBtn: "",
+            cancelBtn: "취소",
+            icon: "",
+        };
+        if (enable) {
+            title.detailMiddle = "시작";
+            title.successBtn = "수집 시작";
+            title.icon = "tsi icon-ts-play_circle_filled";
+        } else {
+            title.detailMiddle = "종료";
+            title.successBtn = "수집 종료";
+            title.icon = "tsi icon-ts-pause_circle_filled";
+        }
+        appEvents.emit('confirm-modal', {
+            title: title.mainTitle,
+            text2: this.list[index].name + title.detailFirst + title.detailMiddle + title.detailLast,
+            icon: title.icon,
+            yesText: title.successBtn,
+            noText: title.cancelBtn,
+            onConfirm: () => {
+                try {
+                    const flowId = uid.generate();
+                    this.backendSrv.patch(`thingspin/connect/${id}/enable`, {
+                        flowId,
+                        enable,
+                    });
+                    const list = this.list[index];
+
+                    list.enable = enable;
+                    list.params.FlowId = flowId;
+                    this.setPageNodes();
+                    this.$scope.$applyAsync();
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        });
     }
 
     async asyncUpdateTypeList(): Promise<void> {
@@ -213,30 +289,37 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     async asyncRemoveConnect(id: number): Promise<void> {
-        if (!confirm('정말로 삭제하시겠습니까?')) {
-            return;
-        }
+        const index = this.list.findIndex((item) => item.id === id);
 
-        try {
-            await this.backendSrv.delete(`thingspin/connect/${id}`);
-            // publish mqtt data
-            const { list } = this;
+        appEvents.emit('confirm-modal', {
+            title: '연결 삭제',
+            text2: this.list[index].name + ' 연결 정보를 삭제하시겠습니까?',
+            icon: 'fa-trash',
+            yesText: '삭제',
+            noText: '취소',
+            onConfirm: () => {
+                try {
+                    this.backendSrv.delete(`thingspin/connect/${id}`);
+                    // publish mqtt data
+                    const { list } = this;
 
-            const index = list.findIndex((item) => item.id === id);
-            if (index >= 0) {
-                const baseTopic = `/thingspin/connect/${list[index].params.FlowId}`;
-                // 싱크 문제 해결이 필요
-                this.publishMqtt(`${baseTopic}/status`, '');
-                this.publishMqtt(`${baseTopic}/data`, '');
+                    const index = list.findIndex((item) => item.id === id);
+                    if (index >= 0) {
+                        const baseTopic = `/thingspin/connect/${list[index].params.FlowId}`;
+                        // 싱크 문제 해결이 필요
+                        this.publishMqtt(`${baseTopic}/status`, '');
+                        this.publishMqtt(`${baseTopic}/data`, '');
 
-                list.splice(index, 1);
-            }
+                        list.splice(index, 1);
+                    }
 
-            this.setPageNodes();
-            this.$scope.$applyAsync();
-        } catch (e) {
-            console.error(e);
-        }
+                    this.setPageNodes();
+                    this.$scope.$applyAsync();
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+        });
     }
 
     // table methods
@@ -302,7 +385,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
             this.runNodes = 0;
 
             for (const { enable, params: { PtagList }, } of this.list) {
-                if ( enable && PtagList) {
+                if (enable && PtagList) {
                     this.runNodes += PtagList.length;
                     this.runConnection += 1;
                 }
