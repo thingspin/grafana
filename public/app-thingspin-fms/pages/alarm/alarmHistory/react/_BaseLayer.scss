@@ -1,0 +1,69 @@
+
+.ts-alarm-hist {// root
+  // position
+  position: relative;
+
+  // box
+  margin: 24px 21px 0 20px;
+
+  // fonts
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.14;
+  letter-spacing: normal;
+  text-align: left;
+
+  // Header
+  &-h {
+    // size
+    width: 100%;
+
+    // position
+    position: relative;
+
+    // flex
+    display: inline-flex;
+    justify-content: space-between;
+
+    // LEFT
+    &-l {
+      // fonts
+      font-size: 16px;
+      line-height: 1.19;
+      color: rgba(#0039ff, 1);
+
+      // flex Item
+      align-self: flex-end;
+
+      i {
+        // box
+        margin-right: 8px;
+
+        // fonts
+        font-size: 20px;
+      }
+    }
+
+    // RIGHT
+    &-r {
+      // flex
+      display: inline-flex;
+
+      // fonts
+      font-weight: 500;
+    }
+  }
+
+  // Body
+  &-b {
+    // size
+    height: calc(100vh - ( 120px + 28px ) );
+
+    // position
+    position: relative;
+    top: 18px;
+  }
+}

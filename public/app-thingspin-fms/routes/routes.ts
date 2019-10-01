@@ -15,6 +15,7 @@ import FMComponent from 'app-thingspin-fms/pages/FacilityMonitoring/react';
 import AlarmManagement from 'app-thingspin-fms/pages/alarm/alarmManagement/react';
 import TsAlarmSettingComponent from 'app-thingspin-fms/pages/alarm/tsAlarmSetting';
 import { TsLoginPage } from 'app-thingspin-fms/pages/login/TsLoginPage';
+import AlarmHistory from 'app-thingspin-fms/pages/alarm/alarmHistory';
 
 /** @ngInject */
 export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: angular.ILocationProvider) {
@@ -155,6 +156,17 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
     },
     resolve: {
       component: () => AlarmManagement,
+    },
+  })
+  .when('/thingspin/alarm/history', {
+    template: '<react-container />',
+    reloadOnSearch: false,
+    routeInfo: {
+      menupath: [UserSettingInfo.Alarm, "알람 이력"],
+      icon: 'fa fa-bell',
+    },
+    resolve: {
+      component: () => AlarmHistory,
     },
   })
   .when('/thingspin/alarm/notification', {

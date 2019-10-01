@@ -18,7 +18,7 @@ import { updateLocation } from 'app/core/actions';
 // Thingspin libs
 // Views
 import AlarmMgmtBaseLayer from './BaseLayer';
-import TsContainer from './TsContainer';
+import TsContainer from '../../common/react/TsContainer';
 import TopButton from './TopButton';
 import TsAlarmRuleItem from './TsAlarmRuleItem';
 import TsAlarmSearch from './TsAlarmSearch';

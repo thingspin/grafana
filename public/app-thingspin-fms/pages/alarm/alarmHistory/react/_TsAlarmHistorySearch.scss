@@ -1,0 +1,97 @@
+
+.ts-alarm-hist-search {
+
+  // box
+  margin-bottom: 21px;
+
+  // flex
+  display: flex;
+  justify-content: space-between;
+
+  &-l {
+
+    &-search {
+      i {
+        position: absolute;
+        left: 8px;
+        line-height: 36px;
+      }
+    }
+
+    &-text {
+      margin:0 20px 0 16px;
+    }
+
+    input {
+      // size
+      width: 301px;
+
+      text-indent: 36px;
+    }
+
+    select {
+      // size
+      width: 257px;
+    }
+
+    input, select {
+      // size
+      height: 36px;
+
+      // box
+      background-color: rgba(#1e1e1e, 0.07);
+      border-bottom: solid 1px rgba(#1e1e1e, 0.3);
+      
+      // fonts
+      color: #1e1e1e;
+
+    }
+  }
+
+  &-r {
+    // size
+    line-height: 36px;
+
+    display: inline;
+
+    &-item {
+
+      &:not(:last-child) {
+        padding-right: 16.4px;
+        border-right: solid 1px rgba(#ecebeb, 1);
+        margin-right: 16.4px;
+      }
+
+      i {
+        padding-right: 8px;
+      }
+    }
+
+    &-time {
+      display: inline-flex;
+
+      .time-picker-popover {
+        top: 53px;
+        right: 3px;
+      }
+
+      .gf-form-select-box__menu {
+        right: 0;
+      }
+    }
+  }
+}
+
+.ts-color-green {
+  color: #55afa6;
+  i { color: #00897b; }
+}
+
+.ts-color-red {
+  color: #da2668;
+  i { color: #d81b60; }
+}
+
+.ts-color-yellow {
+  color: #fb8002;
+}

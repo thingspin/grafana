@@ -9,8 +9,10 @@
 // Page
 @import 'pages/login';
 @import 'pages/alarm/index';
+@import '../pages/alarm/common/index';
 @import '../pages/alarm/alarmManagement/index';
 @import '../pages/alarm/tsAlarmSetting/index';
+@import '../pages/alarm/alarmHistory/index';
 
 
 // React Components

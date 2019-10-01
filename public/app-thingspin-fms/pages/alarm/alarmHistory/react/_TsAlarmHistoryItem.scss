@@ -1,0 +1,105 @@
+@import '../../alarmManagement/react/TsAlarmRuleItem';
+
+.ts-alarm-hist {
+  // extend alert-rule-item
+  &-item { @extend #{$alertRuleItem};
+    // box
+    padding: 20px;
+    margin: 6px 0;
+    background: #fafafa;
+    box-shadow: none;
+  
+    // flex
+    justify-content: space-between;
+  
+    // fonts
+    font-size: 12px;
+    line-height: 1.17;
+    font-family: Roboto;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+  
+    &__header { @extend #{$alertRuleItem}__header; }
+    &__body { @extend #{$alertRuleItem}__body; }
+
+    &__icon { @extend #{$alertRuleItem}__icon;
+      // box
+      padding: 0;
+      border-radius: 20px;
+
+      // fonts
+      font-size: 20px;
+    }
+  
+    &__name { @extend #{$alertRuleItem}__name;
+      // box
+      margin-bottom: 6px;
+  
+      // fonts
+      line-height: 1.19;
+      font-size: 16px;
+      color: rgba(#1e1e1e, 1);
+    }
+  
+    &__time { @extend #{$alertRuleItem}__time;
+      // fonts
+      font-weight: normal;
+
+      &_for {
+        // box
+        margin: 0 13px 0 8px;
+      }
+
+      &_value {
+        // box
+        margin: 0 0 0 24px;
+      }
+    }
+  
+    &__actions { @extend #{$alertRuleItem}__actions;
+      i {
+        // font
+        font-size: 20px;
+      }
+    }
+
+    &__info {
+      // flex
+      display: flex;
+  
+      &>span {
+        // box
+        margin-right: 34px;
+      }
+    }
+
+    &__stat {
+      // flex
+      display: flex;
+      justify-content: space-between;
+
+    }
+
+    &__status {
+
+      // fonts
+      font-weight: bold;
+    }
+  }
+
+  &-btn {
+    // size
+    width: 40px;
+    height: 40px;
+  
+    // box
+    padding: 10px;
+    margin-left: 12px;
+    border: none;
+    background-color: rgba(#f5f5f5, 1);
+  }
+}

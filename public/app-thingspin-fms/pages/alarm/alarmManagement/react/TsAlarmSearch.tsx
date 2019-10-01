@@ -22,7 +22,9 @@ const TsAlarmSearch: React.FC<AlarmSearchProps> = ({ onChange }) => {
   const inputRef = React.createRef<HTMLInputElement>();
 
   const onChangeEvt = () => {
-    onChange(inputRef.current.value, selectRef.current.value);
+    if (onChange) {
+      onChange(inputRef.current.value, selectRef.current.value);
+    }
   };
 
   return <div className={bcls}>

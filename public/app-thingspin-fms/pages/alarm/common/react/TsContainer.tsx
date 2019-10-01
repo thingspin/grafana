@@ -1,5 +1,5 @@
 import React from 'react';
-import { contClass } from '../types';
+import { contClass } from '../../alarmManagement/types';
 
 export interface ContainerProps {
   headerLeft?: React.ReactNode;
@@ -12,13 +12,8 @@ const TsContainer: React.FC<ContainerProps> = ({ headerLeft, headerRight, childr
   return <div className={contClass}>
     {(headerLeft || headerRight) && (
       <div className={`${contClass}-h`}>
-        {headerLeft && (
-          <div className={`${contClass}-h-l`}>{headerLeft}</div>
-        )}
-
-        {headerRight && (
-          <div className={`${contClass}-h-r`}>{headerRight}</div>
-        )}
+        <div className={`${contClass}-h-l`}>{headerLeft}</div>
+        <div className={`${contClass}-h-r`}>{headerRight}</div>
       </div>
     )}
 
