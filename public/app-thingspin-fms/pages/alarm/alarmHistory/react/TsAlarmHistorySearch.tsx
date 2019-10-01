@@ -1,85 +1,58 @@
 // js 3rd party libs
-import React, { useState } from 'react';
+import React from 'react';
 
 // Grafana libs
-import { getShiftedTimeRange } from 'app/core/utils/timePicker';
-import { toUtc, TimeRange, TimeOption, RawTimeRange } from '@grafana/data';
+import { TimeRange, TimeOption, RawTimeRange } from '@grafana/data';
 
 // ThingSPIN libs
 // Views
 import TsTimePicker from './TsTimePicker';
 // Etc
-import { baseClass, tsDefaultSelectOptions, genTimeRange, alarmOptions } from '../types';
+import { baseClass, tsDefaultSelectOptions, genTimeRange, alarmOptions, shiftTime } from '../types';
 
 export interface OnChangePayload {
   text: string;
   state: string;
-  timeRange: TimeRange;
 }
 
 export interface AlarmSearchProps {
   onChange?: (payload: OnChangePayload) => void;
+  onTimeChange?: (payload: TimeRange) => void;
 }
 
 // use common className
 const bcls = `${baseClass}-search`;
 
-const TsAlarmHistorySearch: React.FC<AlarmSearchProps> = ({ onChange }) => {
+const TsAlarmHistorySearch: React.FC<AlarmSearchProps> = ({ onChange, onTimeChange }) => {
   // State & Ref
+  const [timeRange, setTimeRange] = React.useState(genTimeRange());
   const selectRef = React.createRef<HTMLSelectElement>();
   const inputRef = React.createRef<HTMLInputElement>();
-  const [timeRange, setTimeRange] = useState(genTimeRange());
 
-  // Event Processing
-  const onChangeEvt = () => {
-    if (onChange) {
-      onChange({
-        timeRange,
-        text: inputRef.current.value,
-        state: selectRef.current.value,
-      });
-    }
-  };
+  // Component methods
+  const setActiveTimeOption = (timeOptions: TimeOption[], { from, to }: RawTimeRange): TimeOption[] => timeOptions.map(option => ({
+    ...option,
+    active: (option.to === to && option.from === from),
+  }));
 
-  const shiftTime = (direction = 1) => {
-    const { from, to } = getShiftedTimeRange(direction, timeRange);
-    return {
-      from: toUtc(from),
-      to: toUtc(to),
-      raw: timeRange.raw,
-    };
-  };
-
+  // Events
   const onChangeTimePicker = (range: TimeRange) => {
-    setTimeRange(range);
-    if (onChange) {
-      onChange({
-        timeRange: range,
-        text: inputRef.current.value,
-        state: selectRef.current.value,
-      });
+    if (onTimeChange) {
+      onTimeChange(range);
     }
+    setTimeRange(range);
   };
 
+  const onMoveBack = () => setTimeRange(shiftTime(timeRange, -1));
 
-  const onMoveBack = () => {
-    setTimeRange(shiftTime(-1));
-  };
-
-  const onMoveForward = () => {
-    setTimeRange(shiftTime(1));
-  };
+  const onMoveForward = () => setTimeRange(shiftTime(timeRange, 1));
 
   const onZoom = () => { };
 
-  const setActiveTimeOption = (timeOptions: TimeOption[], rawTimeRange: RawTimeRange): TimeOption[] => {
-    return timeOptions.map(option => {
-        return {
-        ...option,
-        active: (option.to === rawTimeRange.to && option.from === rawTimeRange.from),
-      };
-    });
-  };
+  const onChangeEvt = () => (onChange && onChange({
+    text: inputRef.current.value,
+    state: selectRef.current.value,
+  }));
 
   return <div className={bcls}>
     <div className={`${bcls}-l`}>
@@ -92,23 +65,23 @@ const TsAlarmHistorySearch: React.FC<AlarmSearchProps> = ({ onChange }) => {
         <span className={`${bcls}-l-text`}> 상태 </span>
         <select ref={selectRef} onChange={onChangeEvt}>
           {alarmOptions.map(({ value, label }, index) =>
-            (<option key={index} value={value}>{label}</option>))
-          }
+            <option key={index} value={value}>{label}</option>
+          )}
         </select>
       </span>
     </div>
 
     <div className={`${bcls}-r`}>
       <span className={`${bcls}-r-item ts-color-red`}>
-        <i className="icon-gf icon-gf-critical"></i> 위험
+        <i className="icon-gf icon-gf-critical" />위험
       </span>
 
       <span className={`${bcls}-r-item ts-color-yellow`}>
-        <i className="fa fa-exclamation"></i> 경고
+        <i className="fa fa-exclamation" />경고
       </span>
 
       <span className={`${bcls}-r-item ts-color-green`}>
-        <i className="icon-gf icon-gf-online"></i> 정상
+        <i className="icon-gf icon-gf-online" />정상
       </span>
 
       <span className={`${bcls}-r-time`}>

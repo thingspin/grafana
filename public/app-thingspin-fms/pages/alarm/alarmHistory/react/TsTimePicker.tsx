@@ -23,21 +23,13 @@ const TimePickerTooltipContent = ({ timeRange: { from, to } }: { timeRange: Time
 
 export default class TsTimePicker extends TimePicker {
   // Overrride
-  mapTimeOptionsToSelectableValues = (selectOptions: TimeOption[]) => {
-    const options = selectOptions.map(timeOption => {
-      return {
-        label: timeOption.display,
-        value: timeOption,
-      };
-    });
-
-    options.unshift({
+  mapTimeOptionsToSelectableValues = (selectOpts: TimeOption[] = []) => ([
+    {
       label: '사용자 정의 시간 설정',
       value: { from: 'custom', to: 'custom', display: '사용자 정의', section: 1 },
-    });
-
-    return options;
-  };
+    },
+    ...selectOpts.map(value => ({ label: value.display, value, })),
+  ]);
 
   // Override
   render() {
@@ -50,28 +42,29 @@ export default class TsTimePicker extends TimePicker {
 
     const adjustedTime = (time: DateTime) => (isUTC ? time.utc() : time.local()) || null;
     const adjustedTimeRange = {
-      to: dateMath.isMathString(value.raw.to) ? value.raw.to : adjustedTime(value.to),
       from: dateMath.isMathString(value.raw.from) ? value.raw.from : adjustedTime(value.from),
+      to: dateMath.isMathString(value.raw.to) ? value.raw.to : adjustedTime(value.to),
     };
-    const rangeString = rangeUtil.describeTimeRange(adjustedTimeRange);
 
-    const label = (
-      <>
-        {isCustomOpen && <span>사용자 정의 시간 설정</span>}
-        {!isCustomOpen && <span>{rangeString}</span>}
-        {isUTC && <span className="time-picker-utc">UTC</span>}
-      </>
-    );
+    const label = (<>
+      {isCustomOpen
+        ? <span>사용자 정의 시간 설정</span>
+        : <span>{rangeUtil.describeTimeRange(adjustedTimeRange)}</span>
+      }
+      {isUTC && <span className="time-picker-utc">UTC</span>}
+    </>);
     const isAbsolute = isDateTime(value.raw.to);
 
     return (
       <div className="time-picker" ref={this.pickerTriggerRef}>
         <div className="time-picker-buttons">
+
           {isAbsolute && (
             <button className="btn navbar-button navbar-button--tight" onClick={onMoveBackward}>
               <i className="fa fa-chevron-left" />
             </button>
           )}
+
           <ButtonSelect
             className="time-picker-button-select"
             value={currentOption}
@@ -82,6 +75,7 @@ export default class TsTimePicker extends TimePicker {
             iconClass={'fa fa-clock-o fa-fw'}
             tooltipContent={<TimePickerTooltipContent timeRange={value} />}
           />
+
           {isAbsolute && (
             <button className="btn navbar-button navbar-button--tight" onClick={onMoveForward}>
               <i className="fa fa-chevron-right" />

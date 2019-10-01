@@ -1,4 +1,11 @@
-import { TimeOption, TimeRange, dateMath } from '@grafana/data';
+
+// Grafana libs
+// Services
+import { getBackendSrv } from '@grafana/runtime';
+// Data & Model
+import alertDef from 'app/features/alerting/state/alertDef';
+import { getShiftedTimeRange } from 'app/core/utils/timePicker';
+import { TimeOption, TimeRange, dateMath, toUtc, dateTime } from '@grafana/data';
 
 // common className
 export const contClass = 'ts-cont';
@@ -14,6 +21,11 @@ export enum AlarmAPI {
   Annotations = '/api/annotations'
 }
 
+export interface AnnotationQuery {
+  from?: number;
+  to?: number;
+}
+
 export enum AlarmType {
   ALERT = 'alerting',
   WARNING = 'pending',
@@ -22,11 +34,12 @@ export enum AlarmType {
 }
 
 export const alarmOptions: any[] = [
-  { value: '', label: 'ALL'},
+  { value: '', label: '모두'},
   { value: 'ok', label: '정상'},
   { value: 'alerting', label: '위험'},
   { value: 'pending', label: '경고'},
   { value: 'pause', label: '정지'},
+  { value: 'no_data', label: '빈 값'},
 ];
 
 export interface AlarmItem {
@@ -104,3 +117,31 @@ export function genTimeRange(from = 'now-1y', to = 'now'): TimeRange {
     },
   };
 }
+
+export function shiftTime(range: TimeRange, direction = 1) {
+  const { from, to } = getShiftedTimeRange(direction, range);
+  return {
+    from: toUtc(from),
+    to: toUtc(to),
+    raw: range.raw,
+  };
+}
+
+export function genAlarmItem(item: AlarmItem): AlarmItem {
+  const timeStr = dateTime(item.time).fromNow(true);
+  const { iconClass, stateClass, text } = alertDef.getStateDisplayModel(item.newState);
+
+  return {
+    ...item,
+    model: {
+      text,
+      iconClass: iconClass.replace('alert', 'alarm'),
+      stateClass: stateClass.replace('alert', 'alarm'),
+    },
+    timeStr,
+  };
+}
+
+export const fetchHistory = async (params?: AnnotationQuery, limit = 100000, type = AlarmType.ALERT, ): Promise<AlarmItem[]> => (
+  await getBackendSrv().get(AlarmAPI.Annotations, { ...params, limit, type, })
+).map(genAlarmItem);
