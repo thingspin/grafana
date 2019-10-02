@@ -23,12 +23,12 @@ interface Topic {
   value: string;
   viewStr: string;
 }
-
+/*
 interface TagList {
   name: any;
   type: any;
 }
-
+*/
 // interface MqttTableData {
 //   name: string;
 //   topic: string;

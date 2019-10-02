@@ -85,56 +85,72 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 	
 	for _, cnode := range q.Result {
 		if val, ok := cnode.Params["PtagList"]; ok {
-			for _, ptag := range val.([]interface{}) {
-				ptagMap := ptag.(map[string]interface{})
-				//fmt.Println(ptagMap["name"])
-				msname := cnode.Type + "_" + strconv.Itoa(cnode.Id)
-				if _, ok := lev2Map[cnode.Name]; ok {
-					// 이미 존재하는 것은 추가하지 않는다.
-					lv2 := lev2Map[cnode.Name]
-			
-					lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-						SiteId: -cnode.Id,
-						IsPtag : true,
-						IsValid : true,
-						TagId: tid,
-						TagTableName : msname,
-						TagColumnName : ptagMap["name"].(string),
-						TagColumnType : ptagMap["type"].(string),
-						TagName : ptagMap["name"].(string),
-						FacilityTreeOrder : len(lv2.Children) + 1,
-						Value: strconv.Itoa(tid),
-						Label : ptagMap["name"].(string),
-						Children : []m.TsFacilityTreeItem{},
-					})
-					lev2Map[cnode.Name] = lv2
-					tid = tid - 1
-					
-				} else {
-					
-					tags := []m.TsFacilityTreeItem{}
-					tags = append(tags,  m.TsFacilityTreeItem {
-						SiteId: -cnode.Id,
-						IsPtag : true,
-						IsValid : true,
-						TagId: tid,
-						TagTableName : msname,
-						TagColumnName : ptagMap["name"].(string),
-						TagColumnType : ptagMap["type"].(string),
-						TagName : ptagMap["name"].(string),
-						FacilityTreeOrder : 1,
-						Value: strconv.Itoa(tid),
-						Label : ptagMap["name"].(string),
-						Children : []m.TsFacilityTreeItem{},
-					})
-
-					tid = tid - 1
-
+			if len(cnode.Params["PtagList"].([]interface{})) > 0 {
+				for _, ptag := range val.([]interface{}) {
+					ptagMap := ptag.(map[string]interface{})
+					//fmt.Println(ptagMap["name"])
+					msname := cnode.Type + "_" + strconv.Itoa(cnode.Id)
+					if _, ok := lev2Map[cnode.Name]; ok {
+						// 이미 존재하는 것은 추가하지 않는다.
+						lv2 := lev2Map[cnode.Name]
+				
+						lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+							SiteId: -cnode.Id,
+							IsPtag : true,
+							IsValid : true,
+							TagId: tid,
+							TagTableName : msname,
+							TagColumnName : ptagMap["name"].(string),
+							TagColumnType : ptagMap["type"].(string),
+							TagName : ptagMap["name"].(string),
+							FacilityTreeOrder : len(lv2.Children) + 1,
+							Value: strconv.Itoa(tid),
+							Label : ptagMap["name"].(string),
+							Children : []m.TsFacilityTreeItem{},
+						})
+						lev2Map[cnode.Name] = lv2
+						tid = tid - 1
+						
+					} else {
+						
+						tags := []m.TsFacilityTreeItem{}
+						tags = append(tags,  m.TsFacilityTreeItem {
+							SiteId: -cnode.Id,
+							IsPtag : true,
+							IsValid : true,
+							TagId: tid,
+							TagTableName : msname,
+							TagColumnName : ptagMap["name"].(string),
+							TagColumnType : ptagMap["type"].(string),
+							TagName : ptagMap["name"].(string),
+							FacilityTreeOrder : 1,
+							Value: strconv.Itoa(tid),
+							Label : ptagMap["name"].(string),
+							Children : []m.TsFacilityTreeItem{},
+						})
+	
+						tid = tid - 1
+	
+						lev2Map[cnode.Name] = m.TsFacilityTreeItem{
+							SiteId: -cnode.Id,
+							IsPtag : true,
+							FacilityName : cnode.Name,
+							Children : tags,
+							Label : cnode.Name,
+							FacilityTreeOrder : forder,
+							Value: strconv.Itoa(tid),
+						}
+						forder = forder - 1
+						tid = tid - 1
+					}
+				}
+			} else {
+				if _, ok := lev2Map[cnode.Name]; !ok {
 					lev2Map[cnode.Name] = m.TsFacilityTreeItem{
 						SiteId: -cnode.Id,
 						IsPtag : true,
 						FacilityName : cnode.Name,
-						Children : tags,
+						Children : []m.TsFacilityTreeItem{},
 						Label : cnode.Name,
 						FacilityTreeOrder : forder,
 						Value: strconv.Itoa(tid),
@@ -143,6 +159,7 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 					tid = tid - 1
 				}
 			}
+			
 		}
 	}
 
@@ -426,65 +443,82 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 		//fmt.Println("=======================")
 		//fmt.Println(cnode.Params)
 		if val, ok := cnode.Params["PtagList"]; ok {
-			for _, ptag := range val.([]interface{}) {
-				ptagMap := ptag.(map[string]interface{})
-				//fmt.Println(ptagMap["name"])
-				msname := cnode.Type + "_" + strconv.Itoa(cnode.Id)
-				if _, ok := lev2Map[cnode.Name]; ok {
-					// 이미 존재하는 것은 추가하지 않는다.
-					lv2 := lev2Map[cnode.Name]
-			
-					lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-						SiteId: cnode.Id,
-						IsPtag : true,
-						IsValid : true,
-						TagId: tid,
-						TagTableName : msname,
-						TagColumnName : ptagMap["name"].(string),
-						TagColumnType : ptagMap["type"].(string),
-						TagName : ptagMap["name"].(string),
-						FacilityTreeOrder : len(lv2.Children) + 1,
-						Value: strconv.Itoa(uid),
-						Label : ptagMap["name"].(string),
-						Children : []m.TsFacilityTreeItem{},
-					})
-					tid = tid - 1
-					uid = uid + 1
-					lev2Map[cnode.Name] = lv2
-					
-				} else {
-					forder = forder + 1
-					tags := []m.TsFacilityTreeItem{}
-					tags = append(tags,  m.TsFacilityTreeItem {
-						SiteId: cnode.Id,
-						IsPtag : true,
-						IsValid : true,
-						TagId: tid,
-						TagTableName : msname,
-						TagColumnName : ptagMap["name"].(string),
-						TagColumnType : ptagMap["type"].(string),
-						TagName : ptagMap["name"].(string),
-						FacilityTreeOrder : 1,
-						Value: strconv.Itoa(uid),
-						Label : ptagMap["name"].(string),
-						Children : []m.TsFacilityTreeItem{},
-					})
-
-					uid = uid + 1
-					tid = tid - 1
-
+			if len(cnode.Params["PtagList"].([]interface{})) > 0 {
+				for _, ptag := range val.([]interface{}) {
+					ptagMap := ptag.(map[string]interface{})
+					//fmt.Println(ptagMap["name"])
+					msname := cnode.Type + "_" + strconv.Itoa(cnode.Id)
+					if _, ok := lev2Map[cnode.Name]; ok {
+						// 이미 존재하는 것은 추가하지 않는다.
+						lv2 := lev2Map[cnode.Name]
+				
+						lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
+							SiteId: cnode.Id,
+							IsPtag : true,
+							IsValid : true,
+							TagId: tid,
+							TagTableName : msname,
+							TagColumnName : ptagMap["name"].(string),
+							TagColumnType : ptagMap["type"].(string),
+							TagName : ptagMap["name"].(string),
+							FacilityTreeOrder : len(lv2.Children) + 1,
+							Value: strconv.Itoa(uid),
+							Label : ptagMap["name"].(string),
+							Children : []m.TsFacilityTreeItem{},
+						})
+						tid = tid - 1
+						uid = uid + 1
+						lev2Map[cnode.Name] = lv2
+						
+					} else {
+						forder = forder + 1
+						tags := []m.TsFacilityTreeItem{}
+						tags = append(tags,  m.TsFacilityTreeItem {
+							SiteId: cnode.Id,
+							IsPtag : true,
+							IsValid : true,
+							TagId: tid,
+							TagTableName : msname,
+							TagColumnName : ptagMap["name"].(string),
+							TagColumnType : ptagMap["type"].(string),
+							TagName : ptagMap["name"].(string),
+							FacilityTreeOrder : 1,
+							Value: strconv.Itoa(uid),
+							Label : ptagMap["name"].(string),
+							Children : []m.TsFacilityTreeItem{},
+						})
+	
+						uid = uid + 1
+						tid = tid - 1
+	
+						lev2Map[cnode.Name] = m.TsFacilityTreeItem{
+							SiteId: cnode.Id,
+							IsPtag : true,
+							FacilityName : cnode.Name,
+							Children : tags,
+							Label : cnode.Type,
+							FacilityTreeOrder : forder,
+							Value: strconv.Itoa(uid),
+						}
+						uid = uid + 1
+					}
+				}
+			}else {
+				if _, ok := lev2Map[cnode.Name]; !ok {
 					lev2Map[cnode.Name] = m.TsFacilityTreeItem{
 						SiteId: cnode.Id,
 						IsPtag : true,
 						FacilityName : cnode.Name,
-						Children : tags,
-						Label : cnode.Type,
+						Children : []m.TsFacilityTreeItem{},
+						Label : cnode.Name,
 						FacilityTreeOrder : forder,
 						Value: strconv.Itoa(uid),
 					}
+					forder = forder - 1
 					uid = uid + 1
 				}
 			}
+			
 		}
 	}
 
