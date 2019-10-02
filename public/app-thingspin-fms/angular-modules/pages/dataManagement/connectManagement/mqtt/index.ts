@@ -632,7 +632,14 @@ export class TsMqttConnectCtrl {
   }
 
   makePtagList() {
-    this.PtagList = this.tableList.map(({ value, type }: any) => ({ name: type, type: value }));
+    this.PtagList = [];
+    this.tableList.forEach( ({ type, value }: any) => {
+      const TagData = {
+        name: type,
+        type: value,
+      };
+      this.PtagList.push(TagData);
+    });
   }
 
   createConnectNode() {
