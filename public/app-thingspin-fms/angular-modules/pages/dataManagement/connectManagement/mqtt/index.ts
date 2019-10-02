@@ -23,12 +23,12 @@ interface Topic {
   value: string;
   viewStr: string;
 }
-/*
+
 interface TagList {
   name: any;
   type: any;
 }
-*/
+
 // interface MqttTableData {
 //   name: string;
 //   topic: string;
@@ -51,32 +51,38 @@ export interface TableModel {
 export class TsMqttConnectCtrl {
   static template: any = require("./index.html");
 
-  connection: any;
-  defMqtt: any;
+  connection  = {
+    url: '',
+    port: '',
+    keep_alive: '',
+    session: true
+  };
+  defMqtt = {
+    values: ['String', 'Int', 'Float', 'Boolean'],
+    types: [DEF_TOPIC_TYPE_STRING, DEF_TOPIC_TYPE_SHARP, DEF_TOPIC_TYPE_PLUS]
+  };
   topicItem: any;
-  collector: string;
+  collector = '';
   uuid: string;
   FlowID: string;
   valueSelected: string;
   typeSelected: string;
-  isTopicEditView: boolean;
-  isTopicEditBtn: boolean;
+  isTopicEditView = false;
+  isTopicEditBtn = true;
   isEditMode: boolean;
-  isTopicEditMode: boolean;
-  isLoadTopic: string;
+  isTopicEditMode = false;
+  isLoadTopic = '';
   connectStatus: string;
 
   defTabulatorOpts: object;
-  table: any;
-  tableList: any;
-  indexID: any;
-  increaseYPos: any;
-  topicListArrayString: string;
-  topicDisListArrayString: string;
-  topicListPublishArrayString: string;
-  PtagList: any[];
+  tableList = new Map<number, Topic>();
+  indexID = -1;
+  increaseYPos = 60;
+  topicListArrayString = '';
+  topicDisListArrayString = '';
+  topicListPublishArrayString = '';
+  PtagList: TagList[];
 
-  timeout: any;
   // MQTT
   readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
   readonly listenerTopic: string = "/thingspin/connect/+/status" as string;
@@ -85,7 +91,7 @@ export class TsMqttConnectCtrl {
   mqttClient: TsMqttController; // mqtt client instance
   timer: NodeJS.Timer | null;
 
-  list: Topic[];
+  list: Topic[] = [];
   tData: TableModel = {
     rowCount: 10,
     selectOpts: [10, 20, 30],
@@ -102,40 +108,17 @@ export class TsMqttConnectCtrl {
     private $location: angular.ILocationService,
     private $compile: angular.ICompileService,
     $routeParams: angular.route.IRouteParamsService,
-    $timeout: ITimeoutService) {
-    this.timeout = $timeout;
-    this.connection = {
-      url: "",
-      port: "",
-      keep_alive: "",
-      session: true
-    };
-    this.defMqtt = {
-      values: ['String', 'Int', 'Float', 'Boolean'],
-      types: [DEF_TOPIC_TYPE_STRING, DEF_TOPIC_TYPE_SHARP, DEF_TOPIC_TYPE_PLUS]
-    };
-    this.collector = "";
+    private $timeout: ITimeoutService) {
     this.topicItem = {
       id: 0,
-      name: "",
+      name: '',
       topicList: [],
       topicViewList: [],
-      topicString: "",
-      item: "",
+      topicString: '',
+      item: '',
       value: this.defMqtt.values[0],
       selType: this.defMqtt.types[0]
     };
-    this.topicListArrayString = "";
-    this.topicDisListArrayString = "";
-    this.topicListPublishArrayString = "";
-    this.increaseYPos = 60;
-    this.indexID = -1;
-    // this.tableList = new Map<string, MqttTableData>();
-    this.tableList = new Map<number, Topic>();
-    this.isTopicEditView = false;
-    this.isTopicEditBtn = true;
-    this.isTopicEditMode = false;
-    this.isLoadTopic = "";
 
     this.initMqtt();
     if ($routeParams.id) {
@@ -198,7 +181,7 @@ export class TsMqttConnectCtrl {
   }
 
   $onInit(): void {
-    this.timeout(() => {
+    this.$timeout(() => {
       $('#collector_input').focus();
     });
   }
@@ -270,7 +253,7 @@ export class TsMqttConnectCtrl {
         this.delTopicItemList(event.item);
       });
       */
-      this.timeout(() => {
+      this.$timeout(() => {
         $('#topic_name').focus();
       });
     } else {
@@ -309,7 +292,6 @@ export class TsMqttConnectCtrl {
         { title: "동작", field: "", formatter: actionFormatter }
       ],
     };
-    // this.table = new Tabulator("#mqtt-topic-list", this.defTabulatorOpts);
   }
 
   delTopicItemList(value: any) {
@@ -319,23 +301,16 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  loadTopicData(value: any) {
+  loadTopicData(data: any) {
     this.onDataResetTopic();
-    const topicData = this.tableList.get(value);
-    this.topicItem.id = topicData.id;
-    this.topicItem.name = topicData.type;
-    this.topicItem.topicString = topicData.viewStr;
-    this.topicItem.value = topicData.value;
-    // for (let i = 0; i< topicData.topicList.length; i++) {
-    //   const topicItem = {} as Topic;
-    //   topicItem.type = topicData.topicList[i].type;
-    //   topicItem.value = topicData.topicList[i].value;
-    //   topicItem.viewStr = topicData.topicList[i].viewStr;
-    //   this.topicItem.topicList.push(topicItem);
-    //   this.topicItem.topicViewList.push(topicItem.viewStr);
-    // }
+    const {id, type, viewStr, value} = this.tableList.get(data);
+
+    this.topicItem.id = id;
+    this.topicItem.name = type;
+    this.topicItem.topicString = viewStr;
+    this.topicItem.value = value;
     this.isTopicEditMode = true;
-    this.isLoadTopic = topicData.type;
+    this.isLoadTopic = type;
     this.onShowTopicEditView(true);
   }
 
@@ -346,62 +321,50 @@ export class TsMqttConnectCtrl {
     this.$scope.$applyAsync();
   }
 
-  onLoadData(item: any) {
-    this.indexID = item.id;
-    this.collector = item.name;
-    const getParams = item.params;
-    this.FlowID = getParams.FlowId;
-    this.uuid = getParams.UUID;
-    this.connection.url = getParams.Host;
-    this.connection.port = getParams.Port;
-    this.connection.keep_alive = getParams.KeepAlive;
-    this.connection.session = getParams.Session;
-    this.PtagList = getParams.PtagList;
-    const getTopicList = getParams.TopicList;
-    for (let i = 0; i < getTopicList.length; i++) {
-      const tableData = {} as Topic;
-      tableData.id = i;
-      if (getTopicList[i].type === undefined || getTopicList[i].type === null) {
-        tableData.type = getTopicList[i].name;
-      } else {
-        tableData.type = getTopicList[i].type;
-      }
-      if (getTopicList[i].viewStr === undefined || getTopicList[i].viewStr === null) {
-        tableData.viewStr = getTopicList[i].topic;
-      } else {
-        tableData.viewStr = getTopicList[i].viewStr;
-      }
-      tableData.value = getTopicList[i].value;
-      // tableData.topicList = [];
-      /*--jwpark 19.07.04
-      for (let j = 0; j < getTopicList[i].topicList.length; j++) {
-        const itemTopic = {} as Topic;
-        itemTopic.type = getTopicList[i].topicList[j].type;
-        itemTopic.value = getTopicList[i].topicList[j].value;
-        itemTopic.viewStr = getTopicList[i].topicList[j].viewStr;
-        tableData.topicList.push(itemTopic);
-      }
-      */
-      this.tableList.set(tableData.id, tableData);
-      if (this.list === undefined) {
-        this.list = [];
-      }
+  onLoadData({ id, name, params }: any) {
+    const { FlowId, UUID, Host, Port, KeepAlive, Session, PtagList, TopicList } = params;
+
+    this.indexID = id;
+    this.collector = name;
+    this.FlowID = FlowId;
+    this.uuid = UUID;
+    this.connection = {
+      url: Host,
+      port: Port,
+      keep_alive: KeepAlive,
+      session: Session,
+    };
+    this.PtagList = PtagList;
+
+    TopicList.forEach( ({ name: n, type, viewStr, topic, value }: any, id: number) => {
+      const tableData: Topic = {
+        id,
+        type: type ? type : n,
+        viewStr: viewStr ? viewStr : topic,
+        value,
+      };
+
+      this.tableList.set(id, tableData);
       this.list.push(tableData);
-    }
+    });
+
     this.initTable();
-    // this.table.setData(Array.from(this.tableList.values()));
   }
 
   onDataResetTopic() {
-    this.topicItem.id = 0;
-    this.topicItem.name = "";
-    this.topicItem.topic = "";
-    this.topicItem.topicString = "";
-    this.topicItem.topicList = [];
-    this.topicItem.topicViewList = [];
-    this.topicItem.item = "";
-    this.topicItem.value = this.defMqtt.values[0];
-    this.topicItem.selType = this.defMqtt.types[0];
+    const { values: [value], types: [selType] } = this.defMqtt;
+
+    this.topicItem = Object.assign(this.topicItem, {
+      id: 0,
+      name: '',
+      topic: '',
+      topicString: '',
+      topicList: [],
+      topicViewList: [],
+      item: '',
+      value,
+      selType,
+    });
   }
 
   onTopicAdd(item: any) {
@@ -431,7 +394,7 @@ export class TsMqttConnectCtrl {
     const keys = Array.from(this.tableList.keys());
 
     for (const key of keys) {
-      const convType = JSON.stringify(this.tableList.get(key).toLowerCase());
+      const convType = JSON.stringify(this.tableList.get(key).type.toLowerCase());
 
       if (convType !== JSON.stringify(name.toLowerCase())) {
         continue;
@@ -447,36 +410,41 @@ export class TsMqttConnectCtrl {
     return true;
   }
 
-  onTopicListAdd(name: any) {
-    if (name !== -1 && this.topicItem.topicString.length > 0) {
-      const inputData = this.tableList.get(name);
-      if (inputData === null || inputData === undefined) {
-        if (this.findCompareTopicName(this.topicItem.name)) {
-          const tableData = {} as Topic;
-          tableData.id = this.tableList.size;
-          tableData.type = this.topicItem.name;
-          tableData.value = this.topicItem.value;
-          tableData.viewStr = this.topicItem.topicString;
-          this.tableList.set(tableData.id, tableData);
-          this.onDataResetTopic();
-          this.onShowTopicEditView(false);
-        }
-      } else {
-        if (this.findCompareTopicName(this.topicItem.name)) {
-          inputData.type = this.topicItem.name;
-          inputData.value = this.topicItem.value;
-          inputData.viewStr = this.topicItem.topicString;
-          this.tableList.set(inputData.id, inputData);
-          this.onDataResetTopic();
-          this.onShowTopicEditView(false);
+  onTopicListAdd(n: any) {
+    if (n !== -1 && this.topicItem.topicString.length > 0) {
+      const inputData = this.tableList.get(n);
+      const { name, value, topicString } = this.topicItem;
+
+      if (this.findCompareTopicName(name)) {
+        let id, data;
+        if (!inputData) {
+          id = this.tableList.size;
+          data = {
+            id,
+            type: name,
+            value,
+            viewStr: topicString
+          };
+        } else {
+          inputData.type = name;
+          inputData.value = value;
+          inputData.viewStr = topicString;
+
+          id = inputData.id;
+          data = inputData;
+
           this.isTopicEditMode = false;
         }
+
+        this.tableList.set(id, data);
+        this.onDataResetTopic();
+        this.onShowTopicEditView(false);
       }
       this.list = Array.from(this.tableList.values());
       this.setPageNodes();
       this.$scope.$applyAsync();
     } else {
-      if (!name) {
+      if (!n) {
         this.openAlartNotification("토픽 이름을 입력해주세요.");
       } else if (this.topicItem.topicList.length === 0) {
         this.openAlartNotification("토픽 항목을 입력해주세요.");
@@ -664,16 +632,17 @@ export class TsMqttConnectCtrl {
   // Generate OBJECT to send over HTTP Parameter
   createHttpObject() {
     this.makePtagList();
+    const { url, port, keep_alive, session } = this.connection;
     const data = {
       name: this.collector,
       params: {
         Name: this.collector,
         FlowId: this.uuid,
         UUID: this.uuid,
-        Host: this.connection.url,
-        Port: this.connection.port,
-        KeepAlive: this.connection.keep_alive,
-        Session: this.connection.session,
+        Host: url,
+        Port: port,
+        KeepAlive: keep_alive,
+        Session: session,
         TopicList: Array.from(this.tableList.values()),
         AddTopicList: this.topicListArrayString,
         AddDisTopicList: this.topicDisListArrayString,
