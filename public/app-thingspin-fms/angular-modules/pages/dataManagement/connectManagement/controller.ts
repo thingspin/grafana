@@ -190,8 +190,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
             noText: cancelBtn,
             onConfirm: async () => {
                 try {
-                    await this.backendSrv.patch(`thingspin/connect/${item.id}/publish`, item);
                     item.publish = !item.publish;
+                    await this.backendSrv.patch(`thingspin/connect/${item.id}/publish`, item);
                 } catch (e) {
                     item.publish = !item.publish;
                     console.error(e);
