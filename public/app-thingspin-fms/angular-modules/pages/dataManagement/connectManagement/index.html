@@ -98,17 +98,6 @@
 
     <div class="connect-table-body">
       <table>
-        <!-- <thead>
-            <tr class="ts-table-header">
-              <th class="first-line-width"></th>
-              <th class="second-type-image-width"></th>
-              <th class="three-title-width"></th>
-              <th class="four-iconlist-width"></th>
-              <th class="five-setting-width"></th>
-              <th class="six-publish-operation"></th>
-            </tr>
-          </thead> -->
-
         <tbody>
           <tr class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
             <td ng-if="item.enable && item.type === 'opcua'" class="opcua-enable">
@@ -264,67 +253,6 @@
                     </div>
                   </div>
                 </div>
-                <!-- <div class="status-line"></div>
-                <div class="status-width-middle">
-                  <div class="row icon-title-font">
-                    발행상태
-                  </div>
-                  <div class="row" ng-switch="item.status.MQTT.fill">
-                    <div ng-switch-default>
-                      <i ng-if="item.type === 'opcua' && item.enable"
-                        class="fa tsi icon-ts-occurrence-off status-icon-opcua"></i>
-                      <i ng-if="item.type === 'mqtt' && item.enable"
-                        class="fa tsi icon-ts-occurrence-off status-icon-mqtt"></i>
-                      <i ng-if="item.type === 'modbus' && item.enable"
-                        class="fa tsi icon-ts-occurrence-off status-icon-modbus"></i>
-                      <i ng-if="!item.enable" class="fa tsi icon-ts-occurrence-off status-icon"></i>
-                    </div>
-                    <div ng-switch-when="red">
-                      <i ng-if="item.type === 'opcua' && item.enable"
-                        class="fa tsi icon-ts-occurrence-off status-icon-opcua"></i>
-                      <i ng-if="item.type === 'mqtt' && item.enable"
-                        class="fa tsi icon-ts-occurrence-off status-icon-mqtt"></i>
-                      <i ng-if="item.type === 'modbus' && item.enable"
-                        class="fa tsi icon-ts-occurrence-off status-icon-modbus"></i>
-                      <i ng-if="!item.enable" class="fa tsi icon-ts-occurrence-off status-icon"></i>
-                    </div>
-                    <div ng-switch-when="green">
-                      <i ng-if="item.type === 'opcua' && item.enable"
-                        class="fa tsi icon-ts-occurrence status-icon-opcua"></i>
-                      <i ng-if="item.type === 'mqtt' && item.enable"
-                        class="fa tsi icon-ts-occurrence status-icon-mqtt"></i>
-                      <i ng-if="item.type === 'modbus' && item.enable"
-                        class="fa tsi icon-ts-occurrence status-icon-modbus"></i>
-                      <i ng-if="!item.enable" class="fa tsi icon-ts-occurrence status-icon"></i>
-                    </div>
-                  </div>
-                </div> -->
-                <!-- <div class="status-line"></div>
-                <div class="status-width-middle">
-                  <div class="row">
-                    <div class="row icon-title-font">
-                      동작상태
-                    </div>
-                  </div>
-                  <div class="row">
-                    <button class="status-icon-btn" ng-if="!ctrl.list[$index].enable"
-                      ng-click="ctrl.asyncRun(item.id, true)">
-                      <i class="tsi icon-ts-play_circle_filled"></i>
-                    </button>
-                    <button ng-if="item.type === 'opcua' && ctrl.list[$index].enable" class="status-icon-btn-opcua"
-                      ng-click="ctrl.asyncRun(item.id, false)">
-                      <i class="fa tsi icon-ts-pause_circle_filled"></i>
-                    </button>
-                    <button ng-if="item.type === 'mqtt' && ctrl.list[$index].enable" class="status-icon-btn-mqtt"
-                      ng-click="ctrl.asyncRun(item.id, false)">
-                      <i class="fa tsi icon-ts-pause_circle_filled"></i>
-                    </button>
-                    <button ng-if="item.type === 'modbus' && ctrl.list[$index].enable" class="status-icon-btn-modbus"
-                      ng-click="ctrl.asyncRun(item.id, false)">
-                      <i class="fa tsi icon-ts-pause_circle_filled"></i>
-                    </button>
-                  </div>
-                </div> -->
               </div>
             </td>
             <td class="five-setting-width">
@@ -340,7 +268,7 @@
                       <i class="tsi icon-ts-create"></i>
                     </button>
                     <button class="setting-icon-btn setting-margin-middle-icon"
-                      ng-click="ctrl.asyncRemoveConnect(item.id)">
+                      ng-click="ctrl.removeConnect(item.id)">
                       <i class="tsi icon-ts-delete"></i>
                     </button>
                     <button class="setting-icon-btn setting-margin-middle-icon" ng-click="">

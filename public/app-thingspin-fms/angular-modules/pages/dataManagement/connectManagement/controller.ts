@@ -148,69 +148,50 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     enablePublish({ id, enable }: TsConnect) {
-        this.asyncRun(id, enable);
+        this.run(id, enable);
     }
 
-    async updatePublish(item: TsConnect) {
+    updatePublish(item: TsConnect) {
         this.modalPopupPublish(item);
-        if (item.publish) {
-            item.publish = false;
-        } else {
-            item.publish = true;
-        }
+        item.publish = !item.publish;
         this.$scope.$applyAsync();
     }
 
-    async asyncRun(id: number, enable: boolean): Promise<void> {
-        // if (!confirm(`데이터 수집을 ${enable ? '시작' : '중지'}하시겠습니까?`)) {
-        //     return;
-        // }
+    run(id: number, enable: boolean) {
         const index: number = this.list.findIndex((item) => item.id === item.id);
 
-        if (enable) {
-            this.modalPopupRunning(id, enable);
-            const list = this.list[index];
-            list.enable = false;
-        } else {
-            this.modalPopupRunning(id, enable);
-            const list = this.list[index];
-            list.enable = true;
-        }
+        this.modalPopupRunning(id, enable);
+        const list = this.list[index];
+        list.enable = !enable;
     }
 
     modalPopupPublish(item: TsConnect) {
-        const title = {
-            mainTitle: "데이터 발행",
-            detailFirst: " 데이터 발행을 ",
-            detailMiddle: "",
-            detailLast: " 하시겠습니까?",
-            successBtn: "",
-            cancelBtn: "취소",
-            icon: "",
-        };
+        const mainTitle = "데이터 발행",
+            detailFirst = " 데이터 발행을 ",
+            detailLast = " 하시겠습니까?",
+            cancelBtn = "취소";
+
+        let detailMiddle, successBtn, icon;
         if (item.publish) {
-            title.detailMiddle = "시작";
-            title.successBtn = "발행 시작";
-            title.icon = "tsi icon-ts-play_circle_filled";
+            detailMiddle = "시작";
+            successBtn = "발행 시작";
+            icon = "tsi icon-ts-play_circle_filled";
         } else {
-            title.detailMiddle = "종료";
-            title.successBtn = "발행 종료";
-            title.icon = "tsi icon-ts-pause_circle_filled";
+            detailMiddle = "종료";
+            successBtn = "발행 종료";
+            icon = "tsi icon-ts-pause_circle_filled";
         }
+
         appEvents.emit('confirm-modal', {
-            title: title.mainTitle,
-            text2: item.name + title.detailFirst + title.detailMiddle + title.detailLast,
-            icon: title.icon,
-            yesText: title.successBtn,
-            noText: title.cancelBtn,
-            onConfirm: () => {
+            title: mainTitle,
+            text2: item.name + detailFirst + detailMiddle + detailLast,
+            icon: icon,
+            yesText: successBtn,
+            noText: cancelBtn,
+            onConfirm: async () => {
                 try {
-                    this.backendSrv.patch(`thingspin/connect/${item.id}/publish`, item);
-                    if (!item.publish) {
-                        item.publish = true;
-                    } else {
-                        item.publish = false;
-                    }
+                    await this.backendSrv.patch(`thingspin/connect/${item.id}/publish`, item);
+                    item.publish = !item.publish;
                 } catch (e) {
                     item.publish = !item.publish;
                     console.error(e);
@@ -221,34 +202,36 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     modalPopupRunning(id: number, enable: boolean) {
         const index: number = this.list.findIndex((item) => item.id === item.id);
-        const title = {
-            mainTitle: "데이터 수집",
-            detailFirst: " 데이터 수집을 ",
-            detailMiddle: "",
-            detailLast: " 하시겠습니까?",
-            successBtn: "",
-            cancelBtn: "취소",
-            icon: "",
-        };
-        if (enable) {
-            title.detailMiddle = "시작";
-            title.successBtn = "수집 시작";
-            title.icon = "tsi icon-ts-play_circle_filled";
-        } else {
-            title.detailMiddle = "종료";
-            title.successBtn = "수집 종료";
-            title.icon = "tsi icon-ts-pause_circle_filled";
+        if (index < 0) {
+            return;
         }
+
+        const mainTitle = "데이터 수집",
+            detailFirst = " 데이터 수집을 ",
+            detailLast = " 하시겠습니까?",
+            cancelBtn = "취소";
+
+        let detailMiddle, successBtn, icon;
+        if (enable) {
+            detailMiddle = "시작";
+            successBtn = "수집 시작";
+            icon = "tsi icon-ts-play_circle_filled";
+        } else {
+            detailMiddle = "종료";
+            successBtn = "수집 종료";
+            icon = "tsi icon-ts-pause_circle_filled";
+        }
+
         appEvents.emit('confirm-modal', {
-            title: title.mainTitle,
-            text2: this.list[index].name + title.detailFirst + title.detailMiddle + title.detailLast,
-            icon: title.icon,
-            yesText: title.successBtn,
-            noText: title.cancelBtn,
-            onConfirm: () => {
+            title: mainTitle,
+            text2: this.list[index].name + detailFirst + detailMiddle + detailLast,
+            icon: icon,
+            yesText: successBtn,
+            noText: cancelBtn,
+            onConfirm: async () => {
                 try {
                     const flowId = uid.generate();
-                    this.backendSrv.patch(`thingspin/connect/${id}/enable`, {
+                    await this.backendSrv.patch(`thingspin/connect/${id}/enable`, {
                         flowId,
                         enable,
                     });
@@ -288,7 +271,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
-    async asyncRemoveConnect(id: number): Promise<void> {
+    removeConnect(id: number) {
         const index = this.list.findIndex((item) => item.id === id);
 
         appEvents.emit('confirm-modal', {
@@ -297,9 +280,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
             icon: 'fa-trash',
             yesText: '삭제',
             noText: '취소',
-            onConfirm: () => {
+            onConfirm: async () => {
                 try {
-                    this.backendSrv.delete(`thingspin/connect/${id}`);
+                    await this.backendSrv.delete(`thingspin/connect/${id}`);
                     // publish mqtt data
                     const { list } = this;
 
