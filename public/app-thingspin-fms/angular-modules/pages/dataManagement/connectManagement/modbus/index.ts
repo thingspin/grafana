@@ -515,6 +515,8 @@ export class TsModbusConnectCtrl {
         this.addModbusGETTER(this.tableList[i].name, this.tableList[i].address, this.tableList[i].quantity, this.tableList[i].functioncode,
           this.FlowId, i * 20, this.modbusReadIntervals);
       }
+    } else {
+      this.PtagList = [];
     }
 
     const object = {
