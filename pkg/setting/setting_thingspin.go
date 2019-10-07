@@ -43,6 +43,8 @@ type ThingspinLicense struct {
 	Connect           string
 	Nodes             string
 	User              string
+	Date              string
+	Alarm             string
 }
 
 func (cfg *Cfg) loadTsIniFile() error {
@@ -89,6 +91,8 @@ func (cfg *Cfg) readThingspinSettings() {
 		Thingspin.License.Connect = items["connect"].(string)
 		Thingspin.License.Nodes = items["nodes"].(string)
 		Thingspin.License.User = items["user"].(string)
+		Thingspin.License.Date = items["date"].(string)
+		Thingspin.License.Alarm = items["alarm"].(string)
 	} else {
 		fmt.Println(err)
 	}
