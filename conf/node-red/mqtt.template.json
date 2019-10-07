@@ -73,7 +73,7 @@
             "id":"TS-MQTT-HTTPIN-PARSE-{{.Params.UUID}}",
             "type":"function",
             "name":"",
-            "func":"const {url} = msg.req;\nconst list = url.split(\"/\");\nconst id = list[list.length-2];\nconst status = global.get('ts-status');\nmsg.payload = status[id];\nreturn msg;",
+            "func":"const {url} = msg.req;\nconst list = url.split(\"/\");\nconst id = list[list.length-2];\nconst status = global.get('ts-status');\nmsg.payload = status['connect'];\nreturn msg;",
             "outputs":1,
             "noerr":0,
             "x":490,
