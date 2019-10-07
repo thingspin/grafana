@@ -3,6 +3,7 @@ package alerting
 import (
 	"github.com/grafana/grafana/pkg/bus"
 
+	"github.com/grafana/grafana/pkg/models"
 	tsm "github.com/grafana/grafana/pkg/models-thingspin"
 )
 
@@ -16,9 +17,13 @@ func (handler *defaultResultHandler) tsHandle(evalContext *EvalContext) (err err
 			EvalContext: evalContext,
 		}
 
-		if err = bus.Dispatch(&tsCmd); err != nil {
-			return
+		if evalContext.Rule.State == models.AlertStateAlerting || // 심각
+			evalContext.Rule.State == models.AlertStatePending { // 경고
+			if err = bus.Dispatch(&tsCmd); err != nil {
+				return
+			}
 		}
+
 	}
 
 	return
