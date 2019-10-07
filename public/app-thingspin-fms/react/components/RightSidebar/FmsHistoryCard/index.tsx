@@ -29,6 +29,8 @@ export interface Props {
 
     // user ckecked
     isActive?: boolean;
+
+    [etc: string]: any;
 }
 
 export interface States {
@@ -53,10 +55,6 @@ export default class FmsHistoryCard extends PureComponent<Props, States> {
             default:
                 return `tsi icon-ts-user-advanced`;
         }
-    }
-
-    viewDetail() {
-        alert('준비중입니다.');
     }
 
     get renderSubTitle(): ReactNode {
@@ -87,9 +85,9 @@ export default class FmsHistoryCard extends PureComponent<Props, States> {
 
         return <div className="fms-tl-left">
             <div className={`fms-tl-icon ${colorCls}`}>
-                <i className={this.getAlarmIconClass()}></i>
+                <i className={this.getAlarmIconClass()} />
             </div>
-            <div className="fms-tl-dot"></div>
+            <div className="fms-tl-dot" />
         </div>;
     }
 
@@ -105,7 +103,7 @@ export default class FmsHistoryCard extends PureComponent<Props, States> {
                     {m.format("YYYY년 MM월 DD일(ddd) HH:mm:ss")}
                 </div>
                 <div>
-                    <a href={link} onClick={this.viewDetail}>상세보기 ></a>
+                    <a href={link ? link : '#'} >상세보기 ></a>
                 </div>
             </div>
             <FmsCard data={history}
@@ -127,6 +125,6 @@ export default class FmsHistoryCard extends PureComponent<Props, States> {
                 {this.renderLeftIcon}
                 {this.renderHistoryInfo}
             </div>
-        </div>: '');
+        </div> : '');
     }
 }
