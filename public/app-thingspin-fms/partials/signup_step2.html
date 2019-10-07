@@ -9,11 +9,14 @@
       </div>
       <div class="login-outer-box">
           <div class="signup">
-              <h3 class="p-b-1">You're almost there.</h3>
+         
+              <h3 class="p-b-1">회원가입</h3>
+             
               <div class="p-b-1">
-                We just need a couple of more bits of<br> information to finish creating your account.
+                계정을 만들기 위해 아래 정보를 입력해주세요.
               </div>
-              <form name="signUpForm" class="login-form gf-form-group">
+       
+              <form name="signUpForm" class="login-form gf-form-group ts-signup-form">
                 <div class="gf-form" ng-if="verifyEmailEnabled">
                   <span class="gf-form-label width-9">
                     Email code<tip>Email verification code (sent to your email)</tip>
@@ -22,20 +25,20 @@
                 </div>
           
                 <div class="gf-form" ng-if="!autoAssignOrg">
-                  <span class="gf-form-label width-9">Org. name</span>
+                  <span class="gf-form-label width-9">조직 이름</span>
                   <input type="text" name="orgName" class="gf-form-input max-width-14" ng-model="formModel.orgName" placeholder="Name your organization">
                 </div>
           
                 <div class="gf-form">
-                  <span class="gf-form-label width-9">Your name</span>
+                  <span class="gf-form-label width-9">이름</span>
                   <input type="text" name="name" class="gf-form-input max-width-14" ng-model="formModel.name" placeholder="(optional)">
                 </div>
                 <div class="gf-form">
-                  <span class="gf-form-label width-9">Email</span>
+                  <span class="gf-form-label width-9">이메일</span>
                   <input type="text" class="gf-form-input max-width-14" required ng-model="formModel.username" placeholder="Email" autocomplete="off">
                 </div>
                 <div class="gf-form">
-                  <span class="gf-form-label width-9">Password</span>
+                  <span class="gf-form-label width-9">비밀번호</span>
                   <input type="password" class="gf-form-input max-width-14" required ng-model="formModel.password" id="inputPassword" placeholder="password" autocomplete="off">
                 </div>
           
