@@ -135,6 +135,7 @@ export class TsMqttConnectCtrl {
       const list = await this.backendSrv.get("/thingspin/connect/" + id);
 
       this.onLoadData(list);
+      this.updateData();
       this.$scope.$applyAsync();
     } catch (e) {
       console.error(e);
@@ -167,6 +168,16 @@ export class TsMqttConnectCtrl {
   sampleKeep() {
     if (this.connection.keep_alive.length === 0) {
       this.connection.keep_alive = DEF_ALIVE;
+    }
+  }
+
+  async updateData() {
+    try {
+      const result = await this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`);
+
+      this.setConnectStatus(result);
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -460,7 +471,11 @@ export class TsMqttConnectCtrl {
 
       if (this.topicListArrayString.length !== 0 && this.indexID > 0 && this.tableList.size === 0) {
         this.methodProcess(this.createHttpObject(), withclose);
-        return;
+        if (withclose) {
+          this.close();
+        } else {
+          return;
+        }
       }
     }
     if (this.tableList.size > 0) {
@@ -677,6 +692,9 @@ export class TsMqttConnectCtrl {
     } else if (color === "init") {
       $('#mqtt-connect-state').addClass('mqtt-state-retry');
       $('#mqtt-connect-btn').addClass('icon-ts-power');
+    } else {
+      $('#mqtt-connect-state').addClass('mqtt-state-retry');
+      $('#mqtt-connect-btn').addClass('icon-ts-power');
     }
     this.$scope.$applyAsync();
   }
@@ -687,15 +705,19 @@ export class TsMqttConnectCtrl {
     try {
       if (this.isEditMode) {
         await this.backendSrv.put("/thingspin/connect/" + this.indexID, object);
-        await this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`);
+        // await this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`);
         if (value) {
           this.close();
+        } else {
+          this.updateData();
         }
       } else if (this.indexID !== -1) {
         await this.backendSrv.put("/thingspin/connect/" + this.indexID, object);
-        await this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`);
+        // await this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`);
         if (value) {
           this.close();
+        } else {
+          this.updateData();
         }
       } else {
         const result = await this.backendSrv.post("/thingspin/connect/mqtt", object);
