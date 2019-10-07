@@ -93,7 +93,7 @@ func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotatio
 	}
 
 	if query.NewState != "" {
-		sql.WriteString(` AND annotation.new_state <= '?'`)
+		sql.WriteString(` AND annotation.new_state = '?'`)
 		params = append(params, query.NewState)
 	}
 

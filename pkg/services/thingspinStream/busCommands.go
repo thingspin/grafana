@@ -29,6 +29,11 @@ func sendAlarmMessage(msg *m.TsSendAlarmMessageCommand) error {
 	}
 	evalContext := msg.EvalContext.(*alerting.EvalContext)
 
+	url, err := evalContext.GetRuleURL()
+	if err != nil {
+		return err
+	}
+
 	var alarmType string
 	state := evalContext.Rule.State
 	if state == "pending" {
@@ -50,6 +55,7 @@ func sendAlarmMessage(msg *m.TsSendAlarmMessageCommand) error {
 
 			"evalMatches":    evalContext.EvalMatches,
 			"conditionEvals": evalContext.ConditionEvals,
+			"ruleUrl":        url,
 
 			"history": map[string]interface{}{},
 		},
