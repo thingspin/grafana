@@ -47,7 +47,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
       icon: 'fa fa-user',
     },
   })
-  .when('/user/password/send-reset-email', {
+  .when('/thingspin/user/password/send-reset-email', {
     templateUrl: 'public/app-thingspin-fms/partials/reset_password.html',
     controller: 'TsResetPassword',
     pageClass: 'sidemenu-hidden',
@@ -56,7 +56,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
       icon: 'fa fa-refresh',
     },
   })
-  .when('/user/password/reset', {
+  .when('/thingspin/user/password/reset', {
     templateUrl: 'public/app-thingspin-fms/partials/reset_password.html',
     controller: 'TsResetPassword',
     pageClass: 'sidemenu-hidden',

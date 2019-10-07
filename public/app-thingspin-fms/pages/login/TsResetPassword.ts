@@ -5,6 +5,7 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 export class TsResetPassword {
   /** @ngInject */
   constructor($scope: any, backendSrv: BackendSrv, $location: any) {
+    $scope.$parent.ctrl.navbarEnable = false;
     $scope.formModel = {};
     $scope.mode = 'send';
     $scope.ldapEnabled = config.ldapEnabled;

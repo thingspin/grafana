@@ -53,7 +53,7 @@ export class TsLoginForm extends LoginForm {
         <div className="login-button-group">
           {this.props.displayForgotPassword ? (
             <div className="small login-button-forgot-password">
-              <a href="user/password/send-reset-email">비밀번호를 잊으셨나요?</a>
+              <a href="thingspin/user/password/send-reset-email">비밀번호를 잊으셨나요?</a>
             </div>
           ) : null}
 

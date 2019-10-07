@@ -4,6 +4,7 @@ import { coreModule } from 'app/core/core';
 export class TsSignup {
   /** @ngInject */
   constructor(private $scope: any, private backendSrv: any, $location: any, contextSrv: any) {
+    $scope.$parent.ctrl.navbarEnable = false;
     contextSrv.sidemenu = false;
     $scope.ctrl = this;
 

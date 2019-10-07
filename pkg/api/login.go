@@ -27,6 +27,10 @@ var getViewIndex = func() string {
 	return ViewIndex
 }
 
+func (hs *HTTPServer) ResetView(c *models.ReqContext) {
+	c.Redirect(setting.AppSubUrl + "/")
+}
+
 func (hs *HTTPServer) LoginView(c *models.ReqContext) {
 	viewData, err := setIndexViewData(hs, c)
 	if err != nil {

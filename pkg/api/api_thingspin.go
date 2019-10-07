@@ -5,6 +5,7 @@ import (
 	"github.com/grafana/grafana/pkg/api/routing"
 	"github.com/grafana/grafana/pkg/middleware"
 	tsm "github.com/grafana/grafana/pkg/models-thingspin"
+	//"github.com/grafana/grafana/pkg/api/dtos"
 )
 
 // thingspin용 REST API 정의 함수
@@ -12,9 +13,11 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 	reqSignedIn := middleware.ReqSignedIn
 	r := hs.RouteRegister
 	bind := binding.Bind
-
+	//quota := middleware.Quota(hs.QuotaService)
 	// register thingspin rest api
 	r.Group("/thingspin", func(tsRoute routing.RouteRegister) {
+		tsRoute.Get("/user/password/send-reset-email", hs.ResetView)
+		tsRoute.Get("/user/password/reset", hs.ResetView)
 		tsRoute.Get("/", hs.Index)
 		// FMS Front-end Routing Enable
 		tsRoute.Any("/manage/*", reqSignedIn, hs.Index)
