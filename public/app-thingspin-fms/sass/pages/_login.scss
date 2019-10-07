@@ -44,3 +44,50 @@
 .ts-login-reset-after{
 
 }
+
+.ts-reset{
+  .ts-reset-title{
+    margin-bottom: 28px;
+  }
+ 
+}
+.ts-reset-form{
+  .gf-form{
+    .gf-form-label{
+      background:none;
+      border:none;
+
+      font-family: Roboto;
+      font-size: 14px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.14;
+      letter-spacing: normal;
+      
+      color: rgba(0, 0, 0, 0.8);
+      margin-right: 16px;
+    }
+    .gf-form-input{
+      border:none;
+      color: black;
+      background-color: rgba(0, 0, 0, 0.07);
+    }
+  }
+
+  .gf-form-button-row{
+    float: right;
+    margin-top: 28px;
+    .ts-reset-button-submit{
+      background-color: #0039ff;
+      opacity: 1;
+      color: #ffffff;
+    }
+    .ts-reset-button-back{
+      background-color: #5a0dff;
+      opacity: 1;
+      color: #ffffff;
+    }
+  }
+  
+}
