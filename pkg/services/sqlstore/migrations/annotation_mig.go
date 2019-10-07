@@ -124,6 +124,8 @@ func addAnnotationMig(mg *Migrator) {
 	mg.AddMigration("Move region to single row", &AddMakeRegionSingleRowMigration{})
 
 	// TODO! drop region_id column?
+	// thingspin add code----
+	addTsAnnotationMig(mg)
 }
 
 type AddMakeRegionSingleRowMigration struct {
