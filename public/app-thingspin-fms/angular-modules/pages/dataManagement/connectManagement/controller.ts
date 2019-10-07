@@ -292,6 +292,12 @@ export default class TsConnectManagementCtrl implements angular.IController {
                         // 싱크 문제 해결이 필요
                         this.publishMqtt(`${baseTopic}/status`, '');
                         this.publishMqtt(`${baseTopic}/data`, '');
+                        const sideTopic = `/thingspin/${list[index].type}/${list[index].id}`;
+                        this.publishMqtt(`${sideTopic}/status`, '');
+                        this.publishMqtt(`${sideTopic}/data`, '');
+                        const orderTopic = `/thingspin/${list[index].type}/<no value>`;
+                        this.publishMqtt(`${orderTopic}/status`, '');
+                        this.publishMqtt(`${orderTopic}/data`, '');
 
                         list.splice(index, 1);
                     }
