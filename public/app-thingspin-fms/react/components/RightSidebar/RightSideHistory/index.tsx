@@ -150,16 +150,22 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     const list = [...alarmList, ...warnList];
 
     return list.filter(({ newState }) => newState === 'alerting' || newState === 'pending')
-      .map(({newState, alertName, data, time, uid, slug}): AlarmPayload => ({
-        alarmType: convAlarmType(newState),
-        evalMatches: data.evalMatches,
-        title: alertName,
-        time: time,
-        conditionEvals: '',
-        history: {},
-        historyType: convAlarmType(newState),
-        ruleUrl: `/thingspin/alarm/edit/${uid}/${slug}`,
-      }))
+      .map(({ newState, alertName, data, time, uid, slug }): AlarmPayload => {
+        const range = 10;
+        const from = dateTime(time).subtract(range, 'second').valueOf();
+        const to = dateTime(time).add(range, 'second').valueOf();
+
+        return {
+          alarmType: convAlarmType(newState),
+          evalMatches: data.evalMatches,
+          title: alertName,
+          time: time,
+          conditionEvals: '',
+          history: {},
+          historyType: convAlarmType(newState),
+          ruleUrl: `/thingspin/alarm/edit/${uid}/${slug}?from=${from}&to=${to}`,
+        };
+      })
       .filter(this.alarmFilter)
       .map(setFieldData);
   }
