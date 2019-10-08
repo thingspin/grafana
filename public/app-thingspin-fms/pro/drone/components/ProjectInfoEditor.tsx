@@ -2,7 +2,6 @@ import React, { PureComponent, useState } from 'react';
 
 import { appEvents } from 'app/core/core';
 import { getBackendSrv } from 'app/core/services/backend_srv';
-//import { dateTime } from '@grafana/ui/src/utils/moment_wrapper';
 
 import { Project } from '../types';
 

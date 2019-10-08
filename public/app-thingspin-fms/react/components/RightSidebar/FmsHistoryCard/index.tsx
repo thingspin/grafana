@@ -1,8 +1,9 @@
 // 3rd part libs
 import React, { PureComponent, ReactNode } from 'react';
 import classNames from 'classnames';
-// tslint:disable-next-line: import-blacklist
-import moment from 'moment';
+
+// Grafana libs
+import { dateTime } from '@grafana/data';
 
 // Thingspin React Compoonents
 import FmsCard, { TS_HISTORY_TYPE } from './Card';
@@ -94,7 +95,7 @@ export default class FmsHistoryCard extends PureComponent<Props, States> {
     get renderHistoryInfo(): ReactNode {
         const { history, time, link, alarmType, historyType } = this.props;
         const { isActive } = this.state;
-        const m = moment(time);
+        const m = dateTime(time);
 
         return <div className={`fms-tl-right`}>
             {this.renderTitle}

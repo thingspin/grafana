@@ -1,6 +1,4 @@
 import React, { PureComponent } from 'react';
-//import * as rangeUtil from '@grafana/ui/src/utils/rangeutil';
-//import { toUtc, isDateTime, dateTime } from '@grafana/ui/src/utils/moment_wrapper';
 import * as mom from '@grafana/data';
 
 import { Project, DATETIME_DEFAULTFORMAT } from '../types';
