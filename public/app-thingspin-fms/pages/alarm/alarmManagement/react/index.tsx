@@ -29,16 +29,12 @@ export class TsAlarmRuleList extends AlertRuleList {
   searchState = '';
 
   // Thingspin new method
-  gotoAddPage = () => {
-    this.props.updateLocation({ path: '/thingspin/alarm/new' });
-  }
+  gotoAddPage = () => this.props.updateLocation({ path: '/thingspin/alarm/new' });
 
   // Thingspin new method
-  getButtons(): React.ReactNode[] {
-    return [
-      (<TopButton onClick={this.gotoAddPage}>알람 추가</TopButton>),
-    ];
-  }
+  getButtons = (): React.ReactNode[] => [
+    <TopButton onClick={this.gotoAddPage}>알람 추가</TopButton>,
+  ];
 
   onChange = (search: string, state: string) => {
     this.search = search;
@@ -46,16 +42,10 @@ export class TsAlarmRuleList extends AlertRuleList {
     this.forceUpdate();
   }
 
-  dataFiltering = (rule: AlertRule): boolean => {
-    if (
-      (this.searchState && (this.searchState !== rule.state)) // state search
-      || (this.search && (!rule.name.includes(this.search))) // text search
-    ) {
-      return false;
-    }
-
-    return true;
-  }
+  dataFiltering = (rule: AlertRule): boolean => !(
+    (this.searchState && (this.searchState !== rule.state)) // state search
+    || (this.search && (!rule.name.includes(this.search))) // text search
+  );
 
   // override(Render Hijacking)
   render() {
@@ -65,16 +55,16 @@ export class TsAlarmRuleList extends AlertRuleList {
       <TsContainer headerLeft='알람 룰'>
         <TsAlarmSearch onChange={this.onChange}></TsAlarmSearch>
         <section>
-            <ol className='alert-rule-list'>
+          <ol className='alert-rule-list'>
             {alertRules.filter(this.dataFiltering)
               .map(rule => (<TsAlarmRuleItem
-                  rule={rule}
-                  key={rule.id}
-                  search={this.search}
-                  onTogglePause={() => this.onTogglePause(rule)}
-                />
+                rule={rule}
+                key={rule.id}
+                search={this.search}
+                onTogglePause={() => this.onTogglePause(rule)}
+              />
               ))}
-            </ol>
+          </ol>
         </section>
       </TsContainer>
     </AlarmMgmtBaseLayer>);

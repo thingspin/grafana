@@ -14,8 +14,8 @@ export interface TsAlarmStatItemProps {
 // use common class
 const bcls = `${itemClass}-stats`;
 
-const TsAlarmStatItem: React.FC<TsAlarmStatItemProps> = ({ icon= "fa fa-info", children, className, unit }): JSX.Element => {
-  return (<div className={`${bcls} ${className ? className : ''}`}>
+const TsAlarmStatItem: React.FC<TsAlarmStatItemProps> = ({ icon = "fa fa-info", children, className, unit }) => (
+  <div className={`${bcls} ${className ? className : ''}`}>
     <div className={`${bcls}-i`}>
       <i className={icon}></i>
     </div>
@@ -25,7 +25,7 @@ const TsAlarmStatItem: React.FC<TsAlarmStatItemProps> = ({ icon= "fa fa-info", c
         <span className={`${bcls}-t-unit`}>{unit}</span>
       )}
     </div>
-  </div>);
-};
+  </div>
+);
 
 export default TsAlarmStatItem;

@@ -15,6 +15,10 @@ import { baseClass as bcls, itemClass as icls, } from '../types';
 // Views
 import TsAlarmStatsItem from './TsAlarmStatsItem';
 
+enum AlarmRuleStateAPI {
+  Count = '/thingspin/annotations/count/newState',
+}
+
 export interface TsAlarmRuleItemProps extends Props { }
 
 export interface TsAlrmRuleItemStates {
@@ -23,7 +27,6 @@ export interface TsAlrmRuleItemStates {
     warn: number;
   };
 }
-
 
 // full customize AlertRuleItem React Component
 export default class TsAlarmRuleItem extends PureComponent<TsAlarmRuleItemProps, TsAlrmRuleItemStates> {
@@ -36,104 +39,81 @@ export default class TsAlarmRuleItem extends PureComponent<TsAlarmRuleItemProps,
     }
   };
 
-  renderText(text: string) {
-    return (
-      <Highlighter
-        highlightClassName="highlight-search-match"
-        textToHighlight={text}
-        searchWords={[this.props.search]}
-      />
-    );
-  }
-
   componentDidMount(): void {
     const { dashboardId, panelId } = this.props.rule;
-    const url = '/thingspin/annotations/count/newState';
 
     Promise.all([
-      getBackendSrv().get(url, { dashboardId, panelId, newState: 'alerting', }),
-      getBackendSrv().get(url, { dashboardId, panelId, newState: 'pending', }),
+      getBackendSrv().get(AlarmRuleStateAPI.Count, { dashboardId, panelId, newState: 'alerting', }),
+      getBackendSrv().get(AlarmRuleStateAPI.Count, { dashboardId, panelId, newState: 'pending', }),
     ]).then(([alert, warn]) => {
       this.setState({ stats: { alert, warn } });
     });
   }
 
-  renderInfo(): React.ReactNode {
-    const {
-      stateClass, stateText, stateIcon, stateAge,
-      name, info,
-    } = this.props.rule;
-    const convStateClass = stateClass.replace('alert', 'alarm');
+  renderText = (text: string) => (
+    <Highlighter
+      highlightClassName="highlight-search-match"
+      textToHighlight={text}
+      searchWords={[this.props.search]}
+    />
+  );
 
-    return (<div className={`${icls}__info`}>
-      <span className={`${icls}__icon ${convStateClass}`}>
-        <i className={stateIcon} />
-      </span>
-
-      <div className={`${icls}__body`}>
-        <div className={`${icls}__header`}>
-
-          <div className={`${icls}__name`}>
-            <a href={this.ruleUrl}>{this.renderText(name)}</a>
-          </div>
-
-          <div className={`${icls}__text`}>
-            <span className={`${icls}__status ${stateClass}`}>{this.renderText(stateText)}</span>
-            <span className={`${icls}__time`}>
-              <span className={`${icls}__time_for`}>for</span>
-              {stateAge}
-            </span>
-            <span className={`${icls}__time_value`}>
-              {info && this.renderText(info)}
-            </span>
-          </div>
-
-        </div>
-      </div>
-    </div>);
-  }
-
-  renderStat(): React.ReactNode {
-    const { stats: { warn, alert } } = this.state;
-    return (<>
-      <TsAlarmStatsItem className="ts-color-yellow" icon="fa fa-exclamation-triangle" unit="건">{warn}</TsAlarmStatsItem>
-      <TsAlarmStatsItem className="ts-color-red" icon="fa fa-info-circle" unit="건">{alert}</TsAlarmStatsItem>
-    </>);
-  }
-
-  renderAction(): React.ReactNode {
+  render() {
     const { rule, onTogglePause } = this.props;
+    const { stateClass, stateText, stateIcon, stateAge, name, info, } = rule;
+    const { stats: { warn, alert } } = this.state;
 
+    this.ruleUrl = rule.url.replace('/d/', '/thingspin/alarm/edit/');
+
+    const convStateClass = stateClass.replace('alert', 'alarm');
     const iconClassName = classNames({
       fa: true,
       'fa-play': rule.state === 'paused',
       'fa-pause': rule.state !== 'paused',
     });
 
-    return (<div className={`${icls}__actions`}>
-      <button className={`${bcls}-btn`}
-        title="Pausing an alarm rule prevents it from executing"
-        onClick={onTogglePause}
-      >
-        <i className={iconClassName} />
-      </button>
-      <a className={`${bcls}-btn`} href={this.ruleUrl} title="Edit alert rule">
-        <i className="gicon gicon-cog" />
-      </a>
-    </div>);
-  }
-
-  render() {
-    const { rule } = this.props;
-    this.ruleUrl = rule.url.replace('/d/', '/thingspin/alarm/edit/');
-
     return (
       <li className={`${icls}`}>
-        {this.renderInfo()}
+        <div className={`${icls}__info`}>
+          <span className={`${icls}__icon ${convStateClass}`}>
+            <i className={stateIcon} />
+          </span>
 
-        {this.renderStat()}
+          <div className={`${icls}__body`}>
+            <div className={`${icls}__header`}>
 
-        {this.renderAction()}
+              <div className={`${icls}__name`}>
+                <a href={this.ruleUrl}>{this.renderText(name)}</a>
+              </div>
+
+              <div className={`${icls}__text`}>
+                <span className={`${icls}__status ${stateClass}`}>{this.renderText(stateText)}</span>
+                <span className={`${icls}__time`}>
+                  <span className={`${icls}__time_for`}>for</span>
+                  {stateAge}
+                </span>
+                <span className={`${icls}__time_value`}>
+                  {info && this.renderText(info)}
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <TsAlarmStatsItem className="ts-color-yellow" icon="fa fa-exclamation-triangle" unit="건">{warn}</TsAlarmStatsItem>
+        <TsAlarmStatsItem className="ts-color-red" icon="fa fa-info-circle" unit="건">{alert}</TsAlarmStatsItem>
+
+        <div className={`${icls}__actions`}>
+          <button className={`${bcls}-btn`}
+            title="Pausing an alarm rule prevents it from executing"
+            onClick={onTogglePause}
+          >
+            <i className={iconClassName} />
+          </button>
+          <a className={`${bcls}-btn`} href={this.ruleUrl} title="Edit alert rule">
+            <i className="gicon gicon-cog" />
+          </a>
+        </div>
       </li>
     );
   }

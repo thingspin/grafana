@@ -9,13 +9,13 @@ export interface ButtonProps {
   onClick: () => void;
 }
 
-const TopButton: React.FC<ButtonProps> = ({ color = ButtonColor.BLUE, onClick, children, }) => {
-  return <button
+const TopButton: React.FC<ButtonProps> = ({ color = ButtonColor.BLUE, onClick, children, }) => (
+  <button
     className={`ts-top-button ${color}`}
     onClick={onClick}
   >
     {children}
-  </button>;
-};
+  </button>
+);
 
 export default TopButton;
