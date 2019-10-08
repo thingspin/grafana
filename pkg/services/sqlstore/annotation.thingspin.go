@@ -25,7 +25,7 @@ func (r *SqlAnnotationRepo) FindStateCount(query *annotations.TsItemQuery) (num 
 }
 
 // customized 'Find' Method
-func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotations.ItemDTO, error) {
+func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotations.TsItemDTO, error) {
 	var sql bytes.Buffer
 	params := make([]interface{}, 0)
 
@@ -46,10 +46,13 @@ func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotatio
 			annotation.updated,
 			usr.email,
 			usr.login,
-			alert.name as alert_name
+			alert.name as alert_name,
+			dashboard.uid as uid,
+			dashboard.slug as slug
 		FROM annotation
 		LEFT OUTER JOIN ` + dialect.Quote("user") + ` as usr on usr.id = annotation.user_id
 		LEFT OUTER JOIN alert on alert.id = annotation.alert_id
+		LEFT OUTER JOIN dashboard on dashboard.id = annotation.dashboard_id
 		`)
 
 	sql.WriteString(`WHERE annotation.org_id = ?`)
@@ -93,8 +96,12 @@ func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotatio
 	}
 
 	if query.NewState != "" {
-		sql.WriteString(` AND annotation.new_state = '?'`)
+		sql.WriteString(` AND annotation.new_state = ?`)
 		params = append(params, query.NewState)
+	}
+
+	if query.Confirm != "" {
+		sql.WriteString(fmt.Sprintf(" AND annotation.confirm = %s", query.Confirm))
 	}
 
 	if len(query.Tags) > 0 {
@@ -136,7 +143,7 @@ func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotatio
 
 	sql.WriteString(" ORDER BY epoch DESC" + dialect.Limit(query.Limit))
 
-	items := make([]*annotations.ItemDTO, 0)
+	items := make([]*annotations.TsItemDTO, 0)
 
 	if err := x.SQL(sql.String(), params...).Find(&items); err != nil {
 		return nil, err

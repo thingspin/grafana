@@ -14,9 +14,12 @@ import FmsHistoryCard, { TS_ALARM_TYPE } from '../FmsHistoryCard/index';
 import { AnnotationQuery, AlarmType } from 'app-thingspin-fms/pages/alarm/alarmHistory/types';
 
 export enum AlarmAPI {
-  Annotations = '/api/annotations'
+  Annotations = '/thingspin/annotations'
 }
-
+enum AlarmConfirm {
+  Confirm = 'TRUE',
+  Unconfirm = 'FALSE',
+}
 export interface AlarmHistoryPayload {
   id: number;
   alertId: number;
@@ -40,6 +43,8 @@ export interface AlarmHistoryPayload {
   // thingpsin add field----
   confirm: boolean;
   confirmDate: number | Date;
+  uid: string;
+  slug: string;
 }
 
 export interface Props extends TabbarProps {}
@@ -70,8 +75,12 @@ interface AlarmPayload extends Simulator {
   ruleUrl: string;
 }
 
-export const fetchHistory = async (params?: AnnotationQuery, limit = 100000, type = AlarmType.ALERT, ): Promise<AlarmHistoryPayload[]> => (
-  getBackendSrv().get(AlarmAPI.Annotations, { ...params, limit, type, })
+export const fetchHistory = async (newState: AlarmType, params?: AnnotationQuery,
+  confirm = AlarmConfirm.Unconfirm ,
+  limit = 100000,
+  type = AlarmType.ALERT,
+): Promise<AlarmHistoryPayload[]> => (
+  getBackendSrv().get(AlarmAPI.Annotations, { ...params, limit, type, newState, confirm})
 );
 
 export function getAlarmType(type: string): TS_ALARM_TYPE {
@@ -133,10 +142,15 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     const from = cpDate.setHours(0, 0, 0, 0);
     const to = cpDate.setHours(24, 0, 0, 0);
 
-    const list = await fetchHistory({ from, to });
+
+    const [alarmList, warnList] = await Promise.all([
+      fetchHistory(AlarmType.ALERT, { from, to }),
+      fetchHistory(AlarmType.WARNING, { from, to })
+    ]);
+    const list = [...alarmList, ...warnList];
 
     return list.filter(({ newState }) => newState === 'alerting' || newState === 'pending')
-      .map(({newState, alertName, data, time}): AlarmPayload => ({
+      .map(({newState, alertName, data, time, uid, slug}): AlarmPayload => ({
         alarmType: convAlarmType(newState),
         evalMatches: data.evalMatches,
         title: alertName,
@@ -144,7 +158,7 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
         conditionEvals: '',
         history: {},
         historyType: convAlarmType(newState),
-        ruleUrl: '/',
+        ruleUrl: `/thingspin/alarm/edit/${uid}/${slug}`,
       }))
       .filter(this.alarmFilter)
       .map(setFieldData);

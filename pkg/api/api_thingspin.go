@@ -110,6 +110,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 
 		// Alarm
 		tsRoute.Group(`/annotations`, func(tsAnnoRoute routing.RouteRegister) {
+			tsAnnoRoute.Get("/", Wrap(GetTsAnnotations))
 			tsAnnoRoute.Get("/count/newState", Wrap(GetAnnotaionStateCount))
 		})
 
