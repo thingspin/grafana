@@ -1,60 +1,32 @@
-import React, { PureComponent, ReactNode } from 'react';
-import { TsRightSideTabbarComponent } from '../RightSideTabbar/index';
-import { TsRightSideHistoryComponent } from '../RightSideHistory/index';
+// js 3rd party libs
+import React, { useState } from 'react';
 
+// Thingspin libs
+import { TsRightSideTabbarComponent, Props as TabProps } from '../RightSideTabbar';
+import { TsRightSideHistoryComponent, Props as HistoryProps } from '../RightSideHistory';
 
-interface Props {
-}
+export const FmsAlarmBandComp: React.FC<any> = (_) => {
+    const [play, setPlay] = useState(true);
+    const [filters, setFilters] = useState([]);
+    const [date, setDate] = useState(new Date());
 
-export interface States {
-    filters: any[];
-    date: Date;
-    play: boolean;
-}
+    const onPlay = (play: boolean) => setPlay(play);
 
-export class FmsAlarmBandComp extends PureComponent<Props, States> {
-    state: States = {
-        filters: [],
-        date: new Date(),
-        play: true,
+    const onChangeDate = (date: Date) => setDate(date);
+
+    const onChangeFilter = (filters: any[]) => setFilters([...filters]);
+
+    const baseProps = { filters, date, play, };
+    const tabProps: TabProps = {
+        ...baseProps,
+        onPlay,
+        onChangeDate,
+        onChangeFilter,
     };
+    const historyProps: HistoryProps = { ...baseProps };
 
-    getTabNode(title: string, icon: string): () => ReactNode {
-        return () => {
-            return (<>
-                <i className={`fa ${icon} fa-2`} />
-                <span className="fms-right-tap-alarm-title">
-                    {title}
-                </span>
-            </>);
-        };
-    }
-
-    onChangeDate(date: Date) {
-        this.setState({ date });
-    }
-
-    onChangeFilter(filters: any[]) {
-        this.setState({ filters: [...filters] });
-    }
-
-    onPlay(play: boolean) {
-        this.setState({ play, });
-    }
-
-    render(): ReactNode {
-        const { filters, date, play } = this.state;
-
-        return (<>
-            <TsRightSideTabbarComponent
-                date={date}
-                onChangeDate={this.onChangeDate.bind(this)}
-                filters={filters}
-                onChangeFilter={this.onChangeFilter.bind(this)}
-                play={play}
-                onPlay={this.onPlay.bind(this)}
-            />
-            <TsRightSideHistoryComponent filters={filters} date={date} play={play} />
-        </>);
-    }
-}
+    return <>
+        <TsRightSideTabbarComponent {...tabProps} />
+        <TsRightSideHistoryComponent {...historyProps} />
+    </>;
+};

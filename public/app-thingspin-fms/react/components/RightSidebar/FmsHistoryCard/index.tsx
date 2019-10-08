@@ -1,5 +1,5 @@
 // 3rd part libs
-import React, { PureComponent, ReactNode } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 
 // Grafana libs
@@ -34,98 +34,57 @@ export interface Props {
     [etc: string]: any;
 }
 
-export interface States {
-    isShow?: boolean;
-    isActive?: boolean;
-}
-
-export default class FmsHistoryCard extends PureComponent<Props, States> {
-    state: States = {
-        isShow: true,
-        isActive: !!this.props.isActive,
-    };
-
-    getAlarmIconClass(): string {
-        const { alarmType } = this.props;
-
-        switch (alarmType) {
-            case TS_ALARM_TYPE.ERROR:
-                return `tsi icon-ts-error1`;
-            case TS_ALARM_TYPE.WARNING:
-                return `tsi icon-ts-warning1`;
-            default:
-                return `tsi icon-ts-user-advanced`;
-        }
-    }
-
-    get renderSubTitle(): ReactNode {
-        const { subtitle } = this.props;
-
-        return (subtitle ? <div className='fms-tl-subtitle'>
-            {subtitle}
-        </div> : '');
-    }
-
-    get renderTitle(): ReactNode {
-        const { title, alarmType } = this.props;
-        const { isActive } = this.state;
-        const colorCls = isActive ? `ts-${alarmType}` : '';
-
-        return (<>
-            {title ? <div className={`fms-tl-title ${colorCls}`}>
-                {title}
-                {this.renderSubTitle}
-            </div> : ''}
-        </>);
-    }
-
-    get renderLeftIcon(): ReactNode {
-        const { alarmType } = this.props;
-        const { isActive } = this.state;
-        const colorCls = isActive ? `ts-${alarmType}` : '';
-
-        return <div className="fms-tl-left">
-            <div className={`fms-tl-icon ${colorCls}`}>
-                <i className={this.getAlarmIconClass()} />
-            </div>
-            <div className="fms-tl-dot" />
-        </div>;
-    }
-
-    get renderHistoryInfo(): ReactNode {
-        const { history, time, link, alarmType, historyType } = this.props;
-        const { isActive } = this.state;
-        const m = dateTime(time);
-
-        return <div className={`fms-tl-right`}>
-            {this.renderTitle}
-            <div className="fms-tl-time-layer">
-                <div>
-                    {m.format("YYYY년 MM월 DD일(ddd) HH:mm:ss")}
-                </div>
-                <div>
-                    <a href={link ? link : '#'} >상세보기 ></a>
-                </div>
-            </div>
-            <FmsCard data={history}
-                alarmType={alarmType}
-                historyType={historyType}
-                isActive={!!isActive} />
-        </div>;
-    }
-
-    render(): ReactNode {
-        const { isActive, isShow } = this.state;
-        const mainCls = classNames({
-            'ts-on-bg': isActive,
-            'ts-off-bg': !isActive,
-        });
-
-        return (isShow ? <div className={`fms-history-card`}>
-            <div className={mainCls}>
-                {this.renderLeftIcon}
-                {this.renderHistoryInfo}
-            </div>
-        </div> : '');
+function getAlarmIconClass(alarmType: TS_ALARM_TYPE): string {
+    switch (alarmType) {
+        case TS_ALARM_TYPE.ERROR:
+            return `tsi icon-ts-error1`;
+        case TS_ALARM_TYPE.WARNING:
+            return `tsi icon-ts-warning1`;
+        default:
+            return `tsi icon-ts-user-advanced`;
     }
 }
+
+const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, historyType, time, title, subtitle }) => {
+    const m = dateTime(time);
+    const mainCls = classNames({
+        'ts-on-bg': isActive,
+        'ts-off-bg': !isActive,
+    });
+
+    return (<div className="fms-history-card">
+        <div className={mainCls}>
+            <div className="fms-tl-left">
+                <div className={`fms-tl-icon ${isActive && `ts-${alarmType}`}`}>
+                    <i className={getAlarmIconClass(alarmType)} />
+                </div>
+                <div className="fms-tl-dot" />
+            </div>
+
+            <div className="fms-tl-right">
+                {title && <div className={`fms-tl-title ${isActive && `ts-${alarmType}`}`}>
+                    {title}
+                    {subtitle && <div className='fms-tl-subtitle'>
+                        {subtitle}
+                    </div>}
+                </div>}
+
+                <div className="fms-tl-time-layer">
+                    <div>
+                        {m.format("YYYY년 MM월 DD일(ddd) HH:mm:ss")}
+                    </div>
+                    <div>
+                        <a href={link ? link : '#'} >상세보기 ></a>
+                    </div>
+                </div>
+
+                <FmsCard data={history}
+                    alarmType={alarmType}
+                    historyType={historyType}
+                    isActive={!!isActive} />
+            </div>
+        </div>
+    </div>);
+};
+
+export default FmsHistoryCard;

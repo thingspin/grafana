@@ -1,4 +1,4 @@
-import React, { PureComponent, ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Provider, TabsComponent } from './Context';
 
 export interface State {
@@ -6,39 +6,27 @@ export interface State {
   content: ReactNode;
 }
 
-export default class Tabs extends PureComponent<{}, State> {
-  renderEmpty(ProviderValue: TabsComponent, children: ReactNode): ReactNode {
+const Tabs: React.FC<{}> = ({ children }) => {
+  const [name, setName] = useState('');
+  const [content, setContent] = useState('' as ReactNode);
 
-    return (<Provider value={ProviderValue}>
-      <ul className="fms-tab-header">
-        {children}
-      </ul>
-      <div></div>
-    </Provider>
-    );
-  }
+  const handleTabClick = (n: string, c: ReactNode) => {
+    setName(n);
+    setContent(c);
+  };
 
-  render(): ReactNode {
-    const { children } = this.props;
-    const ProviderValue: TabsComponent = {
-      name: this.state ? this.state.name : '',
-      handleTabClick: this.handleTabClick.bind(this),
-    };
+  const ProviderValue: TabsComponent = {
+    name,
+    handleTabClick,
+  };
 
-    if (!this.state) {
-      return this.renderEmpty(ProviderValue, children);
-    }
-    const { content } = this.state;
-
-    return (<Provider value={ProviderValue}>
-      <ul className="fms-tab-header">
-        {children}
-      </ul>
-      <div>{content}</div>
-    </Provider>);
-  }
-
-  handleTabClick(name: string, content: ReactNode) {
-    this.setState({ name, content });
-  }
-}
+  return <Provider value={ProviderValue}>
+    <ul className="fms-tab-header">
+      {children}
+    </ul>
+    <div>
+      {content}
+    </div>
+  </Provider>;
+};
+export default Tabs;
