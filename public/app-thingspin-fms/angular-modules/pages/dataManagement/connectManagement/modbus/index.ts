@@ -34,6 +34,8 @@ interface TagList {
   type: any;
 }
 
+const DEF_REQUEST_MESSAGE_CONNECT = "접속 테스트 시도";
+
 export class TsModbusConnectCtrl {
   static template = require("./index.html");
   selectObj: any;
@@ -91,6 +93,7 @@ export class TsModbusConnectCtrl {
   PtagList: TagList[];
   //for test
   getterparserArray: any;
+  requestHelp: string;
 
   //editmode
   indexID: number = null; //data connection id
@@ -240,6 +243,7 @@ export class TsModbusConnectCtrl {
   //button action
   connTest() {
     this.isConnCheckMode = true;
+    this.requestHelp = DEF_REQUEST_MESSAGE_CONNECT;
     this.checkParams();
   }
 
@@ -536,6 +540,7 @@ export class TsModbusConnectCtrl {
         Tabledata: this.tableList,
         influxID: this.modbusinfluxID,
         PtagList: this.PtagList,
+        RequestMsg: this.requestHelp,
       },
       intervals: this.modbusReadIntervals
     };

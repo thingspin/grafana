@@ -271,6 +271,27 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
+    async showModalHistory(item: TsConnect) {
+        console.log(item);
+        // this.title = "연결 이력 관리";
+        appEvents.emit('show-modal', {
+            src: 'public/app/partials/ts_connect_history.html',
+            model:{
+                title: item.name + ' 연결 이력 관리',
+                topic: '/thingspin/btn',
+                icon: 'fa fa-history',
+                tData: {
+                    rowCount: 16,
+                    selectOpts: [16, 32, 48],
+                    currPage: 0,
+                    maxPage: 0,
+                    maxPageLen: 10,
+                    pageNode: [],
+                }
+            }
+        });
+    }
+
     removeConnect(id: number) {
         const index = this.list.findIndex((item) => item.id === id);
 

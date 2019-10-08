@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/grafana/grafana/pkg/thingspin"
 
@@ -10,6 +11,8 @@ import (
 	gfm "github.com/grafana/grafana/pkg/models"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 )
+
+var prevData m.AddTsConnectHistoryQuery
 
 func str2Json(jsonBytes []byte) (map[string]interface{}, error) {
 	var obj map[string]interface{}
@@ -100,6 +103,15 @@ func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 
+	q1 := m.AddTsConnectHistoryQuery {
+		FlowId:      newFlowId,
+		Event:       "Created",
+		Description: "최초 연결 추가",
+	}
+	if err := bus.Dispatch(&q1); err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
 	return JSON(200, q.Result)
 }
 
@@ -146,6 +158,35 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
+
+	var q1 m.AddTsConnectHistoryQuery
+
+	if info.Params["RequestMsg"] != nil {
+		q1.FlowId = info.FlowId 
+		q1.Event = fmt.Sprint(info.Params["RequestMsg"])
+		q1.Description = fmt.Sprintf("동작 상태 : %t ", info.Enable)
+	} else {
+		q1.FlowId = info.FlowId 
+		q1.Event = "Updated"
+		q1.Description = fmt.Sprintf("연결 내역 변경 / 동작 상태 : %t ", info.Enable)
+	}
+	
+	if prevData.FlowId == q1.FlowId {
+		if prevData.Event == q1.Event {
+			prevData.FlowId = q1.FlowId;
+			prevData.Event = q1.Event;
+			prevData.Description = q1.Description;
+			return JSON(200, q.Result)
+		}
+	}
+
+	if err := bus.Dispatch(&q1); err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	prevData.FlowId = q1.FlowId;
+	prevData.Event = q1.Event;
+	prevData.Description = q1.Description;
 
 	return JSON(200, q.Result)
 }
@@ -234,6 +275,27 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	if err := bus.Dispatch(&q); err != nil {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
+	if info.Enable == true {
+		q1 := m.AddTsConnectHistoryQuery {
+			FlowId:      info.FlowId,
+			Event:       "Updated",
+			Description: fmt.Sprintf("연결 동작 시작 / 발행 상태 : %t", info.Active),
+		}
+		if err := bus.Dispatch(&q1); err != nil {
+			return Error(500, "ThingSPIN Store Error", err)
+		}
+	
+	} else {
+		q1 := m.AddTsConnectHistoryQuery {
+			FlowId:      info.FlowId,
+			Event:       "Updated",
+			Description: fmt.Sprintf("연결 동작 정지 / 발행 상태 : %t", info.Active),
+		}
+		if err := bus.Dispatch(&q1); err != nil {
+			return Error(500, "ThingSPIN Store Error", err)
+		}
+	
+	}
 
 	return JSON(200, info.Id)
 }
@@ -278,6 +340,26 @@ func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 
+	if info.Active {
+		q1 := m.AddTsConnectHistoryQuery {
+			FlowId:      info.FlowId,
+			Event:       "Updated",
+			Description: fmt.Sprintf("연결 발행 시작 / 동작 상태 : %t ", info.Enable),
+		}
+		if err := bus.Dispatch(&q1); err != nil {
+			return Error(500, "ThingSPIN Store Error", err)
+		}
+	} else {
+		q1 := m.AddTsConnectHistoryQuery {
+			FlowId:      info.FlowId,
+			Event:       "Updated",
+			Description: fmt.Sprintf("연결 발행 정지 / 동작 상태 : %t ", info.Enable),
+		}
+		if err := bus.Dispatch(&q1); err != nil {
+			return Error(500, "ThingSPIN Store Error", err)
+		}
+	}
+
 	return JSON(200, info.Id)
 }
 
@@ -301,6 +383,12 @@ func deleteTsConnect(c *gfm.ReqContext) Response {
 		err = errors.New(string(nodeResp.Body.([]byte)))
 		return Error(nodeResp.StatusCode, "ThingSPIN Connect Error", err)
 	}
+
+	q1 := m.DeleteTsConnectHistoryQuery {
+		FlowId:      info.FlowId,
+	}
+	
+	bus.Dispatch(&q1)
 
 	// remove Connect Table Row
 	q := m.DeleteTsConnectQuery{

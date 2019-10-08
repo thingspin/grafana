@@ -23,6 +23,7 @@ func AddThingspinMigrations(mg *Migrator) {
 	addFmsConnectTypeMigrations(mg)
 	addFmsConnectStateMigrations(mg)
 	addFmsConnectMigrations(mg)
+	addFmsConnectHistoryMigrations(mg)
 	addFmsFieldTypeMigrations(mg)
 	addFmsFieldMigrations(mg)
 	addFmsTagMigrations(mg)

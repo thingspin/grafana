@@ -1,0 +1,76 @@
+<div class="modal-body" ng-cloak>
+  <div class="modal-header">
+    <h2 class="modal-header-title">
+      <i class="fa {{model.icon}}"></i>
+      <span class="p-l-1">
+        {{model.title}}
+      </span>
+    </h2>
+
+    <a class="modal-header-close" ng-click="dismiss();">
+      <i class="fa fa-remove"></i>
+    </a>
+  </div>
+
+  <div >
+      발행 MQTT Topic
+      {{model.topic}}
+  </div>
+
+  <div class="modal-content text-center">
+    <div class="ts-mqtt-table-container history-table-size">
+      <div class="connect-table-header" style="float:right;">
+        <span>페이지당 행수 : </span>
+        <span class="connect-page-rows">
+          <select class="connect-table-select" style="background-color:#f7f8fa;" ng-model="model.tData.rowCount"
+            ng-options="n as n for n in model.tData.selectOpts" ng-change="OnSelectChange()">
+          </select>
+        </span>
+      </div>
+
+      <div class="connect-table-body">
+        <table>
+          <thead>
+            <tr class="ts-table-header">
+              <th class="ts-table-name">이름</th>
+              <th class="ts-table-topic">Topic</th>
+              <th>Value Type</th>
+              <th>동작</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr class="ts-table-row" ng-repeat="item in model.tData.pageNode track by $index">
+              <td>{{ item.type }}</td>
+              <td>{{ item.viewStr }}</td>
+              <td>{{ item.value }}</td>
+              <td>
+                <button class="btn" ng-click="loadTopicData(item.id)">
+                  <i class="fa fa-pencil"></i>
+                </button>
+                <button class="btn" ng-click="removeTopic(item.id)">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="connect-table-footer">
+        <div class="table-page-range">
+          <span>페이지 범위 : {{ model.tData.currPage * model.tData.rowCount + 1 }} -
+            {{ (model.tData.currPage * model.tData.rowCount) + model.tData.rowCount }} / 전체 : {{model.list.length}}</span>
+        </div>
+        <div class="table-paging">
+          <button ng-click="tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
+          <button ng-click="model.tSetPaging(page)" class="{{page === model.tData.currPage ? 'blue' : ''}}"
+            ng-repeat="page in tGetPagingNumberArray() track by $index">
+            <span>{{ page + 1}}</span>
+          </button>
+          <button ng-click="tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
