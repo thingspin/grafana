@@ -17,6 +17,8 @@ const DEF_TOPIC_TYPE_PLUS = "+";
 const DEF_TOPIC_SEPARATOR = "/";
 const DEF_TOPIC_SPACE = " ";
 
+const DEF_REQUEST_MESSAGE_CONNECT = "접속 테스트 시도";
+
 interface Topic {
   id: number;
   type: string;
@@ -82,6 +84,7 @@ export class TsMqttConnectCtrl {
   topicDisListArrayString = '';
   topicListPublishArrayString = '';
   PtagList: TagList[];
+  requestHelp: string;
 
   // MQTT
   readonly mqttUrl: string = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt` as string;
@@ -147,7 +150,7 @@ export class TsMqttConnectCtrl {
 
     try {
       await this.mqttClient.run(this.recvMqttMessage.bind(this));
-      console.log("MQTT Connected");
+      // console.log("MQTT Connected");
     } catch (e) {
       console.error(e);
     }
@@ -243,6 +246,7 @@ export class TsMqttConnectCtrl {
         if (this.topicDisListArrayString.length === 0) {
           this.createConnectNode();
         }
+        this.requestHelp = DEF_REQUEST_MESSAGE_CONNECT;
         this.methodProcess(this.createHttpObject(), false);
       } else {
         if (value) {
@@ -662,7 +666,8 @@ export class TsMqttConnectCtrl {
         AddTopicList: this.topicListArrayString,
         AddDisTopicList: this.topicDisListArrayString,
         publishTopicList: this.topicListPublishArrayString,
-        PtagList: this.PtagList
+        PtagList: this.PtagList,
+        RequestMsg: this.requestHelp,
       }
     };
     return data;
