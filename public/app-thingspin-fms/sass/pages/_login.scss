@@ -78,16 +78,7 @@
   .gf-form-button-row{
     float: right;
     margin-top: 28px;
-    .ts-reset-button-submit{
-      background-color: #0039ff;
-      opacity: 1;
-      color: #ffffff;
-    }
-    .ts-reset-button-back{
-      background-color: #5a0dff;
-      opacity: 1;
-      color: #ffffff;
-    }
+    
   }
   
 }
@@ -97,5 +88,45 @@
     span{
       color:black;
     }
+  }
+}
+
+.ts-signup-title{
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.19;
+  letter-spacing: normal;
+  color: #0039ff;
+}
+
+.ts-reset-button-submit{
+  background-color: #0039ff;
+  opacity: 1;
+  color: #ffffff;
+}
+.ts-reset-button-back{
+  background-color: #5a0dff;
+  opacity: 1;
+  color: #ffffff;
+}
+
+.ts-signup-area{
+  display: flew;
+  margin-bottom: 28px;
+  .ts-signup-title {
+    width: 116px;
+    height: 19px;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.19;
+    letter-spacing: normal;
+    text-align: left;
+    color: #0039ff;
   }
 }

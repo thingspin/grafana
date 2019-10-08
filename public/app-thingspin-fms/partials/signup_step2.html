@@ -9,9 +9,10 @@
       </div>
       <div class="login-outer-box">
           <div class="signup">
-         
-              <h3 class="p-b-1">회원가입</h3>
-             
+              <div class="ts-signup-area">
+                <img src="public/img/thingspin/titleicon.svg">
+                <span class="ts-signup-title">회원가입</span>
+              </div>
               <div class="p-b-1">
                 계정을 만들기 위해 아래 정보를 입력해주세요.
               </div>
@@ -43,10 +44,10 @@
                 </div>
           
                 <div class="gf-form-button-row p-t-3">
-                  <button type="submit" class="btn btn-primary" ng-click="ctrl.submit();" ng-disabled="!signUpForm.$valid">
+                  <button type="submit" class="btn ts-reset-button-submit" ng-click="ctrl.submit();" ng-disabled="!signUpForm.$valid">
                     Sign Up
                   </button>
-                  <a href="login" class="btn btn-inverse">
+                  <a href="login" class="btn ts-reset-button-back">
                       Back
                   </a>
                 </div>

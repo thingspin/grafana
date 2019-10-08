@@ -69,11 +69,20 @@ class TsMenuLv1 extends PureComponent<Props, State> {
     const { pin, open } = this.state;
     const arrowIcon = (pin || open) ? 'fa fa-caret-down' : 'fa fa-caret-up';
 
+    return (pin || menu.children.length === 0) ? null : (
+        <div className="fms-menu-header-controls-arrow" onClick={this.arrowClickEvt}>
+          <span>
+            <i className={arrowIcon} />
+          </span>
+        </div>
+    );
+    /*
     return <div className="fms-menu-header-controls-arrow" onClick={this.arrowClickEvt}>
       <span>
         <i className={menu.children ? (pin ? null : arrowIcon) : null} />
       </span>
     </div>;
+    */
   }
 
   get pinDOM() {
