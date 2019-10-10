@@ -1,129 +1,26 @@
 // js 3rd party libs
 import React, { PureComponent } from 'react';
+import { Observable } from 'rxjs';
 
 // Grafana libs
 import { Switch } from '@grafana/ui';
 import { liveSrv } from 'app/core/core';
 import { dateTime } from '@grafana/data';
-import { getBackendSrv } from '@grafana/runtime';
 
 // Thingspin libs
-import { TabbarProps } from '../models';
 import { TS_HISTORY_TYPE } from '../FmsHistoryCard/Card';
-import FmsHistoryCard, { TS_ALARM_TYPE } from '../FmsHistoryCard/index';
-import { AnnotationQuery, AlarmType } from 'app-thingspin-fms/pages/alarm/alarmHistory/types';
+import FmsHistoryCard from '../FmsHistoryCard';
+import { AlarmType } from 'app-thingspin-fms/pages/alarm/alarmHistory/types';
+import { AlarmPayload, WsStream } from './types';
+import { fetchHistory, setFieldData, convAlarmType, getAlarmType } from './models';
+import { TabbarProps } from '../models';
 
-export enum AlarmAPI {
-  Annotations = '/thingspin/annotations'
-}
-enum AlarmConfirm {
-  Confirm = 'TRUE',
-  Unconfirm = 'FALSE',
-}
-export interface AlarmHistoryPayload {
-  id: number;
-  alertId: number;
-  alertName: string;
-  dashboardId: number;
-  panelId: number;
-  userId: number;
-  newState: string;
-  prevState: string;
-  created: number | Date;
-  updated: number | Date;
-  time: number | Date;
-  timeEnd: number | Date;
-  text: string;
-  tags: any[];
-  login: string;
-  email: string;
-  avvatarUrl: string;
-  data: any;
-
-  // thingpsin add field----
-  confirm: boolean;
-  confirmDate: number | Date;
-  uid: string;
-  slug: string;
-}
-
-export interface Props extends TabbarProps {}
+export interface Props extends TabbarProps { }
 
 export interface States {
-  list: any[];
+  list: AlarmPayload[];
   enable: boolean;
   checked: boolean;
-}
-
-interface WsStream {
-  Stream: string;
-  data: Simulator;
-}
-
-interface Simulator {
-  title: string;
-  subtitle?: string;
-  time: string | number | Date;
-  alarmType: string;
-  historyType: string;
-  history: object;
-}
-
-interface AlarmPayload extends Simulator {
-  evalMatches: any[];
-  conditionEvals: string;
-  ruleUrl: string;
-}
-
-export const fetchHistory = async (newState: AlarmType, params?: AnnotationQuery,
-  confirm = AlarmConfirm.Unconfirm ,
-  limit = 100000,
-  type = AlarmType.ALERT,
-): Promise<AlarmHistoryPayload[]> => (
-  getBackendSrv().get(AlarmAPI.Annotations, { ...params, limit, type, newState, confirm})
-);
-
-export function getAlarmType(type: string): TS_ALARM_TYPE {
-  switch (type) {
-    case TS_ALARM_TYPE.WARNING:
-      return TS_ALARM_TYPE.WARNING;
-    case TS_ALARM_TYPE.ERROR:
-      return TS_ALARM_TYPE.ERROR;
-    default:
-      return TS_ALARM_TYPE.NORMAL;
-  }
-}
-
-export function convAlarmType(type: string) {
-  switch (type) {
-    case AlarmType.ALERT:
-    case TS_ALARM_TYPE.ERROR:
-        return TS_ALARM_TYPE.ERROR;
-    case AlarmType.WARNING:
-    case TS_ALARM_TYPE.WARNING:
-        return TS_ALARM_TYPE.WARNING;
-    default:
-      return TS_ALARM_TYPE.NORMAL;
-  }
-}
-
-export function setFieldData(origin: AlarmPayload) {
-  // convert history
-  if (Array.isArray(origin.evalMatches)) {
-    origin.history = origin.evalMatches.reduce((acc: any, { metric, value }: any) => {
-      acc['알람 발생 태그'] = metric;
-      acc['알람 발생 값'] = value;
-      return acc;
-    }, {});
-  }
-
-  // convert url
-  try {
-    const url = new URL(origin.ruleUrl.replace('/d/', '/thingspin/alarm/edit/'));
-    origin.ruleUrl = url.pathname;
-  } catch (e) {
-  }
-  return origin;
 }
 
 export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
@@ -134,14 +31,12 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
   };
 
   dateFormat = "YYYY년 MM월 DD일";
-  source: any;
-  maxLength = 10;
+  liveObs: Observable<WsStream>;
 
   async getCurrHistory(date: Date = this.props.date) {
-    const cpDate = new Date(date); // deep copy
-    const from = cpDate.setHours(0, 0, 0, 0);
-    const to = cpDate.setHours(24, 0, 0, 0);
-
+    const cpDate = dateTime(date); // deep copy
+    const from = cpDate.startOf('day').valueOf();
+    const to = cpDate.endOf('day').valueOf();
 
     const [alarmList, warnList] = await Promise.all([
       fetchHistory(AlarmType.ALERT, { from, to }),
@@ -150,20 +45,22 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     const list = [...alarmList, ...warnList];
 
     return list.filter(({ newState }) => newState === 'alerting' || newState === 'pending')
-      .map(({ newState, alertName, data, time, uid, slug }): AlarmPayload => {
-        const range = 10;
-        const from = dateTime(time).subtract(range, 'second').valueOf();
-        const to = dateTime(time).add(range, 'second').valueOf();
+      .map(({ newState, alertName: title, data: { evalMatches }, time, uid, slug }): AlarmPayload => {
+        const r = 10; // 10 seconds
+        const d = dateTime(time);
+        const ruleUrl = `/thingspin/alarm/edit/${uid}/${slug}?from=${d.subtract(r, 'second').valueOf()}&to=${d.add(r, 'second').valueOf()}`;
+        const alarmType = convAlarmType(newState);
 
         return {
-          alarmType: convAlarmType(newState),
-          evalMatches: data.evalMatches,
-          title: alertName,
-          time: time,
-          conditionEvals: '',
+          time,
+          title,
+          ruleUrl,
+          alarmType,
+          evalMatches,
+
           history: {},
-          historyType: convAlarmType(newState),
-          ruleUrl: `/thingspin/alarm/edit/${uid}/${slug}?from=${from}&to=${to}`,
+          conditionEvals: '',
+          historyType: alarmType,
         };
       })
       .filter(this.alarmFilter)
@@ -172,9 +69,8 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
 
   async UNSAFE_componentWillMount() {
     await liveSrv.getConnection();
-
-    this.source = liveSrv.subscribe('ts-alarm');
-    this.source.subscribe(this.liveSubscribe);
+    this.liveObs = liveSrv.subscribe('ts-alarm');
+    this.liveObs.subscribe(this.liveSubscribe);
 
     const list = await this.getCurrHistory();
     this.setState({ list });
@@ -186,35 +82,31 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
   }
 
   componentWillUnmount() {
-    if (this.source) {
-      liveSrv.removeObserver('ts-alarm', this.source);
+    if (this.liveObs) {
+      liveSrv.removeObserver('ts-alarm', this.liveObs);
     }
   }
 
-  liveSubscribe = (value: WsStream): void => {
+  liveSubscribe = ({ data }: WsStream): void => {
     const { list, enable } = this.state;
     if (!enable) {
       return;
     }
 
-    if (list.length > this.maxLength) {
-      list.pop();
-    }
-    list.push(value.data);
-
-    list.sort((a, b) => a.time < b.time ? 1 : -1);
-
-    const filtered = list
-      .filter(this.dateFilter)
+    const arr = [data];
+    arr.filter(this.dateFilter)
       .filter(this.alarmFilter)
       .map(setFieldData);
 
-    this.setState({ list: [...filtered] });
+    if (arr.length) {
+      list.unshift(arr[0]);
+      this.setState({ list: [...list] });
+    }
   }
 
-  dateFilter = ({ time }: Simulator): boolean => dateTime(this.props.date).format(this.dateFormat) === dateTime(time).format(this.dateFormat);
+  dateFilter = ({ time }: AlarmPayload): boolean => dateTime(this.props.date).format(this.dateFormat) === dateTime(time).format(this.dateFormat);
 
-  alarmFilter = ({ alarmType }: Simulator): boolean => !this.props.filters.includes(alarmType);
+  alarmFilter = ({ alarmType }: AlarmPayload): boolean => !this.props.filters.includes(alarmType);
 
   onChangeChecked = ({ target }: React.SyntheticEvent) => this.setState({ checked: (target as HTMLInputElement).checked });
 
@@ -222,8 +114,8 @@ export class TsRightSideHistoryComponent extends PureComponent<Props, States> {
     const { list, checked } = this.state;
     return <>
       <div className="ts-right-side-history-component">
-        {list.map(({ title, subtitle, time, alarmType, history, ruleUrl }: AlarmPayload, index: number) =>
-          <FmsHistoryCard key={index}
+        {list.map(({ title, subtitle, time, alarmType, history, ruleUrl }: AlarmPayload, idx: number) =>
+          <FmsHistoryCard key={idx}
             title={title}
             subtitle={subtitle}
             history={history}
