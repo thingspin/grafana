@@ -7,6 +7,7 @@ import { DateTime } from '@grafana/data';
 
 // Thingspin React Compoonents
 import FmsCard, { TS_HISTORY_TYPE } from './Card';
+import { getBackendSrv } from '@grafana/runtime';
 
 export enum TS_ALARM_TYPE {
     ERROR = "err",
@@ -51,6 +52,11 @@ const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, h
         'ts-off-bg': !isActive,
     });
 
+    const onClickDetail = async () => {
+        const result = await getBackendSrv().put('/thingspin/annotations/confirm', { time: time.valueOf() });
+        console.log(result);
+    };
+
     return (<div className="fms-history-card">
         <div className={mainCls}>
             <div className="fms-tl-left">
@@ -73,7 +79,7 @@ const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, h
                         {time.format("YYYY년 MM월 DD일(ddd) HH:mm:ss")}
                     </div>
                     <div>
-                        <a href={link ? link : '#'} >상세보기 ></a>
+                        <a href={link ? link : '#'} onClick={onClickDetail} >상세보기 ></a>
                     </div>
                 </div>
 

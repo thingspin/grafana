@@ -2,6 +2,7 @@ package api
 
 import (
 	m "github.com/grafana/grafana/pkg/models"
+	tsm "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/services/annotations"
 )
 
@@ -61,4 +62,14 @@ func GetTsAnnotations(c *m.ReqContext) Response {
 	}
 
 	return JSON(200, items)
+}
+
+func updateTsAnnotationConfirm(c *m.ReqContext, req tsm.UpdateTsAnnotationConfirmCmd) Response {
+	repo := annotations.GetTsRepository()
+
+	result, err := repo.UpdateConfirm(req)
+	if err != nil {
+		return Error(500, "Failed to annotations", err)
+	}
+	return JSON(200, result)
 }

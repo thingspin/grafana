@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/grafana/grafana/pkg/models"
+	tsm "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/services/annotations"
 )
 
@@ -150,4 +151,26 @@ func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotatio
 	}
 
 	return items, nil
+}
+
+func (r *SqlAnnotationRepo) UpdateConfirm(query tsm.UpdateTsAnnotationConfirmCmd) (bool, error) {
+	var sql bytes.Buffer
+	params := make([]interface{}, 0)
+	sql.WriteString(`
+		UPDATE 
+			annotation 
+		SET 
+			(confirm, confirm_date) = (TRUE, datetime('now', 'localtime'))
+		WHERE
+			epoch = ?
+	`)
+
+	params = append(params, query.Time)
+	_, err := x.SQL(sql.String(), params...).Query()
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }

@@ -112,6 +112,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 		tsRoute.Group(`/annotations`, func(tsAnnoRoute routing.RouteRegister) {
 			tsAnnoRoute.Get("/", Wrap(GetTsAnnotations))
 			tsAnnoRoute.Get("/count/newState", Wrap(GetAnnotaionStateCount))
+			tsAnnoRoute.Put("/confirm", bind(tsm.UpdateTsAnnotationConfirmCmd{}), Wrap(updateTsAnnotationConfirm))
 		})
 
 		// Grafana 데이터소스 REST API 커스텀마이징

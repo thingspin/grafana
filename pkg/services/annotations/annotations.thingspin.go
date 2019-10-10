@@ -1,6 +1,9 @@
 package annotations
 
-import "github.com/grafana/grafana/pkg/components/simplejson"
+import (
+	"github.com/grafana/grafana/pkg/components/simplejson"
+	tsm "github.com/grafana/grafana/pkg/models-thingspin"
+)
 
 type TsItemQuery struct {
 	ItemQuery
@@ -41,6 +44,7 @@ type TsRepository interface {
 
 	TsFind(query *TsItemQuery) ([]*TsItemDTO, error)
 	FindStateCount(query *TsItemQuery) (num int64, err error)
+	UpdateConfirm(query tsm.UpdateTsAnnotationConfirmCmd) (result bool, err error)
 }
 
 func GetTsRepository() TsRepository {

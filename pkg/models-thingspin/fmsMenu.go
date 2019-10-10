@@ -168,3 +168,7 @@ type FindFmsMenuByNameCmd struct {
 
 	Result []FmsMenuTblField
 }
+
+type UpdateTsAnnotationConfirmCmd struct {
+	Time int64 `json:"time"`
+}
