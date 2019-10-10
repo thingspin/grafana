@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 // Grafana libs
-import { dateTime } from '@grafana/data';
+import { DateTime } from '@grafana/data';
 
 // Thingspin React Compoonents
 import FmsCard, { TS_HISTORY_TYPE } from './Card';
@@ -21,7 +21,7 @@ export interface Props {
     subtitle?: string;
 
     // time layer
-    time?: Date;
+    time?: DateTime;
     link?: string;
 
     // card layer
@@ -46,7 +46,6 @@ function getAlarmIconClass(alarmType: TS_ALARM_TYPE): string {
 }
 
 const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, historyType, time, title, subtitle }) => {
-    const m = dateTime(time);
     const mainCls = classNames({
         'ts-on-bg': isActive,
         'ts-off-bg': !isActive,
@@ -71,7 +70,7 @@ const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, h
 
                 <div className="fms-tl-time-layer">
                     <div>
-                        {m.format("YYYY년 MM월 DD일(ddd) HH:mm:ss")}
+                        {time.format("YYYY년 MM월 DD일(ddd) HH:mm:ss")}
                     </div>
                     <div>
                         <a href={link ? link : '#'} >상세보기 ></a>
