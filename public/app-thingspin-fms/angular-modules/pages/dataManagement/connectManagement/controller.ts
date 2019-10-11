@@ -2,7 +2,7 @@ import _ from 'lodash';
 import angular from 'angular';
 const uid = require('shortid');
 
-import { TsConnect } from 'app-thingspin-fms/models/connect';
+import { TsConnect, TsConnectHistory } from 'app-thingspin-fms/models/connect';
 import { BackendSrv } from 'app/core/services/backend_srv';
 import appEvents from 'app/core/app_events';
 
@@ -48,7 +48,17 @@ export default class TsConnectManagementCtrl implements angular.IController {
     connectTypeList: string[] = [];
     // table
     list: TsConnect[] = [];
+    historyList: TsConnectHistory[] = [];
     tData: TableModel = {
+        rowCount: 16,
+        selectOpts: [16, 32, 48],
+        currPage: 0,
+        maxPage: 0,
+        maxPageLen: 10,
+        pageNode: [],
+    };
+
+    tHistoryData: TableModel = {
         rowCount: 16,
         selectOpts: [16, 32, 48],
         currPage: 0,
@@ -130,6 +140,10 @@ export default class TsConnectManagementCtrl implements angular.IController {
     initTable(): void {
         this.$scope.$watch('list', () => {
             this.setPageNodes();
+        });
+
+        this.$scope.$watch('historyList', () => {
+            this.setHistoryPageNodes();
         });
     }
     showEdit(type: string, id: number): void {
@@ -272,24 +286,50 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     async showModalHistory(item: TsConnect) {
-        console.log(item);
-        // this.title = "연결 이력 관리";
-        appEvents.emit('show-modal', {
-            src: 'public/app/partials/ts_connect_history.html',
-            model:{
-                title: item.name + ' 연결 이력 관리',
-                topic: '/thingspin/btn',
-                icon: 'fa fa-history',
-                tData: {
-                    rowCount: 16,
-                    selectOpts: [16, 32, 48],
-                    currPage: 0,
-                    maxPage: 0,
-                    maxPageLen: 10,
-                    pageNode: [],
+        try {
+            console.log(item);
+
+            this.historyList = await this.backendSrv.get(`thingspin/connect/${item.id}/history`);
+
+            appEvents.emit('show-modal', {
+                src: 'public/app/partials/ts_connect_history.html',
+                backdrop: 'static',
+                model: {
+                    title: item.name + ' 연결 이력 관리',
+                    topic: "thingspin/" + item.type + "/" + item.id + "/data",
+                    icon: 'fa fa-history',
+                    tData: this.tHistoryData,
+                    list: this.historyList,
+
+                    tOnHistorySelectChange: () => {
+                        this.tOnHistorySelectChange();
+                    },
+
+                    tHistoryPrevPaging: () => {
+                        this.tHistoryPrevPaging();
+                    },
+
+                    tGetHistoryPagingNumberArray: () => {
+                        return this.tGetHistoryPagingNumberArray();
+                    },
+
+                    tHistoryNextPaging: () => {
+                        this.tHistoryNextPaging();
+                    },
+
+                    tSetHistoryPaging: (page: number) => {
+                        this.tSetHistoryPaging(page);
+                    },
+
+                    publishMqttClipeboard: () => {
+                        this.publishMqttClipeboard();
+                    }
                 }
-            }
-        });
+            });
+            this.tOnHistorySelectChange();
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     removeConnect(id: number) {
@@ -344,11 +384,28 @@ export default class TsConnectManagementCtrl implements angular.IController {
             this.setCountValue();
         }
     }
+    // table methods
+    setHistoryPageNodes() {
+        const { currPage, rowCount, } = this.tHistoryData;
+        if (this.historyList) {
+            this.tHistoryData.pageNode = this.historyList.slice(
+                currPage * rowCount,
+                (currPage * rowCount) + rowCount
+            );
+        }
+    }
 
     tNextPaging(): void {
         if (this.tData.currPage < this.tData.maxPage) {
             this.tData.currPage += 1;
             this.setPageNodes();
+        }
+    }
+
+    tHistoryNextPaging(): void {
+        if (this.tHistoryData.currPage < this.tHistoryData.maxPage) {
+            this.tHistoryData.currPage += 1;
+            this.setHistoryPageNodes();
         }
     }
 
@@ -359,10 +416,23 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
+    tHistoryPrevPaging(): void {
+        if (this.tHistoryData.currPage) {
+            this.tHistoryData.currPage -= 1;
+            this.setHistoryPageNodes();
+        }
+    }
+
     tSetPaging(index: number) {
         this.tData.currPage = index;
         this.tCalcPaging();
         this.setPageNodes();
+    }
+
+    tSetHistoryPaging(index: number) {
+        this.tHistoryData.currPage = index;
+        this.tHistoryCalcPaging();
+        this.setHistoryPageNodes();
     }
 
     tCalcPaging() {
@@ -371,8 +441,27 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.tData.maxPage = Math.floor(this.list.length / (rowCount)) - temp;
     }
 
+    tHistoryCalcPaging() {
+        const { rowCount } = this.tHistoryData;
+        const temp: number = (this.historyList.length && (this.historyList.length % rowCount) === 0) ? 1 : 0;
+        this.tHistoryData.maxPage = Math.floor(this.historyList.length / (rowCount)) - temp;
+    }
+
     tGetPagingNumberArray() {
         const { currPage, maxPageLen, maxPage } = this.tData;
+        const index = Math.floor(currPage / maxPageLen);
+
+        const from = index * maxPageLen;
+        let to = index * maxPageLen + maxPageLen;
+        if (to > maxPage) {
+            to = maxPage + 1;
+        }
+
+        return _.range(from, to);
+    }
+
+    tGetHistoryPagingNumberArray() {
+        const { currPage, maxPageLen, maxPage } = this.tHistoryData;
         const index = Math.floor(currPage / maxPageLen);
 
         const from = index * maxPageLen;
@@ -389,6 +478,11 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.setPageNodes();
     }
 
+    tOnHistorySelectChange() {
+        this.tHistoryCalcPaging();
+        this.setHistoryPageNodes();
+    }
+
     setCountValue() {
         if (this.list && this.list.length) {
             this.runConnection = 0;
@@ -401,5 +495,11 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 }
             }
         }
+    }
+
+    publishMqttClipeboard() {
+        $('#topic_view').select();
+        document.execCommand("copy");
+        appEvents.emit('alert-success', ["클립보드에 복사하였습니다."]);
     }
 }

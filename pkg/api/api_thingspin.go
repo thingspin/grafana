@@ -58,6 +58,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsFnRoute.Delete("/:connId", Wrap(deleteTsConnect))
 			tsFnRoute.Patch("/:connId/enable", bind(tsm.EnableTsConnectReq{}), Wrap(enableTsConnect))
 			tsFnRoute.Patch("/:connId/publish", Wrap(toggleMqttPublishTsConnect))
+			tsFnRoute.Get("/:connId/history", Wrap(getTsConnectHistory))
 		})
 
 		// 사이트 관리 동작 API

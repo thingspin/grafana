@@ -13,17 +13,18 @@ type TsConnectHistoryField struct {
 }
 
 type GetAllTsConnectHistoryQuery struct {
+	ConnectId       int
 	Result []TsConnectHistoryField
 }
 
 type AddTsConnectHistoryQuery struct {
-	FlowId      string `xorm:"'flow_id'"`
-	Event       string `xorm:"'event'"`
+	ConnectId   int     `xorm:"'connect_id'"`
+	Event       string  `xorm:"'event'"`
 	Description string  `xorm:"'description'"`
 	Result      int64
 }
 
 type DeleteTsConnectHistoryQuery struct {
-	FlowId     string
+	ConnectId   int
 	Result sql.Result
 }

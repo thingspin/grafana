@@ -343,6 +343,12 @@
     .connect-table-header {
         opacity: 0.6;
     }
+
+    .connect-history-table-header {
+        opacity: 0.6;
+        margin-top: 0px;
+    }
+
     .connect-page-rows {
         display: inline-block;
         .connect-table-select {
@@ -350,8 +356,47 @@
             border: 0;
         }
     }
+    .connect-history-table-body {
+        width: 100%;
+        height: 300px;
+        overflow-y: auto;
+        margin: 8px 0;
+        table {
+            width: 100%;
+            tr {
+                border-bottom: solid 1px #dcdbdc;
+                &:first {
+                    margin-left: 16px;
+                }
+            }
+            th {
+                padding: 7px 0;
+                padding-left: 7px;
+            }
+            td {
+                padding: 12px 0;
+                padding-left: 7px;
+                color: rgba(#1e1e1e, 0.8);
+                button {
+                    font-size: 20px;
+                }
+            }
+            .ts-table-row {
+                &:hover {
+                    background-color: #e3f2fd;
+                }
+                .connect { 
+                    font-size: 20px;
+                }
+            }
+            .ts-table-header {
+                background-color: #ecebeb;
+            }
+        }
+    }
     .connect-table-body {
         width: 100%;
+        height: 50%;
         margin: 8px 0;
         table {
             width: 100%;
@@ -739,4 +784,43 @@
             }
         }
     }
+}
+
+.ts-history-table-date {
+    width: 20%;
+    display: inline-block;
+}
+
+.ts-history-table-event {
+    width: 15%;
+    text-align: center;
+}
+
+.ts-history-table-desc {
+    width: 65%;
+    display: contents;
+}
+
+.mqtt-publish {
+    opacity: 0.8;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.14;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1e1e1e;
+    padding-left: 28px;
+    padding-top: 31px;
+    display: inline-block;
+}
+
+.history-popup-line {
+    width: 92%;
+    border: solid 1px #ecebeb;
+    margin-left: 28px;
+    margin-right: 28px;
+    margin-top: 20px;
 }

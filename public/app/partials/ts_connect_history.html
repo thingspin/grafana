@@ -12,46 +12,46 @@
     </a>
   </div>
 
-  <div >
-      발행 MQTT Topic
-      {{model.topic}}
+  <div>
+    <span class="mqtt-publish">발행 MQTT Topic</span>
+    <div class="ts-input-group">
+      <div class="ts-input">
+          <input id="topic_view" type="text" ng-model="model.topic" readonly="readonly"/>
+          <span ng-class="{separator: true, enable: model.topic}"></span>
+      </div>
+    </div>
+    <button id="mqtt-plus-btn" className="btn" ng-click="model.publishMqttClipeboard()" style="margin-left: 34px;">
+        복사
+    </button>
   </div>
+  <div class="history-popup-line"></div>
 
   <div class="modal-content text-center">
-    <div class="ts-mqtt-table-container history-table-size">
-      <div class="connect-table-header" style="float:right;">
+    <div class="ts-mqtt-table-container history-table-size" style="margin-top: 0px;">
+      <div class="connect-history-table-header" style="float:right;">
         <span>페이지당 행수 : </span>
         <span class="connect-page-rows">
           <select class="connect-table-select" style="background-color:#f7f8fa;" ng-model="model.tData.rowCount"
-            ng-options="n as n for n in model.tData.selectOpts" ng-change="OnSelectChange()">
+            ng-options="n as n for n in model.tData.selectOpts" ng-change="model.tOnHistorySelectChange()">
           </select>
         </span>
       </div>
 
-      <div class="connect-table-body">
+      <div class="connect-history-table-body">
         <table>
           <thead>
             <tr class="ts-table-header">
-              <th class="ts-table-name">이름</th>
-              <th class="ts-table-topic">Topic</th>
-              <th>Value Type</th>
-              <th>동작</th>
+              <th class="ts-history-table-date">Date</th>
+              <th class="ts-history-table-event">Event</th>
+              <th class="ts-history-table-desc">Description</th>
             </tr>
           </thead>
 
           <tbody>
             <tr class="ts-table-row" ng-repeat="item in model.tData.pageNode track by $index">
-              <td>{{ item.type }}</td>
-              <td>{{ item.viewStr }}</td>
-              <td>{{ item.value }}</td>
-              <td>
-                <button class="btn" ng-click="loadTopicData(item.id)">
-                  <i class="fa fa-pencil"></i>
-                </button>
-                <button class="btn" ng-click="removeTopic(item.id)">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </td>
+              <td>{{ item.created }}</td>
+              <td>{{ item.event }}</td>
+              <td>{{ item.description }}</td>
             </tr>
           </tbody>
         </table>
@@ -59,15 +59,16 @@
       <div class="connect-table-footer">
         <div class="table-page-range">
           <span>페이지 범위 : {{ model.tData.currPage * model.tData.rowCount + 1 }} -
-            {{ (model.tData.currPage * model.tData.rowCount) + model.tData.rowCount }} / 전체 : {{model.list.length}}</span>
+            {{ (model.tData.currPage * model.tData.rowCount) + model.tData.rowCount }} / 전체 :
+            {{model.list.length}}</span>
         </div>
         <div class="table-paging">
-          <button ng-click="tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
-          <button ng-click="model.tSetPaging(page)" class="{{page === model.tData.currPage ? 'blue' : ''}}"
-            ng-repeat="page in tGetPagingNumberArray() track by $index">
+          <button ng-click="model.tHistoryPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
+          <button ng-click="model.tSetHistoryPaging(page)" class="{{page === model.tData.currPage ? 'blue' : ''}}"
+            ng-repeat="page in model.tGetHistoryPagingNumberArray() track by $index">
             <span>{{ page + 1}}</span>
           </button>
-          <button ng-click="tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
+          <button ng-click="model.tHistoryNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
         </div>
       </div>
     </div>

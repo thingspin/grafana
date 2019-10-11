@@ -19,3 +19,9 @@ export interface TsConnect {
 export interface GroupTsConnect {
     [type: string]: TsConnect[];
 }
+
+export interface TsConnectHistory {
+    id: number;
+    event: string;
+    description: string;
+}

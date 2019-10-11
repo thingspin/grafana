@@ -104,7 +104,7 @@ func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	}
 
 	q1 := m.AddTsConnectHistoryQuery {
-		FlowId:      newFlowId,
+		ConnectId:   int(q.Result),
 		Event:       "Created",
 		Description: "최초 연결 추가",
 	}
@@ -162,20 +162,20 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	var q1 m.AddTsConnectHistoryQuery
 
 	if info.Params["RequestMsg"] != nil {
-		q1.FlowId = info.FlowId 
+		q1.ConnectId = connId 
 		q1.Event = fmt.Sprint(info.Params["RequestMsg"])
 		q1.Description = fmt.Sprintf("동작 상태 : %t ", info.Enable)
 	} else {
-		q1.FlowId = info.FlowId 
+		q1.ConnectId = connId
 		q1.Event = "Updated"
 		q1.Description = fmt.Sprintf("연결 내역 변경 / 동작 상태 : %t ", info.Enable)
 	}
 	
-	if prevData.FlowId == q1.FlowId {
+	if prevData.ConnectId == q1.ConnectId {
 		if prevData.Event == q1.Event {
-			prevData.FlowId = q1.FlowId;
-			prevData.Event = q1.Event;
-			prevData.Description = q1.Description;
+			prevData.ConnectId = 0
+			prevData.Event = ""
+			prevData.Description = ""
 			return JSON(200, q.Result)
 		}
 	}
@@ -184,9 +184,9 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 
-	prevData.FlowId = q1.FlowId;
-	prevData.Event = q1.Event;
-	prevData.Description = q1.Description;
+	prevData.ConnectId = q1.ConnectId
+	prevData.Event = q1.Event
+	prevData.Description = q1.Description
 
 	return JSON(200, q.Result)
 }
@@ -277,7 +277,7 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	}
 	if info.Enable == true {
 		q1 := m.AddTsConnectHistoryQuery {
-			FlowId:      info.FlowId,
+			ConnectId:   connId,
 			Event:       "Updated",
 			Description: fmt.Sprintf("연결 동작 시작 / 발행 상태 : %t", info.Active),
 		}
@@ -287,7 +287,7 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	
 	} else {
 		q1 := m.AddTsConnectHistoryQuery {
-			FlowId:      info.FlowId,
+			ConnectId:   connId,
 			Event:       "Updated",
 			Description: fmt.Sprintf("연결 동작 정지 / 발행 상태 : %t", info.Active),
 		}
@@ -342,7 +342,7 @@ func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
 
 	if info.Active {
 		q1 := m.AddTsConnectHistoryQuery {
-			FlowId:      info.FlowId,
+			ConnectId:   connId,
 			Event:       "Updated",
 			Description: fmt.Sprintf("연결 발행 시작 / 동작 상태 : %t ", info.Enable),
 		}
@@ -351,7 +351,7 @@ func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
 		}
 	} else {
 		q1 := m.AddTsConnectHistoryQuery {
-			FlowId:      info.FlowId,
+			ConnectId:   connId,
 			Event:       "Updated",
 			Description: fmt.Sprintf("연결 발행 정지 / 동작 상태 : %t ", info.Enable),
 		}
@@ -385,7 +385,7 @@ func deleteTsConnect(c *gfm.ReqContext) Response {
 	}
 
 	q1 := m.DeleteTsConnectHistoryQuery {
-		FlowId:      info.FlowId,
+		ConnectId:      info.Id,
 	}
 	
 	bus.Dispatch(&q1)
@@ -409,4 +409,18 @@ func getTsConnectType(c *gfm.ReqContext) Response {
 	}
 
 	return JSON(200, q.Result)
+}
+
+func getTsConnectHistory(c *gfm.ReqContext) Response {
+	connId := c.ParamsInt(":connId")
+
+	q1 := m.GetAllTsConnectHistoryQuery {
+		ConnectId:      connId,
+	}
+
+	if err := bus.Dispatch(&q1); err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	return JSON(200, q1.Result)
 }

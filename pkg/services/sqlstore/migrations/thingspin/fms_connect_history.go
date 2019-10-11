@@ -11,7 +11,7 @@ func addFmsConnectHistoryMigrations(mg *Migrator) {
 	query := fmt.Sprintf(`
 	CREATE TABLE IF NOT EXISTS '%s' (
 		'id' integer PRIMARY KEY AUTOINCREMENT,
-		'flow_id' varchar(30) references %s(flow_id),
+		'connect_id' integer references %s(id),
 		'event' varchar(100),
 		'description' varchar(1000),
 		'created' datetime default (datetime('now', 'localtime'))

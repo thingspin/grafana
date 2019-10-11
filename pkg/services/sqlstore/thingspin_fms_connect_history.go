@@ -15,7 +15,7 @@ func init() {
 
 type InsertTsConnectHistory struct {
 	Id           int64  `xorm:"'id' pk autoincr"`
-	FlowId       string `xorm:"'flow_id'"`
+	ConnectId    int    `xorm:"'connect_id'"`
 	Event        string `xorm:"'event'"`
 	Description  string `xorm:"'description'"`
 }
@@ -23,7 +23,7 @@ type InsertTsConnectHistory struct {
 func GetAllTsConnectHistory(cmd *m.GetAllTsConnectHistoryQuery) error {
 	var res []m.TsConnectHistoryField
 
-	err := x.Table(m.TsFmsConnectHistoryTbl).Find(&res)
+	err := x.Table(m.TsFmsConnectHistoryTbl).Where(`connect_id=?`, cmd.ConnectId).Desc("created").Find(&res)
 	cmd.Result = res
 
 	return err
@@ -31,7 +31,7 @@ func GetAllTsConnectHistory(cmd *m.GetAllTsConnectHistoryQuery) error {
 
 func AddTsConnectHistory(cmd *m.AddTsConnectHistoryQuery) error {
 	q := &InsertTsConnectHistory{
-		FlowId:       cmd.FlowId,
+		ConnectId:    cmd.ConnectId,
 		Event:        cmd.Event,
 		Description:  cmd.Description,
 	}
@@ -43,8 +43,8 @@ func AddTsConnectHistory(cmd *m.AddTsConnectHistoryQuery) error {
 }
 
 func DelelteTsConnectHistory(cmd *m.DeleteTsConnectHistoryQuery) error {
-	sqlQuery := fmt.Sprintf(`DELETE FROM '%s' WHERE flow_id='%s'`,
-		m.TsFmsConnectHistoryTbl, cmd.FlowId)
+	sqlQuery := fmt.Sprintf(`DELETE FROM '%s' WHERE connect_id='%s'`,
+		m.TsFmsConnectHistoryTbl, cmd.ConnectId)
 	result, err := x.Exec(sqlQuery)
 
 	cmd.Result = result
