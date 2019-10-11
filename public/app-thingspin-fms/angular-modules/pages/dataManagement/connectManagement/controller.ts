@@ -287,8 +287,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     async showModalHistory(item: TsConnect) {
         try {
-            console.log(item);
-
             this.historyList = await this.backendSrv.get(`thingspin/connect/${item.id}/history`);
 
             appEvents.emit('show-modal', {
