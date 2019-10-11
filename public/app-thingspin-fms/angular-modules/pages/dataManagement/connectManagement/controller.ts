@@ -73,6 +73,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
         private backendSrv: BackendSrv, ) { }// Dependency Injection
 
     $onInit(): void {
+        this.runConnection = 0;
+        this.runNodes = 0;
         this.asyncUpdateTypeList();
         this.asyncUpdateList().then(() => {
             this.initMqtt();
