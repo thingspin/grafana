@@ -45,7 +45,7 @@ export class SiteModel {
     }
 
     async getTreeinfo(siteId: any, isCustom: boolean): Promise<any[]> {
-        console.log('getTreeinfo');
+        //console.log('getTreeinfo');
         const urlAll = `/thingspin/tag`;// get all tags include Custom tag
         const urlOrigin = `/thingspin/sites/${siteId}/facilities/tree`;
         const urlPtag = `/thingspin/tagdefine/graph/${siteId}`; //siteid === connectionId
@@ -54,7 +54,7 @@ export class SiteModel {
             ? await getBackendSrv().get(urlAll)
             : await getBackendSrv().get(isCustom ? urlOrigin : urlPtag);
 
-        console.log('getTreeinfo: ', result);
+        //console.log('getTreeinfo: ', result);
         return (result && result.length) ? result : null;
     }
 }

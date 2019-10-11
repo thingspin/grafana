@@ -35,8 +35,8 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
 
     //props check
     UNSAFE_componentWillReceiveProps(nextProps: facilityTreeProps) {
-        console.log("props-tag: ", nextProps.taginfo);
-        console.log("props-site: ", nextProps.siteinfo);
+        //console.log("props-tag: ", nextProps.taginfo);
+        //console.log("props-site: ", nextProps.siteinfo);
 
         this.restoreFacilityData(nextProps).then((state) => {
             this.setState(state);
@@ -102,7 +102,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             const { value, isCustom } = selectedOption;
 
             const siteOptions: any[] = [selectedOption].concat(sites, ptags);
-            console.log("sitelist: ", siteOptions);
+            //("sitelist: ", siteOptions);
             const updateState: TreeInfo = await this.getTreeinfo(value, isCustom);
 
             return {
@@ -179,7 +179,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         this.mqttClient = new TsMqttController(mqttUrl, listenerTopic);
         try {
             await this.mqttClient.run(this.recvMqttMessage.bind(this));
-            console.log("MQTT Connected");
+            //console.log("MQTT Connected");
         } catch (e) {
             console.error(e);
         }
@@ -199,13 +199,13 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
 
     //page move
     connManagePage() {
-        console.log('react/go Connection Manage page');
+        //console.log('react/go Connection Manage page');
         this.$location.url(`/thingspin/manage/data/connect/`).replace();
         this.$rootScope.$apply();
     }
 
     siteManagePage = () => {
-        console.log('react/go Site Manage Page');
+        //console.log('react/go Site Manage Page');
         this.$location.url(`/thingspin/manage/data/site`).replace();
         this.$rootScope.$apply();
     }
@@ -234,7 +234,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
             ? TagData.filter(({ tag_id }) => (tag_id < 0))
             : TagData.filter(({ site_id }) => (siteData.value === site_id));
         */
-        console.log('sendTagData: ', TagData, siteData);
+        //console.log('sendTagData: ', TagData, siteData);
 
         click({
             siteData,
@@ -245,8 +245,8 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
     //SITE SELECTION event
     handleChange = async (selectedOption: any) => {
         const { checked, Taginfo } = this.state;
-        console.log("handleChange");
-        console.log(selectedOption);
+        //console.log("handleChange");
+        //console.log(selectedOption);
         const updateState = await this.getTreeinfo(selectedOption.value, selectedOption.isCustom);
         this.setState({
             ...updateState,
@@ -254,7 +254,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         });
 
         console.log("handleChange checked: ", checked);
-        console.log("handleChange Tag: ", Taginfo);
+        //console.log("handleChange Tag: ", Taginfo);
         this.sendTagData(Taginfo, selectedOption);
     };
 
@@ -271,7 +271,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
         const { siteOptions, checkedSave, nodes } = this.state;
         const isDataEmpty = (nodes.length === 0 || siteOptions.length === 0) ? true : false;
 
-        console.log("render-checkedsave:",checkedSave," DataEmpty:",isDataEmpty);
+        //("render-checkedsave:",checkedSave," DataEmpty:",isDataEmpty);
 
         return (
             <div className="facility-tree-container">
