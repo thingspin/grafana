@@ -43,7 +43,7 @@ func AddTsConnectHistory(cmd *m.AddTsConnectHistoryQuery) error {
 }
 
 func DelelteTsConnectHistory(cmd *m.DeleteTsConnectHistoryQuery) error {
-	sqlQuery := fmt.Sprintf(`DELETE FROM '%s' WHERE connect_id='%s'`,
+	sqlQuery := fmt.Sprintf(`DELETE FROM '%s' WHERE connect_id='%d'`,
 		m.TsFmsConnectHistoryTbl, cmd.ConnectId)
 	result, err := x.Exec(sqlQuery)
 
