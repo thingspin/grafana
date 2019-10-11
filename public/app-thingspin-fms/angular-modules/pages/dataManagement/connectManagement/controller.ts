@@ -24,6 +24,13 @@ export interface TableModel {
     maxPageLen: number; // paging 최대 표시 개수
 }
 
+export interface MqttContent {
+    id: string;
+    old: string;
+    connect: {
+        fill: string;
+    };
+}
 
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
@@ -119,6 +126,11 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 this.list.filter(({ id }) => (id === num))
                     .forEach((item) => {
                         item.status = payload;
+                        if ((payload as MqttContent)) {
+                            if ((payload as MqttContent).connect) {
+                                item.color = (payload as MqttContent).connect.fill;
+                            }
+                        }
                         isChange = true;
                     });
         }
@@ -174,7 +186,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     run(id: number, enable: boolean) {
-        const index: number = this.list.findIndex((item) => item.id === item.id);
+        const index: number = this.list.findIndex((item) => id === item.id);
 
         this.modalPopupRunning(id, enable);
         const list = this.list[index];
@@ -217,7 +229,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     modalPopupRunning(id: number, enable: boolean) {
-        const index: number = this.list.findIndex((item) => item.id === item.id);
+        const index: number = this.list.findIndex((item) => id === item.id);
         if (index < 0) {
             return;
         }
