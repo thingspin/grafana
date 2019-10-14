@@ -280,6 +280,9 @@
         .gf-form{
             margin-bottom: 16px;
         }
+        .gf-form-input{
+            background-color: rgba(0, 0, 0, 0.07);
+        }
         .gf-form-group{
             margin-left: 32px;
             margin-bottom: 0px;
@@ -426,4 +429,87 @@
 }
 
 
+
+.ts-notification-total-area{
+    width: 100%;
+    height: 385px;
+    padding-top: 16px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+   
+    textarea{
+        width: 649px;
+        height: 200px;
+        margin-left: 36px;
+        //opacity: 0.07;
+        border-radius: 4px;
+        background-color: rgba(30, 30, 30, 0.07)
+    }
+
+    .ts-notification-divider{
+        border-top: 1px solid rgba(0, 0, 0, 0.16);
+        width: 97%;
+    
+        margin-left: 16px;
+        margin-right: 16px;
+        margin-bottom: 16px;
+        margin-top: 16px;
+    }
+    
+   
+}
+
+.ts-notification-email-area{
+    .ts-notification-email-title{
+        //width: 103px;
+        //height: 16px;
+        margin-left: 16px;
+        margin-bottom: 16px;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.14;
+        letter-spacing: normal;
+       // text-align: left;
+        color: #0039ff;
+    }
+    .gf-form{
+        span{
+            margin-left: 36px;
+        }
+    }
+    
+}
+
+.ts-notification-webhook-area{
+    .ts-notification-webhook-title{
+        //width: 103px;
+        //height: 16px;
+        margin-left: 16px;
+        margin-bottom: 16px;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.14;
+        letter-spacing: normal;
+       // text-align: left;
+        color: #0039ff;
+    }
+    input{
+        background-color: rgba(0, 0, 0, 0.07);
+    }
+    .gf-form-input{
+        background-color: rgba(0, 0, 0, 0.07);
+    }
+    .gf-form-label{
+        margin-left: 16px;
+        background-color: #ffffff;
+        border:none;
+    }
+}
 

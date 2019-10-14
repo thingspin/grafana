@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group';
 // Grafana Libs
 import TsLogin from 'app-thingspin-fms/pages/login/TsLogin';
 import { LoginServiceButtons } from 'app/core/components/Login/LoginServiceButtons';
-import { ChangePassword } from 'app/core/components/Login/ChangePassword';
+import { TsChangePassword } from 'app-thingspin-fms/pages/login/TsChangePassword';
 
 // ThingSPIN Libs
 // Views
@@ -71,7 +71,7 @@ export const TsLoginPage: FC = () => (
               timeout={250}
               classNames="login-inner-box"
             >
-              <ChangePassword onSubmit={changePassword} onSkip={skipPasswordChange} focus={isChangingPassword} />
+              <TsChangePassword onSubmit={changePassword} onSkip={skipPasswordChange} focus={isChangingPassword} />
             </CSSTransition>
           </div>
         )}
