@@ -31,7 +31,7 @@
             <div class="gf-form">
               <span class="gf-form-label width-4 ts-noti-form-title">종류</span>
               <div class="gf-form-select-wrapper width-16">
-                <select class="gf-form-input ts-noti-select" ng-model="ctrl.model.type" ng-options="t.type as t.name for t in ctrl.notifiers" ng-change="ctrl.typeChanged(notification, $index)">
+                <select class="ts-noti-select gf-form-input" ng-model="ctrl.model.type" ng-options="t.type as t.name for t in ctrl.notifiers" ng-change="ctrl.typeChanged(notification, $index)">
                 </select>
               </div>
             </div>
@@ -82,8 +82,10 @@
           </div>
     </form>
   </div>
-
-
+  
+  <div class="ts-notification-total-area" ng-include src="ctrl.notifierTemplateId">
+  </div>
+<!--
   <div class="ts-noti-form-email-form-area">
       <span class="ts-noti-newchannel-title">이메일 주소</span>
       <div class="ts-noti-divider"></div>
@@ -94,6 +96,6 @@
       <span class="ts-noti-annotaion">";"를 사용하여 여러개의 이메일 주소를 입력할 수 있습니다.</span>
       </div>
   </div>
+  -->
 </div>
-
 

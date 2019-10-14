@@ -13,9 +13,12 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 	reqSignedIn := middleware.ReqSignedIn
 	r := hs.RouteRegister
 	bind := binding.Bind
+	reqEditorRole := middleware.ReqEditorRole
 	//quota := middleware.Quota(hs.QuotaService)
 	// register thingspin rest api
 	r.Group("/thingspin", func(tsRoute routing.RouteRegister) {
+		tsRoute.Get("/alert-notifiers", reqEditorRole, Wrap(GetTsAlertNotifiers))
+
 		tsRoute.Get("/user/password/send-reset-email", hs.ResetView)
 		tsRoute.Get("/user/password/reset", hs.ResetView)
 		tsRoute.Get("/", hs.Index)

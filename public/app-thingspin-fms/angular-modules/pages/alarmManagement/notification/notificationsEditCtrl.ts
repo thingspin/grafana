@@ -40,8 +40,9 @@ export class TsAlarmNotiEditCtrl {
     };
 
     this.backendSrv
-      .get(`/api/alert-notifiers`)
+      .get(`/thingspin/alert-notifiers`)
       .then((notifiers: any) => {
+        //console.log(notifiers);
         this.notifiers = notifiers;
 
         // add option templates
