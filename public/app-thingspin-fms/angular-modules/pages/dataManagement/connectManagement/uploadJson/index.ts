@@ -1,0 +1,1 @@
+export { uploadJsonDirective } from './uploadJsonDirective';

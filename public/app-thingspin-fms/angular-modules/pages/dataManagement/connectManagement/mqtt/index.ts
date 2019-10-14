@@ -50,10 +50,30 @@ export interface TableModel {
   maxPageLen: number; // paging 최대 표시 개수
 }
 
+
+function _formatDatetime(date: Date, format: string) {
+  const _padStart = (value: number): string => value.toString().padStart(2, '0');
+return format
+   .replace(/yyyy/g, _padStart(date.getFullYear()))
+   .replace(/dd/g, _padStart(date.getDate()))
+   .replace(/mm/g, _padStart(date.getMonth() + 1))
+   .replace(/hh/g, _padStart(date.getHours()))
+   .replace(/ii/g, _padStart(date.getMinutes()))
+   .replace(/ss/g, _padStart(date.getSeconds()));
+}
+function isValidDate(d: Date): boolean {
+   return !isNaN(d.getTime());
+}
+
+export function formatDate(date: any): string {
+  const datetime = new Date(date);
+  return isValidDate(datetime) ? _formatDatetime(datetime, 'yyyy-mm-dd_hh:ii:ss') : '';
+}
+
 export class TsMqttConnectCtrl {
   static template: any = require("./index.html");
 
-  connection  = {
+  connection = {
     url: '',
     port: '',
     keep_alive: '',
@@ -205,54 +225,77 @@ export class TsMqttConnectCtrl {
   }
 
   close() {
-    this.$location.path(`/thingspin/manage/data/connect/`);
+    this.$timeout(() => {
+      this.$location.path(`/thingspin/manage/data/connect/`);
+    });
   }
 
-  save(value: boolean) {
-    if (value) {
-      if (this.collector && this.connection.url && this.connection.port && this.connection.keep_alive) {
-        this.onJsonCreatSender(true);
-      } else {
-        if (!this.collector) {
-          this.openAlartNotification("수집기 이름을 입력해주세요.");
-          return;
-        } else if (!this.connection.url) {
-          this.openAlartNotification("HOST를 입력해주세요.");
-          return;
-        } else if (!this.connection.port) {
-          this.openAlartNotification("PORT를 입력해주세요.");
-          return;
-        } else if (!this.connection.keep_alive) {
-          this.openAlartNotification("Keep Alive 초를 입력해주세요.");
-          return;
-        }
-      }
-    } else {
-      if (!this.collector) {
-        this.openAlartNotification("수집기 이름을 입력해주세요.");
-        return;
-      } else if (!this.connection.url) {
-        this.openAlartNotification("HOST를 입력해주세요.");
-        return;
-      } else if (!this.connection.port) {
-        this.openAlartNotification("PORT를 입력해주세요.");
-        return;
-      } else if (!this.connection.keep_alive) {
-        this.openAlartNotification("Keep Alive 초를 입력해주세요.");
-        return;
-      }
+  inputChecker() {
+    if (!this.collector) {
+      this.openAlartNotification("수집기 이름을 입력해주세요.");
+      return false;
+    } else if (!this.connection.url) {
+      this.openAlartNotification("HOST를 입력해주세요.");
+      return false;
+    } else if (!this.connection.port) {
+      this.openAlartNotification("PORT를 입력해주세요.");
+      return false;
+    } else if (!this.connection.keep_alive) {
+      this.openAlartNotification("Keep Alive 초를 입력해주세요.");
+      return false;
+    }
+    return true;
+  }
 
+  connectTest () {
+    if (this.inputChecker()) {
       if (this.indexID === -1 || this.tableList.size === 0) {
         if (this.topicDisListArrayString.length === 0) {
           this.createConnectNode();
         }
         this.methodProcess(this.createHttpObject(), false);
-      } else {
-        if (value) {
-          this.onJsonCreatSender(value);
-        }
       }
     }
+  }
+
+  save(value: boolean) {
+    if (this.inputChecker()) {
+      this.onJsonCreatSender(true);
+    }
+    // if (value) {
+    //   if (this.collector && this.connection.url && this.connection.port && this.connection.keep_alive) {
+    //     this.onJsonCreatSender(true);
+    //   } else {
+    //     if (this.inputChecker()) {
+
+    //     }
+    //   }
+    // } else {
+    //   if (!this.collector) {
+    //     this.openAlartNotification("수집기 이름을 입력해주세요.");
+    //     return;
+    //   } else if (!this.connection.url) {
+    //     this.openAlartNotification("HOST를 입력해주세요.");
+    //     return;
+    //   } else if (!this.connection.port) {
+    //     this.openAlartNotification("PORT를 입력해주세요.");
+    //     return;
+    //   } else if (!this.connection.keep_alive) {
+    //     this.openAlartNotification("Keep Alive 초를 입력해주세요.");
+    //     return;
+    //   }
+
+    //   if (this.indexID === -1 || this.tableList.size === 0) {
+    //     if (this.topicDisListArrayString.length === 0) {
+    //       this.createConnectNode();
+    //     }
+    //     this.methodProcess(this.createHttpObject(), false);
+    //   } else {
+    //     if (value) {
+    //       this.onJsonCreatSender(value);
+    //     }
+    //   }
+    // }
   }
 
   onShowTopicEditView(value: any) {
@@ -317,7 +360,7 @@ export class TsMqttConnectCtrl {
 
   loadTopicData(data: any) {
     this.onDataResetTopic();
-    const {id, type, viewStr, value} = this.tableList.get(data);
+    const { id, type, viewStr, value } = this.tableList.get(data);
 
     this.topicItem.id = id;
     this.topicItem.name = type;
@@ -350,7 +393,7 @@ export class TsMqttConnectCtrl {
     };
     this.PtagList = PtagList;
 
-    TopicList.forEach( ({ name: n, type, viewStr, topic, value }: any, id: number) => {
+    TopicList.forEach(({ name: n, type, viewStr, topic, value }: any, id: number) => {
       const tableData: Topic = {
         id,
         type: type ? type : n,
@@ -471,15 +514,6 @@ export class TsMqttConnectCtrl {
     if (this.topicListArrayString.length === 0 &&
       this.topicDisListArrayString.length === 0) {
       this.createConnectNode();
-
-      if (this.topicListArrayString.length !== 0 && this.indexID > 0 && this.tableList.size === 0) {
-        this.methodProcess(this.createHttpObject(), withclose);
-        if (withclose) {
-          this.close();
-        } else {
-          return;
-        }
-      }
     }
     if (this.tableList.size > 0) {
       this.topicListArrayString += ",";
@@ -578,7 +612,6 @@ export class TsMqttConnectCtrl {
         if (this.topicListArrayString.length !== 0) {
           this.methodProcess(this.createHttpObject(), withclose);
         }
-        this.close();
       }
     }
   }
@@ -619,7 +652,7 @@ export class TsMqttConnectCtrl {
 
   makePtagList() {
     this.PtagList = [];
-    this.tableList.forEach( ({ type, value }: any) => {
+    this.tableList.forEach(({ type, value }: any) => {
       const TagData = {
         name: type,
         type: value,
@@ -705,31 +738,17 @@ export class TsMqttConnectCtrl {
 
   // CASE BY SEND HTTP (PUT, POST)
   // VALUE IS "TRUE" >> CLOSE FUNCTION
-  async methodProcess(object: any, value: any) {
+  async methodProcess(object: any, value: any): Promise<any> {
     try {
-      if (this.isEditMode) {
+      if (this.isEditMode || this.indexID !== -1) {
         await this.backendSrv.put("/thingspin/connect/" + this.indexID, object);
-        // await this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`);
-        if (value) {
-          this.close();
-        } else {
-          this.updateData();
-        }
-      } else if (this.indexID !== -1) {
-        await this.backendSrv.put("/thingspin/connect/" + this.indexID, object);
-        // await this.backendSrv.get(`${this.nodeRedHost}/mqtt/${this.uuid}/status`);
-        if (value) {
-          this.close();
-        } else {
-          this.updateData();
-        }
       } else {
         const result = await this.backendSrv.post("/thingspin/connect/mqtt", object);
         this.indexID = result;
-        this.topicListArrayString = "";
-        this.topicDisListArrayString = "";
-        this.topicListPublishArrayString = "";
-        this.onJsonCreatSender(value);
+        await this.backendSrv.put("/thingspin/connect/" + this.indexID, object);
+      }
+      if (value) {
+        this.close();
       }
     } catch (err) {
       if (err.status === 500) {
@@ -796,6 +815,55 @@ export class TsMqttConnectCtrl {
   tOnSelectChange() {
     this.tCalcPaging();
     this.setPageNodes();
+  }
+
+  onUpload(dash: any) {
+    if (this.jsonDataParsingChecker(dash)) {
+      this.collector = dash.collector;
+      this.connection = {
+        url: dash.connection.url,
+        port: dash.connection.port,
+        keep_alive: dash.connection.keep_alive,
+        session: dash.connection.session,
+      };
+      dash.topicList.forEach(({ name: n, type, viewStr, topic, value }: any, id: number) => {
+        const tableData: Topic = {
+          id,
+          type: type ? type : n,
+          viewStr: viewStr ? viewStr : topic,
+          value,
+        };
+        this.tableList.set(id, tableData);
+        this.list.push(tableData);
+      });
+      this.initTable();
+    }
+  }
+
+  jsonDataParsingChecker(data: any) {
+    if (data.collector === undefined) {
+      return false;
+    } else if (data.connection === undefined) {
+      return false;
+    } else if (data.topicList === undefined) {
+      return false;
+    }
+    return true;
+  }
+
+  async exportData() {
+    const outputData = {
+      "collector": this.collector,
+      "connection": this.connection,
+      "topicList": Array.from(this.tableList.values())
+    };
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputData));
+    $("#downloadAnchorElem").attr("href", dataStr);
+    $("#downloadAnchorElem").attr("download", this.collector + "_" + formatDate(new Date()) + ".json");
+    $("#downloadAnchorElem").get(0).click();
+
+    // console.log(outputData);
   }
 }
 export function tsMqttConnectDirective() {

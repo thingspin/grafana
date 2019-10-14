@@ -14,6 +14,7 @@ import './dataManagement/connectManagement';
 import './dataManagement/connectManagement/modbus';
 import './dataManagement/connectManagement/mqtt';
 import './dataManagement/connectManagement/opcua';
+import './dataManagement/connectManagement/uploadJson';
 
 import './facilityManagement';
 

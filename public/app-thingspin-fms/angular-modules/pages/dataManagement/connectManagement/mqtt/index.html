@@ -6,7 +6,11 @@
         <button id="mqtt-cancel-btn" className="btn" ng-click="ctrl.close(false)">
             취소
         </button>
-        <button id="mqtt-plus-btn" className="btn" ng-click="ctrl.save(true)">
+        <json-upload on-upload="ctrl.onUpload(dash)" btn-text="Import"></json-upload>
+        <button id="mqtt-cancel-btn" className="btn" ng-click="ctrl.exportData()">
+            Export
+        </button>
+        <button id="mqtt-plus-btn" className="btn" ng-click="ctrl.save()">
             저장
         </button>
     </div>
@@ -15,7 +19,7 @@
         <span class="mqtt-title" id="mqtt-title-connect">
             MQTT 접속 정보
         </span>
-        <button id="mqtt-connect-state" class="mqtt-connect-btn-postion" ng-click="ctrl.save(false)">
+        <button id="mqtt-connect-state" class="mqtt-connect-btn-postion" ng-click="ctrl.connectTest()">
             <i id="mqtt-connect-btn" class="tsi icon-ts-power"></i>
         </button>
         <div class="mqtt-content-line"></div>
@@ -41,7 +45,7 @@
                         <input type="text" ng-model="ctrl.connection.port" ng-click="ctrl.samplePort()" placeholder="1883"/>
                         <span ng-class="{separator: true, enable: ctrl.connection.port}"></span>
                     </div>
-                </div>       
+                </div>
             </div>
         </div>
         <div class="mqtt-title" id="mqtt-title-add-connect">
@@ -167,11 +171,13 @@
                         ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
                         <span >{{ page + 1}}</span>
                     </button>
-                    <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
+                    <button ng-click="ctrl.exportData()"><i class="tsi icon-ts-chevron_right"></i></button>
                 </div>
             </div>
         </div>
-
+        <a id="downloadAnchorElem" style="display:contents;">download</a>
+        <br><br>
+        <div></div>
         <!-- <div id="mqtt-topic-list" class="mqtt-table-size"></div> -->
 <!--      
         <div class="mqtt-topic-add-view" ng-show="ctrl.isTopicEditView">
