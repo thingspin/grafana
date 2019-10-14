@@ -11,8 +11,11 @@
 
 .fm-left-tree {
     width: 428px;
+    min-height: 500px;
+    max-height: fit-content;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
     margin-left: 20px;
+    margin-bottom: 20px;
 }
 
 .fm-left-type-selector {

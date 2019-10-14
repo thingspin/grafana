@@ -206,7 +206,7 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
 
     siteManagePage = () => {
         //console.log('react/go Site Manage Page');
-        this.$location.url(`/thingspin/manage/data/site`).replace();
+        this.$location.url(`/thingspin/manage/data/connect`).replace();
         this.$rootScope.$apply();
     }
 
@@ -299,7 +299,10 @@ export default class FacilityTree extends React.Component<facilityTreeProps, Fac
                     {isDataEmpty && <div>
                             <div className="facility-warning-facility-empty"><i className="fa fa-exclamation-triangle">&nbsp;</i> WARNING</div>
                             <div className="facility-warning-facility-empty">설정된 데이터가 없습니다.</div>
-                            <button className="facility-siteManage-page-btn2" onClick={this.siteManagePage}>사이트 관리 이동</button>
+                            <div className="facility-warning-facility-empty">데이터 연결을 설정 하세요.</div>
+                            <button className="facility-siteManage-page-btn2" onClick={this.siteManagePage}>
+                                데이터 연결 관리 이동  &nbsp;&nbsp;<i className="fa fa-arrow-right"></i>
+                                </button>
                         </div>
                     }
                 </div>
