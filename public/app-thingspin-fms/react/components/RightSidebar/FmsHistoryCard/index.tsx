@@ -32,6 +32,9 @@ export interface Props {
     // user ckecked
     isActive?: boolean;
 
+
+    onDeactiveHistory?: (history: any) => void;
+
     [etc: string]: any;
 }
 
@@ -46,15 +49,21 @@ function getAlarmIconClass(alarmType: TS_ALARM_TYPE): string {
     }
 }
 
-const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, historyType, time, title, subtitle }) => {
+const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, historyType, time, title, subtitle, onDeactiveHistory }) => {
     const mainCls = classNames({
         'ts-on-bg': isActive,
         'ts-off-bg': !isActive,
     });
 
     const onClickDetail = async () => {
-        const result = await getBackendSrv().put('/thingspin/annotations/confirm', { time: time.valueOf() });
-        console.log(result);
+        try {
+            await getBackendSrv().put('/thingspin/annotations/confirm', { time: time.valueOf() });
+            if (onDeactiveHistory) {
+                onDeactiveHistory(history);
+            }
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     return (<div className="fms-history-card">

@@ -80,7 +80,6 @@ coreModule.decorator('dashboardSrv',
     let data: any;
     try {
       data = await backendSrv.saveDashboard(clone, options);
-      console.log(data);
       if (isMenuSave) {
         data = await self.fmSaveMenu(clone, data, parentMenuName);
       }

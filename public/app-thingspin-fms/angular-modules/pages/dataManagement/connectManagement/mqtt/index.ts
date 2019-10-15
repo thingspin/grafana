@@ -1,10 +1,15 @@
+// JS 3rd party libs
 import _ from "lodash";
-import "./index.scss";
-import { BackendSrv } from 'app/core/services/backend_srv';
 import angular, { ITimeoutService } from 'angular';
-import { appEvents } from 'app/core/core';
 const uid = require("shortid");
+import "./index.scss";
 
+// Grafana libs
+import { dateTime } from '@grafana/data';
+import { appEvents } from 'app/core/core';
+import { BackendSrv } from 'app/core/services/backend_srv';
+
+// Thingspin libs
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
 const DEF_URL = "localhost";
@@ -50,24 +55,8 @@ export interface TableModel {
   maxPageLen: number; // paging 최대 표시 개수
 }
 
-
-function _formatDatetime(date: Date, format: string) {
-  const _padStart = (value: number): string => value.toString().padStart(2, '0');
-return format
-   .replace(/yyyy/g, _padStart(date.getFullYear()))
-   .replace(/dd/g, _padStart(date.getDate()))
-   .replace(/mm/g, _padStart(date.getMonth() + 1))
-   .replace(/hh/g, _padStart(date.getHours()))
-   .replace(/ii/g, _padStart(date.getMinutes()))
-   .replace(/ss/g, _padStart(date.getSeconds()));
-}
-function isValidDate(d: Date): boolean {
-   return !isNaN(d.getTime());
-}
-
-export function formatDate(date: any): string {
-  const datetime = new Date(date);
-  return isValidDate(datetime) ? _formatDatetime(datetime, 'yyyy-mm-dd_hh:ii:ss') : '';
+export function formatDate(date: Date): string {
+  return dateTime(date).format('YYYY-MM-DD_HH:mm:ss');
 }
 
 export class TsMqttConnectCtrl {
@@ -170,7 +159,6 @@ export class TsMqttConnectCtrl {
 
     try {
       await this.mqttClient.run(this.recvMqttMessage.bind(this));
-      // console.log("MQTT Connected");
     } catch (e) {
       console.error(e);
     }
@@ -247,7 +235,7 @@ export class TsMqttConnectCtrl {
     return true;
   }
 
-  connectTest () {
+  connectTest() {
     if (this.inputChecker()) {
       if (this.indexID === -1 || this.tableList.size === 0) {
         if (this.topicDisListArrayString.length === 0) {
@@ -262,40 +250,6 @@ export class TsMqttConnectCtrl {
     if (this.inputChecker()) {
       this.onJsonCreatSender(true);
     }
-    // if (value) {
-    //   if (this.collector && this.connection.url && this.connection.port && this.connection.keep_alive) {
-    //     this.onJsonCreatSender(true);
-    //   } else {
-    //     if (this.inputChecker()) {
-
-    //     }
-    //   }
-    // } else {
-    //   if (!this.collector) {
-    //     this.openAlartNotification("수집기 이름을 입력해주세요.");
-    //     return;
-    //   } else if (!this.connection.url) {
-    //     this.openAlartNotification("HOST를 입력해주세요.");
-    //     return;
-    //   } else if (!this.connection.port) {
-    //     this.openAlartNotification("PORT를 입력해주세요.");
-    //     return;
-    //   } else if (!this.connection.keep_alive) {
-    //     this.openAlartNotification("Keep Alive 초를 입력해주세요.");
-    //     return;
-    //   }
-
-    //   if (this.indexID === -1 || this.tableList.size === 0) {
-    //     if (this.topicDisListArrayString.length === 0) {
-    //       this.createConnectNode();
-    //     }
-    //     this.methodProcess(this.createHttpObject(), false);
-    //   } else {
-    //     if (value) {
-    //       this.onJsonCreatSender(value);
-    //     }
-    //   }
-    // }
   }
 
   onShowTopicEditView(value: any) {
@@ -618,7 +572,6 @@ export class TsMqttConnectCtrl {
 
   onJsonParseCreate(value: any, type: any) {
     const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type);
-    // console.log(index);
     return "const payload = \n{\n  \"" + value + "\" : parse" + this.defMqtt.values[index] + "(msg.payload)\n};\n\nmsg.payload = payload;\n";
   }
 
@@ -626,7 +579,6 @@ export class TsMqttConnectCtrl {
     const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type);
     const returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.indexID + "\",\n    \"fields\": {\n        \""
       + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n    }\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
-    // console.log(returnValue);
     return returnValue;
   }
 
@@ -646,7 +598,6 @@ export class TsMqttConnectCtrl {
       returnValue = "var influxPayload = {\n    \"" + value + "\":parse" + this.defMqtt.values[index] +
         "(msg.payload)\n\}\n\nmsg.payload = influxPayload;\n\n" + "msg.id = " + this.indexID + "\;\n\nreturn msg;\n";
     }
-    // console.log("String:" + returnValue);
     return returnValue;
   }
 
@@ -826,6 +777,7 @@ export class TsMqttConnectCtrl {
         keep_alive: dash.connection.keep_alive,
         session: dash.connection.session,
       };
+
       dash.topicList.forEach(({ name: n, type, viewStr, topic, value }: any, id: number) => {
         const tableData: Topic = {
           id,
@@ -840,30 +792,22 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  jsonDataParsingChecker(data: any) {
-    if (data.collector === undefined) {
-      return false;
-    } else if (data.connection === undefined) {
-      return false;
-    } else if (data.topicList === undefined) {
-      return false;
-    }
-    return true;
+  jsonDataParsingChecker({collector, connection, topicList}: any) {
+      return !(!collector || !connection || !topicList);
   }
 
   async exportData() {
     const outputData = {
-      "collector": this.collector,
-      "connection": this.connection,
-      "topicList": Array.from(this.tableList.values())
+      collector: this.collector,
+      connection: this.connection,
+      topicList: Array.from(this.tableList.values())
     };
 
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputData));
-    $("#downloadAnchorElem").attr("href", dataStr);
-    $("#downloadAnchorElem").attr("download", this.collector + "_" + formatDate(new Date()) + ".json");
-    $("#downloadAnchorElem").get(0).click();
-
-    // console.log(outputData);
+    const $elem = $("#downloadAnchorElem");
+    $elem.attr("href", dataStr);
+    $elem.attr("download", this.collector + "_" + formatDate(new Date()) + ".json");
+    $elem.get(0).click();
   }
 }
 export function tsMqttConnectDirective() {

@@ -1,5 +1,5 @@
 // js 3rd party libs
-import React from 'react';
+import React, { useState } from 'react';
 
 // Grafana libs
 import { dateTime } from '@grafana/data';
@@ -24,21 +24,33 @@ export function getAlarmType(type: string): TS_ALARM_TYPE {
   }
 }
 
-export const TsRightSideHistoryComponent: React.FC<Props> = ({ list }) => (
-<>
-  <div className="ts-right-side-history-component">
-    {list.map(({ title, subtitle, time, alarmType, history, ruleUrl }: AlarmPayload, idx: number) =>
-      <FmsHistoryCard key={idx}
-        title={title}
-        subtitle={subtitle}
-        history={history}
-        time={dateTime(time)}
-        link={ruleUrl}
+export const TsRightSideHistoryComponent: React.FC<Props> = ({ list }) => {
 
-        isActive={true}
-        alarmType={getAlarmType(alarmType)}
-        historyType={TS_HISTORY_TYPE.ALARM}
-      />
-    )}
-  </div>
-</>);
+  const [deactives, setDeactives] = useState([] as any[]);
+
+  const onDeactiveHistory = (history: any) => {
+    deactives.push(history);
+    setDeactives([...deactives]);
+  };
+
+  return <>
+    <div className="ts-right-side-history-component">
+      {list
+        .filter(({ history })=> !deactives.includes(history))
+        .map(({ title, subtitle, time, alarmType, history, ruleUrl }: AlarmPayload, idx: number) =>
+        <FmsHistoryCard key={idx}
+          title={title}
+          subtitle={subtitle}
+          history={history}
+          time={dateTime(time)}
+          link={ruleUrl}
+
+          isActive={true}
+          alarmType={getAlarmType(alarmType)}
+          historyType={TS_HISTORY_TYPE.ALARM}
+          onDeactiveHistory={onDeactiveHistory}
+        />
+      )}
+    </div>
+  </>
+};

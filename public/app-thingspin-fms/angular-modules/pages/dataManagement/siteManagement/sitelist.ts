@@ -76,7 +76,6 @@ export class TsSiteListCtrl implements angular.IController {
     }// Dependency Injection
 
     $onInit(): void {
-        // console.log("SiteTable : " + this.data);
     }
 
     $onDestroy(): void {

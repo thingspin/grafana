@@ -14,7 +14,6 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
     };
 
     UNSAFE_componentWillReceiveProps({nodes, nodesChecked}: FilterTreeProps) {
-        //console.log("componentWillReceive");
         if (this.props.nodes !== nodes || this.props.nodesChecked !== nodesChecked) {
             const updateState: any = {
                 nodes,
@@ -28,7 +27,6 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
     }
 
     UNSAFE_componentWillMount() {
-        //console.log("componentWillMount: ",this.props);
         if (this.props.nodes && this.props.nodesChecked) {
             const updateState: any = {
                 nodes: this.props.nodes,
@@ -42,9 +40,7 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
 
     putNodeIcon(node: any[]) {
         if (node && node.length) {
-           //console.log("node length: ",node.length);
            for (const n of node) {
-                //console.log(n.label," ",n.children.length);
                 if (n.tag_id === 0) {
                     if (n.site_id < 0) {
                         n.icon = <span className="icon-connection"><i className="fa fa-plug" /></span>;
@@ -65,7 +61,6 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
                         }
                     }
                 }else {
-                    //console.log(n.label);
                     if (n.tag_name ==="" && n.tag_table_name ==="") {
                         //empty tag
                         //n.showCheckbox = false;
@@ -132,7 +127,6 @@ export default class FilterTree extends Component<FilterTreeProps, FilterTreeSta
 
     render() {
         const { filterText, filterPlaceholder, nodesFiltered, checked, expanded } = this.state;
-        //console.log("filterTree Render:",checked);
         return (
             <div>
                 <div className="facility-filter-pos">
