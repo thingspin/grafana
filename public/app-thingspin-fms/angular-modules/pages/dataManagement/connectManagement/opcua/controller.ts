@@ -9,6 +9,8 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 // Thingspin libs
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
+import { dateTime } from '@grafana/data';
+
 const baseApi = `/thingspin/connect`;
 export interface BackendConnectPayload {
     name: string;
@@ -42,6 +44,10 @@ export interface OpcConnectModel {
         securityMode: string;
     };
     updated: string;
+}
+
+export function formatDate(date: Date): string {
+    return dateTime(date).format('YYYY-MM-DD_HH:mm:ss');
 }
 
 export default class TsOpcUaConnectCtrl implements angular.IController {
@@ -209,6 +215,35 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         }
 
         this.$scope.$applyAsync();
+    }
+
+    jsonDataParsingChecker({ intervals, name, params }: any) {
+        return !(!intervals || !name || !params);
+    }
+
+    onUpload(dash: any) {
+        this.jsonDataParsingChecker(dash);
+        this.input = {
+            endpointUrl: dash.params.EndpointUrl,
+            name: dash.name,
+            auth: dash.params.auth,
+            securityMode: dash.params.securityMode,
+            securityPolicy: dash.params.securityPolicy,
+            intervals: dash.intervals,
+        };
+        this.nodes = dash.params.nodes;
+        this.enableNodeSet = true;
+    }
+
+    exportData(): void {
+        if (this.inputChecker()) {
+            const payload = this.genPayload(this.FlowId);
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload));
+            $("#downloadAnchorElem").attr("href", dataStr);
+            $("#downloadAnchorElem").attr("download", payload.name + "_" + formatDate(new Date()) + ".json");
+            $("#downloadAnchorElem").get(0).click();
+        }
     }
 
     cancel(): void {
