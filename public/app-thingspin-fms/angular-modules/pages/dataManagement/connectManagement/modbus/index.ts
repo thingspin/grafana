@@ -262,17 +262,7 @@ export class TsModbusConnectCtrl {
   }
 
   addAddress() {
-    console.log("addAddress button");
     this.orderTable.addRow({});
-  }
-
-  deleteAddress() {
-    console.log("delete button");
-  }
-
-  objectTest() {
-    const str = '"TS-MODBUS-GETTER-CONN-test"';
-    console.log(str);
   }
 
   //---table 관련
@@ -319,7 +309,6 @@ export class TsModbusConnectCtrl {
   }
 
   editPtagList() {
-    console.log("editPtagList");
     this.PtagList = [];
     for (const { quantity, name } of this.tableList) {
       if (quantity > 1) {
@@ -386,7 +375,6 @@ export class TsModbusConnectCtrl {
 
   showEdit2(idx: any): void {
     const item = this.tableList[idx];
-    console.log("showEdit2: " + idx);
 
     this.editIdx = idx + 1;
     this.editAddress = item.address;
@@ -550,7 +538,6 @@ export class TsModbusConnectCtrl {
       },
       intervals: this.modbusReadIntervals
     };
-    console.log(object);
 
     if (this.isEditMode) {
       this.backendSrv.put(`/thingspin/connect/${this.indexID}`, object).then(() => {
