@@ -78,7 +78,7 @@ export class TsChangePassword extends PureComponent<Props, State> {
       <div className="login-inner-box" id="change-password-view">
         <div className="text-left login-change-password-info">
           <h5>비밀번호를 변경하세요.</h5>
-          ThingSPIN을 사용하기전에 비밀번호를 변경하여 계정 보안에 신경써주세요.
+          ThingSPIN을 사용하기전에 <br />비밀번호를 변경하여 계정 보안에 신경써주세요.
           <br />
           이후에도 비밀번호 변경이 가능합니다.
         </div>
