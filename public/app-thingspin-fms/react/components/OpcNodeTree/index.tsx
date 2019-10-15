@@ -71,10 +71,12 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
 
   async updateData() {
     try {
-      const result = await this.backendSrv.get(`${this.nodeRedHost}/opcua/${this.props.flowId}/browser`);
+      if (this.props.flowId !== undefined) {
+        const result = await this.backendSrv.get(`${this.nodeRedHost}/opcua/${this.props.flowId}/browser`);
 
-      const nodes = this.setChildNodes(result.browserResults);
-      this.setState({ nodes });
+        const nodes = this.setChildNodes(result.browserResults);
+        this.setState({ nodes });
+      }
     } catch (e) {
       console.error(e);
     }
