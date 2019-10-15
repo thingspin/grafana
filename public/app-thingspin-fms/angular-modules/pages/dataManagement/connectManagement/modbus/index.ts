@@ -212,7 +212,7 @@ export class TsModbusConnectCtrl {
     this.$scope.$applyAsync();
   }
 
-  onLoadData({id, params, name, intervals}: any) {
+  onLoadData({ id, params, name, intervals }: any) {
     this.indexID = id;
     this.connName = name;
     this.modbusReadIntervals = intervals;
@@ -442,7 +442,7 @@ export class TsModbusConnectCtrl {
       x: 110,
       y: 160 + posY,
       wires: [
-        [ "TS-MODBUS-GETTER-" + address + "-" + flowid ]
+        ["TS-MODBUS-GETTER-" + address + "-" + flowid]
       ]
     };
     const objGetter = {
@@ -464,7 +464,7 @@ export class TsModbusConnectCtrl {
       x: 340,
       y: 240 + posY,
       wires: [
-        [ "TS-MODBUS-P-" + address + "-" + flowid ],
+        ["TS-MODBUS-P-" + address + "-" + flowid],
         []
       ]
     };
@@ -480,7 +480,7 @@ export class TsModbusConnectCtrl {
       x: 510,
       y: 220 + posY,
       wires: [
-        [ "TS-MODBUS-JOIN-" + flowid ]
+        ["TS-MODBUS-JOIN-" + flowid]
       ]
     };
 
@@ -556,21 +556,35 @@ export class TsModbusConnectCtrl {
       this.backendSrv.put(`/thingspin/connect/${this.indexID}`, object).then(() => {
         if (!this.isConnCheckMode) {
           this.close();
+        } else {
+          this.isConnCheckMode = false;
         }
       });
     } else {
-      this.backendSrv.post("/thingspin/connect/modbus", object).then((result: any) => {
-        //upadte connection id for nodered-parser measurement name
-        this.modbusinfluxID = result;
+      if (this.modbusinfluxID.length === 0) {
+        this.backendSrv.post("/thingspin/connect/modbus", object).then((result: any) => {
+          //upadte connection id for nodered-parser measurement name
+          this.modbusinfluxID = result;
 
-        if (!this.isConnCheckMode) {
-          object.params.influxID = this.modbusinfluxID;
-          //update DB & nodered flow
-          this.backendSrv.put(`/thingspin/connect/${this.modbusinfluxID}`, object).then(() => {
-          });
-          this.close();
-        }
-      });
+          if (!this.isConnCheckMode) {
+            object.params.influxID = this.modbusinfluxID;
+            //update DB & nodered flow
+            this.backendSrv.put(`/thingspin/connect/${this.modbusinfluxID}`, object).then(() => {
+              this.close();
+            });
+          } else {
+            this.isConnCheckMode = false;
+          }
+        });
+      } else {
+        this.backendSrv.put(`/thingspin/connect/${this.modbusinfluxID}`, object).then(() => {
+          if (!this.isConnCheckMode) {
+            this.close();
+          } else {
+            this.isConnCheckMode = false;
+          }
+        });
+      }
     }
   }
 
@@ -700,8 +714,8 @@ export class TsModbusConnectCtrl {
     }
   }
 
-  jsonDataParsingChecker({name, params, intervals}: any) {
-      return !(!name || !params || !intervals);
+  jsonDataParsingChecker({ name, params, intervals }: any) {
+    return !(!name || !params || !intervals);
   }
 
   exportData() {
