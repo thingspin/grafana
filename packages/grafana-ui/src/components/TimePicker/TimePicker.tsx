@@ -101,7 +101,7 @@ const defaultZoomOutTooltip = () => {
 export interface State {
   isCustomOpen: boolean;
 }
-class UnThemedTimePicker extends PureComponent<Props, State> {
+export class UnThemedTimePicker extends PureComponent<Props, State> {
   pickerTriggerRef = createRef<HTMLDivElement>();
 
   state: State = {

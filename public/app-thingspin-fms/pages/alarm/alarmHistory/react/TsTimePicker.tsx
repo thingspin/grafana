@@ -2,7 +2,8 @@
 import React from 'react';
 
 // Grafana libs
-import { TimePicker, ButtonSelect, ClickOutsideWrapper } from '@grafana/ui';
+import { ButtonSelect, ClickOutsideWrapper, withTheme } from '@grafana/ui';
+import { UnThemedTimePicker } from '@grafana/ui/src/components/TimePicker/TimePicker';
 import { TimePickerPopover } from '@grafana/ui/src/components/TimePicker/TimePickerPopover';
 import { TimeOption, TimeRange, DateTime, dateMath, isDateTime, TIME_FORMAT } from '@grafana/data';
 
@@ -21,7 +22,7 @@ const TimePickerTooltipContent = ({ timeRange: { from, to } }: { timeRange: Time
   </>
 );
 
-export default class TsTimePicker extends TimePicker {
+export class TsTimePicker extends UnThemedTimePicker {
   // Overrride
   mapTimeOptionsToSelectableValues = (selectOpts: TimeOption[] = []) => ([
     {
@@ -92,3 +93,5 @@ export default class TsTimePicker extends TimePicker {
     );
   }
 }
+
+export default withTheme(TsTimePicker);
