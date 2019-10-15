@@ -5,7 +5,7 @@ const uid = require("shortid");
 import "./index.scss";
 
 // Grafana libs
-import { dateTime } from '@grafana/data';
+import { dateTime, AppEvents } from '@grafana/data';
 import { appEvents } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
@@ -657,7 +657,7 @@ export class TsMqttConnectCtrl {
   }
 
   openAlartNotification(value: any) {
-    appEvents.emit('alert-error', [value]);
+    appEvents.emit(AppEvents.alertError, [value]);
   }
 
   setConnectStatus(color: string): void {
@@ -703,7 +703,7 @@ export class TsMqttConnectCtrl {
       }
     } catch (err) {
       if (err.status === 500) {
-        appEvents.emit('alert-error', [err.statusText]);
+        appEvents.emit(AppEvents.alertError, [err.statusText]);
       }
     }
   }

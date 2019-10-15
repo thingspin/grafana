@@ -1,10 +1,13 @@
 // React PureComponent
 import React, { PureComponent } from 'react';
+
 // Grafana Module
 import { store } from 'app/store/store';
-// import { contextSrv, appEvents } from 'app/core/core';
-import { EViewModeState } from 'app-thingspin-fms/models/common';
 import { appEvents } from 'app/core/core';
+
+// Thingspin libs
+import { TsCoreEvents } from 'app-thingspin-fms/types';
+import { EViewModeState } from 'app-thingspin-fms/models/common';
 import { contextSrv } from 'app-thingspin-fms/angular-modules/core/services/tsContextSrv';
 
 interface Props {
@@ -25,7 +28,7 @@ class TsLogo extends PureComponent<Props> {
     }
 
     contextSrv.toggleSideMenu();
-    appEvents.emit('toggle-sidemenu');
+    appEvents.emit(TsCoreEvents.toggleSidemenu);
   }
 
   render() {

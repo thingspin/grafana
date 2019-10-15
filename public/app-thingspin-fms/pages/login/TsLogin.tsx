@@ -1,13 +1,15 @@
-import React from 'react';
-import config from 'app/core/config';
-
-import { updateLocation } from 'app/core/actions';
+// js 3rd party libs
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { StoreState } from 'app/types';
-import { PureComponent } from 'react';
-import { getBackendSrv } from '@grafana/runtime';
 import { hot } from 'react-hot-loader';
+
+// Grafana libs
+import config from 'app/core/config';
+import { StoreState } from 'app/types';
+import { AppEvents } from '@grafana/data';
 import appEvents from 'app/core/app_events';
+import { getBackendSrv } from '@grafana/runtime';
+import { updateLocation } from 'app/core/actions';
 
 const isOauthEnabled = () => config.hasOwnProperty("oauth") &&  Object.keys(config.oauth).length > 0;
 //() => Object.keys(config.oauth).length > 0;
@@ -52,7 +54,7 @@ export class TsLogin extends PureComponent<Props, State> {
     };
 
     if (config.loginError) {
-      appEvents.emit('alert-warning', ['Login Failed', config.loginError]);
+      appEvents.emit(AppEvents.alertWarning, ['Login Failed', config.loginError]);
     }
   }
 

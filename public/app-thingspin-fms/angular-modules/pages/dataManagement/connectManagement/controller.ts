@@ -1,12 +1,17 @@
+// js 3rd party libs
 import _ from 'lodash';
 import angular from 'angular';
 const uid = require('shortid');
 
-import { TsConnect, TsConnectHistory } from 'app-thingspin-fms/models/connect';
-import { BackendSrv } from 'app/core/services/backend_srv';
+// Grafana libs
+import { CoreEvents } from 'app/types';
+import { AppEvents } from '@grafana/data';
 import appEvents from 'app/core/app_events';
+import { BackendSrv } from 'app/core/services/backend_srv';
 
+// Thingspin libs
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
+import { TsConnect, TsConnectHistory } from 'app-thingspin-fms/models/connect';
 
 export interface Banner {
     title: string;
@@ -210,7 +215,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
             icon = "tsi icon-ts-pause_circle_filled";
         }
 
-        appEvents.emit('confirm-modal', {
+        appEvents.emit(CoreEvents.showConfirmModal, {
             title: mainTitle,
             text2: item.name + detailFirst + detailMiddle + detailLast,
             icon: icon,
@@ -250,7 +255,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
             icon = "tsi icon-ts-pause_circle_filled";
         }
 
-        appEvents.emit('confirm-modal', {
+        appEvents.emit(CoreEvents.showConfirmModal, {
             title: mainTitle,
             text2: this.list[index].name + detailFirst + detailMiddle + detailLast,
             icon: icon,
@@ -303,7 +308,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
         try {
             this.historyList = await this.backendSrv.get(`thingspin/connect/${item.id}/history`);
 
-            appEvents.emit('show-modal', {
+            appEvents.emit(CoreEvents.showModal, {
                 src: 'public/app/partials/ts_connect_history.html',
                 backdrop: 'static',
                 model: {
@@ -347,7 +352,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     removeConnect(id: number) {
         const index = this.list.findIndex((item) => item.id === id);
 
-        appEvents.emit('confirm-modal', {
+        appEvents.emit(CoreEvents.showConfirmModal, {
             title: '연결 삭제',
             text2: this.list[index].name + ' 연결 정보를 삭제하시겠습니까?',
             icon: 'fa-trash',
@@ -512,6 +517,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
     publishMqttClipeboard() {
         $('#topic_view').select();
         document.execCommand("copy");
-        appEvents.emit('alert-success', ["클립보드에 복사하였습니다."]);
+        appEvents.emit(AppEvents.alertSuccess, ["클립보드에 복사하였습니다."]);
     }
 }

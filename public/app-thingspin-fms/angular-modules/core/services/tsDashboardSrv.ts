@@ -9,6 +9,7 @@ import { store } from 'app/store/store';
 import { updateTsMenu } from 'app-thingspin-fms/react/redux/dispayches/tsMenu';
 import { appEvents } from 'app/core/app_events';
 import { DashboardModel } from 'app/features/dashboard/state';
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 
 // Define Thingspin DashboardService interface
 export interface TsDashboardSrv extends DashboardSrv {
@@ -199,7 +200,7 @@ coreModule.decorator('dashboardSrv',
       return self.fmSave(JSON.parse(json), {});
   };
 
-  appEvents.on('save-fm-dashboard', self.fmSaveFM.bind(self), $rootScope);
+  appEvents.on(TsCoreEvents.saveFmDashboard, self.fmSaveFM.bind(self), $rootScope);
 
   return self;
 });

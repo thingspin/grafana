@@ -1,8 +1,12 @@
+// js 3rd party libs
 const uid = require("shortid");
 
-import { BackendSrv } from 'app/core/services/backend_srv';
+// Grafana libs
 import { appEvents } from 'app/core/core';
+import { AppEvents } from '@grafana/data';
+import { BackendSrv } from 'app/core/services/backend_srv';
 
+// Thingspin libs
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
 const baseApi = `/thingspin/connect`;
@@ -92,15 +96,15 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     inputChecker(): boolean {
         if (this.input !== undefined) {
             if (this.input.name.length === 0) {
-                appEvents.emit('alert-warning', ['수집기 이름을 설정 하세요.']);
+                appEvents.emit(AppEvents.alertWarning, ['수집기 이름을 설정 하세요.']);
                 return false;
             }
             if (this.input.endpointUrl.length === 0) {
-                appEvents.emit('alert-warning', ['Endpoint URL을 입력 하세요.']);
+                appEvents.emit(AppEvents.alertWarning, ['Endpoint URL을 입력 하세요.']);
                 return false;
             } else if (this.input.endpointUrl.length > 0) {
                 if (this.input.endpointUrl.indexOf("://") === -1) {
-                    appEvents.emit('alert-warning', ['Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.']);
+                    appEvents.emit(AppEvents.alertWarning, ['Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.']);
                     return false;
                 }
             }
@@ -243,11 +247,11 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
             await this.timeout(3000);
             await this.backendSrv.put(`${baseApi}/${connId}`, payload);
 
-            appEvents.emit('alert-success', ['신규 OPC/UA 연결이 추가되었습니다.']);
+            appEvents.emit(AppEvents.alertSuccess, ['신규 OPC/UA 연결이 추가되었습니다.']);
         } else {
             await this.backendSrv.put(`${baseApi}/${this.connId}`, payload);
 
-            appEvents.emit('alert-success', ['OPC/UA 연결이 수정되었습니다.']);
+            appEvents.emit(AppEvents.alertSuccess, ['OPC/UA 연결이 수정되었습니다.']);
             connId = this.connId;
         }
         return connId;

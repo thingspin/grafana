@@ -1,11 +1,15 @@
-import angular, { IScope, ITimeoutService } from 'angular';
+// 3rd party libs
 import _ from "lodash";
-import "./index.scss";
-import { BackendSrv } from 'app/core/services/backend_srv';
-//import Tabulator from 'tabulator-tables';
-import { appEvents } from 'app/core/core';
+import angular, { IScope, ITimeoutService } from 'angular';
 const uid = require("shortid");
 
+// Grafana libs
+import { appEvents } from 'app/core/core';
+import { AppEvents } from '@grafana/data';
+import { BackendSrv } from 'app/core/services/backend_srv';
+
+// Thingspin libs
+import "./index.scss";
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
 export interface TableModel {
@@ -335,7 +339,7 @@ export class TsModbusConnectCtrl {
       for (let i = 0; i < this.tableList.length; i++) {
         if (this.editAddress === this.tableList[i].address || this.editName === this.tableList[i].name) {
           if (!(this.isAddressEditmode && editIdx === i)) {
-            appEvents.emit('alert-warning', ['동일한 name/Address가 존재 합니다.']);
+            appEvents.emit(AppEvents.alertWarning, ['동일한 name/Address가 존재 합니다.']);
             editParamFinish = false;
             break;
           }
@@ -343,7 +347,7 @@ export class TsModbusConnectCtrl {
       }
     } else {
       editParamFinish = false;
-      appEvents.emit('alert-warning', ['MODBUS 수집 Address를 설정 하세요.']);
+      appEvents.emit(AppEvents.alertWarning, ['MODBUS 수집 Address를 설정 하세요.']);
     }
     // name check
 
@@ -488,19 +492,19 @@ export class TsModbusConnectCtrl {
     this.isParamsComplete = false;
 
     if (!this.connName) {
-      appEvents.emit('alert-warning', ['수집기 이름을 설정 하세요.']);
+      appEvents.emit(AppEvents.alertWarning, ['수집기 이름을 설정 하세요.']);
     } else if (!this.modbusHost) {
-      appEvents.emit('alert-warning', ['HOST IP를 입력 하세요.']);
+      appEvents.emit(AppEvents.alertWarning, ['HOST IP를 입력 하세요.']);
     } else if (!this.modbusPort) {
-      appEvents.emit('alert-warning', ['PORT 넘버를 입력 하세요.']);
+      appEvents.emit(AppEvents.alertWarning, ['PORT 넘버를 입력 하세요.']);
     } else if (!this.modbusUnitID) {
-      appEvents.emit('alert-warning', ['Unit ID를 입력 하세요.']);
+      appEvents.emit(AppEvents.alertWarning, ['Unit ID를 입력 하세요.']);
     } else if (!this.modbusTimeOut) {
-      appEvents.emit('alert-warning', ['TimeOut을 입력 하세요.']);
+      appEvents.emit(AppEvents.alertWarning, ['TimeOut을 입력 하세요.']);
     } else if (!this.modbusReTimeOut) {
-      appEvents.emit('alert-warning', ['Re-TimeOut을 입력 하세요.']);
+      appEvents.emit(AppEvents.alertWarning, ['Re-TimeOut을 입력 하세요.']);
     } else if (!this.modbusReadIntervals) {
-      appEvents.emit('alert-warning', ['데이터 수집 주기를 설정 하세요.']);
+      appEvents.emit(AppEvents.alertWarning, ['데이터 수집 주기를 설정 하세요.']);
     } else {
       this.isParamsComplete = true;
       this.testCreate();

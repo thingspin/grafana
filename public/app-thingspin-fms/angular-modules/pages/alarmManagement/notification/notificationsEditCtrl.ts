@@ -1,7 +1,14 @@
+// js 3rd party libs
 import _ from 'lodash';
+
+// Grafna libs
+import { AppEvents } from '@grafana/data';
 import { appEvents, coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
+
+// Thingspin libs
 import "./index.scss";
+
 export class TsAlarmNotiEditCtrl {
   theForm: any;
   //navModel: any;
@@ -30,9 +37,7 @@ export class TsAlarmNotiEditCtrl {
     private backendSrv: BackendSrv,
     private $location: any,
     private $templateCache: any,
-    //navModelSrv: NavModelSrv
   ) {
-   // this.navModel = navModelSrv.getNav('alerting', 'channels', 0);
     this.isNew = !this.$routeParams.id;
 
     this.getFrequencySuggestion = () => {
@@ -50,14 +55,10 @@ export class TsAlarmNotiEditCtrl {
         }
 
         if (!this.$routeParams.id) {
-          //this.navModel.breadcrumbs.push({ text: 'New channel' });
-          //this.navModel.node = { text: 'New channel' };
           return _.defaults(this.model, this.defaults);
         }
 
         return this.backendSrv.get(`/api/alert-notifications/${this.$routeParams.id}`).then((result: any) => {
-          //this.navModel.breadcrumbs.push({ text: result.name });
-          //this.navModel.node = { text: result.name };
           result.settings = _.defaults(result.settings, this.defaults.settings);
           return result;
         });
@@ -78,23 +79,23 @@ export class TsAlarmNotiEditCtrl {
         .put(`/api/alert-notifications/${this.model.id}`, this.model)
         .then((res: any) => {
           this.model = res;
-          appEvents.emit('alert-success', ['Notification updated', '']);
+          appEvents.emit(AppEvents.alertSuccess, ['Notification updated', '']);
         })
         .catch((err: any) => {
           if (err.data && err.data.error) {
-            appEvents.emit('alert-error', [err.data.error]);
+            appEvents.emit(AppEvents.alertError, [err.data.error]);
           }
         });
     } else {
       this.backendSrv
         .post(`/api/alert-notifications`, this.model)
         .then((res: any) => {
-          appEvents.emit('alert-success', ['Notification created', '']);
+          appEvents.emit(AppEvents.alertSuccess, ['Notification created', '']);
           this.$location.path('thingspin/alarm/notification');
         })
         .catch((err: any) => {
           if (err.data && err.data.error) {
-            appEvents.emit('alert-error', [err.data.error]);
+            appEvents.emit(AppEvents.alertError, [err.data.error]);
           }
         });
     }
@@ -122,7 +123,7 @@ export class TsAlarmNotiEditCtrl {
     };
 
     this.backendSrv.post(`/api/alert-notifications/test`, payload).then((res: any) => {
-      appEvents.emit('alert-success', ['Test notification sent', '']);
+      appEvents.emit(AppEvents.alertSuccess, ['Test notification sent', '']);
     });
   }
 }

@@ -18,6 +18,7 @@ import { changePanelEditorTab } from 'app/features/dashboard/panel_editor/state/
 
 // ThingSPIN libs
 // Models
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 import { FMDashboardModel } from 'app-thingspin-fms/pages/FacilityMonitoring/models';
 // Views
 import FacilityTree from 'app-thingspin-fms/react/components/FacilityNodeTree';
@@ -68,7 +69,7 @@ export class AlarmSetting extends UnConnectedAlertTab {
     }));
 
     // update alarm rule
-    this.panelCtrl.events.emit("ts-update-alarm", params);
+    this.panelCtrl.events.emit(TsCoreEvents.tsUpdateAlarm, params);
 
     // set FacilityTree in dashboard
     const db = dashboard as FMDashboardModel;

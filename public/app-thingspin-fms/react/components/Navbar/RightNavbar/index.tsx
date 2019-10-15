@@ -4,14 +4,15 @@ import React, { PureComponent } from 'react';
 // Grafana Libraries
 import { Tooltip } from '@grafana/ui';
 import { updateLocation } from 'app/core/actions';
-import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 import { appEvents } from 'app/core/app_events';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
 // ThingSPIN libraries
-import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import TsNavSearchComponent from './SearchButton';
-import TsUserSettingButtonComponent from './UserSettingButton/index';
+import { TsCoreEvents } from 'app-thingspin-fms/types';
+import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import TsViewModeButtonComponent from './ViewModeButton/index';
+import TsUserSettingButtonComponent from './UserSettingButton/index';
 import { TsNavbarPayload } from 'app-thingspin-fms/react/redux/reducers/navbar';
 
 export interface Props extends TsBaseProps {
@@ -68,7 +69,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
     // Virtual DOM Private Variables
     // Virtual DOM events Methods
     const onToggleVSplitMode = () => {
-      appEvents.emit('toggle-right-sidebar');
+      appEvents.emit(TsCoreEvents.toggleRightSidebar);
     };
     const { enableRightSidebarButton } = this.props.navbar;
     const icon = enableRightSidebarButton ? 'fa-caret-square-o-left' : 'fa-caret-square-o-right';

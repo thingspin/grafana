@@ -1,8 +1,14 @@
+// js 3rd party libs
 import React, { PureComponent, SyntheticEvent } from 'react';
-import * as m from '../types';
 
+
+// Grafana libs
+import { CoreEvents } from 'app/types';
 import { appEvents } from 'app/core/core';
 import { getBackendSrv } from 'app/core/services/backend_srv';
+
+// Thingspin libs
+import * as m from '../types';
 
 interface PropsSystemControl {
     item: m.Item;
@@ -24,7 +30,7 @@ export class SystemControl extends PureComponent<PropsSystemControl, StatesSyste
     }
 
     onClickReboot = (event: SyntheticEvent) => {
-        appEvents.emit('confirm-modal', {
+        appEvents.emit(CoreEvents.showConfirmModal, {
           title: '시스템 재시작',
           text: '플랫폼 서버를 재 시작하시겠습니까? 서버가 원격지에 위치한 경우 신중을 기하시기 바랍니다.',
           text2: '서버를 재 시작 하는 동안 브라우저로 플랫폼에 접속 할 수 없습니다.',

@@ -1,5 +1,9 @@
+// js 3rd party libs
 import React, { PureComponent, SyntheticEvent, ChangeEvent } from 'react';
+
+// Grafana libs
 import { Tooltip } from '@grafana/ui';
+import { AppEvents } from '@grafana/data';
 import appEvents from 'app/core/app_events';
 
 interface Props {
@@ -42,7 +46,7 @@ export class TsChangePassword extends PureComponent<Props, State> {
     if (valid) {
       this.props.onSubmit(newPassword);
     } else {
-      appEvents.emit('alert-warning', ['New passwords do not match', '']);
+      appEvents.emit(AppEvents.alertWarning, ['New passwords do not match', '']);
     }
   };
 

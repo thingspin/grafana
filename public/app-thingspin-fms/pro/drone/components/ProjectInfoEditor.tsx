@@ -1,8 +1,12 @@
+// js 3rd party libs
 import React, { PureComponent, useState } from 'react';
 
+// Grafana libs
+import { CoreEvents } from 'app/types';
 import { appEvents } from 'app/core/core';
 import { getBackendSrv } from 'app/core/services/backend_srv';
 
+// Thingspin libs
 import { Project } from '../types';
 
 export interface PropsAddProject {
@@ -36,7 +40,7 @@ export class ProjectInfoEditor extends PureComponent<PropsAddProject, Project> {
       return;
     }
 
-    appEvents.emit('confirm-modal', {
+    appEvents.emit(CoreEvents.showConfirmModal, {
       title: '프로젝트 생성',
       text: '드론으로 촬영한 영상과 문제점 분석을 위해 프로젝트를 생성합니다.',
       text2: '프로젝트 생성 후 실영상/영화상 사진 및 동영상을 저작한 폴더와 3D 맵을 생성한 폴더를 지정 하셔야 합니다.',

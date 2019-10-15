@@ -7,6 +7,7 @@ import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { appEvents } from 'app/core/app_events';
 import { DashboardModel } from 'app/features/dashboard/state';
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 
 // Define Thingspin DashboardService interface
 export interface AlarmDashboardSrv extends DashboardSrv {
@@ -168,7 +169,7 @@ coreModule.decorator('dashboardSrv',
       return self.alarmSave(JSON.parse(json), {});
   };
 
-  appEvents.on('save-alarm-dashboard', self.alarmSaveDashboard.bind(self), $rootScope);
+  appEvents.on(TsCoreEvents.saveAlarmDashboard, self.alarmSaveDashboard.bind(self), $rootScope);
 
   return self;
 });

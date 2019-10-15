@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 
 // Grafana libs
 // Models
-import { StoreState } from 'app/types';
+import { AppEvents } from '@grafana/data';
+import { StoreState, CoreEvents } from 'app/types';
 // Views
 import { DashNav } from 'app/features/dashboard/components/DashNav/DashNav';
 import { DashNavButton } from 'app/features/dashboard/components/DashNav/DashNavButton';
@@ -49,7 +50,7 @@ export class AlarmNavComp extends DashNav {
         const text2 = dashboard.title;
 
         if (dashboard.meta.provisioned) {
-            appEvents.emit('confirm-modal', {
+            appEvents.emit(CoreEvents.showConfirmModal, {
                 title: 'Cannot delete provisioned dashboard',
                 text: `해당 알람은 초기 설정(프로비저닝)에서 관리되어 삭제할 수 없습니다. 자세한 내용은 시스템 관리자에게 문의바랍니다.`,
                 icon: 'fa-trash',
@@ -58,7 +59,7 @@ export class AlarmNavComp extends DashNav {
             return;
         }
 
-        appEvents.emit('confirm-modal', {
+        appEvents.emit(CoreEvents.showConfirmModal, {
             title: 'Delete',
             text: '정말 해당 알람을 삭제시겠습니까?',
             text2: text2,
@@ -75,7 +76,7 @@ export class AlarmNavComp extends DashNav {
     deleteDashboardConfirmed() {
         const { dashboard } = this.props;
         this.backendSrv.deleteDashboard(dashboard.uid, false).then(() => {
-            appEvents.emit('alert-success', ['Dashboard Deleted', dashboard.title + ' has been deleted']);
+            appEvents.emit(AppEvents.alertSuccess, ['Dashboard Deleted', dashboard.title + ' has been deleted']);
             this.$location.url('/');
         });
     }

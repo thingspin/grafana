@@ -1,9 +1,15 @@
+// js 3rd party libs
 import _ from "lodash";
+import $ from 'jquery';
 import angular, { ITimeoutService } from "angular";
+
+// Grafana libs
+import { AppEvents } from '@grafana/data';
+import { appEvents } from 'app/core/core';
 import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
-import { appEvents } from 'app/core/core';
-import $ from 'jquery';
+
+// Thingspin libs
 import "./sitelist.scss";
 
 interface SiteTableData {
@@ -104,25 +110,13 @@ export class TsSiteListCtrl implements angular.IController {
             success: (result) => {
                 console.log("Remove after");
                 console.log(result);
-                appEvents.emit('alert-success', ['삭제되었습니다.']);
+                appEvents.emit(AppEvents.alertSuccess, ['삭제되었습니다.']);
                 this.onLoadData(result);
             },
             error: (request, status, err) => {
-                appEvents.emit('alert-error', [err]);
+                appEvents.emit(AppEvents.alertError, [err]);
             },
         });
-        /*
-        this.backendSrv.delete("/thingspin/sites/"+sid).then((result) => {
-            console.log("Remove after");
-            console.log(result);
-            appEvents.emit('alert-success', ['삭제되었습니다.']);
-            this.onLoadData(result);
-        }).catch(err => {
-            if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
-            }
-        });
-        */
     }
     onShowEditView(value: any) {
         if (value) {
@@ -152,12 +146,12 @@ export class TsSiteListCtrl implements angular.IController {
                     Lat: parseFloat(this.lat),
                     Lon: parseFloat(this.lon),
                 }).then((result: any) => {
-                    appEvents.emit('alert-success', ['수정되었습니다.']);
+                    appEvents.emit(AppEvents.alertSuccess, ['수정되었습니다.']);
                     this.onLoadData(result);
                     this.onShowEditView(false);
                 }).catch((err: any) => {
                     if (err.status === 500) {
-                        appEvents.emit('alert-error', [err.statusText]);
+                        appEvents.emit(AppEvents.alertError, [err.statusText]);
                     }
                 });
 
@@ -172,12 +166,12 @@ export class TsSiteListCtrl implements angular.IController {
                         Lat: parseFloat(this.lat),
                         Lon: parseFloat(this.lon),
                     }).then((result: any) => {
-                        appEvents.emit('alert-success', ['추가되었습니다.']);
+                        appEvents.emit(AppEvents.alertSuccess, ['추가되었습니다.']);
                         this.onLoadData(result);
                         this.onShowEditView(false);
                     }).catch((err: any) => {
                         if (err.status === 500) {
-                            appEvents.emit('alert-error', [err.statusText]);
+                            appEvents.emit(AppEvents.alertError, [err.statusText]);
                         }
                     });
                 }
@@ -328,7 +322,7 @@ export class TsSiteListCtrl implements angular.IController {
     }
 
     openAlartNotification(value: any) {
-        appEvents.emit('alert-error', [value]);
+        appEvents.emit(AppEvents.alertError, [value]);
     }
 }
 

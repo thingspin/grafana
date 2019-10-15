@@ -1,14 +1,17 @@
+// js 3rd party libs
 import React, { PureComponent, useState } from 'react';
-import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
+
+// Grafana libs
+import * as mom from '@grafana/data';
+import { CoreEvents } from 'app/types';
 import { appEvents } from 'app/core/core';
 import { getBackendSrv } from 'app/core/services/backend_srv';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
-import { ProjectInfoProps, ProjectInfoState } from '../types';
+// Thingspin libs
 import { loadProject } from '../state/actions';
-
-import * as mom from '@grafana/data';
-
 import { DATETIME_DEFAULTFORMAT } from '../types';
+import { ProjectInfoProps, ProjectInfoState } from '../types';
 
 export class ProjectInfo extends PureComponent<ProjectInfoProps, ProjectInfoState> {
     state: ProjectInfoState = {
@@ -40,7 +43,7 @@ export class ProjectInfo extends PureComponent<ProjectInfoProps, ProjectInfoStat
     onDelete = () => {
       const { id } = this.state.project;
 
-      appEvents.emit('confirm-modal', {
+      appEvents.emit(CoreEvents.showConfirmModal, {
         title: '프로젝트 삭제',
         text: '정말 프로젝트를 삭제 하시겠습니까?',
         icon: 'fa-superpowers',

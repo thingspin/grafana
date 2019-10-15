@@ -1,13 +1,15 @@
+// js 3rd party libs
 import React, { PureComponent } from 'react';
 
 // Grafana Module
 import { store } from 'app/store/store';
 import { appEvents } from 'app/core/core';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
 // Thingspin libraires
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
 import { contextSrv } from 'app-thingspin-fms/angular-modules/core/services/tsContextSrv';
-import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
 interface Props extends TsBaseProps {
   faviconPath: string;
@@ -22,7 +24,7 @@ export class TsIconLogo extends PureComponent<Props> {
     }
 
     contextSrv.toggleSideMenu();
-    appEvents.emit('toggle-sidemenu');
+    appEvents.emit(TsCoreEvents.toggleSidemenu);
   }
 
   render() {

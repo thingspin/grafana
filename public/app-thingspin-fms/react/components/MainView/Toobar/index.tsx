@@ -1,8 +1,14 @@
+// js 3rd party libs
 import React, { PureComponent } from 'react';
+
+// Grafana libs
+import { appEvents } from 'app/core/core';
 import { updateLocation } from 'app/core/actions';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
+
+// Thingspin libs
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 import { TsToolbarPayload, ToolbarItem } from 'app-thingspin-fms/react/redux/reducers/toolbar';
-import { appEvents } from 'app/core/core';
 
 export interface Props {
   kiosk: any;
@@ -20,7 +26,7 @@ export class TsToolbarComponent extends PureComponent<Props> {
   // common event Methods
 
   onCompressEvt = () => {
-    appEvents.emit('ts-change-viewmode', 0);
+    appEvents.emit(TsCoreEvents.tsChangeViewmode, 0);
   };
 
   // get render splitted virtual DOM Methods

@@ -5,6 +5,7 @@ import angular from "angular";
 import { ChangeTracker } from "app/features/dashboard/services/ChangeTracker";
 import { ContextSrv } from 'app/core/services/context_srv';
 import { DashboardModel } from 'app/features/dashboard/state';
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 
 export interface AlarmUnsavedChangesSrv {
     tracker: any;
@@ -42,7 +43,7 @@ class AlarmChangeTracker extends ChangeTracker {
                 self.gotoNext();
             });
         });
-        this.$rc.appEvent('save-alarm-dashboard');
+        this.$rc.appEvent(TsCoreEvents.saveAlarmDashboard);
     }
 }
 

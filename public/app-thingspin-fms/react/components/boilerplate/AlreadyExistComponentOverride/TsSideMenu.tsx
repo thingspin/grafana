@@ -1,8 +1,14 @@
+// js 3rd party libs
 import React from 'react';
-import { SideMenu } from 'app/core/components/sidemenu/SideMenu';
-import { store } from 'app/store/store';
-import { contextSrv } from 'app-thingspin-fms/angular-modules/core/services/tsContextSrv';
+
+// Grafana libs
 import { appEvents } from 'app/core/core';
+import { store } from 'app/store/store';
+import { SideMenu } from 'app/core/components/sidemenu/SideMenu';
+
+// Thingspin libs
+import { TsCoreEvents } from 'app-thingspin-fms/types';
+import { contextSrv } from 'app-thingspin-fms/angular-modules/core/services/tsContextSrv';
 
 export class TsSideMenu extends SideMenu {
   toggleSideMenu = () => {
@@ -13,7 +19,7 @@ export class TsSideMenu extends SideMenu {
     }
 
     contextSrv.toggleSideMenu();
-    appEvents.emit('toggle-sidemenu');
+    appEvents.emit(TsCoreEvents.toggleSidemenu);
   };
 
   render() {

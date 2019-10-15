@@ -1,10 +1,15 @@
+// js 3rd party libs
 import React, { PureComponent } from 'react';
 
-import { appEvents } from 'app/core/core';
+// Grafana libs
 import { Tooltip } from '@grafana/ui';
+import { CoreEvents } from 'app/types';
+import { appEvents } from 'app/core/core';
 import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
+// Thingspin libs
 import { TsBaseProps } from 'app-thingspin-fms/models/common';
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 
 export interface Props extends TsBaseProps {
   kiosk: any;
@@ -38,7 +43,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
     const icon = this.getViewmodeIcon(num);
     // Virtual DOM events Methods
     const updateViewMode = () => {
-      appEvents.emit('ts-change-viewmode', num);
+      appEvents.emit(TsCoreEvents.tsChangeViewmode, num);
     };
 
     // return virtual DOM
@@ -72,7 +77,7 @@ export class TsViewModeButtonCompoent extends PureComponent<Props> {
 
     // Virtual DOM events Methods
     const onToggleViewMode = () => {
-      appEvents.emit('toggle-kiosk-mode');
+      appEvents.emit(CoreEvents.toggleKioskMode);
     };
 
     let faIcon: string;

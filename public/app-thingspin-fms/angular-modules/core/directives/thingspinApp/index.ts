@@ -1,11 +1,13 @@
+// js 3rd party libs
 import { ILocationService, IScope, ITimeoutService, IRootScopeService, } from 'angular';
 // @ts-ignore
 import Drop from 'tether-drop';
 
-import { GrafanaCtrl, grafanaAppDirective } from 'app/routes/GrafanaCtrl';
-import { KioskUrlValue } from 'app/types';
+import { GrafanaCtrl, grafanaAppDirective, GrafanaRootScope } from 'app/routes/GrafanaCtrl';
+import { KioskUrlValue, CoreEvents } from 'app/types';
 import { store } from 'app/store/store';
 import { BackendSrv } from '@grafana/runtime';
+import { AppEvents } from '@grafana/data';
 import { TimeSrv } from 'app/features/dashboard/services/TimeSrv';
 import { KeybindingSrv, coreModule, appEvents } from 'app/core/core';
 import { BridgeSrv } from 'app/core/services/bridge_srv';
@@ -17,6 +19,7 @@ import { TS_NAV_ACTION_TYPES } from 'app-thingspin-fms/react/redux/reducers/navb
 import { PlaylistSrv } from 'app/features/playlist/playlist_srv';
 import { AngularLoader } from 'app/core/services/AngularLoader';
 import { LinkSrv } from 'app/features/panel/panellinks/link_srv';
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 
 export class ThingspinCtrl extends GrafanaCtrl {
   navbarEnable: boolean;
@@ -24,7 +27,7 @@ export class ThingspinCtrl extends GrafanaCtrl {
   constructor(
     $scope: IScope,
     utilSrv: UtilSrv,
-    $rootScope: IRootScopeService,
+    $rootScope: GrafanaRootScope,
     contextSrv: ContextSrv,
     bridgeSrv: BridgeSrv,
     backendSrv: BackendSrv,
@@ -106,12 +109,12 @@ export function thingspinAppDirective(
     sidemenuOpen = scope.contextSrv.sidemenu;
     body.toggleClass('sidemenu-open', sidemenuOpen);
 
-    appEvents.on('toggle-sidemenu', () => {
+    appEvents.on(TsCoreEvents.toggleSidemenu, () => {
       sidemenuOpen = scope.contextSrv.sidemenu;
       body.toggleClass('sidemenu-open');
     });
 
-    appEvents.on('toggle-right-sidebar', (enable: boolean | undefined) => {
+    appEvents.on(TsCoreEvents.toggleRightSidebar, (enable: boolean | undefined) => {
       if (enable === undefined) {
         enable = store.getState().thingspinNavbar.enableRightSidebarButton;
       }
@@ -123,7 +126,7 @@ export function thingspinAppDirective(
         },
       });
     });
-    appEvents.on('ts-change-viewmode', num => {
+    appEvents.on(TsCoreEvents.tsChangeViewmode, (num: number) => {
       // Virtual DOM events Methods
       const getBeforeViewMode = (num: number) => {
         const search: { kiosk?: KioskUrlValue } = {};
@@ -143,23 +146,23 @@ export function thingspinAppDirective(
       };
       const search: any = getBeforeViewMode(num);
       $location.search(search);
-      appEvents.emit('toggle-kiosk-mode');
+      appEvents.emit(CoreEvents.toggleKioskMode);
     });
     // thingspin add code ----
 
-    appEvents.on('toggle-sidemenu-mobile', () => {
+    appEvents.on(CoreEvents.toggleSidemenuMobile, () => {
       body.toggleClass('sidemenu-open--xs');
     });
 
-    appEvents.on('toggle-sidemenu-hidden', () => {
+    appEvents.on(CoreEvents.toggleSidemenuHidden, () => {
       body.toggleClass('sidemenu-hidden');
     });
 
-    appEvents.on('playlist-started', () => {
+    appEvents.on(CoreEvents.playlistStarted, () => {
       elem.toggleClass('view-mode--playlist', true);
     });
 
-    appEvents.on('playlist-stopped', () => {
+    appEvents.on(CoreEvents.playlistStopped, () => {
       elem.toggleClass('view-mode--playlist', false);
     });
 
@@ -196,11 +199,11 @@ export function thingspinAppDirective(
         drop.destroy();
       }
 
-      appEvents.emit('hide-dash-search');
+      appEvents.emit(CoreEvents.hideDashSearch);
     });
 
     // handle kiosk mode
-    appEvents.on('toggle-kiosk-mode', (options: { exit?: boolean }) => {
+    appEvents.on(CoreEvents.toggleKioskMode, (options: { exit?: boolean }) => {
       const search: { kiosk?: KioskUrlValue } = $location.search();
 
       if (options && options.exit) {
@@ -210,7 +213,7 @@ export function thingspinAppDirective(
       switch (search.kiosk) {
         case 'tv': {
           search.kiosk = true;
-          appEvents.emit('alert-success', ['Press ESC to exit Kiosk mode']);
+          appEvents.emit(AppEvents.alertSuccess, ['Press ESC to exit Kiosk mode']);
           break;
         }
         case '1':
@@ -272,7 +275,7 @@ export function thingspinAppDirective(
     // check every 2 seconds
     setInterval(checkForInActiveUser, 2000);
 
-    appEvents.on('toggle-view-mode', () => {
+    appEvents.on(CoreEvents.toggleViewMode, () => {
       lastActivity = 0;
       checkForInActiveUser();
     });

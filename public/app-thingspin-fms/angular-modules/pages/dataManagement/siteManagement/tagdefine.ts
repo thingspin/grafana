@@ -1,10 +1,14 @@
-import angular, { IWindowService, ITimeoutService } from "angular";
-import { BackendSrv } from 'app/core/services/backend_srv';
-import { appEvents } from 'app/core/core';
+// js 3rd party libs
 import $ from 'jquery';
+import angular, { IWindowService, ITimeoutService } from "angular";
+
+// Grafana libs
+import { appEvents } from 'app/core/core';
+import { AppEvents } from '@grafana/data';
+import { BackendSrv } from 'app/core/services/backend_srv';
+
+// Thingspin libs
 import "./tagdefine.scss";
-//import StateHistory from 'app/features/alerting/StateHistory';
-//import appEvents from 'app/core/app_events';
 
 export class TsTagDefineCtrl {
   // tree
@@ -90,7 +94,7 @@ export class TsTagDefineCtrl {
         }
       }).catch((err: any) => {
         if (err.status === 500) {
-          appEvents.emit('alert-error', [err.statusText]);
+          appEvents.emit(AppEvents.alertError, [err.statusText]);
         }
       });
       console.log(this.siteInfo);
@@ -120,14 +124,14 @@ export class TsTagDefineCtrl {
             if (event.dest.nodesScope.$nodeScope.$modelValue.tag_id > 0 && event.source.nodeScope.$modelValue.tag_id === 0) {
               // 설비가 태그 밑으로 이동할 경우 예외처리
               console.log("against rules!");
-              appEvents.emit('alert-error', ["태그는 설비를 포함할 수 없습니다."]);
+              appEvents.emit(AppEvents.alertError, ["태그는 설비를 포함할 수 없습니다."]);
               return false;
             }
           } else if (event.dest.nodesScope.$nodeScope === null) {
             if (event.source.nodeScope.$modelValue.tag_id > 0) {
               // 태그가 lv1로 이동할 경우
               console.log("against rules!");
-              appEvents.emit('alert-error', ["태그는 설비에 포함되어야 합니다."]);
+              appEvents.emit(AppEvents.alertError, ["태그는 설비에 포함되어야 합니다."]);
               return false;
             }
           }
@@ -280,7 +284,7 @@ export class TsTagDefineCtrl {
             success: (data) => {
               console.log("Post result");
               console.log(data);
-              appEvents.emit('alert-success', ['이동되었습니다.']);
+              appEvents.emit(AppEvents.alertSuccess, ['이동되었습니다.']);
             },
             error: (request, status, error) => {
               console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -296,11 +300,11 @@ export class TsTagDefineCtrl {
           const idx = event.dest.index;
           if ((fromNode.facility_id === 0 && toNode === null) || toNode.$modelValue.facility_id === 0) {
             console.log("against rules!");
-            appEvents.emit('alert-error', ["태그는 설비에 포함되어야 합니다."]);
+            appEvents.emit(AppEvents.alertError, ["태그는 설비에 포함되어야 합니다."]);
             return false;
           } else if (fromNode.facility_id === 0 && toNode.$modelValue.tag_id > 0) {
             console.log("against rules!");
-            appEvents.emit('alert-error', ["태그는 설비에 포함되어야 합니다."]);
+            appEvents.emit(AppEvents.alertError, ["태그는 설비에 포함되어야 합니다."]);
             return false;
           }
           const postdata = [];
@@ -338,7 +342,7 @@ export class TsTagDefineCtrl {
               console.log(data);
               this.result = data;
               this.resultIdx = idx;
-              appEvents.emit('alert-success', ['이동되었습니다.']);
+              appEvents.emit(AppEvents.alertSuccess, ['이동되었습니다.']);
             },
             error: (request, status, error) => {
               exitFlag = false;
@@ -408,14 +412,14 @@ export class TsTagDefineCtrl {
               console.log("Edit the faciltiy");
               console.log(node);
               console.log(result);
-              appEvents.emit('alert-success', ['이름이 변경되었습니다.']);
+              appEvents.emit(AppEvents.alertSuccess, ['이름이 변경되었습니다.']);
               node.isEditing = false;
               this.editDataBackup = "";
               //this.dataList = result;
               this.getDataList();
             }).catch((err: any) => {
               if (err.status === 500) {
-                appEvents.emit('alert-error', [err.statusText]);
+                appEvents.emit(AppEvents.alertError, [err.statusText]);
               }
             });
         }
@@ -429,14 +433,14 @@ export class TsTagDefineCtrl {
               console.log("Edit the tag");
               console.log(node);
               console.log(result);
-              appEvents.emit('alert-success', ['이름이 변경되었습니다.']);
+              appEvents.emit(AppEvents.alertSuccess, ['이름이 변경되었습니다.']);
               node.isEditing = false;
               this.editDataBackup = "";
               //this.dataList = result;
               this.getDataList();
             }).catch((err: any) => {
               if (err.status === 500) {
-                appEvents.emit('alert-error', [err.statusText]);
+                appEvents.emit(AppEvents.alertError, [err.statusText]);
               }
             });
         }
@@ -492,7 +496,7 @@ export class TsTagDefineCtrl {
       success: (data) => {
         scope.remove();
         console.log(this.dataList);
-        appEvents.emit('alert-success', ['삭제되었습니다.']);
+        appEvents.emit(AppEvents.alertSuccess, ['삭제되었습니다.']);
       },
       error: (request, status, error) => {
         console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -620,11 +624,11 @@ export class TsTagDefineCtrl {
           }).then((result: any) => {
             // this.onLoadData(result);
             console.log(result);
-            appEvents.emit('alert-success', ['수정되었습니다.']);
+            appEvents.emit(AppEvents.alertSuccess, ['수정되었습니다.']);
             //this.dataList = result;
           }).catch((err: any) => {
             if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
+              appEvents.emit(AppEvents.alertError, [err.statusText]);
             }
           });
       }
@@ -644,10 +648,10 @@ export class TsTagDefineCtrl {
             // this.onLoadData(result);
             console.log(result);
             this.dataList = result;
-            appEvents.emit('alert-success', ['추가되었습니다.']);
+            appEvents.emit(AppEvents.alertSuccess, ['추가되었습니다.']);
           }).catch((err: any) => {
             if (err.status === 500) {
-              appEvents.emit('alert-error', [err.statusText]);
+              appEvents.emit(AppEvents.alertError, [err.statusText]);
             }
           });
       }
@@ -664,7 +668,7 @@ export class TsTagDefineCtrl {
       }
     }).catch((err: any) => {
       if (err.status === 500) {
-        appEvents.emit('alert-error', [err.statusText]);
+        appEvents.emit(AppEvents.alertError, [err.statusText]);
       }
     });
   }
@@ -689,14 +693,14 @@ export class TsTagDefineCtrl {
             this.timeout(() => {
               $('#facility-name').focus();
             });
-            appEvents.emit('alert-error', ['같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.']);
+            appEvents.emit(AppEvents.alertError, ['같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.']);
             return false;
           }
         } else {
           this.timeout(() => {
             $('#facility-name').focus();
           });
-          appEvents.emit('alert-error', ['같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.']);
+          appEvents.emit(AppEvents.alertError, ['같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.']);
           return false;
         }
       }

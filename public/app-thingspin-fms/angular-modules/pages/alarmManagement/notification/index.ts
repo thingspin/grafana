@@ -1,9 +1,15 @@
+// 3rd party libs
+import _ from "lodash";
+
+// Grafana libs
+import { appEvents } from 'app/core/core';
+import { AppEvents } from '@grafana/data';
 import { coreModule, NavModelSrv } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
+
+// Thingspin libs
 import './notificationsEditCtrl';
 import "./index.scss";
-import { appEvents } from 'app/core/core';
-import _ from "lodash";
 
 export interface TableModel {
   // table header data
@@ -115,7 +121,7 @@ export class TsAlarmNotiManagementCtrl {
   }
 
   openAlartNotification(value: any) {
-      appEvents.emit('alert-error', [value]);
+      appEvents.emit(AppEvents.alertError, [value]);
   }
 }
 
