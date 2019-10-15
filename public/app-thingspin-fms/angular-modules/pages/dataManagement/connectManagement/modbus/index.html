@@ -1,229 +1,235 @@
-
 <div class="modbus-conn-editor">
-    <div>
-        <div class="modbus-title-top">Modbus 추가 양식</div>
-        <div class="modbus-right-button-area">
-            <button id="modbus-cancel-btn" className="btn" ng-click="ctrl.close()">
-                취소
-            </button>    
-            <button id="modbus-save-btn" className="btn" ng-click="ctrl.checkParams()">
-                저장
-            </button>
-        </div>
+  <div>
+    <div class="modbus-title-top">Modbus 추가 양식</div>
+    <div class="modbus-right-button-area">
+      <button id="modbus-cancel-btn" className="btn" ng-click="ctrl.close()">
+        취소
+      </button>
+      <json-upload on-upload="ctrl.onUpload(dash)" btn-text="Import"></json-upload>
+      <button id="mqtt-cancel-btn" className="btn" ng-click="ctrl.exportData()">
+        Export
+      </button>
+      <button id="modbus-save-btn" className="btn" ng-click="ctrl.checkParams()">
+        저장
+      </button>
+    </div>
+  </div>
+
+  <div class="section gf-form-group" id="main-view">
+    <div class="modbus-edit-box">
+      <div class="modbus-title-conn">
+        Modbus 접속 정보
+      </div>
+      <div class="modbus-conn-test-buttons">
+        <button class="ts-btn ts-btn-save {{ctrl.connectStatus}}" ng-click="ctrl.connTest()"><i
+            class="tsi {{ctrl.connectIcon}}"></i></button>
+      </div>
     </div>
 
-    <div class="section gf-form-group" id="main-view">
-            <div class = "modbus-edit-box">
-                <div class="modbus-title-conn">
-                Modbus 접속 정보
-                </div> 
-                <div class="modbus-conn-test-buttons">
-                    <button class="ts-btn ts-btn-save {{ctrl.connectStatus}}" ng-click="ctrl.connTest()"><i class="tsi {{ctrl.connectIcon}}"></i></button>
-                </div>
-            </div>
+    <div class="modbus-conn-section-line"></div>
 
-            <div class="modbus-conn-section-line"></div>
-
-            <div class="modbus-edit-box">
-                <div class="ts-input-group collect">
-                    <div class="ts-modbus-collect-label">수집기 이름</div>
-                    <div class="ts-input">
-                        <input id="collector_input" type="text" ng-model="ctrl.connName">
-                        <span ng-class="{separator: true, enable: ctrl.connName}"></span>
-                    </div>
-                </div>
-                <div class="ts-input-group url">
-                    <div class="ts-modbus-url-label">Host</div>
-                    <div class="ts-input">
-                        <input type="text" ng-model="ctrl.modbusHost" ng-click = "ctrl.sampleHost()" placeholder="127.0.0.1">
-                        <span ng-class="{separator: true, enable: ctrl.modbusHost}"></span>
-                    </div>
-                </div>
-                <div class="ts-input-group port">
-                    <div class="ts-modbus-port-label">Port</div>
-                    <div class="ts-input">
-                        <input type="text" ng-model="ctrl.modbusPort" ng-click = "ctrl.samplePort()" placeholder="502">
-                        <span ng-class="{separator: true, enable: ctrl.modbusPort}"></span>
-                    </div>
-                </div>
-            </div>
-        <!--추가정보 -->
-        <div class="modbus-title-conn-add">
-            Modbus 추가 정보
+    <div class="modbus-edit-box">
+      <div class="ts-input-group collect">
+        <div class="ts-modbus-collect-label">수집기 이름</div>
+        <div class="ts-input">
+          <input id="collector_input" type="text" ng-model="ctrl.connName">
+          <span ng-class="{separator: true, enable: ctrl.connName}"></span>
         </div>
-        <div class="modbus-conn-section-line"></div>
-        <div class="modbus-edit-box">
-            <div class="ts-input-group unit-id">
-                <span class="ts-modbus-collect-label-min">Unit-id</span>
-                <div class="ts-input">
-                    <input type="text" ng-click="ctrl.sampleUnitID()" ng-model="ctrl.modbusUnitID" placeholder="1">
-                    <span ng-class="{separator: true, enable: ctrl.connName}"></span>
-                </div>
-            </div>
-            <div class="ts-input-group time-out">
-                <span class="ts-modbus-collect-label">Time out(ms)</span>
-                <div class="ts-input">
-                    <input type="text" ng-click = "ctrl.sampleTimeOut()"ng-model="ctrl.modbusTimeOut" placeholder="1000">
-                    <span ng-class="{separator: true, enable: ctrl.connName}"></span>
-                </div>
-            </div>
-            <div class="ts-input-group recoonect">
-                <span class="ts-modbus-collect-label">Reconnect(ms)</span>
-                <div class="ts-input">
-                    <input type="text" ng-click = "ctrl.sampleReTimeOut()"ng-model="ctrl.modbusReTimeOut" placeholder="2000">
-                    <span ng-class="{separator: true, enable: ctrl.connName}"></span>
-                </div>
-            </div>
-            <div class="ts-input-group interval">
-                <span class="ts-modbus-collect-label-interval">Read Intervals(sec)</span>
-                <div class="ts-input">
-                    <input type="text" ng-click = "ctrl.sampleInterval()"ng-model="ctrl.modbusReadIntervals" placeholder="1">
-                    <span ng-class="{separator: true, enable: ctrl.connName}"></span>
-                </div>
-            </div>
+      </div>
+      <div class="ts-input-group url">
+        <div class="ts-modbus-url-label">Host</div>
+        <div class="ts-input">
+          <input type="text" ng-model="ctrl.modbusHost" ng-click="ctrl.sampleHost()" placeholder="127.0.0.1">
+          <span ng-class="{separator: true, enable: ctrl.modbusHost}"></span>
         </div>
-        <!-- address list-->    
-        <div class="modbus-edit-box">
-            <div class="modbus-title-addr-list">수집 Address list</div>
-            <button id="modbus-addr-add-btn" className="btn" ng-click="ctrl.onShowAddressEditView()" ng-show="ctrl.isAddressEditBtn">+ Address</button>
-        </div>    
-        <div class="modbus-conn-section-line"></div>
-        <div id="modbus-addressTable" class = "modbus-table-size"></div>
+      </div>
+      <div class="ts-input-group port">
+        <div class="ts-modbus-port-label">Port</div>
+        <div class="ts-input">
+          <input type="text" ng-model="ctrl.modbusPort" ng-click="ctrl.samplePort()" placeholder="502">
+          <span ng-class="{separator: true, enable: ctrl.modbusPort}"></span>
+        </div>
+      </div>
+    </div>
+    <!--추가정보 -->
+    <div class="modbus-title-conn-add">
+      Modbus 추가 정보
+    </div>
+    <div class="modbus-conn-section-line"></div>
+    <div class="modbus-edit-box">
+      <div class="ts-input-group unit-id">
+        <span class="ts-modbus-collect-label-min">Unit-id</span>
+        <div class="ts-input">
+          <input type="text" ng-click="ctrl.sampleUnitID()" ng-model="ctrl.modbusUnitID" placeholder="1">
+          <span ng-class="{separator: true, enable: ctrl.connName}"></span>
+        </div>
+      </div>
+      <div class="ts-input-group time-out">
+        <span class="ts-modbus-collect-label">Time out(ms)</span>
+        <div class="ts-input">
+          <input type="text" ng-click="ctrl.sampleTimeOut()" ng-model="ctrl.modbusTimeOut" placeholder="1000">
+          <span ng-class="{separator: true, enable: ctrl.connName}"></span>
+        </div>
+      </div>
+      <div class="ts-input-group recoonect">
+        <span class="ts-modbus-collect-label">Reconnect(ms)</span>
+        <div class="ts-input">
+          <input type="text" ng-click="ctrl.sampleReTimeOut()" ng-model="ctrl.modbusReTimeOut" placeholder="2000">
+          <span ng-class="{separator: true, enable: ctrl.connName}"></span>
+        </div>
+      </div>
+      <div class="ts-input-group interval">
+        <span class="ts-modbus-collect-label-interval">Read Intervals(sec)</span>
+        <div class="ts-input">
+          <input type="text" ng-click="ctrl.sampleInterval()" ng-model="ctrl.modbusReadIntervals" placeholder="1">
+          <span ng-class="{separator: true, enable: ctrl.connName}"></span>
+        </div>
+      </div>
+    </div>
+    <!-- address list-->
+    <div class="modbus-edit-box">
+      <div class="modbus-title-addr-list">수집 Address list</div>
+      <button id="modbus-addr-add-btn" className="btn" ng-click="ctrl.onShowAddressEditView()"
+        ng-show="ctrl.isAddressEditBtn">+ Address</button>
+    </div>
+    <div class="modbus-conn-section-line"></div>
+    <div id="modbus-addressTable" class="modbus-table-size"></div>
 
-        <!-- add view-->
-        <div class = "modbus-address-add-view" ng-show = "ctrl.isAddressEditView">
-            <div class = "modbus-title-address">Address List 추가</div>
-            <div class="modbus-address-btn-pos">
-                <button id="modbus-address-cancel-btn" className="btn" ng-click="ctrl.onShowAddressEditView()">
-                    취소
+    <!-- add view-->
+    <div class="modbus-address-add-view" ng-show="ctrl.isAddressEditView">
+      <div class="modbus-title-address">Address List 추가</div>
+      <div class="modbus-address-btn-pos">
+        <button id="modbus-address-cancel-btn" className="btn" ng-click="ctrl.onShowAddressEditView()">
+          취소
+        </button>
+        <button id="modbus-address-add-btn" className="btn" ng-click="ctrl.editAddressList()">
+          + Address List
+        </button>
+      </div>
+      <div class="modbus-address-add-section-line"></div>
+      <div class="modbus-address-add-edit">
+        <div class="ts-input-group input-name">
+          <span class="ts-modbus-collect-label-input-min">이름</span>
+          <div class="ts-input">
+            <input id="address-name" type="text" ng-model="ctrl.editName" placeholder="name">
+            <span ng-class="{separator: true, enable: ctrl.editName}"></span>
+          </div>
+        </div>
+        <div class="ts-input-group input-address">
+          <span class="ts-modbus-collect-label-input-normal">Address</span>
+          <div class="ts-input">
+            <input type="text" ng-model="ctrl.editAddress" placeholder="40001">
+            <span ng-class="{separator: true, enable: ctrl.editAddress}"></span>
+          </div>
+        </div>
+        <div class="ts-input-group input-fc">
+          <span class="ts-modbus-collect-label-input-min">FC</span>
+          <div class="ts-input">
+            <select ng-model="ctrl.fcSelected" ng-options="opts for opts in ctrl.modbusParams.functioncodes"></select>
+            <span ng-class="{separator: true, enable: ctrl.fcSelected}"></span>
+          </div>
+        </div>
+        <div class="ts-input-group input-quantity">
+          <span class="ts-modbus-collect-label-input-normal">Quantity</span>
+          <div class="ts-input">
+            <select ng-model="ctrl.quantitySelected" ng-options="opts for opts in ctrl.modbusParams.quantity"></select>
+            <span ng-class="{separator: true, enable: ctrl.quantitySelected}"></span>
+          </div>
+        </div>
+        <div class="ts-input-group input-type">
+          <span class="ts-modbus-collect-label-input-normal">Data Type</span>
+          <div class="ts-input">
+            <select ng-model="ctrl.typeSelected" ng-options="opts for opts in ctrl.modbusParams.datatypes"></select>
+            <span ng-class="{separator: true, enable: ctrl.typeSelected}"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- table -->
+    <div class="modbus-ts-connect-table-container">
+      <div class="modbus-connect-table-header">
+        <span>페이지당 행수 : </span>
+        <span class="modbus-connect-page-rows">
+          <select class="modbus-connect-table-select" ng-model="ctrl.tData.rowCount"
+            ng-options="n as n for n in ctrl.tData.selectOpts" ng-change="ctrl.tOnSelectChange()">
+          </select>
+        </span>
+      </div>
+
+      <div class="modbus-connect-table-body">
+        <table>
+          <thead>
+            <tr class="modbus-ts-table-header">
+              <th>No</th>
+              <th>이름</th>
+              <th>Address</th>
+              <th>Function Code</th>
+              <th>Quantity</th>
+              <th>Data Type</th>
+              <th>동작</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr class="modbus-ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
+              <td>{{ (ctrl.tData.currPage * ctrl.tData.rowCount) + $index + 1 }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.address }}</td>
+              <td>{{ item.functioncode }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.datatype }}</td>
+              <td>
+                <button class="btn" ng-click="ctrl.showEdit2($index)">
+                  <i class="tsi icon-ts-create"></i>
                 </button>
-                <button id="modbus-address-add-btn" className="btn" ng-click="ctrl.editAddressList()">
-                    + Address List
+                <button class="btn" ng-click="ctrl.removeEdit2($index)">
+                  <i class="tsi icon-ts-delete"></i>
                 </button>
-            </div>    
-            <div class="modbus-address-add-section-line"></div> 
-            <div class="modbus-address-add-edit">
-                <div class="ts-input-group input-name">
-                    <span class="ts-modbus-collect-label-input-min">이름</span>
-                    <div class="ts-input">
-                        <input id="address-name" type="text" ng-model="ctrl.editName" placeholder="name">
-                        <span ng-class="{separator: true, enable: ctrl.editName}"></span>
-                    </div>
-                </div>
-                <div class="ts-input-group input-address">
-                    <span class="ts-modbus-collect-label-input-normal">Address</span>
-                    <div class="ts-input">
-                        <input type="text" ng-model="ctrl.editAddress" placeholder="40001">
-                        <span ng-class="{separator: true, enable: ctrl.editAddress}"></span>
-                    </div>
-                </div>
-                <div class="ts-input-group input-fc">
-                    <span class="ts-modbus-collect-label-input-min">FC</span>
-                    <div class="ts-input">
-                        <select ng-model="ctrl.fcSelected" ng-options="opts for opts in ctrl.modbusParams.functioncodes"></select>
-                        <span ng-class="{separator: true, enable: ctrl.fcSelected}"></span>
-                    </div>
-                </div>
-                <div class="ts-input-group input-quantity">
-                    <span class="ts-modbus-collect-label-input-normal">Quantity</span>
-                    <div class="ts-input">
-                        <select ng-model="ctrl.quantitySelected" ng-options="opts for opts in ctrl.modbusParams.quantity"></select>
-                        <span ng-class="{separator: true, enable: ctrl.quantitySelected}"></span>
-                    </div>
-                </div>
-                <div class="ts-input-group input-type">
-                    <span class="ts-modbus-collect-label-input-normal">Data Type</span>
-                    <div class="ts-input">
-                        <select ng-model="ctrl.typeSelected" ng-options="opts for opts in ctrl.modbusParams.datatypes"></select>
-                        <span ng-class="{separator: true, enable: ctrl.typeSelected}"></span>
-                    </div>
-                </div>
-            </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modbus-connect-table-footer">
+        <div class="modbus-table-page-range">
+          <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} -
+            {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
         </div>
-
-        <!-- table -->
-        <div class="modbus-ts-connect-table-container">
-                <div class="modbus-connect-table-header">
-                        <span>페이지당 행수 : </span>
-                        <span class="modbus-connect-page-rows">
-                            <select class="modbus-connect-table-select" ng-model="ctrl.tData.rowCount" 
-                                ng-options="n as n for n in ctrl.tData.selectOpts"
-                                ng-change="ctrl.tOnSelectChange()"
-                            >
-                            </select>
-                        </span>
-                    </div>
-            
-                    <div class="modbus-connect-table-body">
-                      <table>
-                        <thead>
-                          <tr class="modbus-ts-table-header">
-                              <th>No</th>
-                              <th>이름</th>
-                              <th>Address</th>
-                              <th>Function Code</th>
-                              <th>Quantity</th>
-                              <th>Data Type</th>
-                              <th>동작</th>
-                          </tr>
-                        </thead>
-            
-                        <tbody>
-                          <tr class="modbus-ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
-                                <td>{{ (ctrl.tData.currPage * ctrl.tData.rowCount) + $index + 1 }}</td>
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.address }}</td>
-                                <td>{{ item.functioncode }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.datatype }}</td>
-                                <td>
-                                    <button class="btn" ng-click="ctrl.showEdit2($index)">
-                                        <i class="tsi icon-ts-create"></i>
-                                    </button>
-                                    <button class="btn" ng-click="ctrl.removeEdit2($index)">
-                                        <i class="tsi icon-ts-delete"></i>
-                                    </button>
-                                </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div class="modbus-connect-table-footer">
-                        <div class="modbus-table-page-range">
-                            <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} - {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
-                        </div>
-                        <div class="modbus-table-paging">
-                            <button ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
-                            <button ng-click="ctrl.tSetPaging(page)" 
-                              class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
-                              ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
-                                <span >{{ page + 1}}</span>
-                            </button>
-                            <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
-                        </div>
-                    </div>
+        <div class="modbus-table-paging">
+          <button ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
+          <button ng-click="ctrl.tSetPaging(page)" class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
+            ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
+            <span>{{ page + 1}}</span>
+          </button>
+          <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
         </div>
+      </div>
+    </div>
 
-        <!-- error message -->
-        <div class="modbus-edit-box" ng-if="ctrl.connectStatus === 'red'">            
-            <div class="modbus-title-error">
-                <i id="modbus-error-icon-bg" class="tsi icon-ts-warning"></i>
-                <span>다음과 같은 이유로 서버에 접속 할 수 없습니다.</span>
-            </div>
-            <div class="modbus-conn-section-line2"></div>
-            <div class="modbus-error-comment">
-                <p ng-repeat="msg in ctrl.errorComment">{{msg}}</p>
-            </div>
-        </div>
+    <!-- error message -->
+    <div class="modbus-edit-box" ng-if="ctrl.connectStatus === 'red'">
+      <div class="modbus-title-error">
+        <i id="modbus-error-icon-bg" class="tsi icon-ts-warning"></i>
+        <span>다음과 같은 이유로 서버에 접속 할 수 없습니다.</span>
+      </div>
+      <div class="modbus-conn-section-line2"></div>
+      <div class="modbus-error-comment">
+        <p ng-repeat="msg in ctrl.errorComment">{{msg}}</p>
+      </div>
+    </div>
 
-    </div> <!--main view end-->
-    <div class="button-row">
+  </div>
+  <a id="downloadAnchorElem" style="display:none;"></a>
+  <!--main view end-->
+  <div class="button-row">
     <!-- <button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">등록</button> -->
-        <!--<button type="button" class="btn btn-success" ng-click="ctrl.getAddressTableData()">test</button>-->
-        <!--<button type="button" class="btn btn-success" ng-click="ctrl.getTablelistData()">get-list</button>-->
-        <!--<button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">node-red1</button>-->
-        <!--<button type="button" class="btn btn-success" ng-click="ctrl.objectTest()">OBJECT_test</button>-->
-        <!--<button type="button" class="btn btn-success" ng-click="ctrl.checkParams()">input-check</button>-->
-        <!-- <button type="button" class="btn btn-success" ng-click="ctrl.goPrev()">이전</button> -->
-    </div>
-</div> <!--page end-->
+    <!--<button type="button" class="btn btn-success" ng-click="ctrl.getAddressTableData()">test</button>-->
+    <!--<button type="button" class="btn btn-success" ng-click="ctrl.getTablelistData()">get-list</button>-->
+    <!--<button type="button" class="btn btn-success" ng-click="ctrl.testCreate()">node-red1</button>-->
+    <!--<button type="button" class="btn btn-success" ng-click="ctrl.objectTest()">OBJECT_test</button>-->
+    <!--<button type="button" class="btn btn-success" ng-click="ctrl.checkParams()">input-check</button>-->
+    <!-- <button type="button" class="btn btn-success" ng-click="ctrl.goPrev()">이전</button> -->
+  </div>
+</div>
+<!--page end-->

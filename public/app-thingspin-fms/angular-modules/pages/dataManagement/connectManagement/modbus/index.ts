@@ -7,6 +7,7 @@ const uid = require("shortid");
 import { appEvents } from 'app/core/core';
 import { AppEvents } from '@grafana/data';
 import { BackendSrv } from 'app/core/services/backend_srv';
+import { dateTime } from '@grafana/data';
 
 // Thingspin libs
 import "./index.scss";
@@ -38,7 +39,9 @@ interface TagList {
   type: any;
 }
 
-const DEF_REQUEST_MESSAGE_CONNECT = "접속 테스트 시도";
+export function formatDate(date: Date): string {
+  return dateTime(date).format('YYYY-MM-DD_HH:mm:ss');
+}
 
 export class TsModbusConnectCtrl {
   static template = require("./index.html");
@@ -247,7 +250,6 @@ export class TsModbusConnectCtrl {
   //button action
   connTest() {
     this.isConnCheckMode = true;
-    this.requestHelp = DEF_REQUEST_MESSAGE_CONNECT;
     this.checkParams();
   }
 
@@ -552,10 +554,7 @@ export class TsModbusConnectCtrl {
 
     if (this.isEditMode) {
       this.backendSrv.put(`/thingspin/connect/${this.indexID}`, object).then(() => {
-        if (this.isConnCheckMode) {
-          this.redirect(this.indexID);
-          location.reload();
-        } else {
+        if (!this.isConnCheckMode) {
           this.close();
         }
       });
@@ -564,9 +563,7 @@ export class TsModbusConnectCtrl {
         //upadte connection id for nodered-parser measurement name
         this.modbusinfluxID = result;
 
-        if (this.isConnCheckMode) {
-          this.redirect(this.modbusinfluxID);
-        } else {
+        if (!this.isConnCheckMode) {
           object.params.influxID = this.modbusinfluxID;
           //update DB & nodered flow
           this.backendSrv.put(`/thingspin/connect/${this.modbusinfluxID}`, object).then(() => {
@@ -679,6 +676,78 @@ export class TsModbusConnectCtrl {
 
   $onInit(): void {
     this.timeout(() => { $('#collector-input').focus(); });
+  }
+
+  onUpload(dash: any) {
+    if (this.jsonDataParsingChecker(dash)) {
+      this.connName = dash.name;
+      this.modbusReadIntervals = dash.params.Intervals;
+      this.modbusHost = dash.params.Host;
+      this.modbusPort = dash.params.Port;
+      this.modbusUnitID = dash.params.UnitId;
+      this.modbusTimeOut = dash.params.TimeOut;
+      this.modbusReTimeOut = dash.params.ReTimeOut;
+      this.nodeModbusGetteritem = dash.params.AddressNode;
+      this.nodeInjectWiresList = dash.params.InjectWires;
+      this.tableList = dash.params.Tabledata;
+
+      if (dash.params.AddressListCount > 0) {
+        this.editIdx = dash.params.AddressListCount;
+        this.list = (Array.from(this.tableList));
+        this.setPageNodes();
+        this.$scope.$applyAsync();
+      }
+    }
+  }
+
+  jsonDataParsingChecker({name, params, intervals}: any) {
+      return !(!name || !params || !intervals);
+  }
+
+  exportData() {
+    if (!this.connName) {
+      appEvents.emit(AppEvents.alertWarning, ['수집기 이름을 설정 하세요.']);
+    } else if (!this.modbusHost) {
+      appEvents.emit(AppEvents.alertWarning, ['HOST IP를 입력 하세요.']);
+    } else if (!this.modbusPort) {
+      appEvents.emit(AppEvents.alertWarning, ['PORT 넘버를 입력 하세요.']);
+    } else if (!this.modbusUnitID) {
+      appEvents.emit(AppEvents.alertWarning, ['Unit ID를 입력 하세요.']);
+    } else if (!this.modbusTimeOut) {
+      appEvents.emit(AppEvents.alertWarning, ['TimeOut을 입력 하세요.']);
+    } else if (!this.modbusReTimeOut) {
+      appEvents.emit(AppEvents.alertWarning, ['Re-TimeOut을 입력 하세요.']);
+    } else if (!this.modbusReadIntervals) {
+      appEvents.emit(AppEvents.alertWarning, ['데이터 수집 주기를 설정 하세요.']);
+    } else {
+      const outputData = {
+        name: this.connName,
+        params: {
+          FlowId: this.FlowId,
+          FlowName: this.nodeRedFlowName,
+          AddressListCount: this.tableList.length,
+          Intervals: this.modbusReadIntervals,
+          Host: this.modbusHost,
+          Port: this.modbusPort,
+          UnitId: this.modbusUnitID,
+          TimeOut: this.modbusTimeOut,
+          ReTimeOut: this.modbusReTimeOut,
+          AddressNode: this.nodeModbusGetteritem,
+          InjectWires: this.nodeInjectWiresList,
+          Tabledata: this.tableList,
+          influxID: this.modbusinfluxID,
+          PtagList: this.PtagList,
+          RequestMsg: this.requestHelp,
+        },
+        intervals: this.modbusReadIntervals
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputData));
+      const $elem = $("#downloadAnchorElem");
+      $elem.attr("href", dataStr);
+      $elem.attr("download", this.connName + "_" + formatDate(new Date()) + ".json");
+      $elem.get(0).click();
+    }
   }
 }
 
