@@ -56,7 +56,7 @@ export const FmsAlarmBandComp: React.FC<any> = (_) => {
                 dt.startOf('day').valueOf(), // from
                 dt.endOf('day').valueOf(), // to
                 [AlarmType.ALERT, AlarmType.WARNING],
-                checked,
+                !checked,
             ));
 
             setList(genData(alarms));
@@ -93,7 +93,7 @@ export const FmsAlarmBandComp: React.FC<any> = (_) => {
 
     return <>
         <TsRightSideTabbarComponent {...tabProps} />
-        <TsRightSideHistoryComponent list={list} />
+        <TsRightSideHistoryComponent list={list} checked={checked} />
 
         <div className="tsr-bottom">
             <div className="tsrb-left">
