@@ -92,13 +92,13 @@
                     <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} - {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
                 </div>
                 <div class="table-paging">
-                    <button ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
-                    <button ng-click="ctrl.tSetPaging(page)" 
+                    <button class="ts-notification-page-button" ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
+                    <button class="ts-notification-number-button" ng-click="ctrl.tSetPaging(page)" 
                         class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
                         ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
                         <span >{{ page + 1}}</span>
                     </button>
-                    <button ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
+                    <button class="ts-notification-page-button" ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
                 </div>
             </div>
         </div> 
