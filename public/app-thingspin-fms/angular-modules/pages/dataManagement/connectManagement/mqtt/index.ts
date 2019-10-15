@@ -159,7 +159,6 @@ export class TsMqttConnectCtrl {
 
     try {
       await this.mqttClient.run(this.recvMqttMessage.bind(this));
-      // console.log("MQTT Connected");
     } catch (e) {
       console.error(e);
     }
@@ -573,7 +572,6 @@ export class TsMqttConnectCtrl {
 
   onJsonParseCreate(value: any, type: any) {
     const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type);
-    // console.log(index);
     return "const payload = \n{\n  \"" + value + "\" : parse" + this.defMqtt.values[index] + "(msg.payload)\n};\n\nmsg.payload = payload;\n";
   }
 
@@ -581,7 +579,6 @@ export class TsMqttConnectCtrl {
     const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type);
     const returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.indexID + "\",\n    \"fields\": {\n        \""
       + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n    }\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
-    // console.log(returnValue);
     return returnValue;
   }
 
@@ -601,7 +598,6 @@ export class TsMqttConnectCtrl {
       returnValue = "var influxPayload = {\n    \"" + value + "\":parse" + this.defMqtt.values[index] +
         "(msg.payload)\n\}\n\nmsg.payload = influxPayload;\n\n" + "msg.id = " + this.indexID + "\;\n\nreturn msg;\n";
     }
-    // console.log("String:" + returnValue);
     return returnValue;
   }
 

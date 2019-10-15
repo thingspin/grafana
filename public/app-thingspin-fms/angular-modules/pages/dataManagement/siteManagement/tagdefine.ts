@@ -360,13 +360,10 @@ export class TsTagDefineCtrl {
           setTimeout(() => {
             console.log("After dropped!");
             if (this.resultIdx !== -1) {
-              //onsole.log(event);
-              //console.log(event.dest.nodesScope.$nodeScope.node.children[this.resultIdx]);
               event.dest.nodesScope.$nodeScope.node.children[this.resultIdx] = this.result[0];
               event.dest.nodesScope.$nodeScope.$digest();
               console.log(event.dest.nodesScope.$nodeScope);
               console.log(event.dest.nodesScope.$nodeScope.node.children[this.resultIdx]);
-              //console.log(event);
             }
           }, 100);
         }
@@ -519,7 +516,6 @@ export class TsTagDefineCtrl {
   }
 
   $onInit(): void {
-    // console.log("SiteTable : " + this.data);
     // this.isShow = false;
     this.recalculatorSize();
   }
