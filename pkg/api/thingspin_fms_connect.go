@@ -105,7 +105,7 @@ func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 
 	q1 := m.AddTsConnectHistoryQuery {
 		ConnectId:   int(q.Result),
-		Event:       "Created",
+		Event:       "연결 생성",
 		Description: "최초 연결 추가",
 	}
 	if err := bus.Dispatch(&q1); err != nil {
@@ -167,8 +167,8 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		q1.Description = fmt.Sprintf("동작 상태 : %t ", info.Enable)
 	} else {
 		q1.ConnectId = connId
-		q1.Event = "Updated"
-		q1.Description = fmt.Sprintf("연결 내역 변경 / 동작 상태 : %t ", info.Enable)
+		q1.Event = "연결 내역"
+		q1.Description = fmt.Sprintf("변경")
 	}
 	
 	if prevData.ConnectId == q1.ConnectId {
@@ -278,8 +278,8 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	if info.Enable == true {
 		q1 := m.AddTsConnectHistoryQuery {
 			ConnectId:   connId,
-			Event:       "Updated",
-			Description: fmt.Sprintf("연결 동작 시작 / 발행 상태 : %t", info.Active),
+			Event:       "연결 동작",
+			Description: fmt.Sprintf("시작"),
 		}
 		if err := bus.Dispatch(&q1); err != nil {
 			return Error(500, "ThingSPIN Store Error", err)
@@ -288,8 +288,8 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	} else {
 		q1 := m.AddTsConnectHistoryQuery {
 			ConnectId:   connId,
-			Event:       "Updated",
-			Description: fmt.Sprintf("연결 동작 정지 / 발행 상태 : %t", info.Active),
+			Event:       "연결 동작",
+			Description: fmt.Sprintf("정지"),
 		}
 		if err := bus.Dispatch(&q1); err != nil {
 			return Error(500, "ThingSPIN Store Error", err)
@@ -343,8 +343,8 @@ func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
 	if info.Active {
 		q1 := m.AddTsConnectHistoryQuery {
 			ConnectId:   connId,
-			Event:       "Updated",
-			Description: fmt.Sprintf("연결 발행 시작 / 동작 상태 : %t ", info.Enable),
+			Event:       "연결 발행",
+			Description: fmt.Sprintf("시작"),
 		}
 		if err := bus.Dispatch(&q1); err != nil {
 			return Error(500, "ThingSPIN Store Error", err)
@@ -352,8 +352,8 @@ func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
 	} else {
 		q1 := m.AddTsConnectHistoryQuery {
 			ConnectId:   connId,
-			Event:       "Updated",
-			Description: fmt.Sprintf("연결 발행 정지 / 동작 상태 : %t ", info.Enable),
+			Event:       "연결 발행",
+			Description: fmt.Sprintf("정지"),
 		}
 		if err := bus.Dispatch(&q1); err != nil {
 			return Error(500, "ThingSPIN Store Error", err)
