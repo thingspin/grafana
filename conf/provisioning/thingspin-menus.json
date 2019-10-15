@@ -17,7 +17,7 @@
     {
       "text": "데이터 관리",
       "icon": "fa fa-sitemap",
-      "url": "/thingspin/manage/data",
+      "url": "/thingspin/manage/data/connect",
       "hideFromMenu": false,
       "placeBottom": false,
       "canDelete": false,
@@ -48,7 +48,7 @@
     {
       "text": "알람",
       "icon": "fa fa-bell",
-      "url": "/thingspin/manage/alarm",
+      "url": "/thingspin/alarm",
       "hideFromMenu": false,
       "placeBottom": false,
       "canDelete": false,
@@ -99,7 +99,7 @@
     {
       "text": "개발자도구",
       "icon": "gicon gicon-shield",
-      "url": "/thingspin/manage/system",
+      "url": "/datasources",
       "placeBottom": true,
       "canDelete": false,
       "children" : [
@@ -125,31 +125,13 @@
           "icon": "gicon gicon-alert-rules",
           "url": "/companions/node-red",
           "canDelete": false
-        },
-        {
-          "text": "데이터 조회",
-          "icon": "gicon gicon-alert-rules",
-          "url": "http://localhost:8888",
-          "canDelete": false
-        },
-        {
-          "text": "시스템 경고",
-          "icon": "gicon gicon-alert-rules",
-          "url": "/alerting",
-          "canDelete": false
-        },
-        {
-          "text": "로그",
-          "icon": "gicon gicon-shield",
-          "url": "",
-          "canDelete": true
         }
       ]
     },
     {
       "text": "시스템 관리",
       "icon": "gicon gicon-shield",
-      "url": "/thingspin/manage/system",
+      "url": "/thingspin/manage/system/user",
       "placeBottom": true,
       "canDelete": false,
       "children" : [
