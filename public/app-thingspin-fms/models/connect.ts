@@ -21,7 +21,7 @@ export interface GroupTsConnect {
 }
 
 export interface TsConnectHistory {
-    id: number;
+    created: string;
     event: string;
     description: string;
 }

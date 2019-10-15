@@ -304,9 +304,18 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
+    resultDateToShowString(value: string) {
+        const slice = value.replace('T', ' ');
+        return slice.substring(0,19);
+    }
+
     async showModalHistory(item: TsConnect) {
         try {
             this.historyList = await this.backendSrv.get(`thingspin/connect/${item.id}/history`);
+
+            this.historyList.forEach(element => {
+                element.created = this.resultDateToShowString(element.created);
+            });
 
             appEvents.emit(CoreEvents.showModal, {
                 src: 'public/app/partials/ts_connect_history.html',
