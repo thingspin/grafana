@@ -1,7 +1,11 @@
+// js 3rd party libs
 import angular from 'angular';
 import $ from 'jquery';
 // @ts-ignore
 import baron from 'baron';
+
+// Grafana libs
+import { PanelEvents } from '@grafana/ui';
 
 const module = angular.module('grafana.directives');
 
@@ -48,7 +52,7 @@ module.directive('tsAlarmPanel', ($rootScope, $document, $timeout: angular.ITime
       }
 
       // update scrollbar after mounting
-      ctrl.events.on('component-did-mount', () => {
+      ctrl.events.on(PanelEvents.componentDidMount, () => {
         if (ctrl.__proto__.constructor.scrollable) {
           const scrollRootClass = 'baron baron__root baron__clipper panel-content--scrollable';
           const scrollerClass = 'baron__scroller';
@@ -77,7 +81,7 @@ module.directive('tsAlarmPanel', ($rootScope, $document, $timeout: angular.ITime
         }
       });
 
-      ctrl.events.on('panel-size-changed', () => {
+      ctrl.events.on(PanelEvents.panelSizeChanged, () => {
         ctrl.calculatePanelHeight(panelContainer[0].offsetHeight);
         $timeout(() => {
           resizeScrollableContent();
@@ -85,7 +89,7 @@ module.directive('tsAlarmPanel', ($rootScope, $document, $timeout: angular.ITime
         });
       });
 
-      ctrl.events.on('view-mode-changed', () => {
+      ctrl.events.on(PanelEvents.viewModeChanged, () => {
         // first wait one pass for dashboard fullscreen view mode to take effect (classses being applied)
         setTimeout(() => {
           // then recalc style
@@ -98,7 +102,7 @@ module.directive('tsAlarmPanel', ($rootScope, $document, $timeout: angular.ITime
         }, 10);
       });
 
-      ctrl.events.on('render', () => {
+      ctrl.events.on(PanelEvents.render, () => {
         // set initial height
         if (!ctrl.height) {
           ctrl.calculatePanelHeight(panelContainer[0].offsetHeight);

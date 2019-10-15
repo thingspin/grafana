@@ -1,9 +1,11 @@
-import angular from 'angular';
+// js 3rd party libs
 import _ from 'lodash';
+import angular from 'angular';
 
+// Grafana libs
 import config from 'app/core/config';
+import { PanelEvents } from '@grafana/ui';
 import coreModule from 'app/core/core_module';
-
 import { importPanelPlugin } from 'app/features/plugins/plugin_loader';
 
 /** @ngInject */
@@ -127,7 +129,7 @@ function alarmPluginDirectiveLoader( $compile: any, $q: angular.IQService, $http
         elem.append(child);
         setTimeout(() => {
           scope.$applyAsync(() => {
-            scope.$broadcast('component-did-mount');
+            scope.$broadcast(PanelEvents.componentDidMount);
           });
         });
       });

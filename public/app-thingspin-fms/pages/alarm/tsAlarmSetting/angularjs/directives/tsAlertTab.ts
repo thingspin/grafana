@@ -16,6 +16,7 @@ import { ThresholdMapper } from 'app/features/alerting/state/ThresholdMapper';
 import { tsEvalFunctions, tsReducerTypes, tsEvalOperators, getDefaltCondition } from '../../utils';
 // Views
 import alertDef from 'app/features/alerting/state/alertDef';
+import { TsCoreEvents } from 'app-thingspin-fms/types';
 
 export interface Tag {
   value: any;
@@ -118,7 +119,7 @@ export class TsAlertTabCtrl extends AlertTabCtrl implements angular.IController 
   // Override
   $onInit() {
     if (this.panelCtrl) {
-      this.panelCtrl.events.on('ts-update-alarm', this.tsUpdateAlarm);
+      this.panelCtrl.events.on(TsCoreEvents.tsUpdateAlarm, this.tsUpdateAlarm);
     }
 
     return super.$onInit();

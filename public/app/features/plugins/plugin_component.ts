@@ -1,13 +1,17 @@
-import angular, { IQService } from 'angular';
+// js 3rd party libs
 import _ from 'lodash';
+import angular, { IQService } from 'angular';
 
+// Grafana libs
 import config from 'app/core/config';
-import coreModule from 'app/core/core_module';
-
-import { DataSourceApi } from '@grafana/ui';
-import { importPanelPlugin, importDataSourcePlugin, importAppPlugin } from './plugin_loader';
 import DatasourceSrv from './datasource_srv';
+import coreModule from 'app/core/core_module';
+import { DataSourceApi, PanelEvents } from '@grafana/ui';
 import { GrafanaRootScope } from 'app/routes/GrafanaCtrl';
+
+// Thingspin libs
+import { importPanelPlugin, importDataSourcePlugin, importAppPlugin } from './plugin_loader';
+
 
 /** @ngInject */
 function pluginDirectiveLoader(
@@ -214,7 +218,7 @@ function pluginDirectiveLoader(
         elem.append(child);
         setTimeout(() => {
           scope.$applyAsync(() => {
-            scope.$broadcast('component-did-mount');
+            scope.$broadcast(PanelEvents.componentDidMount);
           });
         });
       });

@@ -75,11 +75,7 @@ export class TsTagDefineCtrl {
     this.window.bind('resize', () => {
       const total = $('#ts-tag-define-title-left-content').width();
       const calcResult = (total / 2) - 44.719;
-      if (calcResult < 248) {
-        $('#title-info-right-view').css('display', 'none');
-      } else {
-        $('#title-info-right-view').css('display', 'inline-flex');
-      }
+      $('#title-info-right-view').css('display', (calcResult < 248) ? 'none' : 'inline-flex');
       $('#ts-define-tree-title-left').css('padding-left', (total / 2) - 44.719);
     });
 
@@ -105,7 +101,6 @@ export class TsTagDefineCtrl {
       console.log("connect data");
       console.log(res);
       this.source = res.Result;
-      //this.data = res.Result;
     }).catch((err: any) => {
       console.log("After ordering, error!");
       console.log(err);
@@ -211,12 +206,10 @@ export class TsTagDefineCtrl {
             // src Parent
             const from = event.source;
             const to = event.dest;
-            //const fromNode = event.source.nodeScope.$modelValue;
             const fromNodeParent = event.source.nodeScope.$parentNodeScope.$modelValue;
             // dst Parent
             const toNode = event.dest.nodesScope.$nodeScope;
             const toNodeParent = toNode.$modelValue;
-            //const idx = event.dest.index;
             if (fromNodeParent.facility_id === toNodeParent.facility_id) {
               if (from.index < to.index) {
                 console.log("Same Level : Up -> down");
@@ -319,8 +312,6 @@ export class TsTagDefineCtrl {
           for (let i = idx; i < toNode.node.children.length; i++) {
             curIdx = curIdx + 1;
             toNode.node.children[i].facility_tree_order = curIdx;
-            //toNode.node.children[i].facility_id = toNode.node.facility_id;
-            //toNode.node.children[i].site_id = this.data;
             postdata.push(toNode.node.children[i]);
           }
           console.log("Post before");
@@ -385,11 +376,7 @@ export class TsTagDefineCtrl {
         this.inputForm.isEditing = false;
       }
       this.inputForm = null;
-      if (node.tag_id === 0) {
-        node.facility_name = this.editDataBackup;
-      } else {
-        node.tag_name = this.editDataBackup;
-      }
+      node[(node.tag_id === 0) ? 'facility_name' : 'tag_name'] = this.editDataBackup;
     }
   }
 
@@ -408,14 +395,12 @@ export class TsTagDefineCtrl {
               "Lon": parseFloat(node.facility_lon),
               "Imgpath": node.facility_imgpath
             }).then((result: any) => {
-              // this.onLoadData(result);
               console.log("Edit the faciltiy");
               console.log(node);
               console.log(result);
               appEvents.emit(AppEvents.alertSuccess, ['이름이 변경되었습니다.']);
               node.isEditing = false;
               this.editDataBackup = "";
-              //this.dataList = result;
               this.getDataList();
             }).catch((err: any) => {
               if (err.status === 500) {
@@ -429,7 +414,6 @@ export class TsTagDefineCtrl {
             {
               "Name": node.tag_name,
             }).then((result: any) => {
-              // this.onLoadData(result);
               console.log("Edit the tag");
               console.log(node);
               console.log(result);
@@ -447,21 +431,7 @@ export class TsTagDefineCtrl {
       }
     }
   }
-  /*
-  editElement(scope,node) {
-    //const parent = scope.$parent.$parent.$parentNodeScope.node;
-    this.facility = {
-      name: node.facility_name,
-      desc: node.facility_desc,
-      lat: node.facility_lat,
-      lon: node.lon,
-      imgpath: node.facility_path,
-      tagName: node.tag_name
-    };
-    this.onShowFacilityEditView(true);
-    // 설비 인지 태그 인지 체크
-  }
-  */
+
   removeElement(scope: any, node: any) {
     console.log("================= Remove!");
     console.log(scope);
@@ -483,8 +453,8 @@ export class TsTagDefineCtrl {
     }
     deletes.push(node);
     const postData = {
-      "Result": orders,
-      "Delete": deletes,
+      Result: orders,
+      Delete: deletes,
     };
     $.ajax({
       type: 'DELETE',
@@ -493,7 +463,7 @@ export class TsTagDefineCtrl {
       contentType: "application/json; charset=UTF-8",
       data: JSON.stringify(postData),
       async: false,
-      success: (data) => {
+      success: () => {
         scope.remove();
         console.log(this.dataList);
         appEvents.emit(AppEvents.alertSuccess, ['삭제되었습니다.']);
@@ -510,7 +480,6 @@ export class TsTagDefineCtrl {
     try {
       const result = await this.backendSrv.get(`/thingspin/sites/${id}/facilities/tree`);
       if (result !== null || result !== undefined) {
-        this.dataList = [];
         this.dataList = result;
       }
       this.$scope.$applyAsync();
@@ -520,7 +489,6 @@ export class TsTagDefineCtrl {
   }
 
   $onInit(): void {
-    // this.isShow = false;
     this.recalculatorSize();
   }
 
@@ -546,28 +514,16 @@ export class TsTagDefineCtrl {
 
   mouseHoverOut(value: any) {
     console.log(value);
-    // value.isEditing = false;
-    // if (value.tag_id === 0) {
-    //   value.facility_name = this.editDataBackup;
-    // } else {
-    //   value.tag_name = this.editDataBackup;
-    // }
   }
 
   onEditInit(value: any, id: any) {
     this.timeout(() => {
       $('#' + id).focus();
     });
-    if (this.inputForm !== null) {
-      this.inputForm.isEditing = false;
-    }
+
     this.inputForm = value;
     value.isEditing = true;
-    if (value.tag_id === 0) {
-      this.editDataBackup = value.facility_name;
-    } else {
-      this.editDataBackup = value.tag_name;
-    }
+    this.editDataBackup = (value.tag_id === 0) ? value.facility_name : value.tag_name;
   }
 
   onShowEditView(value: any) {
@@ -599,11 +555,7 @@ export class TsTagDefineCtrl {
   recalculatorSize() {
     const total = $('#ts-tag-define-title-left-content').width();
     const calcResult = (total / 2) - 44.719;
-    if (calcResult < 248) {
-      $('#title-info-right-view').css('display', 'none');
-    } else {
-      $('#title-info-right-view').css('display', 'inline-flex');
-    }
+    $('#title-info-right-view').css('display', (calcResult < 248) ? 'none' : 'inline-flex');
     $('#ts-define-tree-title-left').css('padding-left', (total / 2) - 44.719);
   }
 
@@ -622,10 +574,8 @@ export class TsTagDefineCtrl {
             "Lon": parseFloat(this.facility.lon),
             "Imgpath": this.facility.imgpath
           }).then((result: any) => {
-            // this.onLoadData(result);
             console.log(result);
             appEvents.emit(AppEvents.alertSuccess, ['수정되었습니다.']);
-            //this.dataList = result;
           }).catch((err: any) => {
             if (err.status === 500) {
               appEvents.emit(AppEvents.alertError, [err.statusText]);
@@ -645,7 +595,6 @@ export class TsTagDefineCtrl {
             "Lon": parseFloat(this.facility.lon),
             "Imgpath": this.facility.imgpath
           }).then((result: any) => {
-            // this.onLoadData(result);
             console.log(result);
             this.dataList = result;
             appEvents.emit(AppEvents.alertSuccess, ['추가되었습니다.']);
@@ -659,13 +608,8 @@ export class TsTagDefineCtrl {
   }
 
   getDataList() {
-    this.backendSrv.get(`/thingspin/sites/${this.data}/facilities/tree`, {}).then((result: any) => {
-      if (result !== null || result !== undefined) {
-        this.dataList = [];
-        this.dataList = result;
-      } else {
-        this.dataList = [];
-      }
+    this.backendSrv.get(`/thingspin/sites/${this.data}/facilities/tree`, {}).then((result: any = []) => {
+      this.dataList = result;
     }).catch((err: any) => {
       if (err.status === 500) {
         appEvents.emit(AppEvents.alertError, [err.statusText]);
@@ -687,8 +631,6 @@ export class TsTagDefineCtrl {
         if (this.isEdit) {
           if (this.dataList[count].label.toLowerCase() === this.editDataBackup.toLowerCase()) {
             continue;
-            // } else if (this.dataList[count].facility_name.toLowerCase() === cmpString.toLowerCase()) {
-            //   return false;
           } else {
             this.timeout(() => {
               $('#facility-name').focus();
