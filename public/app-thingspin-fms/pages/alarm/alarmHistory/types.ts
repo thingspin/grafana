@@ -18,7 +18,7 @@ export const defaultDateFormat = ['YYYY년', 'MM월', 'DD일', 'a', 'hh시', 'mm
 
 
 export enum AlarmAPI {
-  Annotations = '/api/annotations'
+  Annotations = '/thingspin/annotations'
 }
 
 export interface AnnotationQuery {
@@ -61,6 +61,9 @@ export interface AlarmItem {
   email: string;
   avvatarUrl: string;
   data: any;
+
+  uid: string;
+  slug: string;
 
   // UI Data
   model?: {

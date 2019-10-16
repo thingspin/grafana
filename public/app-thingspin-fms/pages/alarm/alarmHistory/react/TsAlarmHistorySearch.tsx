@@ -1,5 +1,5 @@
 // js 3rd party libs
-import React from 'react';
+import React, { useState, createRef } from 'react';
 
 // Grafana libs
 import { TimeRange, TimeOption, RawTimeRange } from '@grafana/data';
@@ -25,9 +25,9 @@ const bcls = `${baseClass}-search`;
 
 const TsAlarmHistorySearch: React.FC<AlarmSearchProps> = ({ onChange, onTimeChange }) => {
   // State & Ref
-  const [timeRange, setTimeRange] = React.useState(genTimeRange());
-  const selectRef = React.createRef<HTMLSelectElement>();
-  const inputRef = React.createRef<HTMLInputElement>();
+  const [timeRange, setTimeRange] = useState(genTimeRange());
+  const selectRef = createRef<HTMLSelectElement>();
+  const inputRef = createRef<HTMLInputElement>();
 
   // Component methods
   const setActiveTimeOption = (timeOptions: TimeOption[], { from, to }: RawTimeRange): TimeOption[] => timeOptions.map(option => ({
