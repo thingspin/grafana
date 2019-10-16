@@ -8,6 +8,7 @@ import { SettingsCtrl } from 'app/features/dashboard/components/DashboardSetting
 
 // ThingSPIN Modules
 import { TsDashboardSrv } from 'app-thingspin-fms/angular-modules/core/services/tsDashboardSrv';
+import { GrafanaRootScope } from 'app/routes/GrafanaCtrl';
 
 // customize Grafana SettingsCtrl angular controller
 export class TsSettingsCtrl extends SettingsCtrl {
@@ -19,7 +20,7 @@ export class TsSettingsCtrl extends SettingsCtrl {
     $scope: angular.IScope,
     $route: angular.route.IRouteService,
     $location: angular.ILocationService,
-    $rootScope: angular.IRootScopeService,
+    $rootScope: GrafanaRootScope,
     backendSrv: BackendSrv,
     dashboardSrv: TsDashboardSrv) {
     super($scope, $route, $location, $rootScope, backendSrv, dashboardSrv);
