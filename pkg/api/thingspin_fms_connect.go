@@ -424,3 +424,14 @@ func getTsConnectHistory(c *gfm.ReqContext) Response {
 
 	return JSON(200, q1.Result)
 }
+
+
+func getTsConnectTotalHistory(c *gfm.ReqContext) Response {
+	q1 := m.GetTotalTsConnectHistoryQuery {}
+
+	if err := bus.Dispatch(&q1); err != nil {
+		return Error(500, "ThingSPIN Store Error", err)
+	}
+
+	return JSON(200, q1.Result)
+}

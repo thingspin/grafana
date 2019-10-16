@@ -94,6 +94,11 @@
           ng-options="n as n for n in ctrl.tData.selectOpts" ng-change="ctrl.tOnSelectChange()">
         </select>
       </span>
+      <div class="total-history-area">
+        <button id="total-history-btn" className="btn" ng-click="ctrl.totalHistoryShow()">
+          전체 내역 조회
+        </button>
+      </div>
     </div>
 
     <div class="connect-table-body">
@@ -267,8 +272,7 @@
                       ng-click="ctrl.showEdit(item.type, item.id)">
                       <i class="tsi icon-ts-create"></i>
                     </button>
-                    <button class="setting-icon-btn setting-margin-middle-icon"
-                      ng-click="ctrl.removeConnect(item.id)">
+                    <button class="setting-icon-btn setting-margin-middle-icon" ng-click="ctrl.removeConnect(item.id)">
                       <i class="tsi icon-ts-delete"></i>
                     </button>
                     <!-- <button class="setting-icon-btn setting-margin-middle-icon" ng-click=""> -->

@@ -12,9 +12,21 @@ type TsConnectHistoryField struct {
 	Created         time.Time        `json:"created"`
 }
 
+type TsConnectTotalHistoryField struct {
+	Name            string           `json:"name"`
+	Type            string           `json:"type"`
+	Event           string           `json:"event"`
+	Description     string           `json:"description"`
+	Created         time.Time        `json:"created"`
+}
+
 type GetAllTsConnectHistoryQuery struct {
 	ConnectId       int
 	Result []TsConnectHistoryField
+}
+
+type GetTotalTsConnectHistoryQuery struct {
+	Result []TsConnectTotalHistoryField
 }
 
 type AddTsConnectHistoryQuery struct {

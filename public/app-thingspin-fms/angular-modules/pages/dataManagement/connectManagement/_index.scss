@@ -159,6 +159,22 @@ ts-connect-management {
 
   .connect-table-header {
     opacity: 0.6;
+
+    .total-history-area {
+      padding-right: 8px;
+      padding-top: 9px;
+      float:right;
+    }
+  }
+
+  #total-history-btn {
+    opacity: 1;
+    width: 90px;
+    height: 26px;
+    border-radius: 4px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    color: #000000;
   }
 
   .connect-page-rows {

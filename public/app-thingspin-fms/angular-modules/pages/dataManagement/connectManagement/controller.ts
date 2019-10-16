@@ -164,6 +164,11 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.$scope.$watch('historyList', () => {
             this.setHistoryPageNodes();
         });
+
+        this.$scope.$watch('tHistoryData', () => {
+            console.log("historyData");
+        });
+
     }
     showEdit(type: string, id: number): void {
         this.$location.path(`${this.pageBathPath}/${type}/${id}`);
@@ -306,7 +311,54 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     resultDateToShowString(value: string) {
         const slice = value.replace('T', ' ');
-        return slice.substring(0,19);
+        return slice.substring(0, 19);
+    }
+
+    async totalHistoryShow() {
+        try {
+            this.historyList = await this.backendSrv.get(`thingspin/connect/history`);
+
+            this.historyList.forEach(element => {
+                element.created = this.resultDateToShowString(element.created);
+            });
+            appEvents.emit(CoreEvents.showModal, {
+                src: 'public/app/partials/ts_connect_total_history.html',
+                backdrop: 'static',
+                model: {
+                    title: '전체 연결 이력 관리',
+                    icon: 'fa fa-history',
+                    tData: this.tHistoryData,
+                    list: this.historyList,
+
+                    tOnHistorySelectChange: () => {
+                        this.tOnHistorySelectChange();
+                    },
+
+                    tHistoryPrevPaging: () => {
+                        this.tHistoryPrevPaging();
+                    },
+
+                    tGetHistoryPagingNumberArray: () => {
+                        return this.tGetHistoryPagingNumberArray();
+                    },
+
+                    tHistoryNextPaging: () => {
+                        this.tHistoryNextPaging();
+                    },
+
+                    tSetHistoryPaging: (page: number) => {
+                        this.tSetHistoryPaging(page);
+                    },
+
+                    publishMqttClipeboard: () => {
+                        this.publishMqttClipeboard();
+                    },
+                }
+            });
+            this.tOnHistorySelectChange();
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     async showModalHistory(item: TsConnect) {

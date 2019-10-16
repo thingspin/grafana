@@ -1,0 +1,67 @@
+<div class="modal-body" ng-cloak>
+  <div class="modal-header">
+    <h2 class="modal-header-title">
+      <i class="fa {{model.icon}}"></i>
+      <span class="p-l-1">
+        {{model.title}}
+      </span>
+    </h2>
+
+    <a class="modal-header-close" ng-click="dismiss();">
+      <i class="fa fa-remove"></i>
+    </a>
+  </div>
+
+  <div class="modal-content text-center">
+    <div class="ts-mqtt-table-container history-table-size" style="margin-top: 0px;">
+      <div class="connect-history-table-header" style="float:right;">
+        <span>페이지당 행수 : </span>
+        <span class="connect-page-rows">
+          <select class="connect-table-select" ng-model="model.tData.rowCount"
+            ng-options="n as n for n in model.tData.selectOpts" ng-change="model.tOnHistorySelectChange()">
+          </select>
+        </span>
+      </div>
+
+      <div class="connect-history-table-body">
+        <table>
+          <thead>
+            <tr class="ts-table-header">
+              <th class="ts-history-table-date">Date</th>
+              <th class="ts-history-table-event">Type</th>
+              <th class="ts-history-table-event">Name</th>
+              <th class="ts-history-table-event">Event</th>
+              <th class="ts-history-table-desc">Description</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr class="ts-table-row" ng-repeat="item in model.tData.pageNode">
+              <td>{{ item.created }}</td>
+              <td>{{ item.type }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.event }}</td>
+              <td>{{ item.description }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="connect-table-footer">
+        <div class="table-page-range">
+          <span>페이지 범위 : {{ model.tData.currPage * model.tData.rowCount + 1 }} -
+            {{ (model.tData.currPage * model.tData.rowCount) + model.tData.rowCount }} / 전체 :
+            {{model.list.length}}</span>
+        </div>
+        <div class="table-paging">
+          <button ng-click="model.tHistoryPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
+          <button ng-click="model.tSetHistoryPaging(page)" class="{{page === model.tData.currPage ? 'blue' : ''}}"
+            ng-repeat="page in model.tGetHistoryPagingNumberArray() track by $index">
+            <span>{{ page + 1}}</span>
+          </button>
+          <button ng-click="model.tHistoryNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

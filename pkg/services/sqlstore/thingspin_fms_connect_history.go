@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/grafana/grafana/pkg/bus"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
@@ -11,6 +12,7 @@ func init() {
 	bus.AddHandler("thingspin-sql", GetAllTsConnectHistory)
 	bus.AddHandler("thingspin-sql", AddTsConnectHistory)
 	bus.AddHandler("thingspin-sql", DelelteTsConnectHistory)
+	bus.AddHandler("thingspin-sql", GetTotalTsConnectHistory)
 }
 
 type InsertTsConnectHistory struct {
@@ -18,6 +20,25 @@ type InsertTsConnectHistory struct {
 	ConnectId    int    `xorm:"'connect_id'"`
 	Event        string `xorm:"'event'"`
 	Description  string `xorm:"'description'"`
+}
+
+func GetTotalTsConnectHistory(cmd *m.GetTotalTsConnectHistoryQuery) error {
+	var res []m.TsConnectTotalHistoryField
+
+	selectStr := []string{
+		m.TsFmsConnectTbl + ".name",
+		m.TsFmsConnectTbl + ".type",
+		m.TsFmsConnectHistoryTbl + ".created",
+		m.TsFmsConnectHistoryTbl + ".event",
+		m.TsFmsConnectHistoryTbl + ".description",
+	}
+	err := x.Table(m.TsFmsConnectHistoryTbl).
+		Select(strings.Join(selectStr, ", ")).
+		Join("LEFT", m.TsFmsConnectTbl, m.TsFmsConnectTbl+".id = "+m.TsFmsConnectHistoryTbl+".connect_id").
+		Desc(m.TsFmsConnectHistoryTbl + ".created").Find(&res)
+	cmd.Result = res
+
+	return err
 }
 
 func GetAllTsConnectHistory(cmd *m.GetAllTsConnectHistoryQuery) error {
