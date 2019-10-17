@@ -5,6 +5,7 @@ import Highlighter from 'react-highlight-words';
 
 // grafana libs
 import { dateTime } from '@grafana/data';
+import { getBackendSrv } from '@grafana/runtime';
 
 // thingspin libs
 import { AlarmItem, itemClass as icls, defaultDateFormat } from '../types';
@@ -40,61 +41,77 @@ export const TsAlarmHistoryItem: React.FC<TsAlarmHistoryItemProps> = ({
     confirm,
   },
   search,
-}) => (<li className={icls}>
-  <div className={`${icls}__info`}>
-    <span className={`${icls}__icon ${!confirm && stateClass}`}>
-      <i className={iconClass} />
-    </span>
-
-    {genBodyView(
-      <span>
-        <Highlighter
-          highlightClassName="highlight-search-match"
-          textToHighlight={alertName}
-          searchWords={[search]}
-        />
-      </span>,
-      <>
-        <span className={`${icls}__status ${!confirm && stateClass}`}>{text}</span>
-        <span className={`${icls}__time`}>
-          <span className={`${icls}__time_for`}>For</span>
-          {timeStr}
-        </span>
-      </>
-    )}
-  </div>
-
-  <div className={`${icls}__info`}>
-    {
-      JSON.stringify(data) !== JSON.stringify({}) && data.evalMatches
-        ? data.evalMatches.map(({ metric, value }: any, idx: number) => (
-          <div className={`${icls}__metric`} key={idx}>
-            {genBodyView(
-              <span>{metric}</span>,
-              value)}
-          </div>
-        ))
-        : <div className={`${icls}__metric`}>{genBodyView('빈 값')}</div>
+}) => {
+  let link: HTMLAnchorElement;
+  const onClickDetail = async () => {
+    try {
+      await getBackendSrv().put('/thingspin/annotations/confirm', { time: time.valueOf() });
+      link.click(); // force event emit
+    } catch (e) {
+      console.error(e);
     }
+  };
 
-  </div>
+  return <li className={`${icls} ${confirm && 'ts-alarm-confirm'}`}>
+    <div className={`${icls}__info`}>
+      <span className={`${icls}__icon ${!confirm && stateClass}`}>
+        <i className={iconClass} />
+      </span>
 
-  <div className={`${icls}__info`}>
-    <div className={`${icls}__etc`}>
       {genBodyView(
-        <span>발생 시간</span>,
-        dateTime(time).format(defaultDateFormat.join(' '))
+        <span>
+          <Highlighter
+            highlightClassName="highlight-search-match"
+            textToHighlight={alertName}
+            searchWords={[search]}
+          />
+        </span>,
+        <>
+          <span className={`${icls}__status ${!confirm && stateClass}`}>{text}</span>
+          <span className={`${icls}__time`}>
+            <span className={`${icls}__time_for`}>For</span>
+            {timeStr}
+          </span>
+        </>
       )}
     </div>
 
-    <div className={`${icls}__etc`}>
-      {genBodyView(
-        <a className={`${icls}__link`} href={genRuleUrl(uid, slug, time)} >
-          상세보기
-          </a>
-      )}
+    <div className={`${icls}__info`}>
+      {
+        JSON.stringify(data) !== JSON.stringify({}) && data.evalMatches
+          ? data.evalMatches.map(({ metric, value }: any, idx: number) => (
+            <div className={`${icls}__metric`} key={idx}>
+              {genBodyView(
+                <span>{metric}</span>,
+                value)}
+            </div>
+          ))
+          : <div className={`${icls}__metric`}>{genBodyView('빈 값')}</div>
+      }
+
     </div>
-  </div>
-</li>);
+
+    <div className={`${icls}__info`}>
+      <div className={`${icls}__etc`}>
+        {genBodyView(
+          <span>발생 시간</span>,
+          dateTime(time).format(defaultDateFormat.join(' '))
+        )}
+      </div>
+
+      <div className={`${icls}__etc`}>
+        {genBodyView(<>
+          <button className={`${icls}__link-btn`} onClick={onClickDetail}>
+            상세보기
+          </button>
+          <a className={`${icls}__link-a`}
+            href={genRuleUrl(uid, slug, time)}
+            ref={(elem) => { link = elem; }}
+          />
+        </>)}
+      </div>
+    </div>
+  </li>;
+};
 
 export default TsAlarmHistoryItem;
