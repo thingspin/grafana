@@ -46,9 +46,10 @@ export const TsAlarmHistoryItem: React.FC<TsAlarmHistoryItemProps> = ({
   const onClickDetail = async () => {
     try {
       await getBackendSrv().put('/thingspin/annotations/confirm', { time: time.valueOf() });
-      link.click(); // force event emit
     } catch (e) {
       console.error(e);
+    } finally {
+      link.click(); // force event emit
     }
   };
 
