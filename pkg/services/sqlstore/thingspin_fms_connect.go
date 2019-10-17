@@ -19,6 +19,7 @@ func init() {
 	bus.AddHandler("thingspin-sql", GetAllTsConnectType)
 	bus.AddHandler("thingspin-sql", UpdatePublishTsConnect)
 	bus.AddHandler("thingspin-sql", UpdateConnect)
+	bus.AddHandler("thingspin-sql", CountActivation)
 }
 
 type InsertTsConnect struct {
@@ -146,5 +147,15 @@ func UpdatePublishTsConnect(cmd *m.UpdateToggleMqttPublishTsConnectQuery) (err e
 	_, err = x.Table(m.TsFmsConnectTbl).Where("id = ?", cmd.Id).AllCols().Omit("result").Update(cmd)
 	cmd.Result = cmd.Id
 
-	return
+	return err
+}
+
+func CountActivation(cmd *m.CountActivationQuery) error {
+	var res []m.TsConnectField
+	err := x.Table(m.TsFmsConnectTbl).
+	Where("enable = 1").Find(&res)
+
+	cmd.Result = res
+
+	return err
 }
