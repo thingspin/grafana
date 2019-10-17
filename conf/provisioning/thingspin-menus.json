@@ -73,6 +73,13 @@
           "url": "/thingspin/alarm/notification",
           "canDelete": false,
           "children": []
+        },
+        {
+          "text": "알람 이력",
+          "icon": "fa fa-bell",
+          "url": "/thingspin/alarm/history",
+          "canDelete": false,
+          "children": []
         }
       ]
     },    
