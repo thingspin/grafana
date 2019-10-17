@@ -1,4 +1,3 @@
-
 // Grafana libs
 // Services
 import { getBackendSrv } from '@grafana/runtime';
@@ -27,19 +26,21 @@ export interface AnnotationQuery {
 }
 
 export enum AlarmType {
+  EMPTY = '',
   ALERT = 'alerting',
   WARNING = 'pending',
   OK = 'ok',
   NO_DATA = 'no_data',
+  PAUSE = 'pause',
 }
 
 export const alarmOptions: any[] = [
-  { value: '', label: '모두'},
-  { value: 'ok', label: '정상'},
-  { value: 'alerting', label: '위험'},
-  { value: 'pending', label: '경고'},
-  { value: 'pause', label: '정지'},
-  { value: 'no_data', label: '빈 값'},
+  { value: AlarmType.EMPTY, label: '모두'},
+  { value: AlarmType.OK, label: '정상'},
+  { value: AlarmType.ALERT, label: '위험'},
+  { value: AlarmType.WARNING, label: '경고'},
+  { value: AlarmType.PAUSE, label: '정지'},
+  { value: AlarmType.NO_DATA, label: '빈 값'},
 ];
 
 export interface AlarmItem {
@@ -64,6 +65,7 @@ export interface AlarmItem {
 
   uid: string;
   slug: string;
+  confirm: boolean;
 
   // UI Data
   model?: {
@@ -145,6 +147,11 @@ export function genAlarmItem(item: AlarmItem): AlarmItem {
   };
 }
 
-export const fetchHistory = async (params?: AnnotationQuery, limit = 100000, type = AlarmType.ALERT, ): Promise<AlarmItem[]> => (
-  await getBackendSrv().get(AlarmAPI.Annotations, { ...params, limit, type, })
+export const fetchHistory = async (
+  params?: AnnotationQuery,
+  newState?: AlarmType,
+  confirm?: boolean,
+  limit = 100000,
+): Promise<AlarmItem[]> => (
+  await getBackendSrv().get(AlarmAPI.Annotations, { ...params, limit, type: 'alerting', confirm, newState })
 ).map(genAlarmItem);

@@ -1,5 +1,5 @@
 // js 3rd party libs
-import React from 'react';
+import React, { ReactNode } from 'react';
 // @ts-ignore
 import Highlighter from 'react-highlight-words';
 
@@ -15,6 +15,19 @@ export interface TsAlarmHistoryItemProps {
   search: string;
 }
 
+export const genBodyView = (nameContent?: ReactNode, textContent?: ReactNode) => (
+  <div className={`${icls}__body`}>
+    <div className={`${icls}__header`}>
+      {nameContent && <div className={`${icls}__name`}>
+        {nameContent}
+      </div>}
+      {textContent && <div className={`${icls}__text`}>
+        {textContent}
+      </div>}
+    </div>
+  </div>
+);
+
 export const TsAlarmHistoryItem: React.FC<TsAlarmHistoryItemProps> = ({
   item: {
     model: { stateClass, iconClass, text },
@@ -24,70 +37,63 @@ export const TsAlarmHistoryItem: React.FC<TsAlarmHistoryItemProps> = ({
     time,
     uid,
     slug,
+    confirm,
   },
   search,
 }) => (<li className={icls}>
   <div className={`${icls}__info`}>
-    <span className={`${icls}__icon ${stateClass}`}>
+    <span className={`${icls}__icon ${!confirm && stateClass}`}>
       <i className={iconClass} />
     </span>
 
-    <div className={`${icls}__body`}>
-      <div className={`${icls}__header`}>
+    {genBodyView(
+      <span>
+        <Highlighter
+          highlightClassName="highlight-search-match"
+          textToHighlight={alertName}
+          searchWords={[search]}
+        />
+      </span>,
+      <>
+        <span className={`${icls}__status ${!confirm && stateClass}`}>{text}</span>
+        <span className={`${icls}__time`}>
+          <span className={`${icls}__time_for`}>For</span>
+          {timeStr}
+        </span>
+      </>
+    )}
+  </div>
 
-        <div className={`${icls}__name`}>
-          <span>
-            <Highlighter
-              highlightClassName="highlight-search-match"
-              textToHighlight={alertName}
-              searchWords={[search]}
-            />
-          </span>
-        </div>
-
-        <div className={`${icls}__text`}>
-          <span className={`${icls}__status ${stateClass}`}>{text}</span>
-
-          <span className={`${icls}__time`}>
-            <span className={`${icls}__time_for`}>For</span>
-            {timeStr}
-          </span>
-        </div>
-
-      </div>
-    </div>
+  <div className={`${icls}__info`}>
+    {
+      JSON.stringify(data) !== JSON.stringify({}) && data.evalMatches
+        ? data.evalMatches.map(({ metric, value }: any, idx: number) => (
+          <div className={`${icls}__metric`} key={idx}>
+            {genBodyView(
+              <span>{metric}</span>,
+              value)}
+          </div>
+        ))
+        : <div className={`${icls}__metric`}>{genBodyView('빈 값')}</div>
+    }
 
   </div>
 
-  {
-    JSON.stringify(data) !== JSON.stringify({}) && data.evalMatches
-      ? data.evalMatches.map(({ metric, value }: any, idx: number) => (
-        <div className={`${icls}__info`} key={idx}>
-          <div className={`${icls}__body`}>
-            <div className={`${icls}__header`}>
-              <div className={`${icls}__text`}>
-                <span>{metric}</span>
-              </div>
-              <div className={`${icls}__name`}>
-                {value}
-              </div>
-            </div>
-          </div>
-        </div>
-      ))
-      : <div className={`${icls}__info`}></div>
-  }
-
-
-  <div className={`${icls}__actions`}>
-
-    <div className={`${icls}__body`}>
-      {dateTime(time).format(defaultDateFormat.join(' '))}
+  <div className={`${icls}__info`}>
+    <div className={`${icls}__etc`}>
+      {genBodyView(
+        <span>발생 시간</span>,
+        dateTime(time).format(defaultDateFormat.join(' '))
+      )}
     </div>
 
-    <a className={`${icls}__link`} href={genRuleUrl(uid, slug, time)} >
-      상세보기
-      </a>
+    <div className={`${icls}__etc`}>
+      {genBodyView(
+        <a className={`${icls}__link`} href={genRuleUrl(uid, slug, time)} >
+          상세보기
+          </a>
+      )}
+    </div>
   </div>
 </li>);
 
