@@ -39,6 +39,7 @@ export const TsAlarmHistoryItem: React.FC<TsAlarmHistoryItemProps> = ({
     uid,
     slug,
     confirm,
+    panelId
   },
   search,
 }) => {
@@ -106,7 +107,7 @@ export const TsAlarmHistoryItem: React.FC<TsAlarmHistoryItemProps> = ({
             상세보기
           </button>
           <a className={`${icls}__link-a`}
-            href={genRuleUrl(uid, slug, time)}
+            href={genRuleUrl(panelId, uid, slug, time)}
             ref={(elem) => { link = elem; }}
           />
         </>)}

@@ -61,7 +61,7 @@ export function setFieldData(origin: AlarmPayload) {
   return origin;
 }
 
-export function convAlarmPayload({ newState, alertName: title, data: { evalMatches }, time, uid, slug }: AlarmHistoryPayload): AlarmPayload {
+export function convAlarmPayload({ newState, alertName: title, data: { evalMatches }, time, uid, slug, panelId }: AlarmHistoryPayload): AlarmPayload {
   const alarmType = convAlarmType(newState);
 
   return {
@@ -73,12 +73,12 @@ export function convAlarmPayload({ newState, alertName: title, data: { evalMatch
     history: {},
     conditionEvals: '',
     historyType: alarmType,
-    ruleUrl: genRuleUrl(uid, slug, time),
+    ruleUrl: genRuleUrl(panelId, uid, slug, time),
   };
 }
 
-export function genRuleUrl(uid: string, slug: string, time: any, range = 10, unit: DurationUnit = 'second') {
+export function genRuleUrl(panelId: number, uid: string, slug: string, time: any, range = 10, unit: DurationUnit = 'second', ) {
   const from = dateTime(time).subtract(range, unit).valueOf();
   const to = dateTime(time).add(range, unit).valueOf();
-  return `/thingspin/alarm/edit/${uid}/${slug}?from=${from}&to=${to}`;
+  return `/d/${uid}/${slug}?from=${from}&to=${to}&panelId=${panelId}&fullscreen`;
 }
