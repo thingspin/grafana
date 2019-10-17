@@ -49,7 +49,9 @@ func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotatio
 			usr.login,
 			alert.name as alert_name,
 			dashboard.uid as uid,
-			dashboard.slug as slug
+			dashboard.slug as slug,
+			annotation.confirm,
+			annotation.confirm_date
 		FROM annotation
 		LEFT OUTER JOIN ` + dialect.Quote("user") + ` as usr on usr.id = annotation.user_id
 		LEFT OUTER JOIN alert on alert.id = annotation.alert_id
