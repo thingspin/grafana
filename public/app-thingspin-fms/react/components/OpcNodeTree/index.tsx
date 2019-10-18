@@ -18,6 +18,7 @@ export type NodeTreeProps = {
   locale?: LocaleFunction;
 
   flowId?: string;
+  close?: boolean;
 };
 
 export type NodeTreeState = {
@@ -50,7 +51,9 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
   };
 
   componentWillMount() {
-    this.updateData();
+    if (!this.props.close) {
+      this.updateData();
+    }
   }
 
   setChildNodes(browserResults: any[]): any[] {
