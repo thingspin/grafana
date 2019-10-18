@@ -164,10 +164,10 @@ func (r *SqlAnnotationRepo) UpdateConfirm(query tsm.UpdateTsAnnotationConfirmCmd
 		SET 
 			(confirm, confirm_date) = (TRUE, datetime('now', 'localtime'))
 		WHERE
-			epoch = ?
+			id = ?
 	`)
 
-	params = append(params, query.Time)
+	params = append(params, query.Id)
 	_, err := x.SQL(sql.String(), params...).Query()
 
 	if err != nil {

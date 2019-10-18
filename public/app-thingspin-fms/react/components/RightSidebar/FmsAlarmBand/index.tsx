@@ -59,7 +59,7 @@ export const FmsAlarmBandComp: React.FC<any> = (_) => {
                 dt.startOf('day').valueOf(), // from
                 dt.endOf('day').valueOf(), // to
                 [AlarmType.ALERT, AlarmType.WARNING],
-                !checked,
+                checked,
             ));
 
             setList(genData(alarms));

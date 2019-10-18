@@ -1,5 +1,6 @@
 export enum AlarmAPI {
-  Annotations = '/thingspin/annotations'
+  Annotations = '/thingspin/annotations',
+  Confirm = '/thingspin/annotations/confirm'
 }
 
 export enum AlarmConfirm {
@@ -44,6 +45,7 @@ export interface Simulator {
 }
 
 export interface AlarmPayload extends Simulator {
+  id: number;
   evalMatches: any[];
   conditionEvals: string;
   ruleUrl: string;

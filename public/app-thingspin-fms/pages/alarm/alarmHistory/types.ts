@@ -17,7 +17,8 @@ export const defaultDateFormat = ['YYYY년', 'MM월', 'DD일', 'a', 'hh시', 'mm
 
 
 export enum AlarmAPI {
-  Annotations = '/thingspin/annotations'
+  Annotations = '/thingspin/annotations',
+  Confirm = '/thingspin/annotations/confirm',
 }
 
 export interface AnnotationQuery {
@@ -35,12 +36,12 @@ export enum AlarmType {
 }
 
 export const alarmOptions: any[] = [
-  { value: AlarmType.EMPTY, label: '모두'},
-  { value: AlarmType.OK, label: '정상'},
-  { value: AlarmType.ALERT, label: '위험'},
-  { value: AlarmType.WARNING, label: '경고'},
-  { value: AlarmType.PAUSE, label: '정지'},
-  { value: AlarmType.NO_DATA, label: '빈 값'},
+  { value: AlarmType.EMPTY, label: '모두' },
+  { value: AlarmType.OK, label: '정상' },
+  { value: AlarmType.ALERT, label: '위험' },
+  { value: AlarmType.WARNING, label: '경고' },
+  { value: AlarmType.PAUSE, label: '정지' },
+  { value: AlarmType.NO_DATA, label: '빈 값' },
 ];
 
 export interface AlarmItem {

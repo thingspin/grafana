@@ -61,10 +61,13 @@ export function setFieldData(origin: AlarmPayload) {
   return origin;
 }
 
-export function convAlarmPayload({ newState, alertName: title, data: { evalMatches }, time, uid, slug, panelId }: AlarmHistoryPayload): AlarmPayload {
+export function convAlarmPayload({
+  id, newState, alertName: title, data: { evalMatches }, time, uid, slug, panelId
+}: AlarmHistoryPayload): AlarmPayload {
   const alarmType = convAlarmType(newState);
 
   return {
+    id,
     time,
     title,
     alarmType,

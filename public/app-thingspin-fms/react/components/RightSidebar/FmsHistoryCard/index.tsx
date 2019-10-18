@@ -8,6 +8,7 @@ import { DateTime } from '@grafana/data';
 // Thingspin React Compoonents
 import FmsCard, { TS_HISTORY_TYPE } from './Card';
 import { getBackendSrv } from '@grafana/runtime';
+import { AlarmAPI } from '../FmsAlarmBand/types';
 
 export enum TS_ALARM_TYPE {
     ERROR = "err",
@@ -16,13 +17,15 @@ export enum TS_ALARM_TYPE {
 }
 
 export interface Props {
+    id: number;
     alarmType: TS_ALARM_TYPE;
     // title layer
     title?: string;
     subtitle?: string;
 
     // time layer
-    time?: DateTime;
+    time: any;
+    convTime?: DateTime;
     link?: string;
 
     // card layer
@@ -31,7 +34,6 @@ export interface Props {
 
     // user ckecked
     isActive?: boolean;
-
 
     onDeactiveHistory?: (history: any) => void;
 
@@ -49,7 +51,9 @@ function getAlarmIconClass(alarmType: TS_ALARM_TYPE): string {
     }
 }
 
-const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, historyType, time, title, subtitle, onDeactiveHistory }) => {
+const FmsHistoryCard: React.FC<Props> = ({
+    id, history, isActive, alarmType, link, historyType, convTime, title, subtitle, onDeactiveHistory
+}) => {
     const mainCls = classNames({
         'ts-on-bg': isActive,
         'ts-off-bg': !isActive,
@@ -57,7 +61,7 @@ const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, h
 
     const onClickDetail = async () => {
         try {
-            await getBackendSrv().put('/thingspin/annotations/confirm', { time: time.valueOf() });
+            await getBackendSrv().put(AlarmAPI.Confirm, { id });
             if (onDeactiveHistory) {
                 onDeactiveHistory(history);
             }
@@ -85,7 +89,7 @@ const FmsHistoryCard: React.FC<Props> = ({ history, isActive, alarmType, link, h
 
                 <div className="fms-tl-time-layer">
                     <div>
-                        {time.format("YYYY년 MM월 DD일(ddd) HH:mm:ss")}
+                        {convTime.format("YYYY년 MM월 DD일(ddd) HH:mm:ss")}
                     </div>
                     <div>
                         <a href={link ? link : '#'} onClick={onClickDetail} >상세보기 ></a>

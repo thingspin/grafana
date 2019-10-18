@@ -8,7 +8,7 @@ import { dateTime } from '@grafana/data';
 import { getBackendSrv } from '@grafana/runtime';
 
 // thingspin libs
-import { AlarmItem, itemClass as icls, defaultDateFormat } from '../types';
+import { AlarmItem, itemClass as icls, defaultDateFormat, AlarmAPI } from '../types';
 import { genRuleUrl } from 'app-thingspin-fms/react/components/RightSidebar/FmsAlarmBand/models';
 
 export interface TsAlarmHistoryItemProps {
@@ -32,6 +32,7 @@ export const genBodyView = (nameContent?: ReactNode, textContent?: ReactNode) =>
 export const TsAlarmHistoryItem: React.FC<TsAlarmHistoryItemProps> = ({
   item: {
     model: { stateClass, iconClass, text },
+    id,
     alertName,
     data,
     timeStr,
@@ -39,14 +40,14 @@ export const TsAlarmHistoryItem: React.FC<TsAlarmHistoryItemProps> = ({
     uid,
     slug,
     confirm,
-    panelId
+    panelId,
   },
   search,
 }) => {
   let link: HTMLAnchorElement;
   const onClickDetail = async () => {
     try {
-      await getBackendSrv().put('/thingspin/annotations/confirm', { time: time.valueOf() });
+      await getBackendSrv().put(AlarmAPI.Confirm, { id });
     } catch (e) {
       console.error(e);
     } finally {
