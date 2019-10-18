@@ -1,35 +1,33 @@
 <div class="page-container page-body">
     <div class="ts-noti-title-area" ng-hide="ctrl.isNew">
         <img src="public/img/thingspin/thingspin_simbol.svg">
-        <span class = "ts-noti-title">알림 발송 관리</span>
+        <span class="ts-noti-title">알림 발송 관리</span>
     </div>
-    
+
     <div class="page-action-bar">
         <div class="page-action-bar__spacer">
         </div>
 
         <a href="thingspin/alarm/notification/new"><button id="ts-new-noti-btn-area" className="btn">
-            <span>새 채널</span>
-        </button></a>
-        
-    </div>      
+                <span>새 채널</span>
+            </button></a>
+
+    </div>
     <div class="ts-noti-channel-title">발송 채널</div>
 
 
     <div class="ts-site-table-container site-table-size">
-            <div class="connect-table-header">
-                <span>페이지당 행수 : </span>
-                <span class="connect-page-rows">
-                    <select class="connect-table-select" ng-model="ctrl.tData.rowCount" 
-                        ng-options="n as n for n in ctrl.tData.selectOpts"
-                        ng-change="ctrl.tOnSelectChange()"
-                    >
-                    </select>
-                </span>
-            </div>
-    
-            <div class="connect-table-body">
-                <table>
+        <div class="connect-table-header">
+            <span>페이지당 행수 : </span>
+            <span class="connect-page-rows">
+                <select class="connect-table-select" ng-model="ctrl.tData.rowCount"
+                    ng-options="n as n for n in ctrl.tData.selectOpts" ng-change="ctrl.tOnSelectChange()">
+                </select>
+            </span>
+        </div>
+
+        <div class="connect-table-body">
+            <table>
                 <thead>
                     <tr class="ts-table-header">
                         <th class="th-site-id">이름</th>
@@ -40,29 +38,8 @@
                 </thead>
 
                 <tbody>
-                    <!--
-                    <tr ng-repeat="notification in ctrl.list">
-                        <td class="link-td">
-                            <a href="thingspin/alarm/notification/{{notification.id}}/edit">
-                                {{notification.name}}
-                            </a>
-                        </td>
-                        <td class="link-td">
-                            <a href="thingspin/alarm/notification/{{notification.id}}/edit">
-                                {{notification.type}}
-                            </a>
-                        </td>
-                        <td class="text-right">
-                            <span class="btn btn-secondary btn-small" ng-show="notification.isDefault == true">
-                                default
-                            </span>
-                            <a ng-click="ctrl.deleteNotification(notification.id)" class="btn btn-danger btn-small">
-                                <i class="fa fa-remove"></i>
-                            </a>
-                        </td>
-                    </tr>
--->
-                    <tr id='table-tr-{{$index}}' class="ts-table-row" ng-repeat="item in ctrl.tData.pageNode track by $index">
+                    <tr id='table-tr-{{$index}}' class="ts-table-row"
+                        ng-repeat="item in ctrl.tData.pageNode track by $index">
                         <td class="link-td">
                             <a href="thingspin/alarm/notification/{{item.id}}/edit">
                                 {{item.name}}
@@ -73,84 +50,39 @@
                                 {{item.type}}
                             </a>
                         </td>
-                        <td class="text-right">   
-                            <button class="ts-noti-button" ng-show="item.isDefault == true"><span class="ts-noti-button-title">default</span></button>
-                           
+                        <td class="text-right">
+                            <button class="ts-noti-button" ng-show="item.isDefault == true"><span
+                                    class="ts-noti-button-title">default</span></button>
+
                         </td>
                         <td class="text-right">
                             <div class="ts-noti-remove-button">
                                 <i ng-click="ctrl.deleteNotification(item.id)" class="fa fa-remove"></i>
                             </div>
-                            
+
                         </td>
                     </tr>
                 </tbody>
-                </table>
+            </table>
+        </div>
+        <div class="connect-table-footer">
+            <div class="table-page-range">
+                <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} -
+                    {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 :
+                    {{ctrl.list.length}}</span>
             </div>
-            <div class="connect-table-footer">
-                <div class="table-page-range">
-                    <span>페이지 범위 : {{ ctrl.tData.currPage * ctrl.tData.rowCount + 1 }} - {{ (ctrl.tData.currPage * ctrl.tData.rowCount) + ctrl.tData.rowCount }} / 전체 : {{ctrl.list.length}}</span>
-                </div>
-                <div class="table-paging">
-                    <button class="ts-notification-page-button" ng-click="ctrl.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
-                    <button class="ts-notification-number-button" ng-click="ctrl.tSetPaging(page)" 
-                        class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
-                        ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
-                        <span >{{ page + 1}}</span>
-                    </button>
-                    <button class="ts-notification-page-button" ng-click="ctrl.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
-                </div>
+            <div class="table-paging">
+                <button class="ts-notification-page-button" ng-click="ctrl.tPrevPaging()"><i
+                        class="tsi icon-ts-chevron_left"></i></button>
+                <button class="ts-notification-number-button" ng-click="ctrl.tSetPaging(page)"
+                    class="{{page === ctrl.tData.currPage ? 'blue' : ''}}"
+                    ng-repeat="page in ctrl.tGetPagingNumberArray() track by $index">
+                    <span>{{ page + 1}}</span>
+                </button>
+                <button class="ts-notification-page-button" ng-click="ctrl.tNextPaging()"><i
+                        class="tsi icon-ts-chevron_right"></i></button>
             </div>
-        </div> 
-            <!--
-        <table class="filter-table filter-table--hover">
-
-
-            <thead>
-            <th style="min-width: 200px">
-                <strong>Name</strong>
-            </th>
-            <th style="min-width: 100px">Type</th>
-            <th style="width: 1%"></th>
-            </thead>
-
-
-            <tbody>
-            <tr ng-repeat="notification in ctrl.notifications">
-                <td class="link-td">
-                <a href="thingspin/alarm/notification/{{notification.id}}/edit">
-                    {{notification.name}}
-                </a>
-                </td>
-                <td class="link-td">
-                <a href="thingspin/alarm/notification/{{notification.id}}/edit">
-                    {{notification.type}}
-                </a>
-                </td>
-                <td class="text-right">
-                <span class="btn btn-secondary btn-small" ng-show="notification.isDefault == true">
-                    default
-                </span>
-                <a ng-click="ctrl.deleteNotification(notification.id)" class="btn btn-danger btn-small">
-                    <i class="fa fa-remove"></i>
-                </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        </div>
     </div>
-    <div ng-if="ctrl.notifications.length === 0">
-        <empty-list-cta model="{
-            title: 'There are no notification channels defined yet',
-            buttonIcon: 'gicon gicon-alert-notification-channel',
-            buttonLink: 'alerting/notification/new',
-            buttonTitle: 'Add channel',
-            proTip: 'You can include images in your alert notifications.',
-            proTipLink: 'http://docs.grafana.org/alerting/notifications/',
-            proTipLinkTitle: 'Learn more',
-            proTipTarget: '_blank'
-        }" />
-    </div>
-    -->
 
 </div>
