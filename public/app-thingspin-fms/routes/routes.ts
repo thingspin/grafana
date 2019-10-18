@@ -31,13 +31,6 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
     },
     pageClass: 'login-page sidemenu-hidden',
   })
-  .when('/thingspin/manage/alarm', {
-    template: '<ts-alarm-management />',
-    routeInfo: {
-      menupath: [ UserSettingInfo.Alarm ],
-      icon: 'fa fa-bell',
-    },
-  })
   .when('/signup', {
     templateUrl: 'public/app-thingspin-fms/partials/signup_step2.html',
     controller: 'TsSignup',
@@ -65,13 +58,6 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
       icon: 'fa fa-refresh',
     },
   })
-  //.when('/thingspin/manage/alarm/new', { template: '<ts-alarm-new />', })
-  //.when('/thingspin/manage/alarm/management', { template: '<ts-alarm-management />', })
-  //.when('/thingspin/manage/alarm/notification', { template: '<ts-alarm-notification />', })
-  //.when('/thingspin/manage/alarm/setting', { template: '<ts-alarm-setting />', })
-  //.when('/thingspin/manage/alarm/history', { template: '<ts-alarm-history />', })
-
-
   .when('/thingspin/manage/analysis', { template: '<ts-analysis-management />', })
   .when('/thingspin/manage/analysis/correlation', { template: '<ts-corr-analysis />', })
   .when('/thingspin/manage/analysis/pattern', { template: '<ts-pattern-analysis />', })

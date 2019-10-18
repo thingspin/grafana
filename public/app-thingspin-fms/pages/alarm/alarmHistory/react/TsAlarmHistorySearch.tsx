@@ -8,25 +8,33 @@ import { TimeRange, TimeOption, RawTimeRange } from '@grafana/data';
 // Views
 import TsTimePicker from './TsTimePicker';
 // Etc
-import { baseClass, tsDefaultSelectOptions, genTimeRange, alarmOptions, shiftTime } from '../types';
+import { baseClass, tsDefaultSelectOptions, genTimeRange, alarmOptions, shiftTime, AlarmType } from '../types';
 
 export interface OnChangePayload {
-  text: string;
-  state: string;
+  state: AlarmType;
+  confirm: string;
+  range: TimeRange;
 }
 
 export interface AlarmSearchProps {
   onChange?: (payload: OnChangePayload) => void;
-  onTimeChange?: (payload: TimeRange) => void;
+  onTextChange?: (payload: string) => void;
 }
+
+const stateOptions = [
+  { value: '', label: '모두'},
+  { value: 'true', label: '확인'},
+  { value: 'false', label: '미확인'},
+];
 
 // use common className
 const bcls = `${baseClass}-search`;
 
-const TsAlarmHistorySearch: React.FC<AlarmSearchProps> = ({ onChange, onTimeChange }) => {
+const TsAlarmHistorySearch: React.FC<AlarmSearchProps> = ({ onChange, onTextChange }) => {
   // State & Ref
   const [timeRange, setTimeRange] = useState(genTimeRange());
   const selectRef = createRef<HTMLSelectElement>();
+  const stateSelectRef = createRef<HTMLSelectElement>();
   const inputRef = createRef<HTMLInputElement>();
 
   // Component methods
@@ -37,8 +45,12 @@ const TsAlarmHistorySearch: React.FC<AlarmSearchProps> = ({ onChange, onTimeChan
 
   // Events
   const onChangeTimePicker = (range: TimeRange) => {
-    if (onTimeChange) {
-      onTimeChange(range);
+    if (onChange) {
+      onChange({
+        state: selectRef.current.value as AlarmType,
+        confirm: stateSelectRef.current.value,
+        range,
+      });
     }
     setTimeRange(range);
   };
@@ -49,22 +61,38 @@ const TsAlarmHistorySearch: React.FC<AlarmSearchProps> = ({ onChange, onTimeChan
 
   const onZoom = () => { };
 
+  const onChangeText = () => {
+    if (onTextChange) {
+      onTextChange(inputRef.current.value);
+    }
+  };
+
   const onChangeEvt = () => (onChange && onChange({
-    text: inputRef.current.value,
-    state: selectRef.current.value,
+    state: selectRef.current.value as AlarmType,
+    confirm: stateSelectRef.current.value,
+    range: timeRange,
   }));
 
   return <div className={bcls}>
     <div className={`${bcls}-l`}>
       <span className={`${bcls}-l-search`}>
         <i className="fa fa-search"></i>
-        <input ref={inputRef} type="text" placeholder="알람 이름을 입력해 주세요." onChange={onChangeEvt} />
+        <input ref={inputRef} type="text" placeholder="알람 이름을 입력해 주세요." onChange={onChangeText} />
       </span>
 
       <span>
         <span className={`${bcls}-l-text`}> 상태 </span>
         <select ref={selectRef} onChange={onChangeEvt}>
           {alarmOptions.map(({ value, label }, index) =>
+            <option key={index} value={value}>{label}</option>
+          )}
+        </select>
+      </span>
+
+      <span>
+        <span className={`${bcls}-l-text`}> 확인 </span>
+        <select ref={stateSelectRef} onChange={onChangeEvt}>
+          {stateOptions.map(({ value, label }, index) =>
             <option key={index} value={value}>{label}</option>
           )}
         </select>

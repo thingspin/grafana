@@ -50,7 +50,7 @@ export class TsRightNavbarComponent extends PureComponent<Props> {
     const buttonClass = `btn ${isEmergency ? 'ts-alert-emer' : ''}`;
     // Virtual DOM events Methods
     const onToggleRightMenu = () => {
-      this.props.updateLocation({ path: '/thingspin/manage/alarm' });
+      this.props.updateLocation({ path: '/thingspin/alarm/history' });
     };
 
     // return virtual DOM

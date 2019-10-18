@@ -18,6 +18,7 @@ export type NodeTreeProps = {
   locale?: LocaleFunction;
 
   flowId?: string;
+  close?: boolean;
 };
 
 export type NodeTreeState = {
@@ -50,7 +51,9 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
   };
 
   componentWillMount() {
-    this.updateData();
+    if (!this.props.close) {
+      this.updateData();
+    }
   }
 
   setChildNodes(browserResults: any[]): any[] {
@@ -84,7 +87,7 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
 
   onSearch = (value: string): void => {
     const { debounceTime } = this.props;
-    const search = debounce( (searchTerm: string) => this.setState({ searchTerm }), debounceTime, );
+    const search = debounce((searchTerm: string) => this.setState({ searchTerm }), debounceTime);
 
     search(value);
   }
@@ -122,14 +125,16 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
 
   async updateChildNode(nodeId: string) {
     try {
-      const result: any = await this.backendSrv.get(`${this.nodeRedHost}/opcua/${this.props.flowId}/browser`, {
-        nodeid: nodeId,
-      });
+      if (this.props.flowId !== undefined) {
+        const result: any = await this.backendSrv.get(`${this.nodeRedHost}/opcua/${this.props.flowId}/browser`, {
+          nodeid: nodeId,
+        });
 
-      const node: any = this.findNode(this.state.nodes, nodeId);
-      node.nodes = this.setChildNodes(result.browserResults);
+        const node: any = this.findNode(this.state.nodes, nodeId);
+        node.nodes = this.setChildNodes(result.browserResults);
 
-      this.setState({ nodes: this.state.nodes });
+        this.setState({ nodes: this.state.nodes });
+      }
     } catch (e) {
       console.error(e);
     }
@@ -143,8 +148,8 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
 
     const items: OpcNodeItem[] = walk({ data, openNodes, searchTerm, locale });
 
-    return items.map( (props): OpcNodeItem => {
-      const { key, item: {nodeId,}, } = props;
+    return items.map((props): OpcNodeItem => {
+      const { key, item: { nodeId, }, } = props;
 
       // events
       const onClickOnBtn = () => {

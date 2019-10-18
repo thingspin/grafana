@@ -9,14 +9,18 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 // Thingspin libs
 import "./index.scss";
 
+
+function getNotifierTemplateId(type: string) {
+  return `notifier-options-${type}`;
+}
+
 export class TsAlarmNotiEditCtrl {
-  theForm: any;
-  //navModel: any;
-  testSeverity = 'critical';
-  notifiers: any;
-  notifierTemplateId: string;
-  isNew: boolean;
   model: any;
+  theForm: angular.IFormController;
+  notifiers: any[] = [];
+  notifierTemplateId: string;
+
+  testSeverity = 'critical';
   defaults: any = {
     type: 'email',
     sendReminder: false,
@@ -29,102 +33,84 @@ export class TsAlarmNotiEditCtrl {
     },
     isDefault: false,
   };
-  getFrequencySuggestion: any;
+  isNew = !this.$routeParams.id;
+
+  getFrequencySuggestion = () => {
+    return ['1m', '5m', '10m', '15m', '30m', '1h'];
+  };
 
   /** @ngInject */
   constructor(
+    private $scope: angular.IScope,
     private $routeParams: any,
     private backendSrv: BackendSrv,
-    private $location: any,
-    private $templateCache: any,
+    private $location: angular.ILocationService,
+    private $templateCache: angular.ITemplateCacheService,
   ) {
-    this.isNew = !this.$routeParams.id;
-
-    this.getFrequencySuggestion = () => {
-      return ['1m', '5m', '10m', '15m', '30m', '1h'];
-    };
-
-    this.backendSrv
-      .get(`/thingspin/alert-notifiers`)
-      .then((notifiers: any) => {
-        this.notifiers = notifiers;
-
-        // add option templates
-        for (const notifier of this.notifiers) {
-          this.$templateCache.put(this.getNotifierTemplateId(notifier.type), notifier.optionsTemplate);
-        }
-
-        if (!this.$routeParams.id) {
-          return _.defaults(this.model, this.defaults);
-        }
-
-        return this.backendSrv.get(`/api/alert-notifications/${this.$routeParams.id}`).then((result: any) => {
-          result.settings = _.defaults(result.settings, this.defaults.settings);
-          return result;
-        });
-      })
-      .then((model: any) => {
-        this.model = model;
-        this.notifierTemplateId = this.getNotifierTemplateId(this.model.type);
-      });
+    this.init();
   }
 
-  save() {
+  async init() {
+    this.notifiers = await this.backendSrv.get(`/thingspin/alert-notifiers`);
+
+    // add option templates
+    for (const { type, optionsTemplate } of this.notifiers) {
+      this.$templateCache.put(getNotifierTemplateId(type), optionsTemplate);
+    }
+
+    let model;
+    if (!this.$routeParams.id) {
+      model = _.defaults(this.model, this.defaults);
+    } else {
+      model = await this.backendSrv.get(`/api/alert-notifications/${this.$routeParams.id}`);
+      model.settings = _.defaults(model.settings, this.defaults.settings);
+    }
+
+    this.model = model;
+    this.notifierTemplateId = getNotifierTemplateId(this.model.type);
+    this.$scope.$applyAsync();
+  }
+
+  async save() {
     if (!this.theForm.$valid) {
       return;
     }
 
-    if (this.model.id) {
-      this.backendSrv
-        .put(`/api/alert-notifications/${this.model.id}`, this.model)
-        .then((res: any) => {
-          this.model = res;
-          appEvents.emit(AppEvents.alertSuccess, ['Notification updated', '']);
-        })
-        .catch((err: any) => {
-          if (err.data && err.data.error) {
-            appEvents.emit(AppEvents.alertError, [err.data.error]);
-          }
-        });
-    } else {
-      this.backendSrv
-        .post(`/api/alert-notifications`, this.model)
-        .then((res: any) => {
-          appEvents.emit(AppEvents.alertSuccess, ['Notification created', '']);
-          this.$location.path('thingspin/alarm/notification');
-        })
-        .catch((err: any) => {
-          if (err.data && err.data.error) {
-            appEvents.emit(AppEvents.alertError, [err.data.error]);
-          }
-        });
-    }
-  }
+    try {
+      const { id } = this.model;
+      if (id) {
+        this.model = await this.backendSrv.put(`/api/alert-notifications/${id}`, this.model);
 
-  getNotifierTemplateId(type: string) {
-    return `notifier-options-${type}`;
+        appEvents.emit(AppEvents.alertSuccess, ['Notification updated', '']);
+      } else {
+        await this.backendSrv.post(`/api/alert-notifications`, this.model);
+
+        appEvents.emit(AppEvents.alertSuccess, ['Notification created', '']);
+        this.$location.path('thingspin/alarm/notification');
+      }
+    } catch (err) {
+      if (err.data && err.data.error) {
+        appEvents.emit(AppEvents.alertError, [err.data.error]);
+      }
+    }
+    this.$scope.$applyAsync();
   }
 
   typeChanged() {
     this.model.settings = _.defaults({}, this.defaults.settings);
-    this.notifierTemplateId = this.getNotifierTemplateId(this.model.type);
+    this.notifierTemplateId = getNotifierTemplateId(this.model.type);
   }
 
-  testNotification() {
+  async testNotification() {
     if (!this.theForm.$valid) {
       return;
     }
 
-    const payload = {
-      name: this.model.name,
-      type: this.model.type,
-      frequency: this.model.frequency,
-      settings: this.model.settings,
-    };
+    const { name, type, frequency, settings } = this.model;
+    await this.backendSrv.post(`/api/alert-notifications/test`, { name, type, frequency, settings, });
 
-    this.backendSrv.post(`/api/alert-notifications/test`, payload).then((res: any) => {
-      appEvents.emit(AppEvents.alertSuccess, ['Test notification sent', '']);
-    });
+    appEvents.emit(AppEvents.alertSuccess, ['Test notification sent', '']);
+    this.$scope.$applyAsync();
   }
 }
 

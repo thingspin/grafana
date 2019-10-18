@@ -6,6 +6,7 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
     // Inheritance scope data
     flowId: string;
     nodes: any[];
+    close: boolean;
 
     // UI setting data //
     // table header data
@@ -21,6 +22,7 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
    /** @ngInject */
    constructor($scope: angular.IScope) {
         $scope.$watch("nodes", () => {
+            this.tCalcPaging();
             this.setPageNodes();
         });
     }
@@ -103,6 +105,7 @@ export class TsOpcUaNodeSetDirective implements angular.IDirective {
     scope = {
         flowId: "=",
         nodes: "=",
+        close: "=",
     };
 
     /** @ngInject */

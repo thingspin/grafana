@@ -49,7 +49,9 @@ func (r *SqlAnnotationRepo) TsFind(query *annotations.TsItemQuery) ([]*annotatio
 			usr.login,
 			alert.name as alert_name,
 			dashboard.uid as uid,
-			dashboard.slug as slug
+			dashboard.slug as slug,
+			annotation.confirm,
+			annotation.confirm_date
 		FROM annotation
 		LEFT OUTER JOIN ` + dialect.Quote("user") + ` as usr on usr.id = annotation.user_id
 		LEFT OUTER JOIN alert on alert.id = annotation.alert_id
@@ -162,10 +164,10 @@ func (r *SqlAnnotationRepo) UpdateConfirm(query tsm.UpdateTsAnnotationConfirmCmd
 		SET 
 			(confirm, confirm_date) = (TRUE, datetime('now', 'localtime'))
 		WHERE
-			epoch = ?
+			id = ?
 	`)
 
-	params = append(params, query.Time)
+	params = append(params, query.Id)
 	_, err := x.SQL(sql.String(), params...).Query()
 
 	if err != nil {

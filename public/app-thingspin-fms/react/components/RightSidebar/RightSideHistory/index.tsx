@@ -39,19 +39,16 @@ export const TsRightSideHistoryComponent: React.FC<Props> = ({ list, checked }) 
   return <>
     <div className="ts-right-side-history-component">
       {list
-        .filter(({ history }) => {
-          if (!checked) {
-            return true;
-          }
-          return !deactives.includes(history);
-        })
-        .map(({ title, subtitle, time, alarmType, history, ruleUrl }: AlarmPayload, idx: number) =>
+        .filter(({ history }) => checked ? true : !deactives.includes(history))
+        .map(({ id, title, subtitle, time, alarmType, history, ruleUrl }: AlarmPayload, idx: number) =>
           <FmsHistoryCard key={idx}
+            id={id}
             title={title}
             subtitle={subtitle}
             history={history}
-            time={dateTime(time)}
+            convTime={dateTime(time)}
             link={ruleUrl}
+            time={time}
 
             isActive={true}
             alarmType={getAlarmType(alarmType)}

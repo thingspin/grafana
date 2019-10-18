@@ -100,3 +100,7 @@ type EnableTsConnectReq struct {
 	FlowId string `json:"flowId"`
 	Enable bool   `json:"enable"`
 }
+
+type CountActivationQuery struct {
+	Result []TsConnectField
+}

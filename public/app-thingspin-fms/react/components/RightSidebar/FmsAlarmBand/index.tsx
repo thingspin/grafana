@@ -14,6 +14,9 @@ import { AlarmType } from 'app-thingspin-fms/pages/alarm/alarmHistory/types';
 import { TsRightSideTabbarComponent, Props as TabProps } from '../RightSideTabbar';
 import { TsRightSideHistoryComponent } from '../RightSideHistory';
 
+const enable = {
+    confirm: false
+};
 const dateFormat = "YYYY년 MM월 DD일";
 
 export const FmsAlarmBandComp: React.FC<any> = (_) => {
@@ -56,7 +59,7 @@ export const FmsAlarmBandComp: React.FC<any> = (_) => {
                 dt.startOf('day').valueOf(), // from
                 dt.endOf('day').valueOf(), // to
                 [AlarmType.ALERT, AlarmType.WARNING],
-                !checked,
+                checked,
             ));
 
             setList(genData(alarms));
@@ -106,9 +109,9 @@ export const FmsAlarmBandComp: React.FC<any> = (_) => {
                     <span>예지진단</span>
                 </div>
             </div>
-            <div>
+            { enable.confirm && <div>
                 <Switch label="미확인" checked={checked} onChange={onChangeChecked} transparent />
-            </div>
+            </div> }
         </div>
 
     </>;

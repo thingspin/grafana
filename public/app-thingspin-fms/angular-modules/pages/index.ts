@@ -1,4 +1,3 @@
-import './alarmManagement';
 import './alarmManagement/notification';
 
 import './analysisManagement';

@@ -170,5 +170,6 @@ type FindFmsMenuByNameCmd struct {
 }
 
 type UpdateTsAnnotationConfirmCmd struct {
+	Id   int64 `json:"id,omitempty"`
 	Time int64 `json:"time"`
 }

@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/grafana/grafana/pkg/thingspin"
+	"github.com/grafana/grafana/pkg/setting"
 
 	"github.com/grafana/grafana/pkg/bus"
 	gfm "github.com/grafana/grafana/pkg/models"
@@ -236,6 +238,46 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 	return JSON(200, q.Result)
 }
 
+func licenseChecker(addItem *m.TsConnectField) string {
+	q := m.CountActivationQuery {}
+
+	if err := bus.Dispatch(&q); err != nil {
+		fmt.Printf("%v", err)
+	}
+
+	totalCount := len(q.Result)
+	licenseConnt, err := strconv.Atoi(setting.Thingspin.License.Connect)
+	licenseNodeConnt, err := strconv.Atoi(setting.Thingspin.License.Nodes)
+	if err != nil {
+		fmt.Printf("License Data Covert Error")
+	}
+
+	nodeCount := 0
+	for _, item := range q.Result {
+		if _, ok := item.Params["PtagList"]; ok {
+			if len(item.Params["PtagList"].([]interface{})) > 0 {
+				nodeCount += len(item.Params["PtagList"].([]interface{}))
+			}
+		}
+	}
+
+	if _, ok := addItem.Params["PtagList"]; ok {
+		if len(addItem.Params["PtagList"].([]interface{})) > 0 {
+			nodeCount += len(addItem.Params["PtagList"].([]interface{}))
+		}
+	}
+
+	if licenseConnt == totalCount {
+		return "총 구동할 수 있는 연결을 다 이용하셨습니다.";
+	} else {
+		if licenseNodeConnt < nodeCount {
+			return "총 추가할 수 있는 수집노드를 다 이용하셨습니다."
+		} else {
+			return ""
+		}
+	}
+}
+
 func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	connId := c.ParamsInt(":connId")
 
@@ -243,6 +285,12 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	info, err := getTsConnectInfo(connId)
 	if err != nil {
 		return Error(500, "ThingSPIN Store Error", err)
+	}
+	if req.Enable == true {
+		licenseMsg := licenseChecker(info)
+		if len(licenseMsg) > 0 {
+			return Error(500, licenseMsg, errors.New("") )
+		}
 	}
 
 	info.Enable = req.Enable

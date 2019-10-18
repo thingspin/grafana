@@ -1,6 +1,8 @@
 package annotations
 
 import (
+	"time"
+
 	"github.com/grafana/grafana/pkg/components/simplejson"
 	tsm "github.com/grafana/grafana/pkg/models-thingspin"
 )
@@ -33,10 +35,10 @@ type TsItemDTO struct {
 	Data        *simplejson.Json `json:"data"`
 
 	// thingpsin add code ----
-	Confirm     bool   `json:"confirm"`
-	ConfirmDate int64  `json:"confirmDate"`
-	Slug        string `json:"slug"`
-	Uid         string `json:"uid"`
+	Confirm     bool      `xorm:"bool notnull 'confirm'" json:"confirm"`
+	ConfirmDate time.Time `xorm:"confirm_date" json:"confirmDate"`
+	Slug        string    `json:"slug"`
+	Uid         string    `json:"uid"`
 }
 
 type TsRepository interface {
