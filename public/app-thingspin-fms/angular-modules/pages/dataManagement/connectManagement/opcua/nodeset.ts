@@ -21,6 +21,7 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
    /** @ngInject */
    constructor($scope: angular.IScope) {
         $scope.$watch("nodes", () => {
+            this.tCalcPaging();
             this.setPageNodes();
         });
     }
