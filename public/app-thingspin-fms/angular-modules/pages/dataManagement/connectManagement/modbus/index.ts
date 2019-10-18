@@ -45,61 +45,55 @@ export function formatDate(date: Date): string {
 
 export class TsModbusConnectCtrl {
   static template = require("./index.html");
-  selectObj: any;
-  enEtcMenu: boolean;
-  showObj: object;
 
-  modbusParams: any;
-  quantitySelected: string;
-  fcSelected: string;
-  typeSelected: string;
+  modbusParams = {
+    quantity: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+    functioncodes: ['Coil Status', 'Input Status', 'Holding Registers', 'Input Registers'],
+    datatypes: ['decimal']
+    //datatypes: ['decimal','Hex','String']
+  };
+  quantitySelected = this.modbusParams.quantity[0];  // default quantity 1
+  fcSelected = this.modbusParams.functioncodes[2];//holding registers
+  typeSelected = this.modbusParams.datatypes[0];
 
   nodeRedFlowName: any;
 
   connName: any; // connection name
   modbusHost: any; // modbus Host ip
   modbusPort: any; // modbus Host Port
-  modbusAddress: any; // modbus Address
   modbusQuantity: any; // modbus Address from Quantity
-  modbusFC: any;
-  modbusType: any;
   modbusUnitID: any;
   modbusTimeOut: any; // connection time out
   modbusReTimeOut: any; // re connection time out
   modbusReadIntervals: any; //scan interval
-  modbusinfluxID: any;
+  modbusinfluxID = '';
+
   //edit view
-  editIdx: any;
+  editIdx = 0;
   editAddress: any;
   editName: any;
   editQuantity: any;
   editFC: any;
   editType: any;
 
-  defTabulatorOpts: object;
   orderTable: any;
 
-  isAddressEditView: boolean;
-  isAddressEditBtn: boolean;
-  isAddressEditmode: boolean;
-  isParamsComplete: boolean; // check param inputs
+  isAddressEditView = false;
+  isAddressEditBtn = true;
+  isAddressEditmode = false;
+  isParamsComplete = false; // check param inputs
   isEditMode: boolean;
 
-  isConnCheckMode: boolean;
+  isConnCheckMode = false;
 
-  tableindex: any;
-  tableList: any;
-  tableListsize: any;
-  tableData: any;
+  tableList: any[] = [];
   nodeModbusGetteritem: any;
   nodeInjectWiresList: any;
-  templateObject: any; //modbus node-red template
   FlowId: any;
-  timeout: any;
 
   PtagList: TagList[];
   //for test
-  getterparserArray: any;
+  getterparserArray: any[] = [];
   requestHelp: string;
 
   //editmode
@@ -114,7 +108,7 @@ export class TsModbusConnectCtrl {
   enableNodeSet: boolean;
   connectStatus: string;
 
-  connectIcon: any;
+  connectIcon = 'icon-ts-power';
 
   list: ModbusTableData[];
   // table
@@ -137,37 +131,12 @@ export class TsModbusConnectCtrl {
 
   /** @ngInject */
   constructor(
-    private $scope: IScope, $routeParams: angular.route.IRouteParamsService,
+    private $scope: IScope,
+    $routeParams: angular.route.IRouteParamsService,
     private $location: angular.ILocationService,
-    //private $compile: angular.ICompileService, $routeParams,
     private backendSrv: BackendSrv,
-    $timeout: ITimeoutService) {
+    private $timeout: ITimeoutService) {
     //for tabulator table
-    this.timeout = $timeout;
-    this.modbusParams = {
-      quantity: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-      functioncodes: ['Coil Status', 'Input Status', 'Holding Registers', 'Input Registers'],
-      datatypes: ['decimal']
-      //datatypes: ['decimal','Hex','String']
-    };
-
-    this.getterparserArray = [];
-
-    this.modbusinfluxID = "";
-
-    this.isConnCheckMode = false;
-    this.isParamsComplete = false;
-    this.isAddressEditView = false;
-    this.isAddressEditBtn = true;
-    this.isAddressEditmode = false;
-    this.quantitySelected = this.modbusParams.quantity[0]; // default quantity 1
-    this.fcSelected = this.modbusParams.functioncodes[2];//holding registers
-    this.typeSelected = this.modbusParams.datatypes[0];
-
-    this.editIdx = 0;
-    this.tableList = [];
-
-    this.connectIcon = 'icon-ts-power';
     this.initMqtt();
 
     if ($routeParams.id) {
@@ -184,12 +153,13 @@ export class TsModbusConnectCtrl {
     this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
 
     try {
-      await this.mqttClient.run(this.recvMqttMessage.bind(this));
+      await this.mqttClient.run(this.recvMqttMessage);
     } catch (e) {
       console.error(e);
     }
   }
-  recvMqttMessage(topic: string, payload: string): void {
+
+  recvMqttMessage = (topic: string, payload: string): void => {
     const topics = topic.split("/");
     const flowId = topics[topics.length - 2];
 
@@ -198,45 +168,58 @@ export class TsModbusConnectCtrl {
       this.setConnectStatus(payload);
     }
   }
+
   setConnectStatus(color: string): void {
     this.connectStatus = color;
-    if (color === "green") {
-      this.enableNodeSet = true;
-    } else if (color === "yellow") {
-      this.connectIcon = "icon-ts-connection_off";
-      this.connectStatus = "red";
-    } else if (color === "red") {
-      this.connectIcon = "icon-ts-connection_off";
+    switch (color) {
+      case "green":
+        this.enableNodeSet = true;
+        break;
+      case "yellow":
+        this.connectIcon = "icon-ts-connection_off";
+        this.connectStatus = "red";
+        break;
+      case "red":
+        this.connectIcon = "icon-ts-connection_off";
+        break;
     }
 
     this.$scope.$applyAsync();
   }
 
-  onLoadData({ id, params, name, intervals }: any) {
+  onLoadData({
+    id,
+    params: {
+      FlowId, Host, Port, UnitId, TimeOut, ReTimeOut, AddressNode, InjectWires, Tabledata, PtagList, AddressListCount
+    },
+    name,
+    intervals
+  }: any) {
     this.indexID = id;
     this.connName = name;
     this.modbusReadIntervals = intervals;
 
-    this.FlowId = params.FlowId;
+    this.FlowId = FlowId;
 
-    this.modbusHost = params.Host;
-    this.modbusPort = params.Port;
-    this.modbusUnitID = params.UnitId;
-    this.modbusTimeOut = params.TimeOut;
-    this.modbusReTimeOut = params.ReTimeOut;
-    this.nodeModbusGetteritem = params.AddressNode;
-    this.nodeInjectWiresList = params.InjectWires;
+    this.modbusHost = Host;
+    this.modbusPort = Port;
+    this.modbusUnitID = UnitId;
+    this.modbusTimeOut = TimeOut;
+    this.modbusReTimeOut = ReTimeOut;
+    this.nodeModbusGetteritem = AddressNode;
+    this.nodeInjectWiresList = InjectWires;
 
-    this.tableList = params.Tabledata;
-    this.PtagList = params.PtagList;
+    this.tableList = Tabledata;
+    this.PtagList = PtagList;
 
-    if (params.AddressListCount > 0) {
-      this.editIdx = params.AddressListCount;
+    if (AddressListCount > 0) {
+      this.editIdx = AddressListCount;
       this.list = (Array.from(this.tableList));
       this.setPageNodes();
       this.$scope.$applyAsync();
     }
   }
+
   async asyncDataLoader(id: any): Promise<void> {
     try {
       const list = await this.backendSrv.get(`/thingspin/connect/${id}`);
@@ -283,8 +266,6 @@ export class TsModbusConnectCtrl {
       item.functioncode = this.editFC;
       item.quantity = this.editQuantity;
       item.datatype = this.editType;
-
-      this.list = Array.from(this.tableList);
     } else {
       this.editIdx = this.editIdx + 1; // index update
       const tableData: ModbusTableData = {
@@ -297,8 +278,9 @@ export class TsModbusConnectCtrl {
       };
 
       this.tableList.push(tableData);
-      this.list = Array.from(this.tableList);
     }
+    this.list = Array.from(this.tableList);
+
     this.setPageNodes();
     this.$scope.$applyAsync();
 
@@ -327,14 +309,13 @@ export class TsModbusConnectCtrl {
     const editIdx = this.editIdx - 1;
     //address check
     if (this.editAddress && this.editName) {
-      for (let i = 0; i < this.tableList.length; i++) {
-        if (this.editAddress === this.tableList[i].address || this.editName === this.tableList[i].name) {
-          if (!(this.isAddressEditmode && editIdx === i)) {
-            appEvents.emit(AppEvents.alertWarning, ['동일한 name/Address가 존재 합니다.']);
-            editParamFinish = false;
-            break;
-          }
-        }
+      const idx = this.tableList.findIndex(({ address, name }, i) =>
+        (this.editAddress === address || this.editName === name)
+        && !(this.isAddressEditmode && editIdx === i));
+
+      if (idx >= 0) {
+        appEvents.emit(AppEvents.alertWarning, ['동일한 name/Address가 존재 합니다.']);
+        editParamFinish = false;
       }
     } else {
       editParamFinish = false;
@@ -359,33 +340,35 @@ export class TsModbusConnectCtrl {
       this.addTableData2();
     }
   }
+
   onShowAddressEditView() {
-    if (this.isAddressEditView) {
-      this.isAddressEditView = false;
-      this.isAddressEditBtn = true;
+    const b = this.isAddressEditView;
+    this.isAddressEditView = !b;
+    this.isAddressEditBtn = !!b;
+
+    if (b) {
       this.resetEditData();
     } else {
-      this.isAddressEditView = true;
-      this.isAddressEditBtn = false;
-      this.timeout(() => {
+      this.$timeout(() => {
         $('#address-name').focus();
       });
     }
   }
 
   showEdit2(idx: any): void {
-    const item = this.tableList[idx];
+    const { address, name, quantity, functionicode, datatype } = this.tableList[idx];
 
     this.editIdx = idx + 1;
-    this.editAddress = item.address;
-    this.editName = item.name;
-    this.editQuantity = item.quantity;
-    this.editFC = item.functionicode;
-    this.editType = item.datatype;
+    this.editAddress = address;
+    this.editName = name;
+    this.editQuantity = quantity;
+    this.editFC = functionicode;
+    this.editType = datatype;
 
     this.isAddressEditmode = true;
     this.onShowAddressEditView();
   }
+
   removeEdit2(idx: any): void {
     this.tableList.splice(idx, 1);
     this.list = (Array.from(this.tableList));
@@ -396,19 +379,19 @@ export class TsModbusConnectCtrl {
   //-----------------------------
   testAddGetter1(address: any, quantity: any, functioncode: any, flowid: any, posY: any) {
     const addNodeinfo = {
-      getterId: "TS-MODBUS-GETTER-" + address + "-" + flowid,
-      getterName: address + "-Getter",
+      getterId: `TS-MODBUS-GETTER-${address}-${flowid}`,
+      getterName: `${address}-Getter`,
       getterType: functioncode,
       getterAddress: address,
       getterQuantity: quantity,
-      getterServer: "TS-MODBUS-SERVER-ID-" + flowid,
+      getterServer: `TS-MODBUS-SERVER-ID-${flowid}`,
       getterPos: 240 + posY,
-      getterWires: "TS-MODBUS-P-" + address + "-" + flowid,
-      parserId: "TS-MODBUS-P-" + address + "-" + flowid,
+      getterWires: `TS-MODBUS-P-${address}-${flowid}`,
+      parserId: `TS-MODBUS-P-${address}-${flowid}`,
       // tslint:disable-next-line:max-line-length
       parserFunction: "var Total_item = " + quantity + ";\n\nvar res = [\n            {\n                measurement:'modbus',\n                fields:{}\n            }\n            ];\n            \nfor(var i = 0; i < Total_item; i++){\n    var num = i;\n    var n = num.toString();\n    var str = '" + address + "'+'_'+n+'th';\n    \n    var value = msg.payload[i];\n    res[0].fields[str] = value;\n}\n\nmsg.payload = res;\n\n\nreturn msg;",
       parserPos: 220 + posY,
-      parserWires: "TS-MODBUS-JOIN-" + flowid
+      parserWires: `TS-MODBUS-JOIN-${flowid}`
     };
     this.getterparserArray.push(addNodeinfo);
   }
@@ -416,7 +399,7 @@ export class TsModbusConnectCtrl {
   //template 관련
   addModbusGETTER(name: any, address: any, quantity: any, functioncode: any, flowid: any, posY: any, interval: any) {
     const objInjector = {
-      id: "TS-MODBUS-INJECT-" + address + "-" + flowid,
+      id: `TS-MODBUS-INJECT-${address}-${flowid}`,
       type: "inject",
       z: "8900476a.91f358",
       name: "",
@@ -430,14 +413,14 @@ export class TsModbusConnectCtrl {
       x: 110,
       y: 160 + posY,
       wires: [
-        ["TS-MODBUS-GETTER-" + address + "-" + flowid]
+        [`TS-MODBUS-GETTER-${address}-${flowid}`]
       ]
     };
     const objGetter = {
-      id: "TS-MODBUS-GETTER-" + address + "-" + flowid,
+      id: `TS-MODBUS-GETTER-${address}-${flowid}`,
       type: "modbus-getter",
       z: "8900476a.91f358",
-      name: address + "-Getter",
+      name: `${address}-Getter`,
       showStatusActivities: false,
       showErrors: false,
       logIOActivities: false,
@@ -445,19 +428,19 @@ export class TsModbusConnectCtrl {
       dataType: functioncode,
       adr: address,
       quantity: quantity,
-      server: "TS-MODBUS-SERVER-ID-" + flowid,
+      server: `TS-MODBUS-SERVER-ID-${flowid}`,
       useIOFile: false,
       ioFile: "",
       useIOForPayload: false,
       x: 340,
       y: 240 + posY,
       wires: [
-        ["TS-MODBUS-P-" + address + "-" + flowid],
+        [`TS-MODBUS-P-${address}-${flowid}`],
         []
       ]
     };
     const objParser = {
-      id: "TS-MODBUS-P-" + address + "-" + flowid,
+      id: `TS-MODBUS-P-${address}-${flowid}`,
       type: "function",
       z: "8900476a.91f358",
       name: "Parser",
@@ -468,7 +451,7 @@ export class TsModbusConnectCtrl {
       x: 510,
       y: 220 + posY,
       wires: [
-        ["TS-MODBUS-JOIN-" + flowid]
+        [`TS-MODBUS-JOIN-${flowid}`]
       ]
     };
 
@@ -478,23 +461,23 @@ export class TsModbusConnectCtrl {
     this.nodeModbusGetteritem = this.nodeModbusGetteritem + strobjInjector + "," + strObjGetter + "," + strObjParser + ",";
   }
 
+  checkInputData() {
+    return !this.connName ? '수집기 이름을 설정 하세요.'
+      : !this.modbusHost ? 'HOST IP를 입력 하세요.'
+        : !this.modbusPort ? 'PORT 넘버를 입력 하세요.'
+          : !this.modbusUnitID ? 'Unit ID를 입력 하세요.'
+            : !this.modbusTimeOut ? 'TimeOut을 입력 하세요.'
+              : !this.modbusReTimeOut ? 'Re-TimeOut을 입력 하세요.'
+                : !this.modbusReadIntervals ? '데이터 수집 주기를 설정 하세요.'
+                  : null;
+  }
+
   checkParams() {
     this.isParamsComplete = false;
 
-    if (!this.connName) {
-      appEvents.emit(AppEvents.alertWarning, ['수집기 이름을 설정 하세요.']);
-    } else if (!this.modbusHost) {
-      appEvents.emit(AppEvents.alertWarning, ['HOST IP를 입력 하세요.']);
-    } else if (!this.modbusPort) {
-      appEvents.emit(AppEvents.alertWarning, ['PORT 넘버를 입력 하세요.']);
-    } else if (!this.modbusUnitID) {
-      appEvents.emit(AppEvents.alertWarning, ['Unit ID를 입력 하세요.']);
-    } else if (!this.modbusTimeOut) {
-      appEvents.emit(AppEvents.alertWarning, ['TimeOut을 입력 하세요.']);
-    } else if (!this.modbusReTimeOut) {
-      appEvents.emit(AppEvents.alertWarning, ['Re-TimeOut을 입력 하세요.']);
-    } else if (!this.modbusReadIntervals) {
-      appEvents.emit(AppEvents.alertWarning, ['데이터 수집 주기를 설정 하세요.']);
+    const errMsg = this.checkInputData();
+    if (errMsg) {
+      appEvents.emit(AppEvents.alertWarning, [errMsg]);
     } else {
       this.isParamsComplete = true;
       this.testCreate();
@@ -506,13 +489,13 @@ export class TsModbusConnectCtrl {
     this.nodeRedFlowName = `MODBUS-${this.connName}`;
     this.nodeModbusGetteritem = "";
     this.nodeInjectWiresList = "";
+
     if (this.tableList.length > 0) {
       this.editPtagList();
 
-      for (let i = 0; i < this.tableList.length; i++) {
-        this.addModbusGETTER(this.tableList[i].name, this.tableList[i].address, this.tableList[i].quantity, this.tableList[i].functioncode,
-          this.FlowId, i * 20, this.modbusReadIntervals);
-      }
+      this.tableList.forEach(({ name, address, quantity, functioncode }, i) => {
+        this.addModbusGETTER(name, address, quantity, functioncode, this.FlowId, i * 20, this.modbusReadIntervals);
+      });
     } else {
       this.PtagList = [];
     }
@@ -676,7 +659,7 @@ export class TsModbusConnectCtrl {
   }
 
   $onInit(): void {
-    this.timeout(() => { $('#collector-input').focus(); });
+    this.$timeout(() => { $('#collector-input').focus(); });
   }
 
   onUpload(dash: any) {
@@ -694,7 +677,7 @@ export class TsModbusConnectCtrl {
 
       if (dash.params.AddressListCount > 0) {
         this.editIdx = dash.params.AddressListCount;
-        this.list = (Array.from(this.tableList));
+        this.list = Array.from(this.tableList);
         this.setPageNodes();
         this.$scope.$applyAsync();
       }
@@ -706,20 +689,9 @@ export class TsModbusConnectCtrl {
   }
 
   exportData() {
-    if (!this.connName) {
-      appEvents.emit(AppEvents.alertWarning, ['수집기 이름을 설정 하세요.']);
-    } else if (!this.modbusHost) {
-      appEvents.emit(AppEvents.alertWarning, ['HOST IP를 입력 하세요.']);
-    } else if (!this.modbusPort) {
-      appEvents.emit(AppEvents.alertWarning, ['PORT 넘버를 입력 하세요.']);
-    } else if (!this.modbusUnitID) {
-      appEvents.emit(AppEvents.alertWarning, ['Unit ID를 입력 하세요.']);
-    } else if (!this.modbusTimeOut) {
-      appEvents.emit(AppEvents.alertWarning, ['TimeOut을 입력 하세요.']);
-    } else if (!this.modbusReTimeOut) {
-      appEvents.emit(AppEvents.alertWarning, ['Re-TimeOut을 입력 하세요.']);
-    } else if (!this.modbusReadIntervals) {
-      appEvents.emit(AppEvents.alertWarning, ['데이터 수집 주기를 설정 하세요.']);
+    const errMsg = this.checkInputData();
+    if (errMsg) {
+      appEvents.emit(AppEvents.alertWarning, [errMsg]);
     } else {
       const outputData = {
         name: this.connName,
