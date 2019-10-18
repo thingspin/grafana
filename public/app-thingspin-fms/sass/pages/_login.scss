@@ -42,7 +42,12 @@
 
 
 .ts-login-reset-after{
-
+ align-items: center;
+}
+.ts-login-reset-login-row{
+  float: right;
+  margin-top: 28px;
+  padding: 20px;
 }
 
 .ts-reset{
@@ -56,6 +61,10 @@
 }
 .ts-reset-form{
   .gf-form{
+    border: solid 1px #0039ff;
+    border-radius: 4px;
+    background: #efefef;
+    color: #0039ff;
     .gf-form-label{
       //background:none;
       //border:none;
@@ -74,11 +83,12 @@
     .gf-form-input{
       border:none;
       color: black;
-      background-color: rgba(0, 0, 0, 0.07);
+      background: #efefef;
+      //@extendbackground-color: rgba(0, 0, 0, 0.07);
     }
   }
 
-  .gf-form-button-row{
+  .gf-form-reset-button-row{
     float: right;
     margin-top: 28px;
     
@@ -89,9 +99,25 @@
 .ts-signup-form{
   
   .gf-form{
+    border: solid 1px #0039ff;
+    border-radius: 4px;
+    background: #efefef;
+    color: #0039ff;
+    margin-bottom: 16px;
     span{
       color:black;
     }
+  }
+
+  .gf-form-input{
+    border:none;
+    color: black;
+    background: #efefef;
+    //background-color: rgba(0, 0, 0, 0.07);
+  }
+  .gf-form-button-row-signup{
+    float: right;
+    margin-top: 12px;
   }
 }
 
@@ -106,20 +132,38 @@
   color: #0039ff;
 }
 
-.ts-reset-button-submit{
+.ts-signup-desc{
+  font-family: Roboto;
+  font-size: 16px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.19;
+  letter-spacing: normal;
+  color: #0039ff;
+}
+
+.ts-reset-button-submit:not(.gf-form-button-row){
   background-color: #0039ff;
   opacity: 1;
   color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 14px;
 }
-.ts-reset-button-back{
+.ts-reset-button-back:not(.gf-form-button-row){
   background-color: #5a0dff;
   opacity: 1;
   color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 14px;
 }
 
 .ts-signup-area{
   display: flew;
   margin-bottom: 28px;
+  margin-left: 35%;
   .ts-signup-title {
     width: 116px;
     height: 19px;
