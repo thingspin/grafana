@@ -25,6 +25,7 @@ export function tsRegisterAngularDirectives() {
     "initialOpenNodes",
     "locale",
     "children",
+    "close",
     ["onClickItem", { watchDepth: 'reference', wrapApply: true }],
     ["onClickAdd",  { watchDepth: 'reference', wrapApply: true }],
   ]);

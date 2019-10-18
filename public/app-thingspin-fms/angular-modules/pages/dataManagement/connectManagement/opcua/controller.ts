@@ -73,6 +73,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     nodes: any[];
     timer: NodeJS.Timer | null;
     enableNodeSet: boolean;
+    closeValue: boolean;
 
     /** @ngInject */
     constructor(
@@ -82,6 +83,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         private backendSrv: BackendSrv) { }
 
     $onInit(): void {
+        this.closeValue = false;
         this.initMqtt();
         const { id } = this.$routeParams;
         if (id) {
@@ -278,6 +280,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         let connId;
         if (isNew) {
             // new
+            this.closeValue = true;
             connId = await this.backendSrv.post(`${baseApi}/opcua`, payload);
             await this.timeout(3000);
             await this.backendSrv.put(`${baseApi}/${connId}`, payload);
@@ -285,7 +288,6 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
             appEvents.emit(AppEvents.alertSuccess, ['신규 OPC/UA 연결이 추가되었습니다.']);
         } else {
             await this.backendSrv.put(`${baseApi}/${this.connId}`, payload);
-
             appEvents.emit(AppEvents.alertSuccess, ['OPC/UA 연결이 수정되었습니다.']);
             connId = this.connId;
         }
