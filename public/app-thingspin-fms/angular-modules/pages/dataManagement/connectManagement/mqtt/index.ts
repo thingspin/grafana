@@ -15,14 +15,11 @@ import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 const DEF_URL = "localhost";
 const DEF_PORT = "1883";
 const DEF_ALIVE = "60";
-// const DEF_TOPIC = "/#";
 const DEF_TOPIC_TYPE_STRING = "String";
 const DEF_TOPIC_TYPE_SHARP = "#";
 const DEF_TOPIC_TYPE_PLUS = "+";
-const DEF_TOPIC_SEPARATOR = "/";
-const DEF_TOPIC_SPACE = " ";
-
-// const DEF_REQUEST_MESSAGE_CONNECT = "접속 테스트 시도";
+// const DEF_TOPIC_SEPARATOR = "/";
+// const DEF_TOPIC_SPACE = " ";
 
 interface Topic {
   id: number;
@@ -36,12 +33,18 @@ interface TagList {
   type: any;
 }
 
-// interface MqttTableData {
-//   name: string;
-//   topic: string;
-//   value: string;
-//   topicList: Topic[];
-// }
+
+interface TopicItem {
+  id: number;
+  name: string;
+  topic: string;
+  topicList: any[];
+  topicViewList: any[];
+  topicString: string;
+  item: string;
+  value: string;
+  selType: string;
+}
 
 export interface TableModel {
   // table header data
@@ -72,7 +75,17 @@ export class TsMqttConnectCtrl {
     values: ['String', 'Int', 'Float', 'Boolean'],
     types: [DEF_TOPIC_TYPE_STRING, DEF_TOPIC_TYPE_SHARP, DEF_TOPIC_TYPE_PLUS]
   };
-  topicItem: any;
+  topicItem: TopicItem = {
+    id: 0,
+    name: '',
+    topic: '',
+    topicList: [] as any[],
+    topicViewList: [] as any[],
+    topicString: '',
+    item: '',
+    value: this.defMqtt.values[0],
+    selType: this.defMqtt.types[0]
+  };
   collector = '';
   uuid: string;
   FlowID: string;
@@ -80,12 +93,11 @@ export class TsMqttConnectCtrl {
   typeSelected: string;
   isTopicEditView = false;
   isTopicEditBtn = true;
-  isEditMode: boolean;
+  isEditMode = !!this.$routeParams.id;
   isTopicEditMode = false;
   isLoadTopic = '';
   connectStatus: string;
 
-  defTabulatorOpts: object;
   tableList = new Map<number, Topic>();
   indexID = -1;
   increaseYPos = 60;
@@ -118,33 +130,20 @@ export class TsMqttConnectCtrl {
     private $scope: angular.IScope,
     private backendSrv: BackendSrv,
     private $location: angular.ILocationService,
-    private $compile: angular.ICompileService,
-    $routeParams: angular.route.IRouteParamsService,
+    private $routeParams: angular.route.IRouteParamsService,
     private $timeout: ITimeoutService) {
-    this.topicItem = {
-      id: 0,
-      name: '',
-      topicList: [],
-      topicViewList: [],
-      topicString: '',
-      item: '',
-      value: this.defMqtt.values[0],
-      selType: this.defMqtt.types[0]
-    };
-
     this.initMqtt();
+
     if ($routeParams.id) {
       this.asyncDataLoader($routeParams.id);
-      this.isEditMode = true;
     } else {
-      this.isEditMode = false;
       this.uuid = uid.generate();
     }
   }
 
   async asyncDataLoader(id: any): Promise<void> {
     try {
-      const list = await this.backendSrv.get("/thingspin/connect/" + id);
+      const list = await this.backendSrv.get(`/thingspin/connect/${id}`);
 
       this.onLoadData(list);
       this.updateData();
@@ -219,26 +218,23 @@ export class TsMqttConnectCtrl {
   }
 
   inputChecker() {
-    if (!this.collector) {
-      this.openAlartNotification("수집기 이름을 입력해주세요.");
-      return false;
-    } else if (!this.connection.url) {
-      this.openAlartNotification("HOST를 입력해주세요.");
-      return false;
-    } else if (!this.connection.port) {
-      this.openAlartNotification("PORT를 입력해주세요.");
-      return false;
-    } else if (!this.connection.keep_alive) {
-      this.openAlartNotification("Keep Alive 초를 입력해주세요.");
-      return false;
+    const errMsg = (!this.collector) ? "수집기 이름을 입력해주세요."
+      : (!this.connection.url) ? "HOST를 입력해주세요."
+        : (!this.connection.port) ? "PORT를 입력해주세요."
+          : (!this.connection.keep_alive) ? "Keep Alive 초를 입력해주세요."
+            : '';
+
+    if (errMsg) {
+      this.openAlartNotification(errMsg);
     }
-    return true;
+
+    return !errMsg;
   }
 
   connectTest() {
     if (this.inputChecker()) {
       if (this.indexID === -1 || this.tableList.size === 0) {
-        if (this.topicDisListArrayString.length === 0) {
+        if (!this.topicDisListArrayString) {
           this.createConnectNode();
         }
         this.methodProcess(this.createHttpObject(), false);
@@ -253,10 +249,11 @@ export class TsMqttConnectCtrl {
   }
 
   onShowTopicEditView(value: any) {
+    this.isTopicEditView = !!value;
+    this.isTopicEditBtn = !value;
+
     if (value) {
-      this.isTopicEditView = true;
-      this.isTopicEditBtn = false;
-      if (this.topicItem.name.length === 0 && this.topicItem.topicString.length === 0) {
+      if (!this.topicItem.name && !this.topicItem.topicString) {
         this.topicItem.id = this.tableList.size;
       }
       /* --jwpark 19.07.04
@@ -269,40 +266,7 @@ export class TsMqttConnectCtrl {
       });
     } else {
       this.onDataResetTopic();
-      this.isTopicEditView = false;
-      this.isTopicEditBtn = true;
     }
-  }
-
-  initAddressTable() {
-    const actionFormatter = (cell: any, _formatterParams: any, onRendered: Function) => {
-      const data = cell.getData();
-      const $html = this.$compile(/*html*/`
-          <button class="btn" ng-click="ctrl.loadTopicData('${data.id}')">
-              <i class="fa fa-pencil"></i>
-          </button>
-          <button class="btn" ng-click="ctrl.removeTopic('${data.id}')">
-              <i class="fa fa-trash"></i>
-          </button>
-      `)(this.$scope);
-      onRendered((): void => {
-        this.$scope.$applyAsync();
-        $(cell.getElement()).append($html);
-      });
-    };
-    this.defTabulatorOpts = {
-      pagination: "local",
-      paginationSize: 10,
-      responsivelayout: true,
-      layout: "fitColumns",
-      layoutColumnsOnNewData: true,
-      columns: [
-        { title: "이름", field: "name" },
-        { title: "Topic", field: "topic" },
-        { title: "Value Type", field: "value" },
-        { title: "동작", field: "", formatter: actionFormatter }
-      ],
-    };
   }
 
   delTopicItemList(value: any) {
@@ -378,6 +342,7 @@ export class TsMqttConnectCtrl {
     });
   }
 
+  /*
   onTopicAdd(item: any) {
     if (item) {
       const itemTopic = {} as Topic;
@@ -400,24 +365,24 @@ export class TsMqttConnectCtrl {
       this.openAlartNotification("토픽 항목을 입력해주세요.");
     }
   }
+  */
 
   findCompareTopicName(name: any) {
-    const keys = Array.from(this.tableList.keys());
+    const keys = this.tableList.keys();
 
     for (const key of keys) {
-      const convType = JSON.stringify(this.tableList.get(key).type.toLowerCase());
+      const { type } = this.tableList.get(key); // topic alias
+      const convType = type.toLowerCase();
 
-      if (convType !== JSON.stringify(name.toLowerCase())) {
-        continue;
-      }
-
-      if (this.isTopicEditMode && (convType === JSON.stringify(this.isLoadTopic.toLowerCase()))) {
+      if (convType !== name.toLowerCase()
+        || (this.isTopicEditMode && convType === this.isLoadTopic.toLowerCase()) ) { // edit mode check
         continue;
       }
 
       this.openAlartNotification("Topic 이름이 같은 항목이 있습니다. 다른 이름을 입력해주세요.");
       return false;
     }
+
     return true;
   }
 
@@ -437,6 +402,7 @@ export class TsMqttConnectCtrl {
             viewStr: topicString
           };
         } else {
+          // call by reference(?)
           inputData.type = name;
           inputData.value = value;
           inputData.viewStr = topicString;
@@ -457,67 +423,65 @@ export class TsMqttConnectCtrl {
     } else {
       if (!n) {
         this.openAlartNotification("토픽 이름을 입력해주세요.");
-      } else if (this.topicItem.topicList.length === 0) {
+      } else if (!this.topicItem.topicList.length) {
         this.openAlartNotification("토픽 항목을 입력해주세요.");
       }
     }
   }
 
   onJsonCreatSender(withclose: any) {
-    let count = 0;
-    if (this.topicListArrayString.length === 0 &&
-      this.topicDisListArrayString.length === 0) {
+    if (!this.topicListArrayString && !this.topicDisListArrayString) {
       this.createConnectNode();
     }
+
     if (this.tableList.size > 0) {
       this.topicListArrayString += ",";
       this.topicDisListArrayString += ",";
       this.topicListPublishArrayString += ",";
 
-      this.tableList.forEach((value: any, key: any, mapObject: any) => {
+      let count = 0;
+      this.tableList.forEach(({ type, id, viewStr, value }: any) => {
         const topicNode = {
-          "id": "TS-MQTT-IN-" + value.type + "_" + value.id,
-          "type": "mqtt in",
-          "name": value.type + "_" + value.id + "::" + value.viewStr,
-          "topic": value.viewStr,
-          "qos": 0,
-          "datatype": "auto",
-          "broker": "TS-MQTT-CONNECT-" + this.uuid,
-          "x": 200,
-          "y": 300 + (this.increaseYPos * count),
-          "wires": [
+          id: `TS-MQTT-IN-${type}_${id}`,
+          type: "mqtt in",
+          name: `${type}_${id}::${viewStr}`,
+          topic: viewStr,
+          qos: 0,
+          datatype: "auto",
+          broker: `TS-MQTT-CONNECT-${this.uuid}`,
+          x: 200,
+          y: 300 + (this.increaseYPos * count),
+          wires: [
             [
-              "TS-MQTT-PARSE-" + value.type + "_" + value.id
+              `TS-MQTT-PARSE-${type}_${id}`
             ]
           ]
         };
         const topicParse = {
-          "id": "TS-MQTT-PARSE-" + value.type + "_" + value.id,
-          "type": "function",
-          "name": value.type + "_" + value.id + "::" + "Parse",
-          // "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
-          "func": this.onJsonParseWithInfluxTagCreate(value.type, value.value, value.viewStr),
-          "outputs": 1,
-          "noerr": 0,
-          "x": 500,
-          "y": 300 + (this.increaseYPos * count),
-          "wires": [
+          id: `TS-MQTT-PARSE-${type}_${id}`,
+          type: "function",
+          name: `${type}_${id}::Parse`,
+          func: this.onJsonParseWithInfluxTagCreate(type, value, viewStr),
+          outputs: 1,
+          noerr: 0,
+          x: 500,
+          y: 300 + (this.increaseYPos * count),
+          wires: [
             [
-              "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-" + this.uuid
+              `TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-${this.uuid}`
             ]
           ]
         };
         const topicPublishParse = {
-          "id": "TS-MQTT-PARSE-" + value.type + "_" + value.id,
-          "type": "function",
-          "name": value.type + "_" + value.id + "::" + "Parse",
-          // "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
-          "func": this.onJsonParseWithInfluxTagCreate(value.type, value.value, value.viewStr),
-          "outputs": 1,
-          "noerr": 0,
-          "x": 500,
-          "y": 300 + (this.increaseYPos * count),
-          "wires": [
+          id: `TS-MQTT-PARSE-${type}_${id}`,
+          type: "function",
+          name: `${type}_${id}::Parse`,
+          func: this.onJsonParseWithInfluxTagCreate(type, value, viewStr),
+          outputs: 1,
+          noerr: 0,
+          x: 500,
+          y: 300 + (this.increaseYPos * count),
+          wires: [
             [
               "TS-CONV-INFLUXDB-PAYLOAD-FUNC-ID-" + this.uuid,
               "TS-CONV-MQTT-PAYLOAD-FUNC-ID-" + this.uuid
@@ -525,90 +489,60 @@ export class TsMqttConnectCtrl {
           ]
         };
         const topicDisParse: any = {
-          id: "TS-MQTT-PARSE-" + value.type + "_" + value.id,
+          id: `TS-MQTT-PARSE-${type}_${id}`,
           type: "function",
-          name: value.type + "_" + value.id + "::" + "Parse",
-          // "func": this.onJsonParseWithInfluxCreate(value.name, value.value),
-          func: this.onJsonParseWithInfluxTagCreate(value.type, value.value, value.viewStr),
+          name: `${type}_${id}::Parse`,
+          func: this.onJsonParseWithInfluxTagCreate(type, value, viewStr),
           outputs: 1,
           noerr: 0,
           x: 500,
-          y: 300 + (this.increaseYPos * count++),
+          y: 300 + (this.increaseYPos * count),
           wires: [[]]
         };
 
-        if (count === this.tableList.size) {
-          this.topicListPublishArrayString += JSON.stringify(topicNode) + ",";
-          this.topicListPublishArrayString += JSON.stringify(topicPublishParse);
+        this.topicListPublishArrayString += JSON.stringify(topicNode) + "," + JSON.stringify(topicPublishParse);
+        this.topicListArrayString += JSON.stringify(topicNode) + "," + JSON.stringify(topicParse);
+        this.topicDisListArrayString += JSON.stringify(topicNode) + "," + JSON.stringify(topicDisParse);
 
-          this.topicListArrayString += JSON.stringify(topicNode) + ",";
-          this.topicListArrayString += JSON.stringify(topicParse);
-
-          this.topicDisListArrayString += JSON.stringify(topicNode) + ",";
-          this.topicDisListArrayString += JSON.stringify(topicDisParse);
-        } else {
-          this.topicListPublishArrayString += JSON.stringify(topicNode) + ",";
-          this.topicListPublishArrayString += JSON.stringify(topicPublishParse) + ",";
-
-          this.topicListArrayString += JSON.stringify(topicNode) + ",";
-          this.topicListArrayString += JSON.stringify(topicParse) + ",";
-
-          this.topicDisListArrayString += JSON.stringify(topicNode) + ",";
-          this.topicDisListArrayString += JSON.stringify(topicDisParse) + ",";
+        count += 1;
+        if (count !== this.tableList.size) {
+          this.topicListPublishArrayString += ",";
+          this.topicListArrayString += ",";
+          this.topicDisListArrayString += ",";
         }
       });
 
-      if (this.topicListArrayString.length !== 0) {
+      if (this.topicListArrayString.length) {
         this.methodProcess(this.createHttpObject(), withclose);
       }
-    } else {
-      if (withclose) {
-        if (this.topicListArrayString.length !== 0) {
-          this.methodProcess(this.createHttpObject(), withclose);
-        }
-      }
+    } else if (withclose && this.topicListArrayString.length) {
+      this.methodProcess(this.createHttpObject(), withclose);
     }
   }
 
-  onJsonParseCreate(value: any, type: any) {
-    const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type);
-    return "const payload = \n{\n  \"" + value + "\" : parse" + this.defMqtt.values[index] + "(msg.payload)\n};\n\nmsg.payload = payload;\n";
-  }
+  onJsonParseWithInfluxTagCreate(key: any, type: any, topic: any) {
+    const { values } = this.defMqtt;
+    const index = values.findIndex((item: any, _index: any) => item === type);
 
-  onJsonParseWithInfluxCreate(value: any, type: any) {
-    const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type);
-    const returnValue = "var influxPayload = \n[{\n    \"measurement\": \"" + this.indexID + "\",\n    \"fields\": {\n        \""
-      + value + "\": parse" + this.defMqtt.values[index] + "(msg.payload)\n    }\n}]\n\nmsg.payload = influxPayload;\n\nreturn msg;\n";
-    return returnValue;
-  }
+    const value = (type === values[0]) ? `msg.payload` //String
+      : (type === values[3]) ? `parse${values[index]}(msg.payload)` // Boolean
+        : `parse${values[index]}(msg.payload)`;
 
-  onJsonParseWithInfluxTagCreate(value: any, type: any, topic: any) {
-    const index = this.defMqtt.values.findIndex((item: any, _index: any) => item === type);
-    let returnValue = "";
-    if (type === this.defMqtt.values[0]) {
-      //String
-      returnValue = "var influxPayload = {\n    \"" + value + "\": msg.payload\n\}\n\nmsg.payload = influxPayload;\n\n"
-        + "msg.id = " + this.indexID + "\;\n\nreturn msg;\n";
-    } else if (type === this.defMqtt.values[3]) {
-      //Boolean
-      returnValue = "var influxPayload = {\n    \"" + value + "\":parse" + this.defMqtt.values[index] +
-        "(msg.payload)\n\}\n\nmsg.payload = influxPayload;\n\n" + "msg.id = " + this.indexID + "\;\n\nreturn msg;\n";
+    return `
+msg.id = ${this.indexID};
+msg.payload = { "${key}": ${value} };
 
-    } else {
-      returnValue = "var influxPayload = {\n    \"" + value + "\":parse" + this.defMqtt.values[index] +
-        "(msg.payload)\n\}\n\nmsg.payload = influxPayload;\n\n" + "msg.id = " + this.indexID + "\;\n\nreturn msg;\n";
-    }
-    return returnValue;
+return msg;
+`;
   }
 
   makePtagList() {
     this.PtagList = [];
     this.tableList.forEach(({ type, value }: any) => {
-      const TagData = {
+      this.PtagList.push({
         name: type,
         type: value,
-      };
-      this.PtagList.push(TagData);
+      });
     });
   }
 
@@ -635,7 +569,8 @@ export class TsMqttConnectCtrl {
   createHttpObject() {
     this.makePtagList();
     const { url, port, keep_alive, session } = this.connection;
-    const data = {
+
+    return {
       name: this.collector,
       params: {
         Name: this.collector,
@@ -653,7 +588,6 @@ export class TsMqttConnectCtrl {
         RequestMsg: this.requestHelp,
       }
     };
-    return data;
   }
 
   openAlartNotification(value: any) {
@@ -662,28 +596,30 @@ export class TsMqttConnectCtrl {
 
   setConnectStatus(color: string): void {
     this.connectStatus = color;
-    $('#mqtt-connect-btn').removeClass('icon-ts-connection_off');
-    $('#mqtt-connect-btn').removeClass('icon-ts-connection-loding');
-    $('#mqtt-connect-btn').removeClass('icon-ts-power');
-    $('#mqtt-connect-state').removeClass('mqtt-state-connected');
-    $('#mqtt-connect-state').removeClass('mqtt-state-retry');
-    $('#mqtt-connect-state').removeClass('mqtt-state-disconnect');
-    if (color === "green") {
-      $('#mqtt-connect-state').addClass('mqtt-state-connected');
-      $('#mqtt-connect-btn').addClass('icon-ts-power');
-    } else if (color === "yellow") {
-      $('#mqtt-connect-state').addClass('mqtt-state-retry');
-      $('#mqtt-connect-btn').addClass('icon-ts-connection-loding');
-    } else if (color === "red") {
-      $('#mqtt-connect-state').addClass('mqtt-state-disconnect');
-      $('#mqtt-connect-btn').addClass('icon-ts-connection_off');
-    } else if (color === "init") {
-      $('#mqtt-connect-state').addClass('mqtt-state-retry');
-      $('#mqtt-connect-btn').addClass('icon-ts-power');
-    } else {
-      $('#mqtt-connect-state').addClass('mqtt-state-retry');
-      $('#mqtt-connect-btn').addClass('icon-ts-power');
+    const colorCls: { [key: string]: any } = {
+      green: { state: 'mqtt-state-connected', btn: 'icon-ts-power', },
+      yellow: { state: 'mqtt-state-retry', btn: 'icon-ts-connection-loding', },
+      red: { state: 'mqtt-state-disconnect', btn: 'icon-ts-connection_off', },
+      init: { state: 'mqtt-state-retry', btn: 'icon-ts-power', },
+      default: { state: 'mqtt-state-retry', btn: 'icon-ts-power', },
+    };
+    const $btn = $('#mqtt-connect-btn');
+    const $state = $('#mqtt-connect-state');
+
+    for (const c in colorCls) {
+      const { state, btn } = colorCls[c];
+
+      $btn.removeClass(btn);
+      $state.removeClass(state);
     }
+
+    if (!colorCls[color]) {
+      color = 'default';
+    }
+
+    $state.addClass(colorCls[color].state);
+    $btn.addClass(colorCls[color].btn);
+
     this.$scope.$applyAsync();
   }
 
@@ -691,13 +627,11 @@ export class TsMqttConnectCtrl {
   // VALUE IS "TRUE" >> CLOSE FUNCTION
   async methodProcess(object: any, value: any): Promise<any> {
     try {
-      if (this.isEditMode || this.indexID !== -1) {
-        await this.backendSrv.put("/thingspin/connect/" + this.indexID, object);
-      } else {
+      if (!(this.isEditMode || this.indexID !== -1)) {
         const result = await this.backendSrv.post("/thingspin/connect/mqtt", object);
         this.indexID = result;
-        await this.backendSrv.put("/thingspin/connect/" + this.indexID, object);
       }
+      await this.backendSrv.put(`/thingspin/connect/${this.indexID}`, object);
       if (value) {
         this.close();
       }
@@ -762,23 +696,24 @@ export class TsMqttConnectCtrl {
 
     return _.range(from, to);
   }
+
   // table event methods
   tOnSelectChange() {
     this.tCalcPaging();
     this.setPageNodes();
   }
 
-  onUpload(dash: any) {
-    if (this.jsonDataParsingChecker(dash)) {
-      this.collector = dash.collector;
+  onUpload({ collector, connection, topicList }: any) {
+    if (!(!collector || !connection || !topicList)) {
+      this.collector = collector;
       this.connection = {
-        url: dash.connection.url,
-        port: dash.connection.port,
-        keep_alive: dash.connection.keep_alive,
-        session: dash.connection.session,
+        url: connection.url,
+        port: connection.port,
+        keep_alive: connection.keep_alive,
+        session: connection.session,
       };
 
-      dash.topicList.forEach(({ name: n, type, viewStr, topic, value }: any, id: number) => {
+      topicList.forEach(({ name: n, type, viewStr, topic, value }: any, id: number) => {
         const tableData: Topic = {
           id,
           type: type ? type : n,
@@ -792,24 +727,20 @@ export class TsMqttConnectCtrl {
     }
   }
 
-  jsonDataParsingChecker({collector, connection, topicList}: any) {
-      return !(!collector || !connection || !topicList);
-  }
-
-  async exportData() {
-    const outputData = {
+  exportData() {
+    const outputData = JSON.stringify({
       collector: this.collector,
       connection: this.connection,
       topicList: Array.from(this.tableList.values())
-    };
+    });
 
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(outputData));
     const $elem = $("#downloadAnchorElem");
-    $elem.attr("href", dataStr);
+    $elem.attr("href", "data:text/json;charset=utf-8," + encodeURIComponent(outputData));
     $elem.attr("download", this.collector + "_" + formatDate(new Date()) + ".json");
     $elem.get(0).click();
   }
 }
+
 export function tsMqttConnectDirective() {
   return {
     restrict: 'E',
