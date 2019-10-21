@@ -14,19 +14,19 @@ const getTabNode = (title: string, icon: string) => () => (<>
 </>);
 
 const tabs = [
-  <Tab
-    name="alarm" initActive={true}
-    heading={getTabNode('알람', "fms-right-tap-alarm-icon fa-bell")}
-  >
-    <FmsAlarmBandComp />
-  </Tab>,
-  /*
-  <Tab
-    name="log"
-    heading={getTabNode('시스템 로그', "fms-right-tap-alarm-icon fa-window-maximize")}
-  >
-  </Tab>
-  */
+  {
+    name: 'alarm', initActive: true, heading: getTabNode('알람', "fms-right-tap-alarm-icon fa-bell"),
+    content: <FmsAlarmBandComp />,
+  },
+  /*{
+    name: 'log', initActive: false, heading: getTabNode('시스템 로그', "fms-right-tap-alarm-icon fa-window-maximize"),
+  }*/
 ];
 
-export const TsRightSidebar: React.FC = () => <Tabs>{tabs}</Tabs>;
+export const TsRightSidebar: React.FC = () => <Tabs>
+  {tabs.map(({ name, initActive, heading, content }, idx) => (
+    <Tab key={idx} name={name} initActive={initActive} heading={heading}>
+      {content}
+    </Tab>
+  ))}
+</Tabs>;
