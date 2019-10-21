@@ -441,9 +441,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 currPage * rowCount,
                 (currPage * rowCount) + rowCount
             );
-
-            this.setCountValue();
         }
+        this.setCountValue();
     }
 
 
