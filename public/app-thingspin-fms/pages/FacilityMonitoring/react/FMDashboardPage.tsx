@@ -35,21 +35,23 @@ export class FMDashboardPage extends DashboardPage {
         const { dashboard } = this.props;
 
         // remove panels(non diff check)
-        const removes = dashboard.panels.map(({ id }) => id);
-        for (const remove of removes) {
+        dashboard.panels.forEach(({ id }) => {
             // find PanelModel Object
-            const p = dashboard.getPanelById(remove);
+            const panel = dashboard.getPanelById(id);
 
             // remove phase
-            dashboard.removePanel(p);
-        }
+            dashboard.removePanel(panel);
+        });
 
         // add panels
+        for (const add of newPanel) {
+            dashboard.addPanel(add);
+        }
+
+        // apply sequence
         setTimeout(() => {
-            for (const add of newPanel) {
-                dashboard.addPanel(add);
-            }
-        }, 1);
+            dashboard.startRefresh();
+        }, 50);
     }
 
     // add thingspin method
@@ -123,10 +125,7 @@ export class FMDashboardPage extends DashboardPage {
         const approximateScrollTop: number = Math.round(scrollTop / 25) * 25;
         return (<div className={gridClassName}>
 
-            {!isEditing
-                && !editview
-                && this.renderFacilityTree()
-            }
+            {!isEditing && !editview && this.renderFacilityTree()}
 
             <div className={gridWrapperClasses}>
                 {submenuEnabled && <SubMenu dashboard={dashboard} />}
