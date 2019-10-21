@@ -35,8 +35,8 @@ export interface TableModel {
 
 
 export class TsSiteListCtrl implements angular.IController {
-    data: any;
-    list: SiteTableData[];
+    id: any;
+    list: SiteTableData[] = [];
     tData: TableModel = {
         rowCount: 10,
         selectOpts: [10, 20, 30],
@@ -45,61 +45,45 @@ export class TsSiteListCtrl implements angular.IController {
         maxPageLen: 10,
         pageNode: [],
     };
-    isEdit: boolean;
-    isEditView: boolean;
-    isListView: boolean;
-    isAddSiteBtn: boolean;
+    isEdit = false;
+    isEditView = false;
+    isListView = true;
+    isAddSiteBtn = true;
+
     editName: string;
     name: string;
     desc: string;
     lat: string;
     lon: string;
-    selIdx: any;
 
     /** @ngInject */
-    constructor(
+    constructor( // Dependency Injection
         private $scope: angular.IScope,
         private backendSrv: BackendSrv,
         private $location: angular.ILocationService,
         $timeout: ITimeoutService,
     ) {
-        this.isEdit = false;
-        this.isEditView = false;
-        this.isListView = true;
-        this.isAddSiteBtn = true;
-        this.list = [];
         this.asyncDataLoader();
 
-        this.selIdx = -1;
-
-        $scope.$watch('ctrl.isEditView', (value) => {
-            if (value) {
-                $timeout(() => {
-                    $('#site-name').focus();
-                });
-            }
-        });
-    }// Dependency Injection
-
-    $onInit(): void {
+        $scope.$watch('ctrl.isEditView', (value) => (value && $timeout(() => {
+            $('#site-name').focus();
+        })));
     }
 
-    $onDestroy(): void {
-    }
+    $onInit(): void { }
 
+    $onDestroy(): void { }
 
-    editSite(site: any) {
+    editSite({ name, id, desc, lon, lat }: SiteTableData) {
         this.onShowEditView(true);
         this.isEdit = true;
-        this.editName = site.name;
-        this.data = site.id;
-        this.name = site.name;
-        this.desc = site.desc;
-        this.lon = site.lon;
-        this.lat = site.lat;
-        console.log("==========Edit site");
-        console.log(site);
+        this.editName = this.name = name;
+        this.id = id;
+        this.desc = desc;
+        this.lon = lon;
+        this.lat = lat;
     }
+
     removeSite(sid: any) {
         $.ajax({
             type: 'DELETE',
@@ -108,8 +92,6 @@ export class TsSiteListCtrl implements angular.IController {
             contentType: "application/json; charset=UTF-8",
             async: false,
             success: (result) => {
-                console.log("Remove after");
-                console.log(result);
                 appEvents.emit(AppEvents.alertSuccess, ['삭제되었습니다.']);
                 this.onLoadData(result);
             },
@@ -118,85 +100,67 @@ export class TsSiteListCtrl implements angular.IController {
             },
         });
     }
+
     onShowEditView(value: any) {
+        this.isEditView = !!value;
+        this.isListView = !value;
+        this.isAddSiteBtn = !value;
+
         if (value) {
-            this.name = "";
-            this.desc = "";
-            this.lon = "";
-            this.lat = "";
+            this.name = '';
+            this.desc = '';
+            this.lon = '';
+            this.lat = '';
             this.isEdit = false;
-            this.isEditView = true;
-            this.isListView = false;
-            this.isAddSiteBtn = false;
             $('#site-name').focus();
-        } else {
-            this.isEditView = false;
-            this.isListView = true;
-            this.isAddSiteBtn = true;
         }
     }
-    onSiteAdd(): void {
-        if (this.isEdit) {
-            // Edit
-            if (this.checkCmpSiteName()) {
-                this.backendSrv.put("/thingspin/sites", {
-                    Id: this.data,
+
+    async onSiteAdd() {
+        try {
+            if (!this.name) {
+                this.openAlartNotification("사이트에 이름을 입력해주세요.");
+            } else if (this.checkCmpSiteName()) {
+                const payload: any = {
                     Name: this.name,
                     Desc: this.desc,
                     Lat: parseFloat(this.lat),
                     Lon: parseFloat(this.lon),
-                }).then((result: any) => {
-                    appEvents.emit(AppEvents.alertSuccess, ['수정되었습니다.']);
-                    this.onLoadData(result);
-                    this.onShowEditView(false);
-                }).catch((err: any) => {
-                    if (err.status === 500) {
-                        appEvents.emit(AppEvents.alertError, [err.statusText]);
-                    }
-                });
+                };
 
+                let msg;
+                if (this.isEdit) { // Edit
+                    payload.Id = this.id;
+                    msg = '수정되었습니다.';
+                } else { // Add
+                    msg = '추가되었습니다.';
+                }
+
+                const result = await this.backendSrv[this.isEdit ? 'put' : 'post']("/thingspin/sites", payload);
+                appEvents.emit(AppEvents.alertSuccess, [msg]);
+                this.onLoadData(result);
+                this.onShowEditView(false);
+                this.$scope.$applyAsync();
             }
-        } else {
-            // Add
-            if (this.name) {
-                if (this.checkCmpSiteName()) {
-                    this.backendSrv.post("/thingspin/sites", {
-                        Name: this.name,
-                        Desc: this.desc,
-                        Lat: parseFloat(this.lat),
-                        Lon: parseFloat(this.lon),
-                    }).then((result: any) => {
-                        appEvents.emit(AppEvents.alertSuccess, ['추가되었습니다.']);
-                        this.onLoadData(result);
-                        this.onShowEditView(false);
-                    }).catch((err: any) => {
-                        if (err.status === 500) {
-                            appEvents.emit(AppEvents.alertError, [err.statusText]);
-                        }
-                    });
-                }
-            } else {
-                if (!this.name) {
-                    this.openAlartNotification("사이트에 이름을 입력해주세요.");
-                }
+        } catch ({ status, statusText }) {
+            if (status === 500) {
+                appEvents.emit(AppEvents.alertError, [statusText]);
             }
         }
     }
 
     checkCmpSiteName() {
-        for (let count = 0; count < this.list.length; count++) {
-            if (this.list[count].name.toLowerCase() === this.name.toLowerCase()) {
-                if (this.isEdit) {
-                    if (this.list[count].name.toLowerCase() === this.editName.toLowerCase()) {
-                        continue;
-                    } else {
-                        this.openAlartNotification("같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.");
-                        return false;
-                    }
-                } else {
-                    this.openAlartNotification("같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.");
-                    return false;
+        for (const { name } of this.list) {
+            const convName = name.toLowerCase();
+
+            if (convName === this.name.toLowerCase()) {
+
+                if (this.isEdit && convName === this.editName.toLowerCase()) {
+                    continue;
                 }
+
+                this.openAlartNotification("같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.");
+                return false;
             }
         }
         return true;
@@ -212,53 +176,45 @@ export class TsSiteListCtrl implements angular.IController {
         }
     }
 
-    siteNameCreate(value: any) {
-        let resultStr = "";
-        for (let i = 0; i < 5 - value.length; i++) {
-            resultStr += "0";
-        }
-        return resultStr;
-    }
-
-    onLoadData(items: any) {
+    onLoadData(items: SiteTableData[]) {
         this.list = [];
 
         if (Array.isArray(items)) {
-            for (const item of items) {
-                const { id, name, desc, lat, lon } = item;
-                const strID = (id).toString();
-                const siteItem: SiteTableData = {
+            for (const { id, name, desc, lat, lon } of items) {
+                const strID = id.toString();
+                this.list.push({
                     id,
-                    titleid: "SITE_" + this.siteNameCreate(strID) + id,
+                    titleid: `SITE_${strID.padStart(5, '0')}`,
                     name,
                     desc,
                     lat,
                     lon,
-                };
-                this.list.push(siteItem);
+                });
             }
         }
         this.initTable();
     }
-    // TABLE Method
-    tableClick(value: any, idx: any) {
-        this.data = value;
-        this.selIdx = idx;
-        this.tableSelect(idx);
-        this.$location.path(`/thingspin/manage/data/site/${value}`);
-    }
 
-    tableSelect(idx: any) {
-        //maxPageLen
-        for (let i = 0; i < this.tData.maxPageLen; i++) {
+    // TABLE Method
+    tableClick(id: any, idx: number) {
+        this.id = id;
+
+        for (let i = 0; i < this.tData.maxPageLen; i += 1) {
+            const $tr = $('#table-tr-' + i);
+
+            let rmCls, addCls;
             if (i === idx) {
-                $('#table-tr-' + i).removeClass('ts-table-row');
-                $('#table-tr-' + i).addClass('selected');
+                rmCls = 'ts-table-row';
+                addCls = 'selected';
             } else {
-                $('#table-tr-' + i).removeClass('selected');
-                $('#table-tr-' + i).addClass('ts-table-row');
+                rmCls = 'selected';
+                addCls = 'ts-table-row';
             }
+
+            $tr.removeClass(rmCls);
+            $tr.addClass(addCls);
         }
+        this.$location.path(`/thingspin/manage/data/site/${id}`);
     }
 
     initTable(): void {
