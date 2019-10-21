@@ -15,17 +15,22 @@ const getTabNode = (title: string, icon: string) => () => (<>
 
 const tabs = [
   {
-    name: 'alarm', initActive: true, heading: getTabNode('알람', "fms-right-tap-alarm-icon fa-bell"),
+    enable: true,
+    name: 'alarm',
+    initActive: true,
+    heading: getTabNode('알람', "fms-right-tap-alarm-icon fa-bell"),
     content: <FmsAlarmBandComp />,
   },
-  /*{
-    name: 'log', initActive: false, heading: getTabNode('시스템 로그', "fms-right-tap-alarm-icon fa-window-maximize"),
-  }*/
+  {
+    enable: false,
+    name: 'log',
+    heading: getTabNode('시스템 로그', "fms-right-tap-alarm-icon fa-window-maximize"),
+  }
 ];
 
 export const TsRightSidebar: React.FC = () => <Tabs>
-  {tabs.map(({ name, initActive, heading, content }, idx) => (
-    <Tab key={idx} name={name} initActive={initActive} heading={heading}>
+  {tabs.map(({ enable, name, initActive, heading, content }, idx) => (enable &&
+    <Tab key={idx} name={name} initActive={!!initActive} heading={heading}>
       {content}
     </Tab>
   ))}
