@@ -37,6 +37,96 @@ export interface MqttContent {
     };
 }
 
+export function generateModalData(
+    // Required params
+    src: string,
+    title: string,
+    list: TsConnectHistory[],
+    // not Required params(has default value)
+    topic?: string,
+    icon = 'fa fa-history',
+    backdrop = 'static',
+) {
+    // table Data's
+    const tData: TableModel = {
+        rowCount: 16,
+        selectOpts: [16, 32, 48],
+        currPage: 0,
+        maxPage: 0,
+        maxPageLen: 10,
+        pageNode: [],
+    };
+
+    // table common methods
+    function setHistoryPageNodes() {
+        const { currPage, rowCount, } = tData;
+        if (list) {
+            tData.pageNode = list.slice(
+                currPage * rowCount,
+                (currPage * rowCount) + rowCount
+            );
+        }
+    }
+
+    function tHistoryCalcPaging() {
+        const { rowCount } = tData;
+        const temp: number = (list.length && (list.length % rowCount) === 0) ? 1 : 0;
+        tData.maxPage = Math.floor(list.length / (rowCount)) - temp;
+    }
+
+    function tOnHistorySelectChange() {
+        tHistoryCalcPaging();
+        setHistoryPageNodes();
+    }
+
+    tOnHistorySelectChange();
+
+    return {
+        src,
+        backdrop,
+        model: {
+            // Datas
+            title, icon, tData, list, topic,
+            // methods
+            tOnHistorySelectChange,
+            tHistoryPrevPaging: (): void => {
+                if (tData.currPage) {
+                    tData.currPage -= 1;
+                    setHistoryPageNodes();
+                }
+            },
+            tGetHistoryPagingNumberArray: () => {
+                const { currPage, maxPageLen, maxPage } = tData;
+                const index = Math.floor(currPage / maxPageLen);
+
+                const from = index * maxPageLen;
+                let to = index * maxPageLen + maxPageLen;
+                if (to > maxPage) {
+                    to = maxPage + 1;
+                }
+
+                return _.range(from, to);
+            },
+            tHistoryNextPaging: (): void => {
+                if (tData.currPage < tData.maxPage) {
+                    tData.currPage += 1;
+                    setHistoryPageNodes();
+                }
+            },
+            tSetHistoryPaging: (index: number) => {
+                tData.currPage = index;
+                tHistoryCalcPaging();
+                setHistoryPageNodes();
+            },
+            publishMqttClipeboard: () => {
+                $('#topic_view').select();
+                document.execCommand("copy");
+                appEvents.emit(AppEvents.alertSuccess, ["클립보드에 복사하였습니다."]);
+            },
+        },
+    };
+}
+
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
     readonly pageBathPath = '/thingspin/manage/data/connect';
@@ -47,8 +137,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
     mqttClient: TsMqttController; // mqtt client instance
 
     // UI Data
-    runConnection: number;
-    runNodes: number;
+    runConnection = 0;
+    runNodes = 0;
     totalConnection: number;
     totalNodes: number;
 
@@ -60,17 +150,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     connectTypeList: string[] = [];
     // table
     list: TsConnect[] = [];
-    historyList: TsConnectHistory[] = [];
     tData: TableModel = {
-        rowCount: 16,
-        selectOpts: [16, 32, 48],
-        currPage: 0,
-        maxPage: 0,
-        maxPageLen: 10,
-        pageNode: [],
-    };
-
-    tHistoryData: TableModel = {
         rowCount: 16,
         selectOpts: [16, 32, 48],
         currPage: 0,
@@ -85,8 +165,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
         private backendSrv: BackendSrv, ) { }// Dependency Injection
 
     $onInit(): void {
-        this.runConnection = 0;
-        this.runNodes = 0;
         this.asyncUpdateTypeList();
         this.asyncUpdateList().then(() => {
             this.initMqtt();
@@ -104,19 +182,19 @@ export default class TsConnectManagementCtrl implements angular.IController {
     async initMqtt(): Promise<void> {
         this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
         try {
-            await this.mqttClient.run(this.recvMqttMessage.bind(this));
+            await this.mqttClient.run(this.recvMqttMessage);
             console.log('MQTT Connected');
         } catch (e) {
             console.error(e);
         }
     }
 
-    recvMqttMessage(topic: string, payload: string | object): void {
+    recvMqttMessage = (topic: string, payload: string | object): void => {
         const topics = topic.split('/');
         const id = topics[topics.length - 2];
         const target = topics[topics.length - 3];
-        let isChange = false;
 
+        let isChange = false;
         switch (target) {
             case 'connect':
                 this.list.filter(({ params }) => (params.FlowId === id))
@@ -128,16 +206,14 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 break;
             default:
                 const num = parseInt(id, 10);
-                this.list.filter(({ id }) => (id === num))
-                    .forEach((item) => {
-                        item.status = payload;
-                        if ((payload as MqttContent)) {
-                            if ((payload as MqttContent).connect) {
-                                item.color = (payload as MqttContent).connect.fill;
-                            }
-                        }
-                        isChange = true;
-                    });
+                this.list.filter(({ id }) => (id === num)).forEach((item) => {
+                    const pl = payload as MqttContent;
+                    item.status = pl;
+                    if (pl && pl.connect) {
+                        item.color = pl.connect.fill;
+                    }
+                    isChange = true;
+                });
         }
 
         if (isChange) {
@@ -160,16 +236,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.$scope.$watch('list', () => {
             this.setPageNodes();
         });
-
-        this.$scope.$watch('historyList', () => {
-            this.setHistoryPageNodes();
-        });
-
-        this.$scope.$watch('tHistoryData', () => {
-            console.log("historyData");
-        });
-
     }
+
     showEdit(type: string, id: number): void {
         this.$location.path(`${this.pageBathPath}/${type}/${id}`);
     }
@@ -178,11 +246,11 @@ export default class TsConnectManagementCtrl implements angular.IController {
         this.$location.path(`${this.pageBathPath}/${type}`);
     }
 
-    getSetting() {
-        this.backendSrv.get("api/frontend/settings").then((result: any) => {
-            this.totalConnection = Number(result.companions.license.Connect);
-            this.totalNodes = Number(result.companions.license.Nodes);
-        });
+    async getSetting() {
+        const { companions: { license: { Connect, Nodes } } } = await this.backendSrv.get("api/frontend/settings");
+        this.totalConnection = Number(Connect);
+        this.totalNodes = Number(Nodes);
+        this.$scope.$applyAsync();
     }
 
     enablePublish({ id, enable }: TsConnect) {
@@ -196,7 +264,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     run(id: number, enable: boolean) {
-        const index: number = this.list.findIndex((item) => id === item.id);
+        const index = this.list.findIndex((item) => id === item.id);
 
         this.modalPopupRunning(id, enable);
         const list = this.list[index];
@@ -244,6 +312,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
             return;
         }
 
+        const item = this.list[index];
         const mainTitle = "데이터 수집",
             detailFirst = " 데이터 수집을 ",
             detailLast = " 하시겠습니까?",
@@ -262,7 +331,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
         appEvents.emit(CoreEvents.showConfirmModal, {
             title: mainTitle,
-            text2: this.list[index].name + detailFirst + detailMiddle + detailLast,
+            text2: item.name + detailFirst + detailMiddle + detailLast,
             icon: icon,
             yesText: successBtn,
             noText: cancelBtn,
@@ -273,10 +342,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
                         flowId,
                         enable,
                     });
-                    const list = this.list[index];
 
-                    list.enable = enable;
-                    list.params.FlowId = flowId;
+                    item.enable = enable;
+                    item.params.FlowId = flowId;
                     this.setPageNodes();
                     this.$scope.$applyAsync();
                 } catch (e) {
@@ -309,113 +377,50 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
-    resultDateToShowString(value: string) {
-        const slice = value.replace('T', ' ');
-        return slice.substring(0, 19);
+    convHistoryField(history: TsConnectHistory) {
+        const slice = history.created.replace('T', ' ');
+        history.created = slice.substring(0, 19);
+
+        return history;
     }
 
     async totalHistoryShow() {
         try {
-            this.historyList = await this.backendSrv.get(`thingspin/connect/history`);
+            const historyList = (await this.backendSrv.get(`thingspin/connect/history`) || [])
+                .map(this.convHistoryField);
 
-            this.historyList.forEach(element => {
-                element.created = this.resultDateToShowString(element.created);
-            });
-            appEvents.emit(CoreEvents.showModal, {
-                src: 'public/app/partials/ts_connect_total_history.html',
-                backdrop: 'static',
-                model: {
-                    title: '전체 연결 이력 관리',
-                    icon: 'fa fa-history',
-                    tData: this.tHistoryData,
-                    list: this.historyList,
-
-                    tOnHistorySelectChange: () => {
-                        this.tOnHistorySelectChange();
-                    },
-
-                    tHistoryPrevPaging: () => {
-                        this.tHistoryPrevPaging();
-                    },
-
-                    tGetHistoryPagingNumberArray: () => {
-                        return this.tGetHistoryPagingNumberArray();
-                    },
-
-                    tHistoryNextPaging: () => {
-                        this.tHistoryNextPaging();
-                    },
-
-                    tSetHistoryPaging: (page: number) => {
-                        this.tSetHistoryPaging(page);
-                    },
-
-                    publishMqttClipeboard: () => {
-                        this.publishMqttClipeboard();
-                    },
-                }
-            });
-            this.tOnHistorySelectChange();
+            const modalPayoad = generateModalData('public/app/partials/ts_connect_total_history.html',
+                '전체 연결 이력 관리',
+                historyList);
+            appEvents.emit(CoreEvents.showModal, modalPayoad);
         } catch (e) {
             console.error(e);
         }
     }
 
-    async showModalHistory(item: TsConnect) {
+    async showModalHistory({ id, name, type }: TsConnect) {
         try {
-            this.historyList = await this.backendSrv.get(`thingspin/connect/${item.id}/history`);
+            const historyList = (await this.backendSrv.get(`thingspin/connect/${id}/history`) || [])
+                .map(this.convHistoryField);
 
-            this.historyList.forEach(element => {
-                element.created = this.resultDateToShowString(element.created);
-            });
-
-            appEvents.emit(CoreEvents.showModal, {
-                src: 'public/app/partials/ts_connect_history.html',
-                backdrop: 'static',
-                model: {
-                    title: item.name + ' 연결 이력 관리',
-                    topic: "thingspin/" + item.type + "/" + item.id + "/data",
-                    icon: 'fa fa-history',
-                    tData: this.tHistoryData,
-                    list: this.historyList,
-
-                    tOnHistorySelectChange: () => {
-                        this.tOnHistorySelectChange();
-                    },
-
-                    tHistoryPrevPaging: () => {
-                        this.tHistoryPrevPaging();
-                    },
-
-                    tGetHistoryPagingNumberArray: () => {
-                        return this.tGetHistoryPagingNumberArray();
-                    },
-
-                    tHistoryNextPaging: () => {
-                        this.tHistoryNextPaging();
-                    },
-
-                    tSetHistoryPaging: (page: number) => {
-                        this.tSetHistoryPaging(page);
-                    },
-
-                    publishMqttClipeboard: () => {
-                        this.publishMqttClipeboard();
-                    }
-                }
-            });
-            this.tOnHistorySelectChange();
+            const modalPayload = generateModalData('public/app/partials/ts_connect_history.html',
+                `${name} 연결 이력 관리`,
+                historyList,
+                `thingspin/${type}/${id}/data`);
+            appEvents.emit(CoreEvents.showModal, modalPayload);
         } catch (e) {
             console.error(e);
         }
     }
 
     removeConnect(id: number) {
-        const index = this.list.findIndex((item) => item.id === id);
+        const { list } = this;
+        const index = list.findIndex((item) => item.id === id);
+        const { name, params, type } = this.list[index];
 
         appEvents.emit(CoreEvents.showConfirmModal, {
             title: '연결 삭제',
-            text2: this.list[index].name + ' 연결 정보를 삭제하시겠습니까?',
+            text2: name + ' 연결 정보를 삭제하시겠습니까?',
             icon: 'fa-trash',
             yesText: '삭제',
             noText: '취소',
@@ -423,21 +428,20 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 try {
                     await this.backendSrv.delete(`thingspin/connect/${id}`);
                     // publish mqtt data
-                    const { list } = this;
 
-                    const index = list.findIndex((item) => item.id === id);
                     if (index >= 0) {
-                        const baseTopic = `/thingspin/connect/${list[index].params.FlowId}`;
+                        const baseTopic = `/thingspin/connect/${params.FlowId}`;
+                        const sideTopic = `/thingspin/${type}/${id}`;
+                        const orderTopic = `/thingspin/${type}/<no value>`;
+                        const kv = [
+                            `${baseTopic}/status`, `${baseTopic}/data`,
+                            `${sideTopic}/status`, `${sideTopic}/data`,
+                            `${orderTopic}/status`,`${orderTopic}/data`,
+                        ];
                         // 싱크 문제 해결이 필요
-                        this.publishMqtt(`${baseTopic}/status`, '');
-                        this.publishMqtt(`${baseTopic}/data`, '');
-                        const sideTopic = `/thingspin/${list[index].type}/${list[index].id}`;
-                        this.publishMqtt(`${sideTopic}/status`, '');
-                        this.publishMqtt(`${sideTopic}/data`, '');
-                        const orderTopic = `/thingspin/${list[index].type}/<no value>`;
-                        this.publishMqtt(`${orderTopic}/status`, '');
-                        this.publishMqtt(`${orderTopic}/data`, '');
-
+                        for (const topic of kv) {
+                            this.publishMqtt(topic, '');
+                        }
                         list.splice(index, 1);
                     }
 
@@ -462,28 +466,12 @@ export default class TsConnectManagementCtrl implements angular.IController {
             this.setCountValue();
         }
     }
-    // table methods
-    setHistoryPageNodes() {
-        const { currPage, rowCount, } = this.tHistoryData;
-        if (this.historyList) {
-            this.tHistoryData.pageNode = this.historyList.slice(
-                currPage * rowCount,
-                (currPage * rowCount) + rowCount
-            );
-        }
-    }
+
 
     tNextPaging(): void {
         if (this.tData.currPage < this.tData.maxPage) {
             this.tData.currPage += 1;
             this.setPageNodes();
-        }
-    }
-
-    tHistoryNextPaging(): void {
-        if (this.tHistoryData.currPage < this.tHistoryData.maxPage) {
-            this.tHistoryData.currPage += 1;
-            this.setHistoryPageNodes();
         }
     }
 
@@ -494,35 +482,16 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
     }
 
-    tHistoryPrevPaging(): void {
-        if (this.tHistoryData.currPage) {
-            this.tHistoryData.currPage -= 1;
-            this.setHistoryPageNodes();
-        }
-    }
-
     tSetPaging(index: number) {
         this.tData.currPage = index;
         this.tCalcPaging();
         this.setPageNodes();
     }
 
-    tSetHistoryPaging(index: number) {
-        this.tHistoryData.currPage = index;
-        this.tHistoryCalcPaging();
-        this.setHistoryPageNodes();
-    }
-
     tCalcPaging() {
         const { rowCount } = this.tData;
         const temp: number = (this.list.length && (this.list.length % rowCount) === 0) ? 1 : 0;
         this.tData.maxPage = Math.floor(this.list.length / (rowCount)) - temp;
-    }
-
-    tHistoryCalcPaging() {
-        const { rowCount } = this.tHistoryData;
-        const temp: number = (this.historyList.length && (this.historyList.length % rowCount) === 0) ? 1 : 0;
-        this.tHistoryData.maxPage = Math.floor(this.historyList.length / (rowCount)) - temp;
     }
 
     tGetPagingNumberArray() {
@@ -538,27 +507,10 @@ export default class TsConnectManagementCtrl implements angular.IController {
         return _.range(from, to);
     }
 
-    tGetHistoryPagingNumberArray() {
-        const { currPage, maxPageLen, maxPage } = this.tHistoryData;
-        const index = Math.floor(currPage / maxPageLen);
-
-        const from = index * maxPageLen;
-        let to = index * maxPageLen + maxPageLen;
-        if (to > maxPage) {
-            to = maxPage + 1;
-        }
-
-        return _.range(from, to);
-    }
     // table event methods
     tOnSelectChange() {
         this.tCalcPaging();
         this.setPageNodes();
-    }
-
-    tOnHistorySelectChange() {
-        this.tHistoryCalcPaging();
-        this.setHistoryPageNodes();
     }
 
     setCountValue() {
@@ -573,11 +525,5 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 }
             }
         }
-    }
-
-    publishMqttClipeboard() {
-        $('#topic_view').select();
-        document.execCommand("copy");
-        appEvents.emit(AppEvents.alertSuccess, ["클립보드에 복사하였습니다."]);
     }
 }
