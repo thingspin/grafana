@@ -5,17 +5,13 @@ const uid = require('shortid');
 
 // Grafana libs
 import { CoreEvents } from 'app/types';
-import { AppEvents } from '@grafana/data';
+import { AppEvents, dateTime } from '@grafana/data';
 import appEvents from 'app/core/app_events';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
 // Thingspin libs
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 import { TsConnect, TsConnectHistory } from 'app-thingspin-fms/models/connect';
-
-export interface Banner {
-    title: string;
-}
 
 export interface TableModel {
     // table header data
@@ -142,11 +138,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
     totalConnection: number;
     totalNodes: number;
 
-    license: any;
-    // banner
-    banner: Banner = {
-        title: '산업용 프로토콜 및 기타 데이터소스에 대한 연결',
-    };
     connectTypeList: string[] = [];
     // table
     list: TsConnect[] = [];
@@ -205,9 +196,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
                     });
                 break;
             default:
+                const pl = payload as MqttContent;
                 const num = parseInt(id, 10);
                 this.list.filter(({ id }) => (id === num)).forEach((item) => {
-                    const pl = payload as MqttContent;
                     item.status = pl;
                     if (pl && pl.connect) {
                         item.color = pl.connect.fill;
@@ -272,11 +263,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     modalPopupPublish(item: TsConnect) {
-        const mainTitle = "데이터 발행",
-            detailFirst = " 데이터 발행을 ",
-            detailLast = " 하시겠습니까?",
-            cancelBtn = "취소";
-
         let detailMiddle, successBtn, icon;
         if (item.publish) {
             detailMiddle = "시작";
@@ -289,11 +275,11 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
 
         appEvents.emit(CoreEvents.showConfirmModal, {
-            title: mainTitle,
-            text2: item.name + detailFirst + detailMiddle + detailLast,
+            title: '데이터 발행',
+            text2: `${item.name} 데이터 발행을 ${detailMiddle} 하시겠습니까?`,
             icon: icon,
             yesText: successBtn,
-            noText: cancelBtn,
+            noText: "취소",
             onConfirm: async () => {
                 try {
                     item.publish = !item.publish;
@@ -313,11 +299,6 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
 
         const item = this.list[index];
-        const mainTitle = "데이터 수집",
-            detailFirst = " 데이터 수집을 ",
-            detailLast = " 하시겠습니까?",
-            cancelBtn = "취소";
-
         let detailMiddle, successBtn, icon;
         if (enable) {
             detailMiddle = "시작";
@@ -330,11 +311,11 @@ export default class TsConnectManagementCtrl implements angular.IController {
         }
 
         appEvents.emit(CoreEvents.showConfirmModal, {
-            title: mainTitle,
-            text2: item.name + detailFirst + detailMiddle + detailLast,
+            title: '데이터 수집',
+            text2: `${ item.name } 데이터 수집을 ${ detailMiddle } 하시겠습니까?`,
             icon: icon,
             yesText: successBtn,
-            noText: cancelBtn,
+            noText: "취소",
             onConfirm: async () => {
                 try {
                     const flowId = uid.generate();
@@ -378,9 +359,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     convHistoryField(history: TsConnectHistory) {
-        const slice = history.created.replace('T', ' ');
-        history.created = slice.substring(0, 19);
-
+        history.created = dateTime(history.created).format('YYYY-MM-DD HH:mm:ss');
         return history;
     }
 
@@ -433,13 +412,13 @@ export default class TsConnectManagementCtrl implements angular.IController {
                         const baseTopic = `/thingspin/connect/${params.FlowId}`;
                         const sideTopic = `/thingspin/${type}/${id}`;
                         const orderTopic = `/thingspin/${type}/<no value>`;
-                        const kv = [
+                        const topics = [
                             `${baseTopic}/status`, `${baseTopic}/data`,
                             `${sideTopic}/status`, `${sideTopic}/data`,
                             `${orderTopic}/status`,`${orderTopic}/data`,
                         ];
                         // 싱크 문제 해결이 필요
-                        for (const topic of kv) {
+                        for (const topic of topics) {
                             this.publishMqtt(topic, '');
                         }
                         list.splice(index, 1);
