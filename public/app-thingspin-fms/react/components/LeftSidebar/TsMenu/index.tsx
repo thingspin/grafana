@@ -1,12 +1,12 @@
 // 3rd party libs
-import React, { PureComponent, ReactNode, useContext } from 'react';
+import React, { PureComponent, ReactNode } from 'react';
 
 // thingspin libs
 import TsMenuLv1 from './MenuLv1';
-import { ThingspinContext, TsPrivderCtrl } from 'app-thingspin-fms/react/thingspinProvider';
+import { connectWithStore } from 'app/core/utils/connectWithReduxStore';
 
 export interface Props {
-  ctx: TsPrivderCtrl;
+  menu: any[];
 }
 
 export class TsMenu extends PureComponent<Props> {
@@ -28,10 +28,10 @@ export class TsMenu extends PureComponent<Props> {
   }
 
   private filteredMenu(): any[] {
-    const { tsMenu: menu } = this.props.ctx;
+    const { menu } = this.props;
 
     return Array.isArray(menu)
-      ? menu.filter(item => !item.hideFromMenu && item.icon && !item.divider)
+      ? menu.filter(({ hideFromMenu, icon, divider }) => !hideFromMenu && icon && !divider)
       : [];
   }
 
@@ -48,4 +48,13 @@ export class TsMenu extends PureComponent<Props> {
   );
 }
 
-export default () => (<TsMenu ctx={useContext(ThingspinContext)}></TsMenu>);
+
+const mapStateToProps = ({ thingspinMenu: { menu } }: any) => ({
+  menu,
+});
+
+const mapDispatchToProps = {
+  // updateTsMenu,
+};
+
+export default connectWithStore(TsMenu, mapStateToProps, mapDispatchToProps);
