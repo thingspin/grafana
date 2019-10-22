@@ -18,7 +18,7 @@ ts-left-sidebar {
   ts-left-sidebar {
     display: block;
     // layer size
-    width: 200px;
+    min-width: 200px;
     height: 100%;
 
     // 삭제 필요...
