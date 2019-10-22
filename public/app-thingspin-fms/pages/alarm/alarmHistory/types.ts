@@ -112,7 +112,7 @@ export const tsDefaultSelectOptions: TimeOption[] = [
   { from: 'now/y', to: 'now', display: '올해까지', section: 3 },
 ];
 
-export function genTimeRange(from = 'now-1y', to = 'now'): TimeRange {
+export function genTimeRange(from = 'now-24h', to = 'now'): TimeRange {
   // make copies if they are moment  (do not want to return out internal moment, because they are mutable!)
   return {
     from: dateMath.parse(from, false),

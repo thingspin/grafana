@@ -46,18 +46,39 @@ export interface OpcConnectModel {
     updated: string;
 }
 
-export function formatDate(date: Date): string {
-    return dateTime(date).format('YYYY-MM-DD_HH:mm:ss');
+export interface NodeRedStatusPayload {
+    fill: string;
+    shape: string;
+    text: string;
+    source: NodeRedSource;
+}
+
+export interface NodeRedSource {
+    id: string;
+    type: string;
+    name: string;
+}
+
+export interface ReceivedMQTTPayload {
+    id: string;
+    MQTT: NodeRedStatusPayload;
+    connect: NodeRedStatusPayload;
 }
 
 export default class TsOpcUaConnectCtrl implements angular.IController {
     // 2-way binding child directive data
-    input: InputModel;
+    input: InputModel = {
+        auth: "Anonymous",
+        securityMode: "None",
+        securityPolicy: "None",
+        endpointUrl: "http://localhost:4843/",
+        name: '',
+        intervals: 1,
+    };
     connectStatus: string;
 
     // MQTT
     readonly mqttUrl = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt`;
-    readonly listenerTopic = `${baseApi}/+/status`;
     readonly connectTimeout: number = 15000;
     mqttClient: TsMqttController; // mqtt client instance
 
@@ -70,10 +91,10 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     ];
     connId: number = null;
     FlowId: string;
-    nodes: any[];
+    nodes: any[] = [];
     timer: NodeJS.Timer | null;
-    enableNodeSet: boolean;
-    closeValue: boolean;
+    enableNodeSet = false;
+    closeValue = false;
 
     /** @ngInject */
     constructor(
@@ -83,41 +104,25 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         private backendSrv: BackendSrv) { }
 
     $onInit(): void {
-        this.closeValue = false;
         this.initMqtt();
+
         const { id } = this.$routeParams;
         if (id) {
             this.updateData(id);
-        } else {
-            this.nodes = [];
-            this.input = {
-                auth: "Anonymous",
-                securityMode: "None",
-                securityPolicy: "None",
-                endpointUrl: "http://localhost:4843/",
-                name: '',
-                intervals: 1,
-            };
         }
     }
 
     inputChecker(): boolean {
-        if (this.input !== undefined) {
-            if (this.input.name.length === 0) {
-                appEvents.emit(AppEvents.alertWarning, ['수집기 이름을 설정 하세요.']);
-                return false;
-            }
-            if (this.input.endpointUrl.length === 0) {
-                appEvents.emit(AppEvents.alertWarning, ['Endpoint URL을 입력 하세요.']);
-                return false;
-            } else if (this.input.endpointUrl.length > 0) {
-                if (this.input.endpointUrl.indexOf("://") === -1) {
-                    appEvents.emit(AppEvents.alertWarning, ['Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.']);
-                    return false;
-                }
-            }
+        const { name, endpointUrl } = this.input;
+        const errMsg = (!name) ? '수집기 이름을 설정 하세요.'
+            : !endpointUrl ? 'Endpoint URL을 입력 하세요.'
+                : endpointUrl.indexOf("://") === -1 ? 'Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.'
+                    : '';
+
+        if (errMsg) {
+            appEvents.emit(AppEvents.alertWarning, [errMsg]);
         }
-        return true;
+        return !errMsg;
     }
 
     async updateData(connId: number) {
@@ -146,30 +151,30 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     }
 
     async initMqtt(): Promise<void> {
-        this.mqttClient = new TsMqttController(this.mqttUrl, this.listenerTopic);
+        this.mqttClient = new TsMqttController(this.mqttUrl, `/thingspin/opcua/+/status`);
 
         try {
-            await this.mqttClient.run(this.recvMqttMessage.bind(this));
+            await this.mqttClient.run(this.recvMqttMessage);
             console.log("MQTT Connected");
         } catch (e) {
             console.error(e);
         }
     }
 
-    recvMqttMessage(topic: string, payload: string): void {
-        const topics = topic.split("/");
-        const flowId = topics[topics.length - 2];
+    recvMqttMessage = (topic: string, payload: ReceivedMQTTPayload): void =>  {
+        const topics = topic.split('/');
+        const connId = parseInt(topics[topics.length - 2], 10);
 
-        if (flowId === this.FlowId) {
+        if (connId === this.connId) {
             clearTimeout(this.timer);
-            this.setConnectStatus(payload);
+            this.setConnectStatus(payload.connect.fill);
         }
     }
 
     genPayload(FlowId: string): BackendConnectPayload {
         const { nodes } = this;
         const { name, endpointUrl, auth, securityPolicy, securityMode, intervals } = this.input;
-        const PtagList = Array.from(nodes, ({ displayName }) => ({
+        const PtagList = nodes.map(({ displayName }) => ({
             name: displayName.text,
             type: ""
         }));
@@ -191,13 +196,13 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     }
 
     async addConnect() {
-        this.FlowId = uid.generate();
-        this.setConnectStatus("yellow");
-        this.timer = setTimeout(() => {
-            this.setConnectStatus("red");
-        }, this.connectTimeout);
-
         if (this.inputChecker()) {
+            this.FlowId = uid.generate();
+            this.setConnectStatus("yellow");
+            this.timer = setTimeout(() => {
+                this.setConnectStatus("red");
+            }, this.connectTimeout);
+
             try {
                 const connId = await this.sendBackend(!this.connId);
                 this.connId = connId;
@@ -240,11 +245,12 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     exportData(): void {
         if (this.inputChecker()) {
             const payload = this.genPayload(this.FlowId);
+            const $elem = $("#downloadAnchorElem");
+            const d = dateTime(new Date()).format('YYYY-MM-DD_HH:mm:ss');
 
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload));
-            $("#downloadAnchorElem").attr("href", dataStr);
-            $("#downloadAnchorElem").attr("download", payload.name + "_" + formatDate(new Date()) + ".json");
-            $("#downloadAnchorElem").get(0).click();
+            $elem.attr("href", "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload)))
+                .attr("download", `${payload.name}_${d}.json`)
+                .get(0).click();
         }
     }
 
@@ -280,7 +286,6 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         let connId;
         if (isNew) {
             // new
-            this.closeValue = true;
             connId = await this.backendSrv.post(`${baseApi}/opcua`, payload);
             await this.timeout(3000);
             await this.backendSrv.put(`${baseApi}/${connId}`, payload);

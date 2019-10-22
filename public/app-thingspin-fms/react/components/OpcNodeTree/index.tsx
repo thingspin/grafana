@@ -32,6 +32,7 @@ export type NodeTreeState = {
 const defaultOnClick = (props: OpcNodeItem): void => { };
 
 export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState> {
+  mounted: boolean;
   backendSrv: BackendSrv = getBackendSrv();
   private readonly nodeRedHost: string = `/api/cep` as string;
 
@@ -50,10 +51,15 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
     nodes: this.props.data,
   };
 
-  componentWillMount() {
+  componentDidMount() {
+    this.mounted = true;
     if (!this.props.close) {
       this.updateData();
     }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   setChildNodes(browserResults: any[]): any[] {
@@ -74,11 +80,13 @@ export default class OpcNodeTree extends Component<NodeTreeProps, NodeTreeState>
 
   async updateData() {
     try {
-      if (this.props.flowId !== undefined) {
+      if (this.props.flowId) {
         const result = await this.backendSrv.get(`${this.nodeRedHost}/opcua/${this.props.flowId}/browser`);
 
         const nodes = this.setChildNodes(result.browserResults);
-        this.setState({ nodes });
+        if (this.mounted) {
+          this.setState({ nodes });
+        }
       }
     } catch (e) {
       console.error(e);
