@@ -12,27 +12,55 @@ import { updateTsMenu } from 'app-thingspin-fms/react/redux/dispayches/tsMenu';
 
 const { orgId } = config.bootData.user;
 
+export interface ClickedMenu {
+  id: number;
+  parent_id: number;
+  icon: string;
+  text: string;
+  url: string;
+
+  order?: number;
+}
+
+function changeOrder(target: any[], start: number, end: number = target.length) {
+  const list = [];
+  for (let i = start; i < end; i += 1) {
+    target[i].order = i;
+    list.push(target[i]);
+  }
+  return list;
+}
+
 export class TsMenuManagementCtrl {
-  data: any[];
+  data: any[] = [];
+  evt: any;
   url = '';
-  dashboardList: any;
   menuInfo = false;
-  clickedMenu: any;
+  menuInfoType = '';
+  clickedMenu: ClickedMenu = {
+    parent_id: -1,
+    id: -100,
+    icon: 'fa fa-folder-o',
+    text: '',
+    url: ''
+  };
+  dashboardList: any[] = [];
 
   options = {
     beforeDrop: ({ source, dest }: any) => {
       const { parent_id, children } = source.nodeScope.node;
       const toNode = dest.nodesScope.$nodeScope;
 
-      return !(parent_id === -1 && toNode && children);
+      return !(parent_id === -1 && toNode != null && children.length);
     },
-    dropped: ({source, dest}: any) => {
+    dropped: (event: any) => {
+      this.evt = event;
       setTimeout(() => {
-        const fromNode = source.nodeScope.node;
-        const fromNodeParent = source.nodesScope.node;
-        const from = source;
-        const to = dest;
-        const toNode = dest.nodesScope.$nodeScope;
+        const fromNode = this.evt.source.nodeScope.node;
+        const fromNodeParent = this.evt.source.nodesScope.node;
+        const from = this.evt.source;
+        const to = this.evt.dest;
+        const toNode = this.evt.dest.nodesScope.$nodeScope;
 
         const plist = [];
         const clist = [];
@@ -44,17 +72,17 @@ export class TsMenuManagementCtrl {
             console.log("Up -> down");
             // 위에서 아래로 이동할 때
             // 1-1. 이동 후 현재포함 상위 L1 들의 순서 변경
-            for (let _i = 0; _i <= to.index; _i++) {
-              this.data[_i].order = _i;
-              plist.push(this.data[_i]);
+            for (let i = 0; i <= to.index; i += 1) {
+              this.data[i].order = i;
+              plist.push(this.data[i]);
             }
           } else {
             console.log("Down -> to");
             // 아래서 위로 이동할 때
             // 1-2. 이동 후 현재 포함 하위 L1 들의 순서 변경
-            for (let _i = to.index; _i < this.data.length; _i++) {
-              this.data[_i].order = _i;
-              plist.push(this.data[_i]);
+            for (let i = to.index; i < this.data.length; i += 1) {
+              this.data[i].order = i;
+              plist.push(this.data[i]);
             }
           }
         } else if (fromNode.parent_id === -1 && toNode != null) {
@@ -62,23 +90,23 @@ export class TsMenuManagementCtrl {
           // 1. source idx 부터 하위 L1 들의 순서변경
           // 2-1. dest id로 부모 노드를 찾는다.
           // 2-2. dest 부모 노드의 자식 dst idx 부터 하위 L2 들의 순서변경
-          for (let _i = 0; _i < this.data.length; _i++) {
-            if (toNode.node.id === this.data[_i].id) {
+          for (let i = 0; i < this.data.length; i += 1) {
+            if (toNode.node.id === this.data[i].id) {
               // 부모 id 변경
-              this.data[_i].children[to.index].parent_id = toNode.node.id;
+              this.data[i].children[to.index].parent_id = toNode.node.id;
               // L2 순서 조정
-              for (let _j = to.index; _j < toNode.node.children.length; _j++) {
-                this.data[_i].children[_j].order = _j;
-                clist.push(this.data[_i].children[_j]);
-                console.log("Child Update :" + this.data[_i].children[_j].text + " > new order:", _j);
+              for (let j = to.index; j < toNode.node.children.length; j += 1) {
+                this.data[i].children[j].order = j;
+                clist.push(this.data[i].children[j]);
+                console.log("Child Update :" + this.data[i].children[j].text + " > new order:", j);
               }
               break;
             }
           }
-          for (let _i = from.index; _i < this.data.length; _i++) {
-            this.data[_i].order = _i;
-            plist.push(this.data[_i]);
-            console.log("Update :" + this.data[_i].text + " > new order:", _i);
+          for (let i = from.index; i < this.data.length; i += 1) {
+            this.data[i].order = i;
+            plist.push(this.data[i]);
+            console.log("Update :" + this.data[i].text + " > new order:", i);
           }
         } else if (fromNode.parent_id !== -1 && toNode == null) {
           console.log("L2 -> L1");
@@ -88,19 +116,19 @@ export class TsMenuManagementCtrl {
           // 2. src id로 부모 노드를 찾고, idx 부터 하위 노드들의 순서 변경
           this.data[to.index].parent_id = -1;
           console.log("Parent Update :" + this.data[to.index].text + " > new order:", -1);
-          for (let _i = to.index; _i < this.data.length; _i++) {
-            this.data[_i].order = _i;
-            plist.push(this.data[_i]);
-            console.log("Update :" + this.data[_i].text + " > new order:", _i);
+          for (let i = to.index; i < this.data.length; i += 1) {
+            this.data[i].order = i;
+            plist.push(this.data[i]);
+            console.log("Update :" + this.data[i].text + " > new order:", i);
           }
 
-          for (let _i = 0; _i < this.data.length; _i++) {
-            if (fromNodeParent.id === this.data[_i].id) {
-              console.log("Found parent - ", this.data[_i].text);
-              for (let _j = from.index; _j < this.data[_i].children.length; _j++) {
-                this.data[_i].children[_j].order = _j;
-                clist.push(this.data[_i].children[_j]);
-                console.log("Child Update :" + this.data[_i].children[_j].text + " > new order:", _j);
+          for (let i = 0; i < this.data.length; i += 1) {
+            if (fromNodeParent.id === this.data[i].id) {
+              console.log("Found parent - ", this.data[i].text);
+              for (let j = from.index; j < this.data[i].children.length; j += 1) {
+                this.data[i].children[j].order = j;
+                clist.push(this.data[i].children[j]);
+                console.log("Child Update :" + this.data[i].children[j].text + " > new order:", j);
               }
               break;
             }
@@ -122,17 +150,17 @@ export class TsMenuManagementCtrl {
             clist.push(this.data[fromNodeParent.order].children[to.index]);
           } else {
             console.log("Diff Parent");
-            for (let _i = from.index; _i < this.data[fromNodeParent.order].children.length; _i++) {
-              console.log("src Child Update :" + this.data[fromNodeParent.order].children[_i].text + " > new order:", _i);
-              this.data[fromNodeParent.order].children[_i].order = _i;
-              clist.push(this.data[fromNodeParent.order].children[_i]);
+            for (let i = from.index; i < this.data[fromNodeParent.order].children.length; i += 1) {
+              console.log("src Child Update :" + this.data[fromNodeParent.order].children[i].text + " > new order:", i);
+              this.data[fromNodeParent.order].children[i].order = i;
+              clist.push(this.data[fromNodeParent.order].children[i]);
             }
             this.data[toNode.node.order].children[to.index].parent_id = toNode.node.id;
             console.log("dst Child Parent Update :" + this.data[toNode.node.order].children[to.index].text + " > new parent:", toNode.node.text);
-            for (let _i = to.index; _i < toNode.node.children.length; _i++) {
-              console.log("dst Child Update :" + this.data[toNode.node.order].children[_i].text + " > new order:", _i);
-              this.data[toNode.node.order].children[_i].order = _i;
-              clist.push(this.data[toNode.node.order].children[_i]);
+            for (let i = to.index; i < toNode.node.children.length; i += 1) {
+              console.log("dst Child Update :" + this.data[toNode.node.order].children[i].text + " > new order:", i);
+              this.data[toNode.node.order].children[i].order = i;
+              clist.push(this.data[toNode.node.order].children[i]);
             }
           }
         }
@@ -143,6 +171,9 @@ export class TsMenuManagementCtrl {
         };
         this.backendSrv.put('/thingspin/menu/' + orgId, newData).then((res: any) => {
           store.dispatch(updateTsMenu(orgId));
+        }).catch((err: any) => {
+          console.log("After ordering, error!");
+          console.log(err);
         });
       }, 100);
     }
@@ -150,13 +181,6 @@ export class TsMenuManagementCtrl {
 
   /** @ngInject */
   constructor(private $scope: angular.IScope, private backendSrv: BackendSrv) {
-    this.clickedMenu = {
-      id: -100,
-      icon: 'fa fa-folder-o',
-      text: '',
-      url: ''
-    };
-
     this.init();
   }
 
@@ -179,16 +203,16 @@ export class TsMenuManagementCtrl {
   async blur(node: any) {
     try {
       node.hideFromMenu = !node.hideFromMenu;
-      // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
       await this.backendSrv.put(`/thingspin/menu/hide/${node.id}/${node.hideFromMenu}`, {});
+      // id 및 get 했을 때 얻어왔던 값들을 모두 받아와야한다.
       store.dispatch(updateTsMenu(orgId));
-    } catch (e) {
+    } catch (err) {
       node.hideFromMenu = !node.hideFromMenu;
     }
   }
 
   changeUrl() {
-    if (this.url != null) {
+    if (this.url) {
       this.clickedMenu.url = this.url;
     }
   }
@@ -198,20 +222,26 @@ export class TsMenuManagementCtrl {
   }
 
   async createMenu() {
-    if (this.clickedMenu.id < 0) {
-      this.clickedMenu.order = this.data.length;
-      const res = await this.backendSrv.post(`/thingspin/menu/${orgId}`, this.clickedMenu);
-      this.data.push(res);
-      this.clickedMenu = res;
-    } else {
-      const newData = {
-        menu: this.clickedMenu
-      };
-      await this.backendSrv.put('/thingspin/menu/', newData);
+    try {
+      if (this.clickedMenu.id < 0) {
+        this.clickedMenu.order = this.data.length;
+        const res = await this.backendSrv.post(`/thingspin/menu/${orgId}`, this.clickedMenu);
+        this.data.push(res);
+        this.clickedMenu = res;
+      } else {
+        await this.backendSrv.put('/thingspin/menu/', {
+          menu: this.clickedMenu
+        });
+      }
+      this.menuInfo = false;
+      this.$scope.$applyAsync();
+      store.dispatch(updateTsMenu(orgId));
+
+    } catch (e) {
+      console.error(e);
     }
-    this.menuInfo = false;
-    this.$scope.$applyAsync();
-    store.dispatch(updateTsMenu(orgId));
+
+    // init
   }
 
   newMenu() {
@@ -220,9 +250,9 @@ export class TsMenuManagementCtrl {
     this.clickedMenu = {
       parent_id: -1,
       id: -100,
-      icon: "fa fa-folder-o",
-      text: "",
-      url: ""
+      icon: 'fa fa-folder-o',
+      text: '',
+      url: ''
     };
   }
 
@@ -230,9 +260,7 @@ export class TsMenuManagementCtrl {
     if (parent_id === -1) {
       // L1
       // 삭제후에 L1 순서 재조정
-      for (let i = order; i < this.data.length; i += 1) {
-        this.data[i].order = i;
-      }
+      changeOrder(this.data, order);
     } else {
       // L2
       // 삭제 후 L2 순서 재조정
@@ -241,16 +269,17 @@ export class TsMenuManagementCtrl {
       const idx = this.data.findIndex((item) => parent.id === item.id);
       if (idx !== -1) {
         const { children } = this.data[idx];
-
-        for (let i = order; i < children.length; i += 1) {
-          children[i].order = i;
-        }
+        changeOrder(children, order);
       }
     }
 
-    await this.backendSrv.delete(`/thingspin/menu/${orgId}/${id}`);
-    store.dispatch(updateTsMenu(orgId));
-    scope.remove();
+    try {
+      await this.backendSrv.delete(`/thingspin/menu/${orgId}/${id}`);
+      store.dispatch(updateTsMenu(orgId));
+      scope.remove();
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
 
