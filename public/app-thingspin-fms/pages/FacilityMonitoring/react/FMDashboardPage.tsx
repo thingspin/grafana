@@ -15,6 +15,10 @@ import { cleanUpDashboard } from 'app/features/dashboard/state/actions';
 import { updateLocation } from 'app/core/actions';
 import { notifyApp } from 'app/core/actions';
 
+// Grafana libs
+import { getTimeSrv } from 'app/features/dashboard/services/TimeSrv';
+
+
 // ThingSPIN React Components
 import FMNav from './FMNav';
 import FMSettings from './FMSettings';
@@ -34,24 +38,19 @@ export class FMDashboardPage extends DashboardPage {
     updateFmPanel(newPanel: any[]): void {
         const { dashboard } = this.props;
 
-        // remove panels(non diff check)
-        dashboard.panels.forEach(({ id }) => {
-            // find PanelModel Object
-            const panel = dashboard.getPanelById(id);
-
-            // remove phase
+        // remove phase
+        const panels = [...dashboard.panels];
+        for (const panel of panels) {
             dashboard.removePanel(panel);
-        });
-
-        // add panels
-        for (const add of newPanel) {
-            dashboard.addPanel(add);
         }
 
-        // apply sequence
-        setTimeout(() => {
-            dashboard.startRefresh();
-        }, 50);
+        // add panels
+        for (const panel of newPanel) {
+            dashboard.addPanel(panel);
+        }
+
+        const timeSrv = getTimeSrv();
+        timeSrv.refreshDashboard();
     }
 
     // add thingspin method
