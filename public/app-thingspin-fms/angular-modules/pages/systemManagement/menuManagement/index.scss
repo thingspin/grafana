@@ -47,15 +47,16 @@
 
  .menu-top-button-area {
      display: inline-block;;
-     margin-top: 20px;
-     margin-left: 150px;
+     //margin-top: 20px;
+     //margin-left: 150px;
+     margin-left: auto;
      //width: 24px;
      //height: 17px;
  }
 
  .menu-top-button-area-title {
     font-family: Roboto;
-    //font-size: 14px;
+    font-size: 14px;
     font-weight: 500;
     font-style: normal;
     font-stretch: normal;
@@ -69,7 +70,7 @@
     height: 36px;
     border-radius: 4px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
-    background-color: #1e88e5;
+    background-color: #0039ff;;
     color:#ffffff;
  }
 
@@ -435,3 +436,38 @@
     //text-align: center;
     color: #ffffff;
 }
+
+.ts-menu-title-container {
+    padding: 24px 16px 20px 16px;
+}
+.ts-connect-title-container {
+    padding: 24px 16px 20px 16px;
+    border-bottom: solid 1px #ecebeb;
+    display: flex;
+    margin-bottom: 18px;
+    .title-img {
+      margin: 0;
+    }
+  
+    .ts-connect-title {
+      margin-left: 8px;
+  
+      color: #0039ff;
+      display: flex;
+      align-items: center;
+  
+      font-family: Roboto;
+      font-size: 16px;
+      font-weight: bold;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.19;
+      letter-spacing: normal;
+    }
+  
+    .ts-connect-buttons {
+      margin-left: auto;
+      margin-bottom: 12.5px;
+    }
+  }
+  
