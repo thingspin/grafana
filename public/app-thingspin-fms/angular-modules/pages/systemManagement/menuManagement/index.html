@@ -9,11 +9,6 @@
 		</div><br>
 	</div>
 </div>	
-<!--
-<div class="menu-title-top">메뉴 관리</div>
-<div class="menu-description">메뉴 리스트의 항목은 사용자 편의에 따라 숨기기가 가능하며, 새로운 메뉴 추가와 삭제 기능을 지원합니다.(단 추가 한 메뉴 리스트만 삭제 가능 합니다.)</div>
--->
-
 
 <div class="section gf-form-group" id="menu-tree-view">
 	<div class="menu-tree-top">
@@ -55,7 +50,7 @@
 							<a ng-if="node.children.length == 0 && node.canDelete" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
 								<span class="tsi icon-ts-delete"></span>
 							</a>
-							<a data-nodrag ng-if="node.canDelete" ng-click="ctrl.blur(this, node)" class="menu-tree-hide">
+							<a data-nodrag ng-if="node.canDelete" ng-click="ctrl.blur(node)" class="menu-tree-hide">
 								<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_on" style="color: rgb(30,136,229)"></span>
 								<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_off" style="color: rgb(216,27,96)"></span>
 							</a>
@@ -77,7 +72,7 @@
 									<a ng-if="node.children.length == 0 && node.canDelete" data-nodrag ng-click="ctrl.remove(this, node)" class="menu-tree-trash">
 										<span class="tsi icon-ts-delete"></span>
 									</a>
-									<a data-nodrag ng-if="node.canDelete" ng-click="ctrl.blur(this,node)" class="menu-tree-hide">
+									<a data-nodrag ng-if="node.canDelete" ng-click="ctrl.blur(node)" class="menu-tree-hide">
 										<span ng-if="!node.hideFromMenu" class="tsi icon-ts-manutoggle_on" style="color: rgb(30,136,229)"></span>
 										<span ng-if="node.hideFromMenu" class="tsi icon-ts-manutoggle_off" style="color: rgb(216,27,96)"></span>
 									</a>	
