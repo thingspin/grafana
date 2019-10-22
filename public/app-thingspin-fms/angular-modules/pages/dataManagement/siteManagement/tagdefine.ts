@@ -409,7 +409,7 @@ export class TsTagDefineCtrl {
             });
         }
       } else {
-        if (this.checkFacilityName(node.facility_name)) {
+        // if (this.checkFacilityName(node.facility_name)) {
           this.backendSrv.put(`thingspin/sites/${this.data}/facilities/${node.facility_id}/tag/${node.tag_id}`,
             {
               "Name": node.tag_name,
@@ -427,7 +427,7 @@ export class TsTagDefineCtrl {
                 appEvents.emit(AppEvents.alertError, [err.statusText]);
               }
             });
-        }
+        // }
       }
     }
   }
