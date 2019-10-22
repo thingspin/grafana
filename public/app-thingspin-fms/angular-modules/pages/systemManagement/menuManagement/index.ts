@@ -36,7 +36,6 @@ export class TsMenuManagementCtrl {
   evt: any;
   url = '';
   menuInfo = false;
-  menuInfoType = '';
   clickedMenu: ClickedMenu = {
     parent_id: -1,
     id: -100,
@@ -62,8 +61,8 @@ export class TsMenuManagementCtrl {
         const to = this.evt.dest;
         const toNode = this.evt.dest.nodesScope.$nodeScope;
 
-        const plist = [];
-        const clist = [];
+        let plist = [];
+        let clist = [];
         if (fromNode.parent_id === -1 && toNode == null) {
           console.log("L1 -> L1");
           // L1 -> L1
@@ -72,18 +71,12 @@ export class TsMenuManagementCtrl {
             console.log("Up -> down");
             // 위에서 아래로 이동할 때
             // 1-1. 이동 후 현재포함 상위 L1 들의 순서 변경
-            for (let i = 0; i <= to.index; i += 1) {
-              this.data[i].order = i;
-              plist.push(this.data[i]);
-            }
+            plist = changeOrder(this.data, 0, to.index);
           } else {
             console.log("Down -> to");
             // 아래서 위로 이동할 때
             // 1-2. 이동 후 현재 포함 하위 L1 들의 순서 변경
-            for (let i = to.index; i < this.data.length; i += 1) {
-              this.data[i].order = i;
-              plist.push(this.data[i]);
-            }
+            plist = changeOrder(this.data, to.index);
           }
         } else if (fromNode.parent_id === -1 && toNode != null) {
           console.log("L1 -> L2");
@@ -95,19 +88,12 @@ export class TsMenuManagementCtrl {
               // 부모 id 변경
               this.data[i].children[to.index].parent_id = toNode.node.id;
               // L2 순서 조정
-              for (let j = to.index; j < toNode.node.children.length; j += 1) {
-                this.data[i].children[j].order = j;
-                clist.push(this.data[i].children[j]);
-                console.log("Child Update :" + this.data[i].children[j].text + " > new order:", j);
-              }
+              clist = changeOrder(this.data[i].children, to.index, toNode.node.children.length);
               break;
             }
           }
-          for (let i = from.index; i < this.data.length; i += 1) {
-            this.data[i].order = i;
-            plist.push(this.data[i]);
-            console.log("Update :" + this.data[i].text + " > new order:", i);
-          }
+
+          plist = changeOrder(this.data, from.index);
         } else if (fromNode.parent_id !== -1 && toNode == null) {
           console.log("L2 -> L1");
           // L2 -> L1
@@ -116,20 +102,12 @@ export class TsMenuManagementCtrl {
           // 2. src id로 부모 노드를 찾고, idx 부터 하위 노드들의 순서 변경
           this.data[to.index].parent_id = -1;
           console.log("Parent Update :" + this.data[to.index].text + " > new order:", -1);
-          for (let i = to.index; i < this.data.length; i += 1) {
-            this.data[i].order = i;
-            plist.push(this.data[i]);
-            console.log("Update :" + this.data[i].text + " > new order:", i);
-          }
+          plist = changeOrder(this.data, to.index);
 
           for (let i = 0; i < this.data.length; i += 1) {
             if (fromNodeParent.id === this.data[i].id) {
               console.log("Found parent - ", this.data[i].text);
-              for (let j = from.index; j < this.data[i].children.length; j += 1) {
-                this.data[i].children[j].order = j;
-                clist.push(this.data[i].children[j]);
-                console.log("Child Update :" + this.data[i].children[j].text + " > new order:", j);
-              }
+              clist = changeOrder(this.data[i].children, from.index);
               break;
             }
           }
@@ -146,22 +124,19 @@ export class TsMenuManagementCtrl {
             const tmp = this.data[fromNodeParent.order].children[from.index].order;
             this.data[fromNodeParent.order].children[from.index].order = this.data[fromNodeParent.order].children[to.index].order;
             this.data[fromNodeParent.order].children[to.index].order = tmp;
-            clist.push(this.data[fromNodeParent.order].children[from.index]);
-            clist.push(this.data[fromNodeParent.order].children[to.index]);
+            clist = [
+              this.data[fromNodeParent.order].children[from.index],
+              this.data[fromNodeParent.order].children[to.index],
+            ];
           } else {
             console.log("Diff Parent");
-            for (let i = from.index; i < this.data[fromNodeParent.order].children.length; i += 1) {
-              console.log("src Child Update :" + this.data[fromNodeParent.order].children[i].text + " > new order:", i);
-              this.data[fromNodeParent.order].children[i].order = i;
-              clist.push(this.data[fromNodeParent.order].children[i]);
-            }
+            const a = changeOrder(this.data[fromNodeParent.order].children, from.index);
+
             this.data[toNode.node.order].children[to.index].parent_id = toNode.node.id;
             console.log("dst Child Parent Update :" + this.data[toNode.node.order].children[to.index].text + " > new parent:", toNode.node.text);
-            for (let i = to.index; i < toNode.node.children.length; i += 1) {
-              console.log("dst Child Update :" + this.data[toNode.node.order].children[i].text + " > new order:", i);
-              this.data[toNode.node.order].children[i].order = i;
-              clist.push(this.data[toNode.node.order].children[i]);
-            }
+            const b = changeOrder(this.data[toNode.node.order].children, to.index, toNode.node.children.length);
+
+            clist.push(...a, ...b);
           }
         }
 
@@ -229,19 +204,15 @@ export class TsMenuManagementCtrl {
         this.data.push(res);
         this.clickedMenu = res;
       } else {
-        await this.backendSrv.put('/thingspin/menu/', {
-          menu: this.clickedMenu
-        });
+        await this.backendSrv.put('/thingspin/menu/', { menu: this.clickedMenu });
       }
+      // init
       this.menuInfo = false;
       this.$scope.$applyAsync();
       store.dispatch(updateTsMenu(orgId));
-
     } catch (e) {
       console.error(e);
     }
-
-    // init
   }
 
   newMenu() {
