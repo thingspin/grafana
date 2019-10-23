@@ -89,6 +89,9 @@ class GraphElement {
     if (this.elem && this.elem.parent) {
       this.legendElem = this.elem.parent().find('.graph-legend')[0];
     }
+
+    // thingspin add code ----
+    this.ctrl.refresh();
   }
 
   onRender(renderData: any[]) {

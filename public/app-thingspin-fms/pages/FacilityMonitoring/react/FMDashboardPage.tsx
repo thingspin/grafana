@@ -24,7 +24,6 @@ import { FMDashboardGrid } from './FMDashboardGrid';
 // ThingSPIN Utils
 import { tsInitDashboard } from './initDashboard';
 import { FMDashboardModel } from '../models';
-import { getTimeSrv } from 'app/features/dashboard/services/TimeSrv';
 
 // Facility Monitoring Component
 // (Customized grafana react component: iiHOC)
@@ -45,11 +44,6 @@ export class FMDashboardPage extends DashboardPage {
             for (const panel of newPanel) {
                 dashboard.addPanel(panel);
             }
-
-            setTimeout(() => {
-                const timeSrv = getTimeSrv();
-                timeSrv.refreshDashboard();
-            }, newPanel.length * 5);
         }, panels.length * 5);
         // add panels
     }
