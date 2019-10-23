@@ -9,13 +9,14 @@ interface Props {
   newGrafanaVersion: string;
 }
 
-const enable = false;
+// thingspin add code -----
+const thingspinEnable = false;
 
 export const Footer: FC<Props> = React.memo(
   ({ appName, buildVersion, buildCommit, newGrafanaVersionExists, newGrafanaVersion }) => {
     return (
       <div>
-        { enable &&
+        { thingspinEnable && // thingspin edit code -----
           <footer className="footer">
             <div className="text-center">
               <ul>
