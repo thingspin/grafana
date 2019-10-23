@@ -45,7 +45,10 @@ var (
 	buildId               string   = "0"
 	serverBinary          string   = "grafana-server"
 	cliBinary             string   = "grafana-cli"
+	tsServerBinary        string   = "thingspin-server"
+	tsCliBinary           string   = "thingspin-cli"
 	binaries              []string = []string{serverBinary, cliBinary}
+	tsBinaries            []string = []string{tsServerBinary, tsCliBinary}
 	isDev                 bool     = false
 	enterprise            bool     = false
 	skipRpmGen            bool     = false
@@ -123,6 +126,14 @@ func main() {
 			for _, binary := range binaries {
 				build(binary, "./pkg/cmd/"+binary, []string{})
 			}
+
+		// ThingSPIN Add Code -------------------
+		case "ts-build":
+			//clean()
+			for idx, binary := range tsBinaries {
+				build(binary, "./pkg/cmd/"+binaries[idx], []string{})
+			}
+		// ThingSPIN Add Code -------------------
 
 		case "build-frontend":
 			grunt(gruntBuildArg("build")...)
