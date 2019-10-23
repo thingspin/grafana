@@ -115,10 +115,10 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         private $location: angular.ILocationService,
         private backendSrv: BackendSrv) { }
 
-    $onInit(): void {
+    async $onInit() {
         const { id } = this.$routeParams;
         if (id) {
-            this.updateData(id);
+            await this.updateData(parseInt(id, 10));
         }
         this.initMqtt();
     }
