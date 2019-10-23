@@ -1,5 +1,5 @@
 // js 3rd party libs
-const uid = require("shortid");
+const uid = require('shortid');
 
 // Grafana libs
 import { appEvents } from 'app/core/core';
@@ -68,14 +68,26 @@ export interface ReceivedMQTTPayload {
 export default class TsOpcUaConnectCtrl implements angular.IController {
     // 2-way binding child directive data
     input: InputModel = {
-        auth: "Anonymous",
-        securityMode: "None",
-        securityPolicy: "None",
-        endpointUrl: "http://localhost:4843/",
+        auth: 'Anonymous',
+        securityMode: 'None',
+        securityPolicy: 'None',
+        endpointUrl: 'http://localhost:4843/',
         name: '',
         intervals: 1,
     };
-    connectStatus: string;
+
+    _connectStatus: string;
+    set connectStatus(color: string) {
+        this._connectStatus = color;
+        if (color === 'green') {
+            this.enableNodeSet = true;
+        }
+
+        this.$scope.$applyAsync();
+    }
+    get connectStatus() {
+        return this._connectStatus;
+    }
 
     // MQTT
     readonly mqttUrl = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt`;
@@ -104,19 +116,22 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         private backendSrv: BackendSrv) { }
 
     $onInit(): void {
-        this.initMqtt();
-
         const { id } = this.$routeParams;
         if (id) {
             this.updateData(id);
         }
+        this.initMqtt();
+    }
+
+    $onDestroy() {
+        this.mqttClient.end();
     }
 
     inputChecker(): boolean {
         const { name, endpointUrl } = this.input;
         const errMsg = (!name) ? '수집기 이름을 설정 하세요.'
             : !endpointUrl ? 'Endpoint URL을 입력 하세요.'
-                : endpointUrl.indexOf("://") === -1 ? 'Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.'
+                : endpointUrl.indexOf('://') === -1 ? 'Endpoint URL 형태가 잘못되었습니다.\n다시 입력해주세요.'
                     : '';
 
         if (errMsg) {
@@ -128,18 +143,19 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     async updateData(connId: number) {
         try {
             this.connId = connId;
-            const result: OpcConnectModel = await this.backendSrv.get(`${baseApi}/${this.connId}`);
+            const { params, name, intervals }: OpcConnectModel = await this.backendSrv.get(`${baseApi}/${this.connId}`);
+            const { EndpointUrl, auth, securityMode, securityPolicy, FlowId, nodes } = params;
 
             this.input = {
-                endpointUrl: result.params.EndpointUrl,
-                name: result.name,
-                auth: result.params.auth,
-                securityMode: result.params.securityMode,
-                securityPolicy: result.params.securityPolicy,
-                intervals: result.intervals,
+                endpointUrl: EndpointUrl,
+                name,
+                auth,
+                securityMode,
+                securityPolicy,
+                intervals,
             };
-            this.FlowId = result.params.FlowId;
-            this.nodes = result.params.nodes;
+            this.FlowId = FlowId;
+            this.nodes = nodes;
             this.enableNodeSet = true;
 
             this.$scope.$applyAsync();
@@ -153,7 +169,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
 
         try {
             await this.mqttClient.run(this.recvMqttMessage);
-            console.log("MQTT Connected");
+            console.log('MQTT Connected');
         } catch (e) {
             console.error(e);
         }
@@ -165,7 +181,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
 
         if (connId === this.connId) {
             clearTimeout(this.timer);
-            this.setConnectStatus(payload.connect.fill);
+            this.connectStatus = payload.connect.fill;
         }
     }
 
@@ -174,7 +190,7 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         const { name, endpointUrl, auth, securityPolicy, securityMode, intervals } = this.input;
         const PtagList = nodes.map(({ displayName }) => ({
             name: displayName.text,
-            type: ""
+            type: ''
         }));
 
         return {
@@ -196,9 +212,9 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     async addConnect() {
         if (this.inputChecker()) {
             this.FlowId = uid.generate();
-            this.setConnectStatus("yellow");
+            this.connectStatus = 'yellow';
             this.timer = setTimeout(() => {
-                this.setConnectStatus("red");
+                this.connectStatus = 'red';
             }, this.connectTimeout);
 
             try {
@@ -211,15 +227,6 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
                 }
             }
         }
-    }
-
-    setConnectStatus(color: string): void {
-        this.connectStatus = color;
-        if (color === "green") {
-            this.enableNodeSet = true;
-        }
-
-        this.$scope.$applyAsync();
     }
 
     jsonDataParsingChecker({ intervals, name, params }: any) {
@@ -243,17 +250,17 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     exportData(): void {
         if (this.inputChecker()) {
             const payload = this.genPayload(this.FlowId);
-            const $elem = $("#downloadAnchorElem");
+            const $elem = $('#downloadAnchorElem');
             const d = dateTime(new Date()).format('YYYY-MM-DD_HH:mm:ss');
 
-            $elem.attr("href", "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload)))
-                .attr("download", `${payload.name}_${d}.json`)
+            $elem.attr('href', 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(payload)))
+                .attr('download', `${payload.name}_${d}.json`)
                 .get(0).click();
         }
     }
 
     cancel(): void {
-        this.$location.path("/thingspin/manage/data/connect");
+        this.$location.path('/thingspin/manage/data/connect');
     }
 
     async save(): Promise<void> {

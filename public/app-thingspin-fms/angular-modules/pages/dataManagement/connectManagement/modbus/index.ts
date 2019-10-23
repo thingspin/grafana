@@ -641,6 +641,10 @@ return msg;
     this.$timeout(() => { $('#collector-input').focus(); });
   }
 
+  $onDestroy() {
+    this.mqttClient.end();
+  }
+
   onUpload({ name, params, intervals,}: any) {
     if (!(!name || !params || !intervals)) {
       const { Intervals, Host, Port, UnitId, TimeOut, ReTimeOut, AddressNode, InjectWires, Tabledata, AddressListCount } = params;

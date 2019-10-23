@@ -207,6 +207,10 @@ export class TsMqttConnectCtrl {
     });
   }
 
+  $onDestroy() {
+    this.mqttClient.end();
+  }
+
   link(scope: any, elem: any, attrs: any, ctrl: { scope: any; }) {
     ctrl.scope = scope;
   }
