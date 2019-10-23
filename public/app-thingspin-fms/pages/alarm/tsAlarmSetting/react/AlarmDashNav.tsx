@@ -77,7 +77,7 @@ export class AlarmNavComp extends DashNav {
         const { dashboard } = this.props;
         this.backendSrv.deleteDashboard(dashboard.uid, false).then(() => {
             appEvents.emit(AppEvents.alertSuccess, ['Dashboard Deleted', dashboard.title + ' has been deleted']);
-            this.$location.url('/');
+            this.gotoBack();
         });
     }
 
