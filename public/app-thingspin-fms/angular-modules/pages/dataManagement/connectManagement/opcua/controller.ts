@@ -126,27 +126,25 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
     }
 
     async updateData(connId: number) {
-        if (this.inputChecker()) {
-            try {
-                this.connId = connId;
-                const result: OpcConnectModel = await this.backendSrv.get(`${baseApi}/${this.connId}`);
+        try {
+            this.connId = connId;
+            const result: OpcConnectModel = await this.backendSrv.get(`${baseApi}/${this.connId}`);
 
-                this.input = {
-                    endpointUrl: result.params.EndpointUrl,
-                    name: result.name,
-                    auth: result.params.auth,
-                    securityMode: result.params.securityMode,
-                    securityPolicy: result.params.securityPolicy,
-                    intervals: result.intervals,
-                };
-                this.FlowId = result.params.FlowId;
-                this.nodes = result.params.nodes;
-                this.enableNodeSet = true;
+            this.input = {
+                endpointUrl: result.params.EndpointUrl,
+                name: result.name,
+                auth: result.params.auth,
+                securityMode: result.params.securityMode,
+                securityPolicy: result.params.securityPolicy,
+                intervals: result.intervals,
+            };
+            this.FlowId = result.params.FlowId;
+            this.nodes = result.params.nodes;
+            this.enableNodeSet = true;
 
-                this.$scope.$applyAsync();
-            } catch (e) {
-                console.error(e);
-            }
+            this.$scope.$applyAsync();
+        } catch (e) {
+            console.error(e);
         }
     }
 
