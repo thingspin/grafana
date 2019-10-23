@@ -9,7 +9,6 @@ import FilterTree from './filterTree';
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
 // style libs
-import './_index.scss';
 import siteModel from './SiteModel';
 import { SiteOptions, facilityTreeProps, FacilityItem, TreeInfo, FacilityTreeType } from './model';
 

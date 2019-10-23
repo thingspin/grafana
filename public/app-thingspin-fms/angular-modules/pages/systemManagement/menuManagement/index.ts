@@ -7,7 +7,6 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 import { store } from 'app/store/store';
 
 // Thingspin libs
-import "./index.scss";
 import { updateTsMenu } from 'app-thingspin-fms/react/redux/dispayches/tsMenu';
 
 const { orgId } = config.bootData.user;

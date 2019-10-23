@@ -9,9 +9,6 @@ import { appEvents } from 'app/core/core';
 import { coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
-// Thingspin libs
-import "./sitelist.scss";
-
 interface SiteTableData {
     id: string;
     titleid: string;

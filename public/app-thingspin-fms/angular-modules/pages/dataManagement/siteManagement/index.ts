@@ -1,5 +1,4 @@
 import angular from "angular";
-import "./index.scss";
 import './tagdefine';
 import './sitetable';
 

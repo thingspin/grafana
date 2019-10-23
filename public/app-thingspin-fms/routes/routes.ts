@@ -3,6 +3,7 @@ import 'app/routes/dashboard_loaders';
 // Grafana libs
 import ChangePasswordPage from 'app/features/profile/ChangePasswordPage';
 import UsersListPage from 'app/features/users/UsersListPage';
+import { SafeDynamicImport } from 'app/core/components/SafeDynamicImport';
 
 // Types
 import { DashboardRouteInfo } from 'app/types';
@@ -11,7 +12,6 @@ import { setupAngularRoutes } from 'app/routes/routes';
 // thingspin Registrations
 import 'app-thingspin-fms/angular-modules/pages';
 import { UserSettingInfo } from 'app-thingspin-fms/types';
-import FMComponent from 'app-thingspin-fms/pages/FacilityMonitoring/react';
 import AlarmManagement from 'app-thingspin-fms/pages/alarm/alarmManagement/react';
 import TsAlarmSettingComponent from 'app-thingspin-fms/pages/alarm/tsAlarmSetting';
 import { TsLoginPage } from 'app-thingspin-fms/pages/login/TsLoginPage';
@@ -22,6 +22,9 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
   setupAngularRoutes($routeProvider, $locationProvider);
 
   // 여기서 프론트엔드 라우터를 추가하거나 덮어쓰기를 하세요.
+  const importFmDashboardPage = () =>
+    SafeDynamicImport(import(/* webpackChunkName: "FMComponent" */ 'app-thingspin-fms/pages/FacilityMonitoring/react'));
+
   $routeProvider
   // LOGIN / SIGNUP
   .when('/login', {
@@ -88,7 +91,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
     routeInfo: DashboardRouteInfo.New,
     reloadOnSearch: false,
     resolve: {
-      component: () => FMComponent,
+      component: importFmDashboardPage,
     },
   })
   .when('/thingspin/manage/monitoring/:uid/:slug', {
@@ -97,7 +100,7 @@ export function fmsSetupAngularRoutes($routeProvider: any, $locationProvider: an
     routeInfo: DashboardRouteInfo.Normal,
     reloadOnSearch: false,
     resolve: {
-      component: () => FMComponent,
+      component: importFmDashboardPage,
     },
   })
 

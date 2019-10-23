@@ -12,9 +12,6 @@ import {
 // thingspin react components
 import FMDashboardPage from './FMDashboardPage';
 
-// styler(scss, css)
-import './_index.scss';
-
 export interface Props extends GfDPProps {
 
 }

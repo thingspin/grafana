@@ -7,9 +7,6 @@ import { appEvents } from 'app/core/core';
 import { AppEvents } from '@grafana/data';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
-// Thingspin libs
-import "./tagdefine.scss";
-
 export class TsTagDefineCtrl {
   // tree
   source: any;
