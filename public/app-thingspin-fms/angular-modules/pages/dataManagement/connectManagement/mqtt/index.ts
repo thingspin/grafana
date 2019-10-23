@@ -633,10 +633,10 @@ return msg;
   async methodProcess(object: any, value: any): Promise<any> {
     try {
       if (!(this.isEditMode || this.indexID !== -1)) {
-        const result = await this.backendSrv.post("/thingspin/connect/mqtt", object);
-        this.indexID = result;
+        this.indexID = await this.backendSrv.post("/thingspin/connect/mqtt", object);
       }
       await this.backendSrv.put(`/thingspin/connect/${this.indexID}`, object);
+      this.updateData();
       if (value) {
         this.close();
       }
