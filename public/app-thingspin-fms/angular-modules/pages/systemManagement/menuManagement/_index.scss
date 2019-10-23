@@ -1,4 +1,4 @@
-@import "../../../../../../node_modules/angular-ui-tree/dist/angular-ui-tree.min.css";
+@import "~angular-ui-tree/dist/angular-ui-tree.min.css";
 // ui-tree
 .hidden {
     display: none!important;
@@ -429,9 +429,6 @@
     color: #ffffff;
 }
 
-.ts-menu-title-container {
-    padding: 24px 16px 20px 16px;
-}
 .ts-connect-title-container {
     padding: 24px 16px 20px 16px;
     border-bottom: solid 1px #ecebeb;
