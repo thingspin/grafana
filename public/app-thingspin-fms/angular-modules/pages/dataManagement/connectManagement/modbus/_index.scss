@@ -1,0 +1,848 @@
+
+.modbus {
+    &-conn {
+        &-editor {
+            background-color: #ffffff;
+            min-width: 1094px;
+            overflow-x: scroll;
+        }
+
+        &-section {
+            &-line {
+                height: 0;
+                border: solid 1px #ecebeb;
+                margin-top: 16.5px;
+                margin-left: 8.2%;
+                margin-right: 8.14%;
+                align-content: center;
+            }
+            &-line2 {
+                height: 0;
+                border: solid 1px #ecebeb;
+                margin-top: 1.7%;//16.5
+                align-content: center;
+            }
+        }
+
+        &-sub-info {
+            width: 106px;
+            height: 17px;
+            opacity: 0.8;
+            font-family: Roboto;
+            font-size: 14px;
+            font-weight: bold;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.14;
+            letter-spacing: normal;
+            text-align: left;
+            color: #1e1e1e;
+        }
+
+        &-test-buttons {
+            margin-top:20px;
+            //margin-right: 8.43%;
+            float: right;
+            button {
+                color: #6a6a6a;
+                background-color: #ecebeb;
+                padding: 5px 5px 5px 5px;
+                //width: 28px;
+                //height: 28px;   
+                &.green {
+                    //width: 28px;
+                    //height: 28px;
+                    color: #ffffff;
+                    background-color: #0039ff;
+                }
+                &.red {
+                    //width: 28px;
+                    //height: 28px;
+                    color: #ffffff;
+                    background-color: #d81b60;
+                }
+                &.yellow {
+                    //width: 28px;
+                    //height: 28px;
+                    color: #ffffff;
+                    background-color: #f1ee09;
+                }
+        
+                i {
+                    font-size: 20px;
+                    padding-right: 0px;
+                }
+            }
+        }
+    }
+
+    &-edit {
+        &-box1 {
+            margin-left: 8.2%;
+            margin-right: 8.14%;
+            display: inline-flex;
+        }
+
+        &-box {
+            margin-left: 8.2%;
+            margin-right: 8.14%;
+        }
+
+        &-bg {
+            display:inline-block;
+            background-color: rgb(235,235,235);
+        }
+
+        &-header-banner {
+            margin-right: 8.14%;
+            margin-left: 8.2%;
+        }
+    }
+
+    &-content {
+        &-first-box{
+            margin-left: 19.5px;
+        }
+
+        &-middle-box{
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        &-last-box{
+            margin-left: auto;
+            margin-right: 21.5px;
+        }
+    }
+
+    //top title
+    &-title {
+        &-top {
+            margin-left: 1.54%;
+            margin-top: 44px;
+            opacity: 0.8;
+            font-family: Roboto;
+            font-size: 16px;
+            font-weight: bold;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.19;
+            letter-spacing: normal;
+            text-align: left;
+            color: #1e1e1e;
+            display:inline-block;
+        }
+
+        &-conn {
+            margin-top:31px;
+            height: 17px;
+            opacity: 0.8;
+            font-family: Roboto;
+            font-size: 14px;
+            font-weight: bold;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.14;
+            letter-spacing: normal;
+            text-align: left;
+            color: #1e1e1e;
+            display:inline-block;
+
+            &-add {
+                margin-left:8.43%;
+                margin-top: 36px; //45
+                height: 17px;
+                opacity: 0.8;
+                font-family: Roboto;
+                font-size: 14px;
+                font-weight: bold;
+                font-style: normal;
+                font-stretch: normal;
+                line-height: 1.14;
+                letter-spacing: normal;
+                text-align: left;
+                color: #1e1e1e;
+                display:inline-block;
+            }
+        }
+
+        &-error {
+            margin-top:31px;
+            //width: 8.05%; //106
+            height: 17px;
+            opacity: 0.8;
+            font-family: Roboto;
+            font-size: 14px;
+            font-weight: bold;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.14;
+            letter-spacing: normal;
+            text-align: left;
+            color: #d81b60;
+            background-color: #ffffff;
+            display:inline-block;
+        }
+
+        &-addr-list {
+            //margin-left:8.43%;
+            margin-top:6.12%; //57
+            //width: 106px;
+            height: 17px;
+            opacity: 0.8;
+            font-family: Roboto;
+            font-size: 14px;
+            font-weight: bold;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.14;
+            letter-spacing: normal;
+            text-align: left;
+            color: #1e1e1e;
+            display:inline-block;
+        }
+
+        &-address {
+            margin-left: 20px; //20
+            margin-top: 31px; //31
+            opacity: 0.8;
+            font-family: Roboto;
+            font-size: 14px;
+            font-weight: bold;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 1.14;
+            letter-spacing: normal;
+            text-align: left;
+            color: #1e1e1e;
+            display:inline-block;
+        }
+    }
+
+    // TOP RIGHT BUTTON
+    &-right-button-area {
+        margin-right: 1.47%;
+        margin-top: 28px;
+        display:block;
+        float: right;
+    }
+
+    &-error {
+        &-comment {
+            margin-top: 16.5px;
+            margin-left: 20px;
+            display: block;
+            color: #1e1e1e;
+        }
+    }
+
+    &-subtitle {
+        display:inline-block;
+        opacity: 0.8;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: 500;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.14;
+        letter-spacing: normal;
+        text-align: left;
+        color: #1e1e1e;
+    }
+
+    &-name-bg {
+        width: 23.48%; //308
+        height: 3.86%;
+        display:inline-block;
+        background-color: rgb(235,235,235);
+    }
+
+    &-host-bg {
+        width: 17.55%; //231
+        height: 3.86%;
+        display:inline-block;
+        background-color: rgb(235,235,235);
+    }
+
+    &-port-bg {
+        width: 17.7%; //233
+        height: 3.86%;
+        display:inline-block;
+        background-color: rgb(235,235,235);
+    }
+
+    &-unitid-bg {
+        width: 6.53%; //86
+        height: 36px;
+        display:inline-block;
+        background-color: rgb(235,235,235);
+    }
+
+    &-timeout-bg {
+        width: 11.39%;//150
+        height: 36px;
+        display:inline-block;
+        background-color: rgb(235,235,235);
+    }
+
+    &-reconnect-bg {
+        width: 14.43%;//190
+        height: 36px;
+        display:inline-block;
+        background-color: rgb(235,235,235);
+    }
+
+    &-interval-bg {
+        width: 14.58%; //192
+        height: 36px;
+        display:inline-block;
+        background-color: rgb(235,235,235);
+    }
+
+    &-address {
+        &-add-view {
+            margin-left: 8.43%; //111px
+            margin-right: 8.43%;
+            margin-top: 1.71%;//16px
+            //margin-bottom: 38.66%; //360px
+            margin-bottom: 16px; //360px
+            width: 83.13%; //194
+            height: 14.7%; //137
+            border: solid 1px #ecebeb;
+        }
+
+        &-add-edit {
+            margin-bottom: 2.14%;//20px
+        }
+
+        &-add-section-line {
+            height: 0;
+            border: solid 1px #ecebeb;
+            margin-top: 16.5px;//16.5
+            margin-left: 20px; //20
+            margin-right: 20px;
+            align-content: center;
+        }
+
+        &-btn-pos{
+            margin-right: 19.9px;
+            margin-top: 20px;
+            float: right;
+        }
+    }
+
+    &-table-size {
+        margin-left: 8.43%;
+        margin-right: 8.43%;
+        margin-top: 1.58%;
+        width: 83.13%;
+    }
+
+    &-table-edit-button {
+        //background-color: #ecebeb;
+        color:#ffffff;
+    }
+
+    &-banner-buttons {
+        margin-left: auto;
+    
+        .ts-btn-cancel {
+            background-color: #6a6a6a;
+        }
+    
+        .ts-btn-save {
+            background-color: #0039ff;
+        }
+    }
+
+    &-ts-connect-table-container {
+        margin-top: 1.58%;
+        //margin-top: 44.6px;
+        margin-left: 8.2%;
+        margin-right: 8.14%;
+        color: #1e1e1e;
+    
+        button {
+            border: 0;
+            background-color: rgba(#000,0);
+        }
+    
+        .modbus-connect {
+            &-table {
+                &-header {
+                    opacity: 0.6;
+                }
+
+                &-body {
+                    width: 100%;
+                    margin: 8px 0;
+            
+                    table {
+                        width: 100%;
+            
+                        tr {
+                            border-bottom: solid 1px #dcdbdc;
+            
+                            &:first {
+                                margin-left: 16px;
+                            }
+                        }
+            
+                        th {
+                            padding: 7px 0;
+                        }
+            
+                        td {
+                            padding: 12px 0;
+            
+                            color: rgba(#1e1e1e, 0.8);
+                            button {
+                                font-size: 20px;
+                            }
+                        }
+            
+                        .modbus-ts-table-row {
+                            &:hover {
+                                background-color: #e3f2fd;
+                            }
+            
+                            .connect { 
+                                font-size: 20px;
+                            }
+                        }
+            
+                        .modbus-ts-table-header {
+                            background-color: #ecebeb;
+                        }
+                    }
+                }
+
+                &-footer {
+                    width: 100%;
+                    display: inline-flex;
+            
+                    .modbus-table {
+                        &-page-range {
+                            opacity: 0.6;
+                        }
+                        &-paging {
+                            margin-left: auto;
+                            display: inline-block;
+                        }
+                    }
+                    button {
+                        opacity: 0.3;
+            
+                        &.blue {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+
+            &-page-rows {
+                display: inline-block;
+        
+                .modbus-connect-table-select {
+                    width: 100%;
+        
+                    border: 0;
+                }
+            }
+        }
+    }
+}
+
+.ts-input-group {
+    margin-top: 16.5px;
+    margin-left: 19.5px;
+    display: inline-flex;
+
+    &.collect {
+        width: 30%;
+    }
+    &.url {
+        margin-left: 10.12%;
+        width: 26%;
+    }
+    &.port {
+        margin-left: 6.12%;
+        width: 22%;
+    }
+    &.unit-id {
+        margin-left: 19.5px;
+        width: 14%;
+    }
+    &.time-out {
+        margin-left: 32px;
+        width: 20%;
+    }
+    &.recoonect {
+        margin-left: 32px;
+        width: 24%;
+    }
+    &.interval {
+        margin-left: 32px;
+        width: 25%;
+    }
+    &.input-name {
+        width: 16%
+    }
+    &.input-address {
+        margin-left: 38px;
+        width: 16%;
+    }
+    &.input-fc {
+        margin-left: 38px;
+        width: 18%;
+    }
+    &.input-quantity {
+        margin-left: 38px;
+        width: 12%;
+    }
+    &.input-type {
+        margin-left: 38px;
+        width: 16%;
+    }
+
+    .ts-modbus {
+        &-collect {
+            &-label {
+                display: flex;
+                min-width: 80px;
+                align-items: center;
+
+                &-min {
+                    display: flex;
+                    min-width: 40px;
+                    align-items: center;
+                }
+                &-interval {
+                    display: flex;
+                    min-width: 120px;
+                    align-items: center;
+                }
+                &-input-min {
+                    display: flex;
+                    min-width: 30px;
+                    align-items: center;
+                }
+                &-input-normal {
+                    display: flex;
+                    min-width: 60px;
+                    align-items: center;
+                }
+            }
+        }
+        &-url-label {
+            display: flex;
+            width: 46px;
+            align-items: center;
+        }
+        &-port-label {
+            display: flex;
+            width: 33px;
+            align-items: center;
+        }
+    }
+    .ts-mqtt-keep-label {
+        display: flex;
+        width: 100px;
+        align-items: center;
+    }
+    .ts-input {
+        margin-left: 16px;
+        display: inline-block;
+        width: 100%;
+        &>:first-child {
+            width: 100%;
+            height: 36px;
+            border-radius: 4px;
+            padding-left: 8px;
+            background-color: rgba(#1e1e1e, 0.07);
+            &:focus + .separator {
+                opacity: 1;
+                height: 2px;
+                background: #0039ff;
+                transform: scaleX(1) translateY(-2px);   
+            }
+        }
+        .separator {
+            display: block;
+            opacity: 0;
+            width: 100%;
+            background: rgba(#1e1e1e, 0.3);
+            transform: scaleX(0) translateY(-2px);
+            transform-origin: 50%;
+            transition: all .15s linear;
+            &.enable {
+                opacity: 1;
+                height: 1px;
+                transform: scaleX(1) translateY(-2px);   
+            }
+        }
+    }
+}
+
+//main border line
+#main-view {
+    margin-top: 21px; //2%
+    width: 97%;
+    border: solid 1px #ecebeb;
+    background-color: #ffffff;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 28px;
+}
+
+#modbus {
+    &-conn-btn {
+        font-size: 19px;
+    }
+    &-save-btn {
+        width: 80px;
+        height: 36px;
+        border-radius: 4px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+        background-color: #0039ff;
+        color:#ffffff;
+    }
+    &-cancel-btn {
+        width: 80px;
+        height: 36px;
+        margin-right: 16px;
+        border-radius: 4px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+        background-color: #6a6a6a;
+        color:#ffffff;
+    }
+    &-addr-add-btn {
+        //margin-left: 67.09%; //919
+        margin-top: 5%;
+        float: right;
+        width: 104.1px;
+        height: 28px;
+        border-radius: 4px;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+        background-color: #0039ff;
+        color:#ffffff;
+    }
+    &-error-icon-bg {
+        color: #d81b60;
+        background-color: #ffffff;
+        font-size: 19px;
+    }
+    &-edit {
+        //width: 83px;
+        //height: 17px;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.14;
+        letter-spacing: normal;
+        text-align: left;
+        color: #1e1e1e;
+        background:rgba(0,0,0,0);
+    }
+    &-collector {
+        margin-left:1.48%; //131px
+        margin-top:26.5px;
+
+        &-name-position {
+            margin-left:16px;
+            width:23.4%;//308
+            //width:100%;//308
+            height: 3.86%; // 36
+        }
+        &-host-position {
+            margin-left:16px;
+            width: 17.55%;//231
+            height: 3.86%; // 36
+        }
+        &-port-position {
+            margin-left:16px;
+            width:17.7%;//233
+            height: 3.86%; // 36
+          
+        }
+    }
+    &-host {
+        margin-left:4.25%;
+        margin-top:26.5px;
+    }
+    &-port {
+        margin-left:4.25%;
+        margin-top:26.5px;
+    }
+    &-unit-id {
+        margin-left:1.48%; 
+        margin-top:26.5px;
+        //width: 48px;
+        &-pos{
+            margin-left:1.21%; //16
+            height: 3.86%; //36
+        }
+    }
+    &-time-out {
+        margin-left:2.73%; //36
+        margin-top:26.5px; 
+        //width: 4.25%;
+        width: 56px;
+        &-pos{
+            margin-left:1.21%;
+            height: 3.86%; //36
+        }
+    }
+    &-Reconnect {
+        margin-left:2.73%;
+        margin-top:26.5px;
+        //width: 5.39%;
+        width: 71px;
+        &-pos{
+            margin-left:1.21%;
+            height: 3.86%; //36
+        }
+    }
+    &-Intervals {
+        margin-left:2.73%;
+        margin-top:26.5px;
+        //width: 6.76%;
+        width: 100px;
+
+        &-pos{
+            margin-left:1.21%;
+            //margin-right: 10.03%;
+            height: 3.86%; //36
+        }
+    }
+    &-addressTable {
+        background-color:#ccc;
+    }
+    &-address {
+        &-cancel-btn {
+            margin-right: 16px;
+            //margin-left: 65.9%; //721
+            width: 80px;
+            height: 28px;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+            background-color: #6a6a6a;
+            color:#ffffff;
+        }
+        &-add-btn {
+            width: 130.1px;
+            height: 28px;
+            border-radius: 4px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+            background-color: #0039ff;
+            color:#ffffff;
+        }
+    }
+    &-add-edit {
+        &-name {
+            margin-left: 20px; //20
+            margin-top: 26.5px;
+        }
+        &-name-pos {
+            width: 8.35%;
+            margin-left:16px;
+        }
+        &-address {
+            margin-left: 3.29%; //36
+            margin-top: 26.5px;
+        }
+        &-FC {
+            margin-left: 3.29%; //36
+            margin-top: 26.5px;
+        }
+        &-quantity {
+            margin-left: 3.29%; //36
+            margin-top: 26.5px;
+        }
+        &-datatype {
+            margin-left: 3.29%; //36
+            margin-top: 26.5px;
+        }
+    }
+
+    &-FC-combobox {
+        width:177px;
+        //height:180px;
+        opacity: 1;
+        background-color: rgba(0,0,0,0);
+        font-size: 14px;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.14;
+        letter-spacing: normal;
+        text-align: left;
+        color: #1e1e1e;
+        background:rgba(0,0,0,0);
+    }
+    &-type-combobox{
+        width:108px;
+        //height:90px;//180
+        opacity: 1;
+        background-color: rgba(0,0,0,0);
+        font-size: 14px;
+        font-family: Roboto;
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.14;
+        letter-spacing: normal;
+        text-align: left;
+        color: #1e1e1e;
+        background:rgba(0,0,0,0);
+    }
+}
+
+/*Theme the header*/
+#modbus-addressTable .tabulator-header {
+    background-color: #ecebeb;
+    color:#1e1e1e;
+    border: solid 0px #dcdbdc;
+}
+
+/*Allow column header names to wrap lines*/
+#modbus-addressTable .tabulator-header .tabulator-col,
+#modbus-addressTable .tabulator-header .tabulator-col-row-handle {
+    background-color: #ecebeb;
+}
+/*Color the table rows*/
+#modbus-addressTable .tabulator-tableHolder .tabulator-table .tabulator-row{
+    color:#1e1e1e;
+    background-color: #fff;
+}
+/*Color even rows*/
+#modbus-addressTable .tabulator-tableHolder .tabulator-table .tabulator-row:nth-child(even) {
+    background-color: #fff;
+}
+#modbus-addressTable .tabulator .tabulator-footer{
+    background-color: #fff;
+}
+#modbus-addressTable .tabulator .tabulator-tableHolder{
+    background-color: #fff;
+}
+
+#modbu-add-edit-address-pos {
+    margin-left:16px;
+}
+
+#modbu-add-edit-FC-pos {
+    margin-left:16px;
+}
+
+#modbu-add-edit-quantity-pos {
+    margin-left:16px;
+}
+
+#modbu-add-edit-datatype-pos {
+    margin-left:16px;
+}

@@ -1,4 +1,7 @@
 @import '~tabulator-tables/dist/css/bootstrap/tabulator_bootstrap.min.css';
+@import './mqtt/index';
+@import './modbus/index';
+
 $OPCUA_COLOR: #fb8002;
 $MQTT_COLOR: #00897b;
 $MODBUS_COLOR: #8e24aa;

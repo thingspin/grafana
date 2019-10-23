@@ -2,7 +2,6 @@
 import _ from "lodash";
 import angular, { ITimeoutService } from 'angular';
 const uid = require("shortid");
-import "./index.scss";
 
 // Grafana libs
 import { dateTime, AppEvents } from '@grafana/data';
@@ -62,7 +61,7 @@ export function formatDate(date: Date): string {
   return dateTime(date).format('YYYY-MM-DD_HH:mm:ss');
 }
 
-export class TsMqttConnectCtrl {
+export class TsMqttConnectCtrl implements angular.IController {
   static template: any = require("./index.html");
 
   connection = {
@@ -207,8 +206,10 @@ export class TsMqttConnectCtrl {
     });
   }
 
-  $onDestroy() {
-    this.mqttClient.end();
+  $onDestroy(): void {
+    if (this.mqttClient) {
+        this.mqttClient.end();
+    }
   }
 
   link(scope: any, elem: any, attrs: any, ctrl: { scope: any; }) {

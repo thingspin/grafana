@@ -10,7 +10,6 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 import { dateTime } from '@grafana/data';
 
 // Thingspin libs
-import "./index.scss";
 import TsMqttController from 'app-thingspin-fms/utils/mqttController';
 
 export interface TableModel {
@@ -43,7 +42,7 @@ export function formatDate(date: Date): string {
   return dateTime(date).format('YYYY-MM-DD_HH:mm:ss');
 }
 
-export class TsModbusConnectCtrl {
+export class TsModbusConnectCtrl implements angular.IController {
   static template = require("./index.html");
 
   modbusParams = {
@@ -135,7 +134,6 @@ export class TsModbusConnectCtrl {
     private $location: angular.ILocationService,
     private backendSrv: BackendSrv,
     private $timeout: ITimeoutService) {
-    //for tabulator table
     this.initMqtt();
 
     if ($routeParams.id) {
@@ -641,8 +639,10 @@ return msg;
     this.$timeout(() => { $('#collector-input').focus(); });
   }
 
-  $onDestroy() {
-    this.mqttClient.end();
+  $onDestroy(): void {
+    if (this.mqttClient) {
+        this.mqttClient.end();
+    }
   }
 
   onUpload({ name, params, intervals,}: any) {

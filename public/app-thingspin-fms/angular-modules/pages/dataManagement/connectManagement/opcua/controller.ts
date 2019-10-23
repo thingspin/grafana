@@ -123,8 +123,10 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
         this.initMqtt();
     }
 
-    $onDestroy() {
-        this.mqttClient.end();
+    $onDestroy(): void {
+        if (this.mqttClient) {
+            this.mqttClient.end();
+        }
     }
 
     inputChecker(): boolean {
