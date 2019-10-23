@@ -29,7 +29,7 @@ interface PanelEditorProps {
   changePanelEditorTab: typeof changePanelEditorTab;
 }
 
-class UnConnectedPanelEditor extends PureComponent<PanelEditorProps> {
+export class UnConnectedPanelEditor extends PureComponent<PanelEditorProps> {
   constructor(props: PanelEditorProps) {
     super(props);
   }

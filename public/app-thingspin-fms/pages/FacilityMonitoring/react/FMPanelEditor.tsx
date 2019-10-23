@@ -1,17 +1,25 @@
-// External Libraries
+// Js 3rd party libs
 import React from 'react';
+import { hot } from 'react-hot-loader';
+import { connect } from 'react-redux';
 
-// Grafana Components
-import { PanelEditor } from 'app/features/dashboard/panel_editor/PanelEditor';
-import { GeneralTab } from 'app/features/dashboard/panel_editor/GeneralTab';
+// Grafana libs
 import { AlertTab } from 'app/features/alerting/AlertTab';
+import { GeneralTab } from 'app/features/dashboard/panel_editor/GeneralTab';
+import { mapStateToProps } from 'app/features/dashboard/panel_editor/PanelEditor';
+import { UnConnectedPanelEditor } from 'app/features/dashboard/panel_editor/PanelEditor';
+import {
+    changePanelEditorTab,
+    panelEditorCleanUp,
+    refreshPanelEditor
+} from 'app/features/dashboard/panel_editor/state/actions';
 
-// ThingSPIN Components
+// ThingSPIN libs
 import FMVisualizationTab from './FMViauslizationTab';
 import FMQueriesTab from './FMQueriesTab';
 
 // (Customized grafana react component: iiHOC)
-export class FMPanelEditor extends PanelEditor {
+export class UnConnectedFMPanelEditor extends UnConnectedPanelEditor {
     // Override
     renderCurrentTab(activeTab: string) {
         const { panel, dashboard, onPluginTypeChange, plugin, angularPanel } = this.props;
@@ -38,3 +46,12 @@ export class FMPanelEditor extends PanelEditor {
         }
     }
 }
+
+export const mapDispatchToProps = { refreshPanelEditor, panelEditorCleanUp, changePanelEditorTab };
+
+export const FMPanelEditor = hot(module)(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(UnConnectedFMPanelEditor)
+);
