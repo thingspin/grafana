@@ -388,7 +388,7 @@ func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 
-	if info.Active {
+	if info.Publish == true {
 		q1 := m.AddTsConnectHistoryQuery {
 			ConnectId:   connId,
 			Event:       "연결 발행",
