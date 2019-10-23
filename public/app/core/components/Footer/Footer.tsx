@@ -9,11 +9,13 @@ interface Props {
   newGrafanaVersion: string;
 }
 
+const enable = false;
+
 export const Footer: FC<Props> = React.memo(
   ({ appName, buildVersion, buildCommit, newGrafanaVersionExists, newGrafanaVersion }) => {
     return (
       <div>
-        {/*
+        { enable &&
           <footer className="footer">
             <div className="text-center">
               <ul>
@@ -52,7 +54,7 @@ export const Footer: FC<Props> = React.memo(
               </ul>
             </div>
           </footer>
-                */}
+          }
       </div>
     );
   }
