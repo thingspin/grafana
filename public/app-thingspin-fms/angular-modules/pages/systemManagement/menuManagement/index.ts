@@ -76,7 +76,7 @@ export class TsMenuManagementCtrl {
           plist = (from.index < to.index)
             // 위에서 아래로 이동할 때
             // 1-1. 이동 후 현재포함 상위 L1 들의 순서 변경
-            ? changeOrder(this.data, 0, to.index)
+            ? changeOrder(this.data, 0, to.index + 1)
             // 아래서 위로 이동할 때
             // 1-2. 이동 후 현재 포함 하위 L1 들의 순서 변경
             : changeOrder(this.data, to.index);
