@@ -25,6 +25,9 @@ import (
 
 const (
 	anonString = "Anonymous"
+
+	// Thingspin add code -----
+	isThingspin = true
 )
 
 func isDashboardStarredByUser(c *m.ReqContext, dashID int64) (bool, error) {
@@ -310,7 +313,17 @@ func GetHomeDashboard(c *m.ReqContext) Response {
 		log.Warn("Failed to get slug from database, %s", err.Error())
 	}
 
-	filePath := path.Join(setting.StaticRootPath, "dashboards/home.json")
+	// thingspin edi code ----
+	// filePath := path.Join(setting.StaticRootPath, "dashboards/home.json")
+	var jsonFilePath string
+	if isThingspin {
+		jsonFilePath = "dashboards/home.thingspin.json"
+	} else {
+		jsonFilePath = "dashboards/home.json"
+	}
+	filePath := path.Join(setting.StaticRootPath, jsonFilePath)
+	// thingspin edit code ----
+
 	file, err := os.Open(filePath)
 	if err != nil {
 		return Error(500, "Failed to load home dashboard", err)
@@ -327,7 +340,10 @@ func GetHomeDashboard(c *m.ReqContext) Response {
 		return Error(500, "Failed to load home dashboard", err)
 	}
 
+	/* thingspin edit code -----
 	if c.HasUserRole(m.ROLE_ADMIN) && !c.HasHelpFlag(m.HelpFlagGettingStartedPanelDismissed) {
+	*/
+	if !isThingspin && c.HasUserRole(m.ROLE_ADMIN) && !c.HasHelpFlag(m.HelpFlagGettingStartedPanelDismissed) {
 		addGettingStartedPanelToHomeDashboard(dash.Dashboard)
 	}
 
