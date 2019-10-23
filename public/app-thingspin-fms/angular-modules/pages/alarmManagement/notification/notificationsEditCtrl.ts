@@ -6,10 +6,6 @@ import { AppEvents } from '@grafana/data';
 import { appEvents, coreModule } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
-// Thingspin libs
-import "./index.scss";
-
-
 function getNotifierTemplateId(type: string) {
   return `notifier-options-${type}`;
 }

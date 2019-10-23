@@ -9,7 +9,6 @@ import { BackendSrv } from 'app/core/services/backend_srv';
 
 // Thingspin libs
 import './notificationsEditCtrl';
-import "./index.scss";
 
 export interface TableModel {
   // table header data

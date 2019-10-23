@@ -1,3 +1,7 @@
+.ts-noti {
+    @extend .page-container;
+    max-width: none;
+}
 
 .ts-noti-table-button {
     display: flex;
@@ -535,4 +539,3 @@
         border:none;
     }
 }
-
