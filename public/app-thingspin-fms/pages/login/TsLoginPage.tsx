@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 // Grafana Libs
-import TsLogin from 'app-thingspin-fms/pages/login/TsLogin';
+import LoginCtrl from 'app/core/components/Login/LoginCtrl';
 import { LoginServiceButtons } from 'app/core/components/Login/LoginServiceButtons';
 import { TsChangePassword } from 'app-thingspin-fms/pages/login/TsChangePassword';
 
@@ -18,7 +18,7 @@ export const TsLoginPage: FC = () => (
       <div className="login-branding">
         <img className="logo-icon" src="public/img/thingspin/thingspin_icon.svg" alt="ThingSPIN" />
       </div>
-      <TsLogin>
+      <LoginCtrl>
         {({
           loginHint,
           passwordHint,
@@ -34,8 +34,9 @@ export const TsLoginPage: FC = () => (
           isChangingPassword,
         }) => (
           <div className="login-outer-box">
-            <div className={`login-inner-box login-small-logo`}><img className={`login-small-logo`}
-                    src="public/img/thingspin/thingspin_logo.svg" alt="ThingSPIN" /></div>
+            <div className='login-inner-box login-small-logo'>
+              <img className='login-small-logo' src="public/img/thingspin/thingspin_logo.svg" alt="ThingSPIN" />
+            </div>
             <div className={`login-inner-box ${isChangingPassword ? 'hidden' : ''}`} id="login-view">
               {!disableLoginForm ? (
                 <TsLoginForm
@@ -46,6 +47,7 @@ export const TsLoginPage: FC = () => (
                   isLoggingIn={isLoggingIn}
                 />
               ) : null}
+
               {isOauthEnabled ? (
                 <>
                   <div className="text-center login-divider">
@@ -75,7 +77,7 @@ export const TsLoginPage: FC = () => (
             </CSSTransition>
           </div>
         )}
-      </TsLogin>
+      </LoginCtrl>
 
       <div className="clearfix" />
     </div>

@@ -1,76 +1,16 @@
 // js 3rd party libs
-import React, { PureComponent, SyntheticEvent, ChangeEvent } from 'react';
+import React from 'react';
 
 // Grafana libs
 import { Tooltip } from '@grafana/ui';
-import { AppEvents } from '@grafana/data';
-import appEvents from 'app/core/app_events';
+import { ChangePassword } from 'app/core/components/Login/ChangePassword';
 
-interface Props {
-  onSubmit: (pw: string) => void;
-  onSkip: Function;
-  focus?: boolean;
-}
+export class TsChangePassword extends ChangePassword {
+  private tsUserInput: HTMLInputElement;
 
-interface State {
-  newPassword: string;
-  confirmNew: string;
-  valid: boolean;
-}
-
-export class TsChangePassword extends PureComponent<Props, State> {
-  private userInput: HTMLInputElement;
-  state = {
-    newPassword: '',
-    confirmNew: '',
-    valid: false,
-  };
-
-  componentDidUpdate({ focus }: Props) {
-    if (!focus && this.props.focus) {
-      this.focus();
-    }
-  }
-
+  // override
   focus() {
-    this.userInput.focus();
-  }
-
-  onSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
-
-    const { newPassword, valid } = this.state;
-    if (valid) {
-      this.props.onSubmit(newPassword);
-    } else {
-      appEvents.emit(AppEvents.alertWarning, ['New passwords do not match', '']);
-    }
-  };
-
-  onNewPasswordChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      newPassword: value,
-      valid: this.validate('newPassword', value),
-    });
-  };
-
-  onConfirmPasswordChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      confirmNew: value,
-      valid: this.validate('confirmNew', value),
-    });
-  };
-
-  onSkip = (e: SyntheticEvent) => {
-    this.props.onSkip();
-  };
-
-  validate(changed: string, pw: string) {
-    const { confirmNew, newPassword } = this.state;
-
-    return (changed === 'newPassword') ? confirmNew === pw
-      : (changed === 'confirmNew') ? newPassword === pw
-        : false;
+    this.tsUserInput.focus();
   }
 
   render() {
@@ -93,7 +33,7 @@ export class TsChangePassword extends PureComponent<Props, State> {
               placeholder="New password"
               onChange={this.onNewPasswordChange}
               ref={input => {
-                this.userInput = input;
+                this.tsUserInput = input;
               }}
             />
           </div>
