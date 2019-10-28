@@ -35,14 +35,14 @@
                 <div class="ts-input-group mqtt-url">
                     <div class="ts-mqtt-url-label">Host</div>
                     <div class="ts-input">
-                        <input type="text" ng-model="ctrl.connection.url" ng-click="ctrl.sampleHost()" placeholder="localhost"/>
+                        <input maxlength="16" type="text" ng-model="ctrl.connection.url" ng-click="ctrl.sampleHost()" placeholder="localhost"/>
                         <span ng-class="{separator: true, enable: ctrl.connection.url}"></span>
                     </div>
                 </div>
                 <div class="ts-input-group mqtt-port">
                     <div class="ts-mqtt-port-label">Port</div>
                     <div class="ts-input">
-                        <input type="text" ng-model="ctrl.connection.port" ng-click="ctrl.samplePort()" placeholder="1883"/>
+                        <input maxlength="5" type="text" ng-model="ctrl.connection.port" ng-click="ctrl.samplePort()" placeholder="1883"/>
                         <span ng-class="{separator: true, enable: ctrl.connection.port}"></span>
                     </div>
                 </div>
