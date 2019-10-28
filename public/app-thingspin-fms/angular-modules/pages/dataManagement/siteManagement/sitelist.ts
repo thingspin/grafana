@@ -1,7 +1,7 @@
 // js 3rd party libs
-import _ from "lodash";
+import _ from 'lodash';
 import $ from 'jquery';
-import angular, { ITimeoutService } from "angular";
+import angular, { ITimeoutService } from 'angular';
 
 // Grafana libs
 import { AppEvents } from '@grafana/data';
@@ -33,7 +33,6 @@ export interface TableModel {
 
 export class TsSiteListCtrl implements angular.IController {
     id: any;
-    list: SiteTableData[] = [];
     tData: TableModel = {
         rowCount: 10,
         selectOpts: [10, 20, 30],
@@ -45,7 +44,6 @@ export class TsSiteListCtrl implements angular.IController {
     isEdit = false;
     isEditView = false;
     isListView = true;
-    isAddSiteBtn = true;
 
     editName: string;
     name: string;
@@ -60,14 +58,33 @@ export class TsSiteListCtrl implements angular.IController {
         private $location: angular.ILocationService,
         $timeout: ITimeoutService,
     ) {
-        this.asyncDataLoader();
-
-        $scope.$watch('ctrl.isEditView', (value) => (value && $timeout(() => {
-            $('#site-name').focus();
-        })));
+        $scope.$watch('ctrl.isEditView', (value) => value && $timeout(() => $('#site-name').focus()));
     }
 
-    $onInit(): void { }
+    private _list: SiteTableData[] = [];
+    set list(items: SiteTableData[]) {
+        this._list = [];
+
+        if (Array.isArray(items)) {
+            for (const { id, name, desc, lat, lon } of items) {
+                const strID = id.toString();
+                this._list.push({ titleid: `SITE_${strID.padStart(5, '0')}`, id, name, desc, lat, lon, });
+            }
+        }
+        this.initTable();
+        this.$scope.$applyAsync();
+    }
+    get list() {
+        return this._list;
+    }
+
+    async $onInit() {
+        try {
+            this.list = await this.backendSrv.get('/thingspin/sites');
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     $onDestroy(): void { }
 
@@ -81,29 +98,16 @@ export class TsSiteListCtrl implements angular.IController {
         this.lat = lat;
     }
 
-    removeSite(sid: any) {
-        $.ajax({
-            type: 'DELETE',
-            url: `/thingspin/sites/${sid}`,
-            dataType: "json",
-            contentType: "application/json; charset=UTF-8",
-            async: false,
-            success: (result) => {
-                appEvents.emit(AppEvents.alertSuccess, ['삭제되었습니다.']);
-                this.onLoadData(result);
-            },
-            error: (request, status, err) => {
-                appEvents.emit(AppEvents.alertError, [err]);
-            },
-        });
+    async removeSite(sid: any) {
+        this.list = await this.backendSrv.delete(`/thingspin/sites/${sid}`);
+        appEvents.emit(AppEvents.alertSuccess, ['삭제되었습니다.']);
     }
 
-    onShowEditView(value: any) {
-        this.isEditView = !!value;
-        this.isListView = !value;
-        this.isAddSiteBtn = !value;
+    onShowEditView(isEditView: boolean) {
+        this.isEditView = isEditView;
+        this.isListView = !isEditView;
 
-        if (value) {
+        if (isEditView) {
             this.name = '';
             this.desc = '';
             this.lon = '';
@@ -116,7 +120,7 @@ export class TsSiteListCtrl implements angular.IController {
     async onSiteAdd() {
         try {
             if (!this.name) {
-                this.openAlartNotification("사이트에 이름을 입력해주세요.");
+                this.openAlartNotification('사이트에 이름을 입력해주세요.');
             } else if (this.checkCmpSiteName()) {
                 const payload: any = {
                     Name: this.name,
@@ -133,11 +137,9 @@ export class TsSiteListCtrl implements angular.IController {
                     msg = '추가되었습니다.';
                 }
 
-                const result = await this.backendSrv[this.isEdit ? 'put' : 'post']("/thingspin/sites", payload);
+                this.list = await this.backendSrv[this.isEdit ? 'put' : 'post']('/thingspin/sites', payload);
                 appEvents.emit(AppEvents.alertSuccess, [msg]);
-                this.onLoadData(result);
                 this.onShowEditView(false);
-                this.$scope.$applyAsync();
             }
         } catch ({ status, statusText }) {
             if (status === 500) {
@@ -156,40 +158,11 @@ export class TsSiteListCtrl implements angular.IController {
                     continue;
                 }
 
-                this.openAlartNotification("같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.");
+                this.openAlartNotification('같은 이름에 사이트가 있습니다. 다름 이름을 입력해주세요.');
                 return false;
             }
         }
         return true;
-    }
-
-    async asyncDataLoader(): Promise<void> {
-        try {
-            const list = await this.backendSrv.get("/thingspin/sites");
-            this.onLoadData(list);
-            this.$scope.$applyAsync();
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    onLoadData(items: SiteTableData[]) {
-        this.list = [];
-
-        if (Array.isArray(items)) {
-            for (const { id, name, desc, lat, lon } of items) {
-                const strID = id.toString();
-                this.list.push({
-                    id,
-                    titleid: `SITE_${strID.padStart(5, '0')}`,
-                    name,
-                    desc,
-                    lat,
-                    lon,
-                });
-            }
-        }
-        this.initTable();
     }
 
     // TABLE Method
@@ -215,13 +188,14 @@ export class TsSiteListCtrl implements angular.IController {
     }
 
     initTable(): void {
-        this.$scope.$watch("list", () => {
+        this.$scope.$watch('list', () => {
             this.tCalcPaging();
             this.setPageNodes();
         });
     }
     setPageNodes() {
         const { currPage, rowCount, } = this.tData;
+
         if (this.list) {
             this.tData.pageNode = this.list.slice(
                 currPage * rowCount,
