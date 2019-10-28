@@ -1,5 +1,5 @@
 // js 3rd party libs
-import React, { PureComponent } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader';
 
@@ -9,20 +9,17 @@ import { StoreState } from 'app/types';
 import { AppEvents } from '@grafana/data';
 import appEvents from 'app/core/app_events';
 import { getBackendSrv } from '@grafana/runtime';
-import { updateLocation } from 'app/core/actions';
 
 const isOauthEnabled = () => config.hasOwnProperty("oauth") &&  Object.keys(config.oauth).length > 0;
-//() => Object.keys(config.oauth).length > 0;
-//const isOauthEnabled = () => Object.keys(config.oauth).length > 0;
 
 export interface FormModel {
   user: string;
   password: string;
   email: string;
 }
+
 interface Props {
   routeParams?: any;
-  updateLocation?: typeof updateLocation;
   children: (props: {
     isLoggingIn: boolean;
     changePassword: (pw: string) => void;
@@ -39,116 +36,96 @@ interface Props {
   }) => JSX.Element;
 }
 
-interface State {
-  isLoggingIn: boolean;
-  isChangingPassword: boolean;
-}
+export const TsLogin: React.FC<Props> = ({ children, routeParams }) => {
+  let isInited = false;
+  let result: any = {};
+  const backendSrv = getBackendSrv();
 
-export class TsLogin extends PureComponent<Props, State> {
-  result: any = {};
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      isLoggingIn: false,
-      isChangingPassword: false,
-    };
+  if (!isInited) {
+    isInited = true;
 
     if (config.loginError) {
       appEvents.emit(AppEvents.alertWarning, ['Login Failed', config.loginError]);
     }
   }
 
-  changePassword = (password: string) => {
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const toThingspin = () => {
+    const { appSubUrl } = config;
+    const { redirectUrl } = result;
+    const { redirect } = routeParams;
+
+    const url = appSubUrl +
+      (redirect && redirect[0] === '/') ? redirect
+      : redirectUrl ? redirectUrl
+        : '/';
+
+    window.location.href = url;
+  };
+
+  const changePassword = async (newPassword: string) => {
     const pw = {
-      newPassword: password,
-      confirmNew: password,
+      newPassword,
+      confirmNew: newPassword,
       oldPassword: 'admin',
     };
-    getBackendSrv()
-      .put('/api/user/password', pw)
-      .then(() => {
-        this.toGrafana();
-      })
-      .catch((err: any) => console.log(err));
-  };
 
-  login = (formModel: FormModel) => {
-    this.setState({
-      isLoggingIn: true,
-    });
-
-    getBackendSrv()
-      .post('/login', formModel)
-      .then((result: any) => {
-        this.result = result;
-        if (formModel.password !== 'admin' || config.ldapEnabled || config.authProxyEnabled) {
-          this.toGrafana();
-          return;
-        } else {
-          this.changeView();
-        }
-      })
-      .catch(() => {
-        this.setState({
-          isLoggingIn: false,
-        });
-      });
-  };
-
-  changeView = () => {
-    this.setState({
-      isChangingPassword: true,
-    });
-  };
-
-  toGrafana = () => {
-    const params = this.props.routeParams;
-    // Use window.location.href to force page reload
-    if (params.redirect && params.redirect[0] === '/') {
-      window.location.href = config.appSubUrl + params.redirect;
-    } else if (this.result.redirectUrl) {
-      window.location.href = config.appSubUrl + this.result.redirectUrl;
-    } else {
-      window.location.href = config.appSubUrl + '/';
+    try {
+      await backendSrv.put('/api/user/password', pw);
+      toThingspin();
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  render() {
-    const { children } = this.props;
-    const { isLoggingIn, isChangingPassword } = this.state;
-    const { login, toGrafana, changePassword } = this;
-    const { loginHint, passwordHint, disableLoginForm, ldapEnabled, authProxyEnabled, disableUserSignUp } = config;
+  const changeView = () => {
+    setIsChangingPassword(true);
+  };
 
-    return (
-      <>
-        {children({
-          isOauthEnabled: isOauthEnabled(),
-          loginHint,
-          passwordHint,
-          disableLoginForm,
-          ldapEnabled,
-          authProxyEnabled,
-          disableUserSignUp,
-          login,
-          isLoggingIn,
-          changePassword,
-          skipPasswordChange: toGrafana,
-          isChangingPassword,
-        })}
-      </>
-    );
-  }
-}
 
-export const mapStateToProps = (state: StoreState) => ({
-  routeParams: state.location.routeParams,
+  const login = async (formModel: FormModel) => {
+    setIsLoggingIn(true);
+
+    try {
+      result = await backendSrv.post('/login', formModel);
+      const caller = (formModel.password !== 'admin' || config.ldapEnabled || config.authProxyEnabled)
+        ? toThingspin : changeView;
+      caller();
+    } catch (e) {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const { loginHint, passwordHint, disableLoginForm, ldapEnabled, authProxyEnabled, disableUserSignUp } = config;
+
+  return (
+    <>
+      {children({
+        isOauthEnabled: isOauthEnabled(),
+        loginHint,
+        passwordHint,
+        disableLoginForm,
+        ldapEnabled,
+        authProxyEnabled,
+        disableUserSignUp,
+        login,
+        isLoggingIn,
+        changePassword,
+        skipPasswordChange: toThingspin,
+        isChangingPassword,
+      })}
+    </>
+  );
+};
+
+export const mapStateToProps = ({ location: { routeParams }}: StoreState) => ({
+  routeParams,
 });
-
-const mapDispatchToProps = { updateLocation };
 
 export default hot(module)(
   connect(
     mapStateToProps,
-    mapDispatchToProps
   )(TsLogin)
 );

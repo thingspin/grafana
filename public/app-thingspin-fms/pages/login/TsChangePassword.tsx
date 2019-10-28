@@ -20,17 +20,14 @@ interface State {
 
 export class TsChangePassword extends PureComponent<Props, State> {
   private userInput: HTMLInputElement;
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      newPassword: '',
-      confirmNew: '',
-      valid: false,
-    };
-  }
+  state = {
+    newPassword: '',
+    confirmNew: '',
+    valid: false,
+  };
 
-  componentDidUpdate(prevProps: Props) {
-    if (!prevProps.focus && this.props.focus) {
+  componentDidUpdate({ focus }: Props) {
+    if (!focus && this.props.focus) {
       this.focus();
     }
   }
@@ -50,17 +47,17 @@ export class TsChangePassword extends PureComponent<Props, State> {
     }
   };
 
-  onNewPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+  onNewPasswordChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      newPassword: e.target.value,
-      valid: this.validate('newPassword', e.target.value),
+      newPassword: value,
+      valid: this.validate('newPassword', value),
     });
   };
 
-  onConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+  onConfirmPasswordChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      confirmNew: e.target.value,
-      valid: this.validate('confirmNew', e.target.value),
+      confirmNew: value,
+      valid: this.validate('confirmNew', value),
     });
   };
 
@@ -69,12 +66,11 @@ export class TsChangePassword extends PureComponent<Props, State> {
   };
 
   validate(changed: string, pw: string) {
-    if (changed === 'newPassword') {
-      return this.state.confirmNew === pw;
-    } else if (changed === 'confirmNew') {
-      return this.state.newPassword === pw;
-    }
-    return false;
+    const { confirmNew, newPassword } = this.state;
+
+    return (changed === 'newPassword') ? confirmNew === pw
+      : (changed === 'confirmNew') ? newPassword === pw
+        : false;
   }
 
   render() {

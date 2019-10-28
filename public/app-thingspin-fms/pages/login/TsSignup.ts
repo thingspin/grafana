@@ -10,18 +10,18 @@ export class TsSignup {
 
     $scope.formModel = {};
 
-    const params = $location.search();
+    const { email, code } = $location.search();
 
     // validate email is semi ok
-    if (params.email && !params.email.match(/^\S+@\S+$/)) {
+    if (email && !email.match(/^\S+@\S+$/)) {
       console.log('invalid email');
       return;
     }
 
-    $scope.formModel.orgName = params.email;
-    $scope.formModel.email = params.email;
-    $scope.formModel.username = params.email;
-    $scope.formModel.code = params.code;
+    $scope.formModel.orgName = email;
+    $scope.formModel.email = email;
+    $scope.formModel.username = email;
+    $scope.formModel.code = code;
 
     $scope.verifyEmailEnabled = false;
     $scope.autoAssignOrg = false;
@@ -35,23 +35,20 @@ export class TsSignup {
       },
     };
 
-    backendSrv.get('/api/user/signup/options').then((options: any) => {
-      $scope.verifyEmailEnabled = options.verifyEmailEnabled;
-      $scope.autoAssignOrg = options.autoAssignOrg;
+    backendSrv.get('/api/user/signup/options').then(({verifyEmailEnabled, autoAssignOrg}: any) => {
+      $scope.verifyEmailEnabled = verifyEmailEnabled;
+      $scope.autoAssignOrg = autoAssignOrg;
     });
   }
 
   submit() {
-    if (!this.$scope.signUpForm.$valid) {
+    const { signUpForm, formModel } = this.$scope;
+    if (!signUpForm.$valid) {
       return;
     }
 
-    this.backendSrv.post('/api/user/signup/step2', this.$scope.formModel).then((rsp: any) => {
-      if (rsp.code === 'redirect-to-select-org') {
-        window.location.href = config.appSubUrl + '/profile/select-org?signup=1';
-      } else {
-        window.location.href = config.appSubUrl + '/';
-      }
+    this.backendSrv.post('/api/user/signup/step2', formModel).then(({ code }: any) => {
+      location.href = config.appSubUrl + (code === 'redirect-to-select-org') ? '/profile/select-org?signup=1' : '/';
     });
   }
 }
