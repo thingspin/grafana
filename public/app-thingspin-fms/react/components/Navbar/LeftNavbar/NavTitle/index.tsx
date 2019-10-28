@@ -105,10 +105,11 @@ export const getTitle = (list: NavModelItem[] | undefined) => {
   return retValue;
 };
 
-export const mapStateToProps = (state: any, { $route }: {$route: angular.route.IRouteParamsService}) => {
+export const mapStateToProps = (state: any, { $route: { current } }: {$route: angular.route.IRouteParamsService}) => {
   let titleObj: any = getTitle(undefined);
-  if ($route.current) {
-    const { $$route } = $route.current;
+
+  if (current && current.$$route) {
+    const { $$route } = current;
     const originalPath = $$route.keys.length > 0
       ? new URL(window.location.href).pathname
       : $$route.originalPath;
@@ -120,7 +121,7 @@ export const mapStateToProps = (state: any, { $route }: {$route: angular.route.I
       let list = findPathNavItem(originalPath, menu);
       let subPath = originalPath;
 
-      while (list === null) {
+      while (!list) {
         const lastIdx = subPath.lastIndexOf('/');
         if (lastIdx <= 0) {
           break;
