@@ -206,6 +206,7 @@ var (
 	S3TempImageStoreSecretKey string
 
 	ImageUploadProvider string
+	FeatureToggles      map[string]bool
 )
 
 // TODO move all global vars to this struct
@@ -958,6 +959,7 @@ func (cfg *Cfg) Load(args *CommandLineArgs) error {
 	for _, feature := range util.SplitString(featuresTogglesStr) {
 		cfg.FeatureToggles[feature] = true
 	}
+	FeatureToggles = cfg.FeatureToggles
 
 	// check old location for this option
 	if panelsSection.Key("enable_alpha").MustBool(false) {
@@ -1097,4 +1099,12 @@ func (cfg *Cfg) LogConfigSources() {
 	cfg.Logger.Info("Path Plugins", "path", PluginsPath)
 	cfg.Logger.Info("Path Provisioning", "path", cfg.ProvisioningPath)
 	cfg.Logger.Info("App mode " + Env)
+}
+
+func IsExpressionsEnabled() bool {
+	v, ok := FeatureToggles["expressions"]
+	if !ok {
+		return false
+	}
+	return v
 }
