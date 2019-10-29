@@ -51,14 +51,8 @@ export interface TsDsTarget extends InfluxQuery {
 
 export interface RcQueryCtrlProps {
   target: TsDsTarget;
-  onChange: (target: object) => void;
-}
-
-export interface RcQueryCtrlStates {
-  // share data
-  expanded: any[];
-  treeData: TsTree[];
-  sites: TsSite[];
+  inject: angular.auto.IInjectorService; // for route
+  onChange: (siteId: any, target: object) => void;
 }
 
 export type ReactDirective = (reactComponentName: any, props: any[], conf?: any, injectableProps?: any) => any;

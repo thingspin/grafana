@@ -28,19 +28,18 @@ export function generateTree(facTrees: any[] = [], tags: any[] = [], facs: any[]
         let children: TreeNodeShape[] = tree;
         for (const id of ids) {
             node = children.find((node: TreeNodeShape): boolean => node.id === id);
-
-            if (node) {
-                children = node.children;
-            } else {
+            if (!node) {
                 break;
             }
+
+            children = node.children;
         }
 
         return children;
     };
 
     // internal method
-    const addChild = (node: TreeNodeShape): void => {
+    const addChild = (node: TreeNodeShape) => {
         const children: TreeNodeShape[] = findNode(node.value);
 
         if (children) {
@@ -57,16 +56,16 @@ export function generateTree(facTrees: any[] = [], tags: any[] = [], facs: any[]
     };
 
     // internal method
-    const getNodeInfo = (id: string, isFacility: boolean): { origin: any, type: string } => ({
+    const getNodeInfo = (id: string, isFacility: boolean) => ({
         origin: isFacility ? facsObj[id] : tagsObj[id],
         type: isFacility ? 'facility' : 'tag',
     });
 
-    for (const { treePath: value, facilityId: facId, } of facTrees) {
+    for (const { treePath: value, facilityId, } of facTrees) {
         const paths: string[] = value.split('/');
         const id: string = paths[paths.length - 1];
 
-        const { origin, type } = getNodeInfo(id, facId);
+        const { origin, type } = getNodeInfo(id, facilityId);
 
         addChild({
             id,

@@ -1,7 +1,8 @@
-import { Datasource, QueryCtrl } from './angularjs';
-import './react/queryCtrl';
+import { DataSourcePlugin } from '@grafana/ui';
 
-export {
-  Datasource,
-  QueryCtrl,
-};
+import { FmsDatasource } from './angularjs';
+import './react/queryCtrl';
+import FmsQueryCtrl from './angularjs/queryController';
+
+export const plugin = new DataSourcePlugin(FmsDatasource)
+  .setQueryCtrl(FmsQueryCtrl);

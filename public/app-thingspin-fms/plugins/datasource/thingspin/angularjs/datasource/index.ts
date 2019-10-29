@@ -12,7 +12,7 @@ import { InfluxQuery } from 'app/plugins/datasource/influxdb/types';
 import InfluxDatasource from 'app/plugins/datasource/influxdb/datasource';
 
 // thingpsin plugin libs
-import { TsDsTarget } from '../../models/index';
+import { TsDsTarget } from '../../models';
 import { setTsPluginBackendSrv, getDatasourceByName, } from '../../utils/backendCtrl';
 
 export class FmsDatasource extends DataSourceApi<TsDsTarget> {
@@ -20,8 +20,8 @@ export class FmsDatasource extends DataSourceApi<TsDsTarget> {
   influxInst: InfluxDatasource;
 
   /** @ngInject */
-  constructor(private backendSrv: BackendSrv, private $q: IQService, private templateSrv: TemplateSrv,
-    instanceSettings: DataSourceInstanceSettings,
+  constructor(instanceSettings: DataSourceInstanceSettings,
+    private $q: IQService, private backendSrv: BackendSrv, private templateSrv: TemplateSrv,
   ) {
     super(instanceSettings);
     setTsPluginBackendSrv(backendSrv);
@@ -42,8 +42,6 @@ export class FmsDatasource extends DataSourceApi<TsDsTarget> {
   }
 
   generateInfluxQueries(options: DataQueryRequest<TsDsTarget>): InfluxQuery[] {
-    const targets: InfluxQuery[] = [];
-
     const measurementGroup: any = {};
     const getMeasurement = (measurement: string, refId: string): InfluxQuery => {
       let obj: InfluxQuery = measurementGroup[measurement];
@@ -60,25 +58,21 @@ export class FmsDatasource extends DataSourceApi<TsDsTarget> {
       return obj;
     };
 
-    for (const target of options.targets) {
-      if (Array.isArray(target.tagNodes)) {
-        for (const tagNode of target.tagNodes) {
-          const { // js renaming
-            tag_table_name: measurement,
-            tag_column_name: columnName,
-            tag_name: aliasName
-          } = tagNode;
-          const iq = getMeasurement(measurement, target.refId);
+    for (const { tagNodes, refId } of options.targets) {
+      if (Array.isArray(tagNodes)) {
+        for (const { tag_table_name, tag_column_name, tag_name } of tagNodes) {
+          const iq = getMeasurement(tag_table_name, refId);
 
           iq.select.push([
-            { type: 'field', params: [columnName] },  //select columnName <-
+            { type: 'field', params: [tag_column_name] },  //select columnName <-
             { type: 'mean', params: [] }, //select mean(columnName) <-
-            { type: 'alias', params: [aliasName] } // select mean(columnName) as aliasName <-
+            { type: 'alias', params: [tag_name] } // select mean(columnName) as aliasName <-
           ]);
         }
       }
     }
 
+    const targets: InfluxQuery[] = [];
     for (const measurement in measurementGroup) {
       targets.push(measurementGroup[measurement]);
     }
@@ -92,8 +86,7 @@ export class FmsDatasource extends DataSourceApi<TsDsTarget> {
       return Promise.resolve({ data: [] });
     }
 
-    const targets = this.generateInfluxQueries(options);
-    options.targets = (targets as any);
+    options.targets = this.generateInfluxQueries(options) as any;
 
     return this.influxInst.query(options);
   }
