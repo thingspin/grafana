@@ -38,6 +38,10 @@ let fmsHot = merge(common, {
         target: 'ws://localhost:3000',
         ws: true,
       },
+      '/api/plugin-proxy/*': {
+        target: 'http://localhost:3000',
+        ws: true,
+      }
     },
   },
 
