@@ -8,11 +8,12 @@ import { store } from 'app/store/store';
 import { CoreEvents, AppEventEmitter } from 'app/types';
 
 import Mousetrap from 'mousetrap';
-import { PanelEvents } from '@grafana/ui';
+import { PanelEvents } from '@grafana/data';
 import 'mousetrap-global-bind';
 import { ContextSrv } from './context_srv';
 import { ILocationService, ITimeoutService, IRootScopeService } from 'angular';
 import { GrafanaRootScope } from 'app/routes/GrafanaCtrl';
+import { getLocationSrv } from '@grafana/runtime';
 
 export class KeybindingSrv {
   helpModal: boolean;
@@ -261,6 +262,13 @@ export class KeybindingSrv {
           src: 'public/app/features/dashboard/components/ShareModal/template.html',
           scope: shareScope,
         });
+      }
+    });
+
+    // inspect panel
+    this.bind('p i', () => {
+      if (dashboard.meta.focusPanelId) {
+        getLocationSrv().update({ partial: true, query: { inspect: dashboard.meta.focusPanelId } });
       }
     });
 
