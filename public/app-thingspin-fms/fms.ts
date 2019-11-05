@@ -11,6 +11,7 @@ import { coreModule, angularModules } from './grafana_custom/core_module';
 import { tsRegisterAngularDirectives } from './angular-modules/tsCore';
 import { registerAngularDirectives } from './grafana_custom/core';
 import { importPluginModule } from 'app/features/plugins/plugin_loader';
+import './plugins/plugin_loaders';
 import { setMarkdownOptions } from '@grafana/data';
 
 import { fmsSetupAngularRoutes } from './routes/routes';
