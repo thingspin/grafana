@@ -5,7 +5,7 @@ import _ from 'lodash';
 // grafana libs
 import { BackendSrv } from 'app/core/services/backend_srv';
 import { TemplateSrv } from 'app/features/templating/template_srv';
-import { DataQueryRequest, DataSourceInstanceSettings, DataSourceApi, DataQueryResponse, MetricFindValue } from '@grafana/ui';
+import { DataQueryRequest, DataSourceInstanceSettings, DataSourceApi, DataQueryResponse, MetricFindValue } from '@grafana/data';
 
 // grafana plugin libs
 import { InfluxQuery } from 'app/plugins/datasource/influxdb/types';

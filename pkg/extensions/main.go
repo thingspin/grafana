@@ -6,11 +6,22 @@ import (
 
 	_ "github.com/crewjam/saml"
 	_ "github.com/gobwas/glob"
+	"github.com/grafana/grafana/pkg/models"
+	"github.com/grafana/grafana/pkg/registry"
 	_ "github.com/jung-kurt/gofpdf"
+	_ "github.com/pkg/errors"
 	_ "github.com/robfig/cron"
 	_ "github.com/robfig/cron/v3"
 	_ "github.com/stretchr/testify/require"
 	_ "gopkg.in/square/go-jose.v2"
 )
 
+func init() {
+	registry.RegisterService(&models.OSSLicensingService{})
+}
+
+// thingspin edit code ------
+// var IsEnterprise bool = false
 var IsEnterprise bool = true
+
+// thingspin edit code ------

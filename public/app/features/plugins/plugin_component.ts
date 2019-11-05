@@ -6,7 +6,7 @@ import angular, { IQService } from 'angular';
 import config from 'app/core/config';
 import DatasourceSrv from './datasource_srv';
 import coreModule from 'app/core/core_module';
-import { DataSourceApi, PanelEvents } from '@grafana/ui';
+import { DataSourceApi, PanelEvents } from '@grafana/data';
 import { GrafanaRootScope } from 'app/routes/GrafanaCtrl';
 
 // Thingspin libs

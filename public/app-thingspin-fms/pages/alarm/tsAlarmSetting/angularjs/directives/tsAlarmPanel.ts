@@ -5,7 +5,7 @@ import $ from 'jquery';
 import baron from 'baron';
 
 // Grafana libs
-import { PanelEvents } from '@grafana/ui';
+import { PanelEvents } from '@grafana/data';
 
 const module = angular.module('grafana.directives');
 

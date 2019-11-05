@@ -1,4 +1,4 @@
-import { DataSourcePlugin } from '@grafana/ui';
+import { DataSourcePlugin } from '@grafana/data';
 
 import { FmsDatasource } from './angularjs';
 import './react/queryCtrl';

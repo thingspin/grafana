@@ -4,7 +4,7 @@ import angular from 'angular';
 
 // Grafana libs
 import config from 'app/core/config';
-import { PanelEvents } from '@grafana/ui';
+import { PanelEvents } from '@grafana/data';
 import coreModule from 'app/core/core_module';
 import { importPanelPlugin } from 'app/features/plugins/plugin_loader';
 
