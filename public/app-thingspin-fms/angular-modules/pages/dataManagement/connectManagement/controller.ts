@@ -359,7 +359,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     }
 
     convHistoryField(history: TsConnectHistory) {
-        history.created = dateTime(history.created).format('YYYY-MM-DD HH:mm:ss');
+        history.created = dateTime(history.created).utc().format('YYYY-MM-DD HH:mm:ss');
         return history;
     }
 
