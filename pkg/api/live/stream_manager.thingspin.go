@@ -2,10 +2,11 @@ package live
 
 import (
 	"github.com/grafana/grafana/pkg/components/simplejson"
-	m "github.com/grafana/grafana/pkg/models-thingspin"
+	m "github.com/grafana/grafana/pkg/models"
+	tsm "github.com/grafana/grafana/pkg/models-thingspin"
 )
 
-func (sm *StreamManager) TsPush(packet *m.TsStreamPacket) {
+func (sm *StreamManager) TsPush(packet *tsm.TsStreamPacket) {
 	// get connected websocket clients(streams)
 	subscribers, exists := sm.hub.streams[packet.Stream]
 
@@ -23,4 +24,8 @@ func (sm *StreamManager) TsPush(packet *m.TsStreamPacket) {
 			sub.send <- messageBytes
 		}
 	}
+}
+
+func (sm *StreamManager) PushToServiceStream(c *m.ReqContext, message tsm.EdgeAiStreamMessage) {
+	sm.hub.edgeAiChannel <- &message
 }

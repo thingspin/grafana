@@ -74,6 +74,14 @@ func (hs *HTTPServer) Init() error {
 	hs.log = log.New("http.server")
 
 	hs.streamManager = live.NewStreamManager()
+
+	// Thingspin add code -----
+	err := NewEdgeAiManager(hs.Cfg, hs.streamManager)
+	if err != nil {
+		hs.log.Error("Failed to load edge AI configuration", "error", err)
+	}
+	// Thingspin add code -----
+
 	hs.macaron = hs.newMacaron()
 	hs.registerRoutes()
 	hs.registerThingspinRoutes()

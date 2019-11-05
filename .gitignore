@@ -106,5 +106,9 @@ theOutput/
 
 # ThingSPIN ADD ignore code
 !data/plugins/sys/svg/node_modules
+data/thingspin/ml/config/**
+!data/thingspin/ml/config/samples
+!data/thingspin/ml/config/samples-db
+
 # Ignore compilation stats from `yarn stats`
 compilation-stats.json

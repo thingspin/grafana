@@ -59,6 +59,7 @@ require (
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/russellhaering/goxmldsig v0.0.0-20180430223755-7acd5e4a6ef7 // indirect
 	github.com/sergi/go-diff v1.0.0 // indirect
+	github.com/serverhorror/rog-go v0.0.0-20150622204439-87e4e0161534
 	github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
 	github.com/stretchr/testify v1.4.0
 	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf

@@ -230,6 +230,8 @@ github.com/russellhaering/goxmldsig/etreeutils
 github.com/russellhaering/goxmldsig/types
 # github.com/sergi/go-diff v1.0.0
 github.com/sergi/go-diff/diffmatchpatch
+# github.com/serverhorror/rog-go v0.0.0-20150622204439-87e4e0161534
+github.com/serverhorror/rog-go/reverse
 # github.com/smartystreets/assertions v1.0.1
 github.com/smartystreets/assertions
 github.com/smartystreets/assertions/internal/go-diff/diffmatchpatch

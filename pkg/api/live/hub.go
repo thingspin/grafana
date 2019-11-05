@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/grafana/grafana/pkg/api/dtos"
+	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/components/simplejson"
 	"github.com/grafana/grafana/pkg/infra/log"
 )
@@ -17,6 +18,10 @@ type hub struct {
 	unregister    chan *connection
 	streamChannel chan *dtos.StreamMessage
 	subChannel    chan *streamSubscription
+
+	// thingspin add code -----
+	edgeAiChannel chan *m.EdgeAiStreamMessage
+	// thingspin add code -----
 }
 
 type streamSubscription struct {
@@ -34,6 +39,10 @@ func newHub() *hub {
 		streamChannel: make(chan *dtos.StreamMessage),
 		subChannel:    make(chan *streamSubscription),
 		log:           log.New("stream.hub"),
+
+		// thingspin add code -----
+		edgeAiChannel: make(chan *m.EdgeAiStreamMessage),
+		// thingspin add code -----
 	}
 }
 
@@ -94,6 +103,31 @@ func (h *hub) run(ctx context.Context) {
 					delete(subscribers, sub)
 				}
 			}
+		// thingspin add code -----
+		case message := <-h.edgeAiChannel:
+			subscribers, exists := h.streams[message.Stream]
+			if !exists || len(subscribers) == 0 {
+				h.log.Info("Message to stream without subscribers", "stream", message.Stream)
+				continue
+			}
+
+			messageBytes, _ := simplejson.NewFromAny(message).Encode()
+			for sub := range subscribers {
+				// check if channel is open
+				if _, ok := h.connections[sub]; !ok {
+					delete(subscribers, sub)
+					continue
+				}
+
+				select {
+				case sub.send <- messageBytes:
+				default:
+					close(sub.send)
+					delete(h.connections, sub)
+					delete(subscribers, sub)
+				}
+			}
+			// thingspin add code -----
 		}
 	}
 }

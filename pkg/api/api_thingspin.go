@@ -5,7 +5,6 @@ import (
 	"github.com/grafana/grafana/pkg/api/routing"
 	"github.com/grafana/grafana/pkg/middleware"
 	tsm "github.com/grafana/grafana/pkg/models-thingspin"
-	//"github.com/grafana/grafana/pkg/api/dtos"
 )
 
 // thingspin용 REST API 정의 함수
@@ -129,6 +128,25 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 
 			tsDsRoute.Any("/proxy/:id/*", reqSignedIn, hs.ProxyTsDataSourceRequest)
 			tsDsRoute.Any("/proxy/:id", reqSignedIn, hs.ProxyTsDataSourceRequest)
+		})
+
+		// Edge AI API
+		tsRoute.Group("/edge-ai", func(edgeAiRoute routing.RouteRegister) {
+			edgeAiRoute.Get("/", Wrap(EAIM.EdgeAiGetAll))
+			edgeAiRoute.Post("/", binding.MultipartForm(tsm.EdgeAiSaveReq{}), Wrap(EAIM.EdgeAiSave))
+
+			edgeAiRoute.Get("/:cid", Wrap(EAIM.EdgeAiGet))
+			edgeAiRoute.Put("/:cid", binding.MultipartForm(tsm.EdgeAiSaveReq{}), Wrap(EAIM.EdgeAiEdit))
+			edgeAiRoute.Delete("/:cid", Wrap(EAIM.EdgeAiDelete))
+			edgeAiRoute.Post("/:cid/start", Wrap(EAIM.EdgeAiStart))
+			edgeAiRoute.Post("/:cid/stop", Wrap(EAIM.EdgeAiStop))
+			edgeAiRoute.Get("/:cid/check", Wrap(EAIM.EdgeAiCheck))
+			edgeAiRoute.Get("/:cid/model/:fileName", EAIM.EdgeAiDownloadModel)
+			edgeAiRoute.Get("/:cid/algorithm/:fileName", EAIM.EdgeAiDownloadAl)
+			edgeAiRoute.Put("/:cid/model/:fileName", binding.MultipartForm(tsm.EdgeAiUploadReq{}), Wrap(EAIM.EdgeAiUploadModel))
+			edgeAiRoute.Put("/:cid/algorithm/:fileName", binding.MultipartForm(tsm.EdgeAiUploadReq{}), Wrap(EAIM.EdgeAiUploadAl))
+			edgeAiRoute.Get("/:cid/log", Wrap(EAIM.EdgeAiGetLog))
+			edgeAiRoute.Get("/:cid/log/:num", Wrap(EAIM.EdgeAiGetLogs))
 		})
 	})
 

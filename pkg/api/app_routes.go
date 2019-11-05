@@ -46,7 +46,10 @@ func (hs *HTTPServer) initAppPluginRoutes(r *macaron.Macaron) {
 					handlers = append(handlers, middleware.RoleAuth(m.ROLE_EDITOR, m.ROLE_ADMIN))
 				}
 			}
-			handlers = append(handlers, AppPluginRoute(route, plugin.Id, hs))
+			// thingspin edit code -----
+			// handlers = append(handlers, AppPluginRoute(route, plugin.Id, hs))
+			handlers = append(handlers, TsAppPluginRoute(route, plugin.Id, hs))
+			// thingspin edit code -----
 			r.Route(url, route.Method, handlers...)
 			log.Debug("Plugins: Adding proxy route %s", url)
 		}

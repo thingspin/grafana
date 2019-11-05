@@ -30,6 +30,7 @@ import (
 	_ "github.com/grafana/grafana/pkg/tsdb/prometheus"
 	_ "github.com/grafana/grafana/pkg/tsdb/stackdriver"
 	_ "github.com/grafana/grafana/pkg/tsdb/testdatasource"
+
 	// thingspin add code -----
 	_ "github.com/grafana/grafana/pkg/tsdb/thingspin"
 )
@@ -99,6 +100,13 @@ func main() {
 	go listenToSystemSignals(server)
 
 	err := server.Run()
+
+	// thingspin add code -----
+	err = TsStop()
+	if err != nil {
+		server.log.Error("Failed to store edge ai configuration", "error", err)
+	}
+	// thingspin add code -----
 
 	code := server.ExitCode(err)
 	trace.Stop()
