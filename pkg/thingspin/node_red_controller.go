@@ -55,6 +55,8 @@ func template2Str(str string, info interface{}) (string, error) {
 	// add data
 	m := structs.Map(info)
 	m["TsSettings"] = setting.Thingspin
+	// m["Domain"] = setting.AppUrl
+	m["Domain"] = "http://localhost:3333/"
 
 	var tpl bytes.Buffer
 	err = tmpl.Execute(&tpl, m)

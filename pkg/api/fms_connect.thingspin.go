@@ -15,6 +15,8 @@ import (
 )
 
 var prevData m.AddTsConnectHistoryQuery
+var prevHistory m.TsConnectHistoryReq
+var historyMap map[int]m.TsConnectHistoryReq
 
 func str2Json(jsonBytes []byte) (map[string]interface{}, error) {
 	var obj map[string]interface{}
@@ -334,6 +336,20 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 		}
 	
 	} else {
+		if historyMap != nil {
+			prevHistory := historyMap[prevHistory.Id]
+			if len(prevHistory.Connect) > 0 {
+				prevHistory.Connect = ""
+			}
+			if len(prevHistory.MQTT) > 0 {
+				prevHistory.MQTT = ""
+			}
+			if len(prevHistory.Db) > 0 {
+				prevHistory.Db = ""
+			}
+			historyMap[prevHistory.Id] = prevHistory
+		}
+
 		q1 := m.AddTsConnectHistoryQuery {
 			ConnectId:   connId,
 			Event:       "연결 동작",
@@ -483,3 +499,57 @@ func getTsConnectTotalHistory(c *gfm.ReqContext) Response {
 
 	return JSON(200, q1.Result)
 }
+
+func postTsConnectHistory(c *gfm.ReqContext, req m.TsConnectHistoryReq) Response {
+	if  historyMap == nil {
+		historyMap = make(map[int]m.TsConnectHistoryReq)
+	}
+
+	fmt.Printf("%v", req)
+
+	prevHistory := historyMap[req.Id]
+
+	if len(req.Connect) > 0 {
+		if prevHistory.Connect != req.Connect {
+			q1 := m.AddTsConnectHistoryQuery {
+				ConnectId:   req.Id,
+				Event:       "서버 상태",
+				Description: fmt.Sprintf(req.Connect),
+			}
+			if err := bus.Dispatch(&q1); err != nil {
+				return Error(500, "ThingSPIN Store Error", err)
+			}
+			prevHistory.Connect = req.Connect
+		}
+	}
+	if len(req.MQTT) > 0 {
+		if prevHistory.MQTT != req.MQTT {
+			q1 := m.AddTsConnectHistoryQuery {
+				ConnectId:   req.Id,
+				Event:       "발행 상태",
+				Description: fmt.Sprintf(req.MQTT),
+			}
+			if err := bus.Dispatch(&q1); err != nil {
+				return Error(500, "ThingSPIN Store Error", err)
+			}
+			prevHistory.MQTT = req.MQTT
+		}
+	}
+	if len(req.Db) > 0 {
+		if prevHistory.Db != req.Db {
+			q1 := m.AddTsConnectHistoryQuery {
+				ConnectId:   req.Id,
+				Event:       "데이터 상태",
+				Description: fmt.Sprintf(req.Db),
+			}
+			if err := bus.Dispatch(&q1); err != nil {
+				return Error(500, "ThingSPIN Store Error", err)
+			}
+			prevHistory.Db = req.Db
+		}
+	}
+	prevHistory.Id = req.Id
+	historyMap[req.Id] = prevHistory
+
+	return JSON(200, "OK")
+} 

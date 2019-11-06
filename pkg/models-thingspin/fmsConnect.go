@@ -26,6 +26,14 @@ type TsConnectField struct {
 	Updated   time.Time              `json:"updated"`
 }
 
+type TsConnectHistoryReq struct {
+	Id        int                     `json:"id"`
+	Connect   string                  `json:"connect"`
+	MQTT      string                  `json:"mqtt"`
+	Db        string                  `json:"db"`
+	Time      string                  `json:"time"`
+}
+
 type TsConnectName struct {
 	Id        int     `json:"id"`
 	Name    string    `json:"name"`

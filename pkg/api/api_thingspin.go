@@ -62,6 +62,7 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			tsFnRoute.Patch("/:connId/publish", Wrap(toggleMqttPublishTsConnect))
 			tsFnRoute.Get("/:connId/history", Wrap(getTsConnectHistory))
 			tsFnRoute.Get("/history", Wrap(getTsConnectTotalHistory))
+			tsFnRoute.Post("/:connId/history", bind(tsm.TsConnectHistoryReq{}), Wrap(postTsConnectHistory))
 		})
 
 		// 사이트 관리 동작 API

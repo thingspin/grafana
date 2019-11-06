@@ -42,19 +42,50 @@
         ]
     },
     {
+      "id": "TS-FLOW-STATUS-SENDER-{{.Params.FlowId}}",
+      "type": "http request",
+      "name": "",
+      "method": "POST",
+      "ret": "txt",
+      "paytoqs": false,
+      "url": "{{.Domain}}thingspin/connect/{{.Id}}/history",
+      "tls": "",
+      "proxy": "",
+      "authType": "basic",
+      "x": 1050,
+      "y": 60,
+      "wires": [
+          []
+      ]
+    }, {
+      "id": "TS-FLOW-STATUS-SENDER-PROCESS-{{.Params.FlowId}}",
+      "type": "function",
+      "name": "",
+      "func": "function checkZeroTime(value) {\n    return (value>9 ? '' : '0') + value\n}\nfunction nowDateFormat() {\n    var nowTime = new Date();\n    return nowTime.getFullYear() + checkZeroTime(nowTime.getMonth()+1) + checkZeroTime(nowTime.getDate()) + ' ' + checkZeroTime(nowTime.getHours()) + ':' + checkZeroTime(nowTime.getMinutes()) + ':' + checkZeroTime(nowTime.getSeconds());\n}\nfunction msgConnectStatus(msgData) {\n    if (msgData.payload.hasOwnProperty(\"MQTT\") && context.global.sendData.mqtt.length === 0) {\n        return true;\n    } else if (msgData.payload.hasOwnProperty(\"MQTT\")) {\n        if (msgData.payload.MQTT.hasOwnProperty(\"fill\")) {\n            if (context.global.sendData.mqtt !== msgData.payload.MQTT.fill) {\n                return true;\n            }\n        }\n    }\n    if (msgData.payload.hasOwnProperty(\"connect\") && context.global.sendData.connect.length === 0) {\n        return true;\n    } else if (msgData.payload.hasOwnProperty(\"connect\")) {\n        if (msgData.payload.connect.hasOwnProperty(\"fill\")) {\n            if (context.global.sendData.connect !== msgData.payload.connect.fill) {\n                return true;\n            }\n        }\n    }\n    if (msgData.payload.hasOwnProperty(\"INFLUXDB\") && context.global.sendData.db.length === 0) {\n        return true;\n    } else if (msgData.payload.hasOwnProperty(\"INFLUXDB\")) {\n        if (msgData.payload.INFLUXDB.hasOwnProperty(\"fill\")) {\n            if (context.global.sendData.db !== msgData.payload.INFLUXDB.fill) {\n                return true;\n            }\n        }\n    }\n    return false;\n}\nfunction dataStatusChecker(value) {\n    if (value === \"red\") {\n        return \"연결 끊어짐\";\n    } else if (value === \"yellow\") {\n        return \"연결 재시도\";\n    } else if (value === \"green\") {\n        return \"정상 연결\";\n    } else {\n        return \"연결 끊어짐\";\n    }\n}\nfunction sendDataMaker(value) {\n    const sendData = {\n        id: {{.Id}},\n        mqtt: \"\",\n        db: \"\",\n        connect: \"\",\n        time: \"\",\n    };\n    \n    const saveData = {\n        id: {{.Id}},\n        mqtt: \"\",\n        db: \"\",\n        connect: \"\",\n    }\n    \n    if (value.hasOwnProperty(\"MQTT\")) {\n        sendData.mqtt = dataStatusChecker(msg.payload.MQTT.fill);\n        if (msg.payload.MQTT.hasOwnProperty(\"fill\")) {\n            saveData.mqtt = msg.payload.MQTT.fill;\n        }\n    }\n    if (value.hasOwnProperty(\"connect\")) {\n        sendData.connect = dataStatusChecker(msg.payload.connect.fill);\n        if (msg.payload.connect.hasOwnProperty(\"fill\")) {\n            saveData.connect = msg.payload.connect.fill;\n        }\n    }\n    if (value.hasOwnProperty(\"INFLUXDB\")) {\n        sendData.db = dataStatusChecker(msg.payload.INFLUXDB.fill);\n        if (msg.payload.INFLUXDB.hasOwnProperty(\"fill\")) {\n            saveData.db = msg.payload.INFLUXDB.fill;    \n        }\n        \n    }\n    sendData.time = nowDateFormat();\n    value.payload = sendData;\n    \n    context.global.sendData = saveData;\n    \n    return value;\n}\n\nif (context.global.sendData === undefined || context.global.sendData === null) {\n    return sendDataMaker(msg.payload);\n} else {\n    if(msgConnectStatus(msg)) {\n        return sendDataMaker(msg.payload);\n    }\n}",
+      "outputs": 1,
+      "noerr": 0,
+      "x": 870,
+      "y": 60,
+      "wires": [
+          [
+              "TS-FLOW-STATUS-SENDER-{{.Params.FlowId}}"
+          ]
+      ]
+    },
+    {
       "id": "TS-FLOW-STATUS-LISTENER-{{.Params.FlowId}}",
       "type": "status",
       "name": "",
       "scope": [
           "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
           "TS-ADD-MQTT-ID-{{.Params.FlowId}}",
-          "TS-OPC-UA-BROWSER-ID-{{.Params.FlowId}}"
+          "TS-OPC-UA-READ-ID-{{.Params.FlowId}}"
       ],
       "x": 100,
       "y": 120,
       "wires": [
           [
-              "TS-FLOW-STATUS-FUNC-ID-{{.Params.FlowId}}"
+            "TS-FLOW-STATUS-FUNC-ID-{{.Params.FlowId}}"
           ]
       ]
     },
@@ -68,7 +99,12 @@
         "x": 330,
         "y": 120,
         "wires": [
-          [ "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}" ]
+          [
+            {{if .Enable}}
+            "TS-FLOW-STATUS-SENDER-PROCESS-{{.Params.FlowId}}",
+            {{end}}
+            "TS-FLOW-STATUS-PUBLISH-{{.Params.FlowId}}"
+          ]
         ]
     },
     {
@@ -90,7 +126,7 @@
       "maxAge": 1,
       "depth": 1,
       "connector": "TS-OPC-UA-CONNECT-ID-{{.Params.FlowId}}",
-      "name": "{{.Params.FlowId}}",
+      "name": "connect",
       "justValue": true,
       "showStatusActivities": false,
       "showErrors": false,
@@ -117,7 +153,7 @@
       "type": "OPCUA-IIoT-Browser",
       "connector": "TS-OPC-UA-CONNECT-ID-{{.Params.FlowId}}",
       "nodeId": "",
-      "name": "connect",
+      "name": "{{.Params.FlowId}}",
       "justValue": false,
       "sendNodesToRead": false,
       "sendNodesToListener": false,
@@ -279,7 +315,7 @@
         "id": "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
         "type": "function",
         "name": "INFLUXDB",
-        "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif (!INFLUXDB || \n    newStatus.text !== INFLUXDB.text) {\n    node.status(newStatus);\n}\n",
+        "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif (context.global.INFLUXDB === undefined) {\n    context.global.INFLUXDB = 0;\n}\nif (context.global.INFLUXDB === 10 || context.global.INFLUXDB === -10) {\n    context.global.INFLUXDB = 0;\n}\nif (newStatus.fill === \"red\") {\n    context.global.INFLUXDB = -1;\n    node.status(newStatus);\n} else {\n    context.global.INFLUXDB += 1;\n}\nif (context.global.INFLUXDB > 0) {\n    node.status(newStatus);\n}\n",
         "outputs": 1,
         "noerr": 0,
         "x": 870,
