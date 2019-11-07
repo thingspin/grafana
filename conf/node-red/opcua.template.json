@@ -315,7 +315,7 @@
         "id": "TS-ADD-INFLUXDB-STAT-FUNC-ID-{{.Params.FlowId}}",
         "type": "function",
         "name": "INFLUXDB",
-        "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif (context.global.INFLUXDB === undefined) {\n    context.global.INFLUXDB = 0;\n}\nif (context.global.INFLUXDB === 10 || context.global.INFLUXDB === -10) {\n    context.global.INFLUXDB = 0;\n}\nif (newStatus.fill === \"red\") {\n    context.global.INFLUXDB = -1;\n    node.status(newStatus);\n} else {\n    context.global.INFLUXDB += 1;\n}\nif (context.global.INFLUXDB > 0) {\n    node.status(newStatus);\n}\n",
+        "func": "const { INFLUXDB } = flow.get('status');\nconst newStatus = msg.error\n? {\n    fill:\"red\",\n    shape: \"dot\",\n    text: msg.error.message,\n}\n: {\n    fill: \"green\",\n    shape: \"dot\",\n    text: \"active\",\n};\n\nif (context.global.INFLUXDB === undefined) {\n    context.global.INFLUXDB = 0;\n}\nif (context.global.INFLUXDB === 10 || context.global.INFLUXDB === -10) {\n    context.global.INFLUXDB = 0;\n}\nif (newStatus.fill === \"red\") {\n    context.global.INFLUXDB = -1;\n    node.status(newStatus);\n} else {\n    context.global.INFLUXDB += 1;\n}\nif (context.global.INFLUXDB > 2) {\n    node.status(newStatus);\n}\n",
         "outputs": 1,
         "noerr": 0,
         "x": 870,
