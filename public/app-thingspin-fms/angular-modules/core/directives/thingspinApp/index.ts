@@ -62,25 +62,25 @@ function setViewModeBodyClass(body: JQuery, mode: KioskUrlValue, sidemenuOpen: b
 
   switch (mode) {
     case 'tv': {
-      // thingspin add code ----
+      // thingspin add code -----
       body.removeClass('sidemenu-open');
-      // thingspin add code ----
+      // thingspin add code -----
       body.addClass('view-mode--tv');
       break;
     }
     // 1 & true for legacy states
     case '1':
     case true: {
-      // thingspin add code ----
+      // thingspin add code -----
       body.removeClass('sidemenu-open');
-      // thingspin add code ----
+      // thingspin add code -----
       body.addClass('view-mode--kiosk');
       break;
     }
-    // thingspin add code ----
+    // thingspin add code -----
     default:
       body.toggleClass('sidemenu-open', sidemenuOpen);
-    // thingspin add code ----
+    // thingspin add code -----
   }
 }
 
@@ -94,9 +94,9 @@ export function thingspinAppDirective(
 ) {
   // link function override
   const link = (scope: any, elem: JQuery) => {
-    // thingspin add code ----
+    // thingspin add code -----
     let sidemenuOpen: any;
-    // thingspin add code ----
+    // thingspin add code -----
 
     const body = $('body');
 
@@ -105,7 +105,7 @@ export function thingspinAppDirective(
 
     $('.preloader').remove();
 
-    // thingspin add code ----
+    // thingspin add code -----
     sidemenuOpen = scope.contextSrv.sidemenu;
     body.toggleClass('sidemenu-open', sidemenuOpen);
 
@@ -148,7 +148,7 @@ export function thingspinAppDirective(
       $location.search(search);
       appEvents.emit(CoreEvents.toggleKioskMode);
     });
-    // thingspin add code ----
+    // thingspin add code -----
 
     appEvents.on(CoreEvents.toggleSidemenuMobile, () => {
       body.toggleClass('sidemenu-open--xs');
@@ -225,12 +225,12 @@ export function thingspinAppDirective(
           search.kiosk = 'tv';
         }
       }
-      // thingspin add code ----
+      // thingspin add code -----
       store.dispatch({
         type: TS_NAV_ACTION_TYPES.UPDATE_VIEWMODE,
         payload: search.kiosk,
       });
-      // thingspin add code ----
+      // thingspin add code -----
 
       $timeout(() => $location.search(search));
       setViewModeBodyClass(body, search.kiosk, sidemenuOpen);

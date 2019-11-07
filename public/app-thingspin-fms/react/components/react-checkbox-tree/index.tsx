@@ -133,10 +133,10 @@ export default class CheckboxTree extends React.Component<Props, States> {
 
         model.toggleChecked(nodeInfo, nodeInfo.checked, noCascade);
 
-        // thingspin add code ---
+        // thingspin add code -----
         const checked: string[] = model.serializeList(Check.Checked);
         const originData: any[] = checked.map((value) => model.getNode(value).origin);
-        // thingspin add code ---
+        // thingspin add code -----
 
         onCheck([...checked], { ...node, ...nodeInfo }, [...originData]);
     }

@@ -35,7 +35,7 @@ export class GettingStarted extends PureComponent<PanelProps, State> {
 
     this.steps = [
       {
-        // thingspin add code ----
+        // thingspin add code -----
         // title: 'Install Grafana',
         title: 'Install ThingSPIN',
         icon: 'icon-gf icon-gf-check',
