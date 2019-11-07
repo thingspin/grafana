@@ -41,6 +41,10 @@ let fmsHot = merge(common, {
       '/api/plugin-proxy/*': {
         target: 'http://localhost:3000',
         ws: true,
+      },
+      '/thingspin/analytics/*': {
+        target: 'http://localhost:3000',
+        ws: true,
       }
     },
   },
