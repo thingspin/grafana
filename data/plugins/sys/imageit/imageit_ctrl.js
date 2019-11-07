@@ -149,7 +149,6 @@ System.register(["lodash", "app/plugins/sdk", "./sprintf.js", "./angular-sprintf
 
           _.defaults(_this.panel, panelDefaults);
 
-          _this.templateSrv = templateSrv;
           _this.$sce = $sce;
 
           _this.events.on('init-edit-mode', _this.onInitEditMode.bind(_assertThisInitialized(_this)));
