@@ -1,0 +1,31 @@
+{
+  "type": "panel",
+  "name": "Jupyter @ThingSPIN",
+  "id": "thingspin-jupyter-panel",
+  "info": {
+    "description": "Analytics @ThingSPIN (Jupyter with Python, R, Go)",
+    "author": {
+      "name": "gunwoo@hancommds.com"
+    },
+    "keywords": [
+      "jupyter",
+      "thingspin",
+      "analytics",
+      "plotly",
+      "scatter",
+      "panel"
+    ],
+    "logos": {
+      "small": "img/logo.png",
+      "large": "img/logo.png"
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "0.1.0",
+    "updated": "2019-11-07"
+  },
+  "dependencies": {
+    "grafanaVersion": "4.x.x",
+    "plugins": []
+  }
+}
