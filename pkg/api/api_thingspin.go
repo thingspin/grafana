@@ -149,6 +149,13 @@ func (hs *HTTPServer) registerThingspinRoutes() {
 			edgeAiRoute.Get("/:cid/log", Wrap(EAIM.EdgeAiGetLog))
 			edgeAiRoute.Get("/:cid/log/:num", Wrap(EAIM.EdgeAiGetLogs))
 		})
+
+		// analytics API
+		tsRoute.Group("/analytics", func(aRoute routing.RouteRegister) {
+			aRoute.Any("/jupyter/*", TsRevProxyReq)
+			aRoute.Post("/script/R", bind(tsm.AnalyticsSource{}), Wrap(GetR))
+			aRoute.Post("/script/python", bind(tsm.AnalyticsSource{}), Wrap(GetPython))
+		})
 	})
 
 	r.Group("/api/:ver", func(tsSysAPIRoute routing.RouteRegister) {

@@ -12,9 +12,9 @@ import (
 
 type CacheService interface {
 	GetDatasource(datasourceID int64, user *m.SignedInUser, skipCache bool) (*m.DataSource, error)
-	// thingspin add code ----
+	// thingspin add code -----
 	GetTsDatasource(datasourceID int64, user *m.SignedInUser, skipCache bool) (*m.DataSource, error)
-	// thingspin add code ----
+	// thingspin add code -----
 }
 
 type CacheServiceImpl struct {

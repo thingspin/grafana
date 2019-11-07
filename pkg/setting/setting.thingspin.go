@@ -128,4 +128,5 @@ func (cfg *Cfg) readThingspinSettings() {
 
 	cfg.readAssetSettings()
 	cfg.readEdgeAiSettings()
+	cfg.readAnalyticsSettings()
 }

@@ -57,11 +57,13 @@ require (
 	github.com/rainycape/unidecode v0.0.0-20150907023854-cb7f23ec59be // indirect
 	github.com/robfig/cron v0.0.0-20180505203441-b41be1df6967
 	github.com/robfig/cron/v3 v3.0.0
+	github.com/senseyeio/roger v0.0.0-20191009211040-43e330bee47f
 	github.com/sergi/go-diff v1.0.0 // indirect
 	github.com/serverhorror/rog-go v0.0.0-20150622204439-87e4e0161534
 	github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
 	github.com/stretchr/testify v1.4.0
 	github.com/teris-io/shortid v0.0.0-20171029131806-771a37caa5cf
+	github.com/tink-ab/tempfile v0.0.0-20180226111222-33beb0518f1a
 	github.com/ua-parser/uap-go v0.0.0-20190826212731-daf92ba38329
 	github.com/uber-go/atomic v1.3.2 // indirect
 	github.com/uber/jaeger-client-go v2.16.0+incompatible

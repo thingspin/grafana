@@ -327,7 +327,7 @@ func GetHomeDashboard(c *m.ReqContext) Response {
 		log.Warn("Failed to get slug from database, %s", err.Error())
 	}
 
-	// thingspin edi code ----
+	// thingspin edi code -----
 	// filePath := path.Join(setting.StaticRootPath, "dashboards/home.json")
 	var jsonFilePath string
 	if isThingspin {
@@ -336,7 +336,7 @@ func GetHomeDashboard(c *m.ReqContext) Response {
 		jsonFilePath = "dashboards/home.json"
 	}
 	filePath := path.Join(setting.StaticRootPath, jsonFilePath)
-	// thingspin edit code ----
+	// thingspin edit code -----
 
 	file, err := os.Open(filePath)
 	if err != nil {

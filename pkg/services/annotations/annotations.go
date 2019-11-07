@@ -93,7 +93,7 @@ type ItemDTO struct {
 	Email       string           `json:"email"`
 	AvatarUrl   string           `json:"avatarUrl"`
 	Data        *simplejson.Json `json:"data"`
-	// thingpsin add code ----
+	// thingpsin add code -----
 	Confirm     bool  `json:"confirm"`
 	ConfirmDate int64 `json:"confirmDate"`
 }

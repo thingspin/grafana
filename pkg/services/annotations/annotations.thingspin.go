@@ -34,7 +34,7 @@ type TsItemDTO struct {
 	AvatarUrl   string           `json:"avatarUrl"`
 	Data        *simplejson.Json `json:"data"`
 
-	// thingpsin add code ----
+	// thingpsin add code -----
 	Confirm     bool      `xorm:"bool notnull 'confirm'" json:"confirm"`
 	ConfirmDate time.Time `xorm:"confirm_date" json:"confirmDate"`
 	Slug        string    `json:"slug"`

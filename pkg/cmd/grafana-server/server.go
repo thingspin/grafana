@@ -42,7 +42,7 @@ import (
 	"github.com/grafana/grafana/pkg/util/errutil"
 	"golang.org/x/xerrors"
 
-	// thingspin add code ----
+	// thingspin add code -----
 	_ "github.com/grafana/grafana/pkg/services/thingspin"
 	_ "github.com/grafana/grafana/pkg/services/thingspinStream"
 	_ "github.com/grafana/grafana/pkg/thingspin/drone"

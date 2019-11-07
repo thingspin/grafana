@@ -38,7 +38,7 @@ func AddMigrations(mg *Migrator) {
 	addUserAuthTokenMigrations(mg)
 	addCacheMigration(mg)
 
-	// ThingSPIN add code ----
+	// ThingSPIN add code -----
 	AddThingspinMigrations(mg)
 }
 
