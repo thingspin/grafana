@@ -1,0 +1,179 @@
+<div class="editor-row">
+	<div class="section gf-form-group">
+		<div class="gf-form">
+			<label class="gf-form-label width-8">Picture URL</label>
+			<input type="text" class="input-small gf-form-input width-30" ng-model="ctrl.panel.bgimage"
+				ng-change="ctrl.render()" ng-model-onblur />
+		</div>
+
+		<div class="gf-form-inline">
+			<label class="gf-form-label width-10">Background Size</label>
+			<div class="gf-form-select-wrapper width-15">
+				<select class="gf-form-input ng-pristine ng-valid ng-touched ng-untouched ng-empty" ng-model="ctrl.panel.bgtype"
+					ng-options="f for f in ['cover','contain']" ng-change="ctrl.render()">
+					<option label="cover" value="string:cover">Cover</option>
+					<option label="contain" value="string:contain">Contain</option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="editor-row">
+	<div ng-repeat="image in ctrl.panel.images">
+		<div class="section gf-form-group">
+			<h5 class="section-heading">&nbsp</h5>
+			<span class="gf-form-label">
+				<i class="fa fa-remove pointer" ng-click="ctrl.deleteImage($index)"></i>
+			</span>
+		</div>
+		<div class="section gf-form-group">
+			<h5 class="section-heading">Metric</h5>
+			<div class="gf-form-inline">
+				<div class="gf-form">
+					<input type="text" class="input-small gf-form-input max-width-40" ng-model="image.name"
+						ng-change="ctrl.render()" ng-model-onblur />
+				</div>
+			</div>
+		</div>
+		<div class="section gf-form-group">
+			<h5 class="section-heading">Position</h5>
+			<div class="gf-form-inline">
+				<div class="gf-form">
+					<label class="gf-form-label width-8">X Location</label>
+					<input type="number" class="input-small gf-form-input width-8" ng-model="image.xlocation"
+						ng-change="ctrl.render()" />
+				</div>
+			</div>
+			<div class="gf-form-inline">
+				<div class="gf-form">
+
+					<label class="gf-form-label width-8">Y Location</label>
+					<input type="number" class="input-small gf-form-input width-8" ng-model="image.ylocation"
+						ng-change="ctrl.render()" />
+				</div>
+			</div>
+		</div>
+
+		<div class="section gf-form-group">
+			<h5 class="section-heading">Image Size</h5>
+			<div class="gf-form-inline">
+				<div class="gf-form">
+					<label class="gf-form-label width-8">Size</label>
+					<input type="number" class="input-small gf-form-input width-8" ng-model="image.size"
+						ng-change="ctrl.render()" />
+				</div>
+			</div>
+		</div>
+
+		<div class="section gf-form-group">
+			<h5 class="section-heading">Image Mappings</h5>
+			<div class="gf-form-group">
+				<div class="gf-form" ng-repeat="map in image.imageMaps">
+					<span class="gf-form-label">
+						<i class="fa fa-remove pointer" ng-click="ctrl.removeImageMap(image,map)"></i>
+					</span>
+					<input type="text" ng-model="map.value" placeholder="value" class="gf-form-input max-width-6"
+						ng-blur="ctrl.render()">
+					<span class="gf-form-label">
+						<i class="fa fa-arrow-right"></i>
+					</span>
+					<input type="text" placeholder="text" ng-model="map.text" class="gf-form-input max-width-8"
+						ng-blur="ctrl.render()">
+				</div>
+
+				<div class="gf-form-button-row">
+					<button class="btn btn-inverse" ng-click="ctrl.addImageMap(image);">
+						<i class="fa fa-plus"></i>
+						Add a image mapping
+					</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div class="editor-row">
+		<div ng-repeat="sensor in ctrl.panel.sensors">
+			<div class="section gf-form-group">
+				<h5 class="section-heading">&nbsp</h5>
+				<span class="gf-form-label">
+					<i class="fa fa-remove pointer" ng-click="ctrl.deleteSensor($index)"></i>
+				</span>
+			</div>
+			<div class="section gf-form-group">
+				<h5 class="section-heading">Metric</h5>
+				<div class="gf-form-inline">
+					<div class="gf-form">
+						<input type="text" class="input-small gf-form-input max-width-40" ng-model="sensor.name"
+							ng-change="ctrl.render()" ng-model-onblur />
+					</div>
+				</div>
+			</div>
+			<div class="section gf-form-group">
+				<h5 class="section-heading">Position</h5>
+				<div class="gf-form-inline">
+					<div class="gf-form">
+						<label class="gf-form-label width-8">X Location</label>
+						<input type="number" class="input-small gf-form-input width-8" ng-model="sensor.xlocation"
+							ng-change="ctrl.render()" />
+					</div>
+				</div>
+				<div class="gf-form-inline">
+					<div class="gf-form">
+
+						<label class="gf-form-label width-8">Y Location</label>
+						<input type="number" class="input-small gf-form-input width-8" ng-model="sensor.ylocation"
+							ng-change="ctrl.render()" />
+					</div>
+				</div>
+			</div>
+			<div class="section gf-form-group">
+				<h5 class="section-heading">Appearance</h5>
+				<div class="gf-form-inline">
+					<div class="gf-form">
+						<label class="gf-form-label width-8">Format</label>
+						<input type="text" class="input-small gf-form-input width-8" ng-model="sensor.format"
+							ng-change="ctrl.render()" />
+						<label class="gf-form-label width-8">Font Color</label>
+						<span class="gf-form-label">
+							<spectrum-picker ng-model="sensor.color" ng-change="ctrl.render()"></spectrum-picker>
+						</span>
+						<label class="gf-form-label width-8">Border Color</label>
+						<span class="gf-form-label">
+							<spectrum-picker ng-model="sensor.bordercolor" ng-change="ctrl.render()"></spectrum-picker>
+						</span>
+					</div>
+				</div>
+				<div class="gf-form-inline">
+					<div class="gf-form">
+						<label class="gf-form-label width-8">Font Size</label>
+						<input type="number" class="input-small gf-form-input width-8" ng-model="sensor.size"
+							ng-change="ctrl.render()" />
+						<label class="gf-form-label width-8">Background</label>
+						<span class="gf-form-label">
+							<spectrum-picker ng-model="sensor.bgcolor" ng-change="ctrl.render()"></spectrum-picker>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="editor-row">
+		<div class="gf-form-button">
+			<button class="btn btn-inverse" ng-click="ctrl.addSensor();ctrl.render()">
+				<i class="fa fa-plus"></i>&nbsp;Add Sensor
+			</button>
+		</div>
+	</div>
+
+	<div class="editor-row">
+		<div class="gf-form-button">
+			<button class="btn btn-inverse" ng-click="ctrl.addImage();ctrl.render()">
+				<i class="fa fa-plus"></i>&nbsp;Add Image
+			</button>
+		</div>
+	</div>
