@@ -102,6 +102,27 @@
         }
       ]
     },
+
+    {
+      "text": "Edge AI",
+      "icon": "gicon gicon-shield",
+      "url": "/plugins/thingspin-edge-ai-app/page/monitoring",
+      "placeBottom": true,
+      "canDelete": false,
+      "children" : [
+        {
+          "text": "생성마법사",
+          "icon": "gicon gicon-plugins",
+          "url": "/plugins/thingspin-edge-ai-app/page/wizard"
+        },
+        {
+          "text": "모니터링",
+          "icon": "gicon gicon-shield",
+          "url": "/plugins/thingspin-edge-ai-app/page/monitoring",
+          "canDelete": false
+        }
+      ]
+    },
     
     {
       "text": "개발자도구",
