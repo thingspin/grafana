@@ -3,7 +3,7 @@ import 'app/routes/dashboard_loaders';
 // Grafana libs
 import ChangePasswordPage from 'app/features/profile/ChangePasswordPage';
 import UsersListPage from 'app/features/users/UsersListPage';
-import { SafeDynamicImport } from 'app/core/components/SafeDynamicImport';
+import { SafeDynamicImport } from 'app/core/components/DynamicImports/SafeDynamicImport';
 
 // Types
 import { DashboardRouteInfo } from 'app/types';
