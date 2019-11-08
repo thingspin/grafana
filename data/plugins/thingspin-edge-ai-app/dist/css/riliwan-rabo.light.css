@@ -1,0 +1,43 @@
+.board{
+    background: transparent;
+}
+
+.board > div.board-inner{
+    background: transparent;
+}
+
+.liner{
+    background: transparent;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: blue;
+}
+
+span.round-tabs{
+    background: white;
+    border: 2px solid gray;
+}
+
+a.active span.round-tabs { 
+    color:  black;
+    background: yellow;
+    border: 2px solid rgb(34, 194, 34);
+}
+
+a.hover span.round-tabs { 
+    border: 4px;
+}
+
+.nav-tabs > li.active > a span.round-tabs{
+    background: transparent;
+}
+.nav-tabs > li:after {
+    border-bottom-color: transparent;
+}
+.nav-tabs > li.active:after {
+    border-bottom-color: transparent;
+}
+.nav-tabs > li a:hover{
+    background: transparent;
+}

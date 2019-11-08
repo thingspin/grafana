@@ -1,0 +1,51 @@
+{
+  "type": "app",
+  "name": "Edge AI",
+  "id": "thingspin-edge-ai-app",
+
+  "css": {
+    "dark":  "css/thingspin-edge-ai-app.dark.css",
+    "light":  "css/thingspin-edge-ai-app.light.css"
+  },
+
+  "info": {
+    "description": "ThingSPIN Edge AI",
+    "author": {
+      "name": "gunwoo@hancommds.com",
+      "url": "http://thingspin.io"
+    },
+    "keywords": ["thingspin app"],
+    "logos": {
+      "small": "img/edge_ai_64.svg",
+      "large": "img/edge_ai_64.svg"
+    },
+    "links": [
+      {"name": "Project site", "url": ""},
+      {"name": "License & Terms", "url": ""}
+    ],
+    "version": "1.0.2",
+    "updated": "2018-01-19"
+  },
+
+  "HideFromList": false,
+  "putSideBottom": true,
+  "includes": [
+    {"type": "menu", "name": "Edge AI", "slug":"monitoring", "component": "Monitoring",  "mainMenu": true, "uid": "TE0000000001", "img":"img/M01.png", "menuId": 0},
+    {"type": "page", "name": "Monitoring","component": "Monitoring", "AddToNav": true, "menuID": 0, "ico":"fa fa-list-ul"},
+    {"type": "page", "name": "Wizard","component": "Wizard", "AddToNav": true, "menuID": 0, "ico":"fa fa-magic"}
+  ],
+  "routes": [
+    {
+      "path": "/mqtt",
+      "method": "*",
+      "url": "ws://localhost:1884",
+      "reqSignedIn": false
+    }
+  ],
+  
+  "dependencies": {
+    "grafanaVersion": "4.x.x 5.x.x",
+    "plugins": [
+    ]
+  }
+}

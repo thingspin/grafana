@@ -1,0 +1,10 @@
+{
+	"version": 3,
+	"file": "thingspin-edge-ai-app.light.css",
+	"sources": [
+		"../../src/sass/thingspin-edge-ai-app.light.scss",
+		"../../src/sass/common.scss"
+	],
+	"names": [],
+	"mappings": "ACAA,OAAO,CAAP,wBAAO;AACP,OAAO,CAAP,qBAAO"
+}

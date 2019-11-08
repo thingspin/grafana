@@ -1,0 +1,60 @@
+<div class="thingspin-info-box text-center">
+	<span>{{ctrl.title}}</span>
+</div>
+
+<div class='edit-row'>
+	<div class='gf-form-group'>
+		<h5 class="section-heading">Basic Info.</h5>
+		<div class="gf-form">
+			<label class="gf-form-label width-8">Module</label>
+			<input class="gf-form-input width-64" type="text" ng-model='ctrl.appModel.info.description' min-length="26" ng-readonly="ctrl.appModel.info.description" />
+		</div>
+		<gf-form-switch class="gf-form" label="Enabled" label-class="width-7" checked="ctrl.appModel.enabled" on-change="ctrl.refresh()" disabled>
+			<label for="check-177" class="gf-form-label width-8 pointer">Enabled</label>
+			<div class="gf-form-switch width-32">
+				<input id="check-177" type="checkbox" ng-model="ctrl.appModel.enabled" class="ng-pristine ng-untouched ng-valid ng-not-empty">
+				<label for="check-177" data-on="Yes" data-off="No"></label>
+			</div>
+		</gf-form-switch>
+	</div>
+</div>
+
+<div class='edit-row'>
+<form name="editForm">
+	<div class='section gf-form-group'>
+		<h5 class="section-heading">Folders</h5>
+		<div class="gf-form">
+			<span class="gf-form-label width-8">Base Folder</span>
+			<input class="gf-form-input" type="text" ng-model='ctrl.appModel.jsonData.storage.base' placeholder="{{ctrl.suggest.storage.base}}" required />
+			<info-popover mode="right-absolute">
+				<span>Specify a base folder name</span>
+			</info-popover>
+		</div>
+
+		<div class="gf-form">
+			<span class="gf-form-label width-8">Data Folder</span>
+			<input class="gf-form-input" type="text" ng-model='ctrl.appModel.jsonData.storage.data' placeholder="{{ctrl.suggest.storage.data}}" bs-typeahead="{{['data', 'space']}}" required />
+		</div>	
+	</div>
+
+	<div class='section gf-form-group'>
+		<h5 class="section-heading">MQTT</h5>
+		<div class="gf-form">
+			<span class="gf-form-label width-8">Brocker</span>
+			<input type="text" class="gf-form-input width-16 ng-valid" ng-model="ctrl.appModel.jsonData.mqtt.brocker" placeholder="{{ctrl.suggest.mqtt.brocker}}" required />
+		</div>
+		<div class="gf-form">
+			<span class="gf-form-label width-8">Topic Base</span>
+			<input type="text" class="gf-form-input width-16 ng-valid" ng-model="ctrl.appModel.jsonData.mqtt.base" placeholder="{{ctrl.suggest.mqtt.base}}" required />
+		</div>
+		<div class="gf-form">
+			<span class="gf-form-label width-8">Input Prefix</span>
+			<input type="text" class="gf-form-input width-16 ng-valid" ng-model="ctrl.appModel.jsonData.mqtt.inprefix" placeholder="{{ctrl.suggest.mqtt.inprefix}}" required />
+		</div>
+		<div class="gf-form">
+			<span class="gf-form-label width-8">Output Prefix</span>
+			<input type="text" class="gf-form-input width-16 ng-valid" ng-model="ctrl.appModel.jsonData.mqtt.outprefix" placeholder="{{ctrl.suggest.mqtt.outprefix}}" required />
+		</div>	
+	</div>
+</form>
+</div>

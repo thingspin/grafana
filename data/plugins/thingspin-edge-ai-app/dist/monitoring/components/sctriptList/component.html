@@ -1,0 +1,68 @@
+<div  class="monitoring-theme">
+    <div style='margin-top: 10px;' class='row'></div>
+    <mat-card>
+        <mat-card-title> Inference Config </mat-card-title>
+        <mat-card-content>
+            <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" multiTemplateDataRows>
+                <ng-container matColumnDef="cname">
+                    <mat-header-cell *matHeaderCellDef> Project </mat-header-cell>
+                    <mat-cell *matCellDef="let el">{{el.cname}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="model">
+                    <mat-header-cell *matHeaderCellDef> Model </mat-header-cell>
+                    <mat-cell *matCellDef="let el"> {{el.model}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="algorithmName">
+                    <mat-header-cell *matHeaderCellDef> Algorithm </mat-header-cell>
+                    <mat-cell *matCellDef="let el"> {{el.algorithmName}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef class="mat-column-action"> Action </mat-header-cell>
+                    <mat-cell class="mat-column-action button-row" *matCellDef="let el">
+                        <button mat-stroked-button *ngIf="!el.running" (click)="runAlgorithm(el)">
+                            <mat-icon>play_circle_filled_white</mat-icon>Play
+                        </button>
+                        <button mat-stroked-button *ngIf="!el.running" (click)="editConfig(el.cid)">
+                            <mat-icon>edit</mat-icon>Edit
+                        </button>
+                        <button mat-stroked-button *ngIf="!el.running" (click)="deleteConfig(el.cid)" color="warn">
+                            <mat-icon>delete</mat-icon>Remove
+                        </button>
+                        <button mat-stroked-button *ngIf="el.running" (click)="stopAlgorithm(el)">
+                            <mat-icon>pause</mat-icon>Stop
+                        </button>
+
+                        <button mat-stroked-button *ngIf="!el.running" (click)="showHistory(el)" [color]="el.error ? 'warn' : 'accent'">
+                            <mat-icon>list</mat-icon>History
+                        </button>
+                        <button mat-stroked-button *ngIf="el.running" (click)="showLog(el)">
+                            <mat-icon>art_track</mat-icon>Log
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let element; columns: displayedColumns"></mat-row>
+
+            </mat-table>
+            <mat-paginator [length]="dataSource.length" [pageSize]="20" color='primary' showFirstLastButtons></mat-paginator>
+        </mat-card-content>
+    </mat-card>
+    <mat-divider></mat-divider>
+    <div mwlResizable [enableGhostResize]="true" [resizeEdges]="{bottom: true, top: true}" [allowNegativeResizes]="true">
+        <mat-card [hidden]="!enableLog">
+            <mat-card-title>
+                Algorithm Logger({{currAlgorithmName}})
+            </mat-card-title>
+            <mat-card-content>
+                <div class="terminal-title-bar">
+                    <button mat-icon-button color="primary" class="small" (click)="closeTerminal(el)"><mat-icon>clear</mat-icon></button>
+                </div>
+               <div id="terminal" #terminal></div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
