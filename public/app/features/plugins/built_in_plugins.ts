@@ -51,9 +51,9 @@ import * as pieChartPanel from 'app/plugins/panel/piechart/module';
 import * as barGaugePanel from 'app/plugins/panel/bargauge/module';
 import * as logsPanel from 'app/plugins/panel/logs/module';
 
-// thingspin add code ---
+// thingspin add code -----
 import { thingspinBuiltInPlugins } from 'app-thingspin-fms/plugins/built_in_plugins_thingspin';
-// thingspin add code ---
+// thingspin add code -----
 const exampleApp = async () => await import(/* webpackChunkName: "exampleApp" */ 'app/plugins/app/example-app/module');
 
 const builtInPlugins: any = {
@@ -97,6 +97,6 @@ const builtInPlugins: any = {
   'app/plugins/app/example-app/module': exampleApp,
 };
 
-// thingspin add code ---
+// thingspin add code -----
 export default Object.assign(builtInPlugins, thingspinBuiltInPlugins);
-// thingspin add code ---
+// thingspin add code -----

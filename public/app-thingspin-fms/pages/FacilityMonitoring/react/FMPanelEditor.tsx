@@ -17,6 +17,7 @@ import {
 // ThingSPIN libs
 import FMVisualizationTab from './FMViauslizationTab';
 import FMQueriesTab from './FMQueriesTab';
+import { TsAnalyticsTab } from 'app-thingspin-fms/react/components/TsAnalyticsTab/TsAnalyticsTab';
 
 // (Customized grafana react component: iiHOC)
 export class UnConnectedFMPanelEditor extends UnConnectedPanelEditor {
@@ -40,6 +41,10 @@ export class UnConnectedFMPanelEditor extends UnConnectedPanelEditor {
                         onPluginTypeChange={onPluginTypeChange}
                         angularPanel={angularPanel}
                     />
+                );
+            case 'analytics':
+                return (
+                    <TsAnalyticsTab panel={panel} angularPanel={angularPanel}/>
                 );
             default:
                 return null;

@@ -65,6 +65,12 @@ async function link(scope: any, elem: any, attrs: any) {
   await import('brace/snippets/markdown');
   await import('brace/mode/json');
   await import('brace/snippets/json');
+  // thingspin add code -----
+  await import('brace/mode/python');
+  await import('brace/snippets/python');
+  await import('brace/mode/r');
+  await import('brace/snippets/r');
+  // thingspin add code -----
 
   // @ts-ignore
   await import('./theme-grafana-dark');

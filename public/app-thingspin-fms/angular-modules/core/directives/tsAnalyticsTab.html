@@ -1,0 +1,36 @@
+<div>
+  <div class="editor-row">
+
+    <div class="gf-form">
+      <span class="gf-form-label width-7">Language</span>
+      <div class="gf-form-select-wrapper max-width-18">
+        <select class="gf-form-input ng-pristine ng-untouched ng-valid ng-empty" ng-model="ctrl.panel.kernel"
+          ng-options="v as k for (k, v) in ctrl.kernel" ng-change="ctrl.modeChanged()">
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="gf-form gf-form--v-stretch">
+    <span class="gf-form-label width-7">Script</span>
+    <div class="gf-form" ng-switch="ctrl.panel.kernel" style="width:1024px">
+      <code-editor content="ctrl.panel.scripts" data-show-gutter data-mode="r" data-max-lines=20 ng-switch-when="ir" />
+      <code-editor content="ctrl.panel.scripts" data-show-gutter data-mode="r" data-max-lines=20 ng-switch-when="ir_j" />
+      <code-editor content="ctrl.panel.scripts" data-show-gutter data-mode="python" data-max-lines=20 ng-switch-when="python3" />
+      <code-editor content="ctrl.panel.scripts" data-show-gutter data-mode="python" data-max-lines=20 ng-switch-when="python3_j" />
+      <code-editor content="ctrl.panel.scripts" data-show-gutter data-mode="text" data-max-lines=20 ng-switch-default />
+    </div>
+  </div>
+
+  <gf-form-switch class="gf-form" label-class="width-7" switch-class="max-width-6" label="Enable"
+    checked="ctrl.panel.enableScript" on-change="ctrl.refresh()">
+    <label class="gf-form-label width79 pointer" ng-show="ctrl.label">
+      Enable
+    </label>
+    <div class="gf-form-switch max-width-6" ng-if="ctrl.show">
+      <input type="checkbox" ng-model="ctrl.checked" ng-change="ctrl.internalOnChange()"
+        class="ng-pristine ng-untouched ng-valid ng-empty">
+    </div>
+  </gf-form-switch>
+
+</div>

@@ -25,6 +25,9 @@ export const refreshPanelEditor = (props: {
 
     const tabs: PanelEditorTab[] = [
       getPanelEditorTab(PanelEditorTabIds.Queries),
+      // thingspin add code -----
+      getPanelEditorTab(PanelEditorTabIds.Analytics),
+      // thingspin add code -----
       getPanelEditorTab(PanelEditorTabIds.Visualization),
       getPanelEditorTab(PanelEditorTabIds.Advanced),
     ];

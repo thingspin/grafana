@@ -17,6 +17,11 @@ import { PanelEditorTab, PanelEditorTabIds } from './state/reducers';
 import { changePanelEditorTab, panelEditorCleanUp, refreshPanelEditor } from './state/actions';
 import { getActiveTabAndTabs } from './state/selectors';
 
+// thingspin add code -----
+import { TsTabItem } from 'app-thingspin-fms/react/components/PanelEditorTab/PanelEditorTab';
+import { TsAnalyticsTab } from 'app-thingspin-fms/react/components/TsAnalyticsTab/TsAnalyticsTab';
+// thingspin add code -----
+
 interface PanelEditorProps {
   panel: PanelModel;
   dashboard: DashboardModel;
@@ -89,6 +94,12 @@ export class UnConnectedPanelEditor extends PureComponent<PanelEditorProps> {
             angularPanel={angularPanel}
           />
         );
+      // thingspin add code -----
+      case 'analytics':
+        return (
+          <TsAnalyticsTab panel={panel} angularPanel={angularPanel}/>
+        );
+      // thingspin add code -----
       default:
         return null;
     }
@@ -101,7 +112,10 @@ export class UnConnectedPanelEditor extends PureComponent<PanelEditorProps> {
       <div className="panel-editor-container__editor">
         <div className="panel-editor-tabs">
           {tabs.map(tab => {
-            return <TabItem tab={tab} activeTab={activeTab} onClick={this.onChangeTab} key={tab.id} />;
+            // Thingspin edit code -----
+            // return <TabItem tab={tab} activeTab={activeTab} onClick={this.onChangeTab} key={tab.id} />;
+            return <TsTabItem tab={tab} activeTab={activeTab} onClick={this.onChangeTab} key={tab.id} />;
+            // Thingspin edit code -----
           })}
         </div>
         <div className="panel-editor__right">{this.renderCurrentTab(activeTab)}</div>

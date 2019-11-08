@@ -11,6 +11,10 @@ export enum PanelEditorTabIds {
   Visualization = 'visualization',
   Advanced = 'advanced',
   Alert = 'alert',
+
+  // thingspin add code -----
+  Analytics = 'analytics',
+  // thingspin add code -----
 }
 
 export const panelEditorTabTexts = {
@@ -18,6 +22,10 @@ export const panelEditorTabTexts = {
   [PanelEditorTabIds.Visualization]: 'Visualization',
   [PanelEditorTabIds.Advanced]: 'General',
   [PanelEditorTabIds.Alert]: 'Alert',
+
+  // thingspin add code -----
+  [PanelEditorTabIds.Analytics]: 'Analytics',
+  // thingspin add code -----
 };
 
 export const getPanelEditorTab = (tabId: PanelEditorTabIds): PanelEditorTab => {
