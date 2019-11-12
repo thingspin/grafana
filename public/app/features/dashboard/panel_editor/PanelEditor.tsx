@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import classNames from 'classnames';
+// import classNames from 'classnames';
 import { hot } from 'react-hot-loader';
 import { connect } from 'react-redux';
-import { Tooltip } from '@grafana/ui';
+// import { Tooltip } from '@grafana/ui';
 import { PanelPlugin, PanelPluginMeta } from '@grafana/data';
 import { AngularComponent, config } from '@grafana/runtime';
 
@@ -135,25 +135,25 @@ export const PanelEditor = hot(module)(
   )(UnConnectedPanelEditor)
 );
 
-interface TabItemParams {
-  tab: PanelEditorTab;
-  activeTab: string;
-  onClick: (tab: PanelEditorTab) => void;
-}
+// interface TabItemParams {
+//   tab: PanelEditorTab;
+//   activeTab: string;
+//   onClick: (tab: PanelEditorTab) => void;
+// }
 
-function TabItem({ tab, activeTab, onClick }: TabItemParams) {
-  const tabClasses = classNames({
-    'panel-editor-tabs__link': true,
-    active: activeTab === tab.id,
-  });
+// function TabItem({ tab, activeTab, onClick }: TabItemParams) {
+//   const tabClasses = classNames({
+//     'panel-editor-tabs__link': true,
+//     active: activeTab === tab.id,
+//   });
 
-  return (
-    <div className="panel-editor-tabs__item" onClick={() => onClick(tab)}>
-      <a className={tabClasses} aria-label={`${tab.text} tab button`}>
-        <Tooltip content={`${tab.text}`} placement="auto">
-          <i className={`gicon gicon-${tab.id}${activeTab === tab.id ? '-active' : ''}`} />
-        </Tooltip>
-      </a>
-    </div>
-  );
-}
+//   return (
+//     <div className="panel-editor-tabs__item" onClick={() => onClick(tab)}>
+//       <a className={tabClasses} aria-label={`${tab.text} tab button`}>
+//         <Tooltip content={`${tab.text}`} placement="auto">
+//           <i className={`gicon gicon-${tab.id}${activeTab === tab.id ? '-active' : ''}`} />
+//         </Tooltip>
+//       </a>
+//     </div>
+//   );
+// }

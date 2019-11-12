@@ -3,7 +3,8 @@ import React, { PureComponent, ReactNode } from 'react';
 
 import config from 'app/core/config';
 
-import { PanelPluginMeta, Select, FormLabel } from '@grafana/ui';
+import { PanelPluginMeta } from '@grafana/data';
+import { Select, FormLabel } from '@grafana/ui';
 import { SelectableValue } from '@grafana/data';
 
 export interface Props {

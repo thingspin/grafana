@@ -242,7 +242,7 @@ export class JupyterSrv {
   };
 
   onReceivedFrameData = (obj: any, result: DataFrame[]) => {
-    const now = new Date().getTime(); // ms
+    //const now = new Date().getTime(); // ms
     console.log(obj, result);
   };
 }
