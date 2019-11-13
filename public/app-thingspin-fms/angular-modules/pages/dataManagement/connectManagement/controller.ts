@@ -45,8 +45,8 @@ export function generateModalData(
 ) {
     // table Data's
     const tData: TableModel = {
-        rowCount: 16,
-        selectOpts: [16, 32, 48],
+        rowCount: 5,
+        selectOpts: [5, 10, 20, 50, 100],
         currPage: 0,
         maxPage: 0,
         maxPageLen: 10,
@@ -71,6 +71,7 @@ export function generateModalData(
     }
 
     function tOnHistorySelectChange() {
+        tData.currPage = 0;
         tHistoryCalcPaging();
         setHistoryPageNodes();
     }
@@ -142,8 +143,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
     // table
     list: TsConnect[] = [];
     tData: TableModel = {
-        rowCount: 16,
-        selectOpts: [16, 32, 48],
+        rowCount: 5,
+        selectOpts: [5, 10, 20, 50, 100],
         currPage: 0,
         maxPage: 0,
         maxPageLen: 10,
@@ -351,6 +352,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
                 this.list = list.map((item) => ({ ...item, status: {} }));
 
                 this.$scope.$applyAsync();
+                this.tCalcPaging();
                 this.setPageNodes();
             }
         } catch (e) {
@@ -487,8 +489,9 @@ export default class TsConnectManagementCtrl implements angular.IController {
 
     // table event methods
     tOnSelectChange() {
-        this.tCalcPaging();
-        this.setPageNodes();
+        // this.tCalcPaging();
+        // this.setPageNodes();
+        this.tSetPaging(0);
     }
 
     setCountValue() {

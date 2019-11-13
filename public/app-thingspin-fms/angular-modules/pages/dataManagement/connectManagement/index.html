@@ -292,8 +292,8 @@
                   <div class="row publish-operation-margin">
                     <div class="row">
                       <label class="switch">
-                        <input type="checkbox" ng-model="ctrl.list[$index].enable"
-                          ng-change="ctrl.enablePublish(ctrl.list[$index])">
+                        <input type="checkbox" ng-model="item.enable"
+                          ng-change="ctrl.enablePublish(item)">
                         <span ng-if="item.type === 'opcua'" class="slider-opcua round"></span>
                         <span ng-if="item.type === 'mqtt'" class="slider-mqtt round"></span>
                         <span ng-if="item.type === 'modbus'" class="slider-modbus round"></span>
