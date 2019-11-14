@@ -2,31 +2,37 @@
   "type": "panel",
   "name": "thingspin-pictureIt",
   "id": "thingspin-pictureit-panel",
-
   "info": {
     "description": "Add Measurements and images to a Picture in ThingSPIN",
     "author": {
-      "name": "Daseul Cho"
+      "name": "Gunwoo Cho"
     },
-    "keywords": ["pictureit","picture", "panel"],
+    "keywords": [
+      "pictureit",
+      "picture",
+      "panel"
+    ],
     "logos": {
       "small": "img/pictureit_logo.png",
       "large": "img/pictureit_logo.png"
     },
     "links": [
-      {"name": "Project site", "url": "https://github.com/vbessler/grafana-pictureit"},
-      {"name": "MIT License", "url": "https://github.com/vbessler/grafana-pictureit/blob/master/LICENSE"},
-      {"name": "3-clause BSD license", "url": "https://github.com/vbessler/grafana-pictureit/blob/master/LICENSE_additional"}
+      {
+        "name": "Project site",
+        "url": "http://iot.mdstec.com:7990/projects/THSP/repos/thingspin-v3/browse/public/app-thingspin-fms/plugins/panel/thingspin-pictureit-panel"
+      }
     ],
     "screenshots": [
-      {"name": "Showcase", "path": "img/bridge_strains.png"}
+      {
+        "name": "Showcase",
+        "path": "img/bridge_strains.png"
+      }
     ],
     "version": "1.0.0",
     "updated": "2018-03-21"
   },
-
   "dependencies": {
     "grafanaVersion": "3.x.x",
-    "plugins": [ ]
+    "plugins": []
   }
 }
