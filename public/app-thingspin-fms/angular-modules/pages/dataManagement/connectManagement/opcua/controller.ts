@@ -4,6 +4,7 @@ const uid = require('shortid');
 // Grafana libs
 import { appEvents } from 'app/core/core';
 import { AppEvents } from '@grafana/data';
+import { CoreEvents } from 'app/types';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
 // Thingspin libs
@@ -237,16 +238,37 @@ export default class TsOpcUaConnectCtrl implements angular.IController {
 
     onUpload(dash: any) {
         this.jsonDataParsingChecker(dash);
-        this.input = {
-            endpointUrl: dash.params.EndpointUrl,
-            name: dash.name,
-            auth: dash.params.auth,
-            securityMode: dash.params.securityMode,
-            securityPolicy: dash.params.securityPolicy,
-            intervals: dash.intervals,
-        };
-        this.nodes = dash.params.nodes;
-        this.enableNodeSet = true;
+        appEvents.emit(CoreEvents.showConfirmModal, {
+            title: 'Import 방식',
+            text2: `Import 된 내용을 Overwrite 하시겠습니까?`,
+            icon: 'fa-trash',
+            yesText: "Overwrite",
+            altActionText: 'Add on',
+            onAltAction: async () => {
+                try {
+                this.nodes = this.nodes.concat(dash.params.nodes);
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+            onConfirm: async () => {
+                try {
+                    this.input = {
+                        endpointUrl: dash.params.EndpointUrl,
+                        name: dash.name,
+                        auth: dash.params.auth,
+                        securityMode: dash.params.securityMode,
+                        securityPolicy: dash.params.securityPolicy,
+                        intervals: dash.intervals,
+                    };
+                    this.nodes = [];
+                    this.nodes = dash.params.nodes;
+                    this.enableNodeSet = true;
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+        });
     }
 
     exportData(): void {

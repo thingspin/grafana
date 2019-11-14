@@ -4,6 +4,7 @@ import angular, { ITimeoutService } from 'angular';
 const uid = require("shortid");
 
 // Grafana libs
+import { CoreEvents } from 'app/types';
 import { dateTime, AppEvents } from '@grafana/data';
 import { appEvents } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
@@ -208,7 +209,7 @@ export class TsMqttConnectCtrl implements angular.IController {
 
   $onDestroy(): void {
     if (this.mqttClient) {
-        this.mqttClient.end();
+      this.mqttClient.end();
     }
   }
 
@@ -380,7 +381,7 @@ export class TsMqttConnectCtrl implements angular.IController {
       const convType = type.toLowerCase();
 
       if (convType !== name.toLowerCase()
-        || (this.isTopicEditMode && convType === this.isLoadTopic.toLowerCase()) ) { // edit mode check
+        || (this.isTopicEditMode && convType === this.isLoadTopic.toLowerCase())) { // edit mode check
         continue;
       }
 
@@ -710,25 +711,55 @@ return msg;
 
   onUpload({ collector, connection, topicList }: any) {
     if (!(!collector || !connection || !topicList)) {
-      this.collector = collector;
-      this.connection = {
-        url: connection.url,
-        port: connection.port,
-        keep_alive: connection.keep_alive,
-        session: connection.session,
-      };
+      appEvents.emit(CoreEvents.showConfirmModal, {
+        title: 'Import 방식',
+        text2: `Import 된 내용을 Overwrite 하시겠습니까?`,
+        icon: 'fa-trash',
+        yesText: "Overwrite",
+        altActionText: 'Add on',
+        onAltAction: async () => {
+          try {
+            // this.nodes = this.nodes.concat(dash.params.nodes);
+            topicList.forEach(({ name: n, type, viewStr, topic, value }: any, id: number) => {
+              const tableData: Topic = {
+                id,
+                type: type ? type : n,
+                viewStr: viewStr ? viewStr : topic,
+                value,
+              };
+              this.tableList.set(id, tableData);
+              this.list.push(tableData);
+            });
+            this.initTable();
+          } catch (e) {
+            console.error(e);
+          }
+        },
+        onConfirm: async () => {
+          this.collector = collector;
+          this.connection = {
+            url: connection.url,
+            port: connection.port,
+            keep_alive: connection.keep_alive,
+            session: connection.session,
+          };
+          this.tableList.clear();
+          this.list = [];
+          this.initTable();
 
-      topicList.forEach(({ name: n, type, viewStr, topic, value }: any, id: number) => {
-        const tableData: Topic = {
-          id,
-          type: type ? type : n,
-          viewStr: viewStr ? viewStr : topic,
-          value,
-        };
-        this.tableList.set(id, tableData);
-        this.list.push(tableData);
+          topicList.forEach(({ name: n, type, viewStr, topic, value }: any, id: number) => {
+            const tableData: Topic = {
+              id,
+              type: type ? type : n,
+              viewStr: viewStr ? viewStr : topic,
+              value,
+            };
+            this.tableList.set(id, tableData);
+            this.list.push(tableData);
+          });
+          this.initTable();
+        },
       });
-      this.initTable();
     }
   }
 
