@@ -127,6 +127,7 @@ export function generateModalData(
 // AngularJs Lifecycle hook (https://docs.angularjs.org/guide/component)
 export default class TsConnectManagementCtrl implements angular.IController {
     readonly pageBathPath = '/thingspin/manage/data/connect';
+    readonly connectManager = 'TsConnectManagementCtrl';
 
     // MQTT
     readonly mqttUrl = `ws://${this.$location.host()}:${this.$location.port()}/thingspin-proxy/mqtt`;
@@ -154,9 +155,14 @@ export default class TsConnectManagementCtrl implements angular.IController {
     /** @ngInject */
     constructor(private $scope: angular.IScope,
         private $location: angular.ILocationService,
-        private backendSrv: BackendSrv, ) { }// Dependency Injection
+        private backendSrv: BackendSrv,
+        private $templateCache: angular.ITemplateCacheService,) { }// Dependency Injection
 
     $onInit(): void {
+        const cached = this.$templateCache.get(this.connectManager);
+        if (cached !== undefined) {
+            this.tData.rowCount = cached;
+        }
         this.asyncUpdateTypeList();
         this.asyncUpdateList().then(() => {
             this.initMqtt();
@@ -491,6 +497,8 @@ export default class TsConnectManagementCtrl implements angular.IController {
     tOnSelectChange() {
         // this.tCalcPaging();
         // this.setPageNodes();
+        const { rowCount } = this.tData;
+        this.$templateCache.put(this.connectManager, rowCount);
         this.tSetPaging(0);
     }
 
