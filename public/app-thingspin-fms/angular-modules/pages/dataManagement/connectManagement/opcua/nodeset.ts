@@ -10,8 +10,8 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
 
     // UI setting data //
     // table header data
-    pagingNumber: number = 12 as number; // 페이지당 표시할 행(row) 개수
-    selectOpts: number[] = [12, 24, 48];
+    pagingNumber: number = 5 as number; // 페이지당 표시할 행(row) 개수
+    selectOpts: number[] = [5, 10, 20, 100];
     // table body data
     pageNode: any[];
     // table footer data
@@ -29,6 +29,12 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
 
     removeNode(index: number): void {
         this.nodes.splice(index, 1);
+        this.tCalcPaging();
+        this.setPageNodes();
+    }
+
+    removeAllNode(): void {
+        this.nodes = [];
         this.tCalcPaging();
         this.setPageNodes();
     }

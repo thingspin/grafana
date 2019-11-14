@@ -1,76 +1,80 @@
 <div class="opcua-edit-container">
-    <div class="opcua-edit-header">
-        <div class="opcua-edit-title">
-            OPC 수집 정보 목록
+  <div class="opcua-edit-header">
+    <div class="opcua-edit-title">
+      OPC 수집 정보 목록
+    </div>
+  </div>
+
+  <div class="opcua-edit-body">
+    <!-- tree -->
+    <div class="opcua-node-tree">
+      <div class="opcua-edit-container">
+        <div class="opcua-tree-title">
+          OPC Server 노드 목록
         </div>
+        <div class="opcua-tree-container">
+          <!--React Component -->
+          <rc-opc-tree close="cm.close" flow-id="cm.flowId" on-click-add="cm.onClickAddNodeTreeItem.bind(cm)">
+          </rc-opc-tree>
+        </div>
+      </div>
     </div>
 
-    <div class="opcua-edit-body">
-        <!-- tree -->
-        <div class="opcua-node-tree">
-            <div class="opcua-edit-container">
-                <div class="opcua-tree-title">
-                    OPC Server 노드 목록
-                </div>
-                <div class="opcua-tree-container">
-                    <!--React Component -->
-                    <rc-opc-tree close="cm.close" flow-id="cm.flowId" on-click-add="cm.onClickAddNodeTreeItem.bind(cm)">
-                    </rc-opc-tree>
-                </div>
-            </div>
+    <!-- table -->
+    <div class="opcua-node-table">
+
+      <div class="opc-node-table-header">
+        <span>페이지당 행수 : </span>
+        <span class="opc-node-page-rows">
+          <select class="opc-node-table-select" ng-model="cm.pagingNumber" ng-options="n as n for n in cm.selectOpts"
+            ng-change="cm.tOnSelectChange()">
+          </select>
+        </span>
+      </div>
+
+      <div class="opc-node-table-body">
+        <table>
+          <!-- header -->
+          <tr class="ts-table-header">
+            <th>No</th>
+            <th>Node Id</th>
+            <th>Display Name</th>
+            <!-- <th>option</th> -->
+            <th>
+              <button ng-click="cm.removeAllNode()">
+                option
+              </button>
+            </th>
+          </tr>
+          <!-- body -->
+          <tr class="ts-table-row" ng-repeat="item in cm.pageNode track by $index">
+            <td>{{ (cm.currPage * cm.pagingNumber) + $index + 1 }}</td>
+            <td>{{ item.nodeId }}</td>
+            <td>{{ item.displayName.text }}</td>
+            <td>
+              <button ng-click="cm.removeNode($index)">
+                <i class="tsi icon-ts-delete"></i>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- paging -->
+      <div class="opc-node-table-footer">
+        <div class="table-page-range">
+          <span>페이지 범위 : {{ cm.currPage * cm.pagingNumber + 1 }} -
+            {{ (cm.currPage * cm.pagingNumber) + cm.pagingNumber }} / 전체 : {{cm.nodes.length}}</span>
         </div>
-
-        <!-- table -->
-        <div class="opcua-node-table">
-
-            <div class="opc-node-table-header">
-                <span>페이지당 행수 : </span>
-                <span class="opc-node-page-rows">
-                    <select class="opc-node-table-select" ng-model="cm.pagingNumber" 
-                        ng-options="n as n for n in cm.selectOpts"
-                        ng-change="cm.tOnSelectChange()"
-                    >
-                    </select>
-                </span>
-            </div>
-
-            <div class="opc-node-table-body">
-                <table>
-                    <!-- header -->
-                    <tr class="ts-table-header">
-                        <th>No</th>
-                        <th>Node Id</th>
-                        <th>Display Name</th>
-                        <th>option</th>
-                    </tr>
-                    <!-- body -->
-                    <tr class="ts-table-row" ng-repeat="item in cm.pageNode track by $index">
-                        <td>{{ (cm.currPage * cm.pagingNumber) + $index + 1 }}</td>
-                        <td>{{ item.nodeId }}</td>
-                        <td>{{ item.displayName.text }}</td>
-                        <td>
-                            <button ng-click="cm.removeNode($index)">
-                                <i class="tsi icon-ts-delete"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- paging -->
-            <div class="opc-node-table-footer">
-                <div class="table-page-range">
-                    <span>페이지 범위 : {{ cm.currPage * cm.pagingNumber + 1 }} - {{ (cm.currPage * cm.pagingNumber) + cm.pagingNumber }} / 전체 : {{cm.nodes.length}}</span>
-                </div>
-                <div class="table-paging">
-                    <button ng-click="cm.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
-                    <button ng-click="cm.tSetPaging(page)" ng-repeat="page in cm.tGetPagingNumberArray() track by $index">
-                        <span class="{{page === cm.currPage ? 'blue' : ''}}">{{ page + 1}}</span>
-                    </button>
-                    <button ng-click="cm.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
-                </div>
-            </div>
-
+        <div class="table-paging">
+          <button ng-click="cm.tPrevPaging()"><i class="tsi icon-ts-chevron_left"></i></button>
+          <button ng-click="cm.tSetPaging(page)" ng-repeat="page in cm.tGetPagingNumberArray() track by $index">
+            <span class="{{page === cm.currPage ? 'blue' : ''}}">{{ page + 1}}</span>
+          </button>
+          <button ng-click="cm.tNextPaging()"><i class="tsi icon-ts-chevron_right"></i></button>
         </div>
+      </div>
+
     </div>
+  </div>
 </div>
