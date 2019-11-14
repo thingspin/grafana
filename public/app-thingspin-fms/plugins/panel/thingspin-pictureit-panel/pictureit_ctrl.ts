@@ -44,7 +44,6 @@ export class ThingspinPictureItCtrl extends MetricsPanelCtrl {
   };
 
   onDataReceived = (dataList: RecievedData[]) => {
-    console.log(dataList);
     const panel: PictureItPanelData = this.panel;
 
     panel.valueMaps = dataList.map(({ target, datapoints }) => ({
@@ -174,7 +173,6 @@ export class ThingspinPictureItCtrl extends MetricsPanelCtrl {
         sensor.valueFormatted = sprintf(format, valueMaps[idx].value);
       }
     }
-    console.log(this.panel.sensors, this.panel.valueMaps);
 
     for (const image of images) {
       const { xlocation, ylocation, size, imageMaps } = image;
