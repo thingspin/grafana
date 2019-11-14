@@ -1,5 +1,7 @@
 import _ from "lodash";
 import angular from 'angular';
+import { CoreEvents } from 'app/types';
+import appEvents from 'app/core/app_events';
 import { OpcNodeItem } from 'app-thingspin-fms/react/components/OpcNodeTree/walk';
 
 export class TsOpcUaNodeSetCtrl implements angular.IController {
@@ -34,9 +36,22 @@ export class TsOpcUaNodeSetCtrl implements angular.IController {
     }
 
     removeAllNode(): void {
-        this.nodes = [];
-        this.tCalcPaging();
-        this.setPageNodes();
+        appEvents.emit(CoreEvents.showConfirmModal, {
+            title: '모두 삭제',
+            text2: `추가하신 모든 수집 노드들을 전체 삭제 하시겠습니까?`,
+            icon: 'fa-trash',
+            yesText: "삭제",
+            noText: "취소",
+            onConfirm: async () => {
+                try {
+                    this.nodes = [];
+                    this.tCalcPaging();
+                    this.setPageNodes();
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+        });
     }
 
     setPageNodes() {
