@@ -161,7 +161,7 @@ export default class TsConnectManagementCtrl implements angular.IController {
     $onInit(): void {
         const cached = this.$templateCache.get(this.connectManager);
         if (cached !== undefined) {
-            this.tData.rowCount = cached;
+            this.tData.rowCount = this.$templateCache.get(this.connectManager);
         }
         this.asyncUpdateTypeList();
         this.asyncUpdateList().then(() => {
