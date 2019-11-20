@@ -4,16 +4,15 @@ import (
 	gfm "github.com/grafana/grafana/pkg/models"
 	//"encoding/json"
 	//"fmt"
-	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/bus"
-	"strconv"
-	influx "github.com/influxdata/influxdb1-client/v2"
+	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/setting"
+	influx "github.com/influxdata/influxdb1-client/v2"
 	"sort"
+	"strconv"
 	//m "github.com/grafana/grafana/pkg/models-thingspin"
 	//"reflect"
 )
-
 
 func getAllTsTag(c *gfm.ReqContext) Response {
 	returnList := []m.TsFacilityTreeItem{}
@@ -30,27 +29,27 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 
 	for _, siteInfo := range result.Result {
 		lev2Map[strconv.Itoa(siteInfo.Id)] = m.TsFacilityTreeItem{
-			SiteId: siteInfo.Id,
-			IsPtag : false,
-			FacilityName : siteInfo.Name,
-			Children : []m.TsFacilityTreeItem{},
-			Label : siteInfo.Name,
-			FacilityTreeOrder : forder,
-			Value: strconv.Itoa(tid),
+			SiteId:            siteInfo.Id,
+			IsPtag:            false,
+			FacilityName:      siteInfo.Name,
+			Children:          []m.TsFacilityTreeItem{},
+			Label:             siteInfo.Name,
+			FacilityTreeOrder: forder,
+			Value:             strconv.Itoa(tid),
 		}
-		forder = forder -1
-		tid = tid -1
-		// site with map 
+		forder = forder - 1
+		tid = tid - 1
+		// site with map
 		GetFacilityTreeData(siteInfo.Id, &returnList)
 	}
-	
+
 	// Sort all site data by facility order
-	sortReturnTreeData(returnList)	
+	sortReturnTreeData(returnList)
 
 	// append facility to site with map
 	for _, facility := range returnList {
 		c := lev2Map[strconv.Itoa(facility.SiteId)]
-		c.Children = append(c.Children,facility)
+		c.Children = append(c.Children, facility)
 		lev2Map[strconv.Itoa(facility.SiteId)] = c
 	}
 
@@ -69,10 +68,9 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 		Addr: influxHost,
 	})
 	if err != nil {
-		return Error(500, "Get ts connect query Error", err)
+		return Error(500, "can't connect InfluxDB Error", err)
 	}
 	defer cli.Close()
-	
 
 	// measurements
 	lev2Map = make(map[string]m.TsFacilityTreeItem)
@@ -80,9 +78,9 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 	// Query Ptaglist from Connect table
 	q := m.GetAllTsConnectQuery{}
 	if err := bus.Dispatch(&q); err != nil {
-		return Error(500, "Get ts connect query Error", err)
+		return Error(500, "Get ts connect table query Error", err)
 	}
-	
+
 	for _, cnode := range q.Result {
 		if val, ok := cnode.Params["PtagList"]; ok {
 			if len(cnode.Params["PtagList"].([]interface{})) > 0 {
@@ -93,52 +91,52 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 					if _, ok := lev2Map[cnode.Name]; ok {
 						// 이미 존재하는 것은 추가하지 않는다.
 						lv2 := lev2Map[cnode.Name]
-				
-						lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-							SiteId: -cnode.Id,
-							IsPtag : true,
-							IsValid : true,
-							TagId: tid,
-							TagTableName : msname,
-							TagColumnName : ptagMap["name"].(string),
-							TagColumnType : ptagMap["type"].(string),
-							TagName : ptagMap["name"].(string),
-							FacilityTreeOrder : len(lv2.Children) + 1,
-							Value: strconv.Itoa(tid),
-							Label : ptagMap["name"].(string),
-							Children : []m.TsFacilityTreeItem{},
+
+						lv2.Children = append(lv2.Children, m.TsFacilityTreeItem{
+							SiteId:            -cnode.Id,
+							IsPtag:            true,
+							IsValid:           true,
+							TagId:             tid,
+							TagTableName:      msname,
+							TagColumnName:     ptagMap["name"].(string),
+							TagColumnType:     ptagMap["type"].(string),
+							TagName:           ptagMap["name"].(string),
+							FacilityTreeOrder: len(lv2.Children) + 1,
+							Value:             strconv.Itoa(tid),
+							Label:             ptagMap["name"].(string),
+							Children:          []m.TsFacilityTreeItem{},
 						})
 						lev2Map[cnode.Name] = lv2
 						tid = tid - 1
-						
+
 					} else {
-						
+
 						tags := []m.TsFacilityTreeItem{}
-						tags = append(tags,  m.TsFacilityTreeItem {
-							SiteId: -cnode.Id,
-							IsPtag : true,
-							IsValid : true,
-							TagId: tid,
-							TagTableName : msname,
-							TagColumnName : ptagMap["name"].(string),
-							TagColumnType : ptagMap["type"].(string),
-							TagName : ptagMap["name"].(string),
-							FacilityTreeOrder : 1,
-							Value: strconv.Itoa(tid),
-							Label : ptagMap["name"].(string),
-							Children : []m.TsFacilityTreeItem{},
+						tags = append(tags, m.TsFacilityTreeItem{
+							SiteId:            -cnode.Id,
+							IsPtag:            true,
+							IsValid:           true,
+							TagId:             tid,
+							TagTableName:      msname,
+							TagColumnName:     ptagMap["name"].(string),
+							TagColumnType:     ptagMap["type"].(string),
+							TagName:           ptagMap["name"].(string),
+							FacilityTreeOrder: 1,
+							Value:             strconv.Itoa(tid),
+							Label:             ptagMap["name"].(string),
+							Children:          []m.TsFacilityTreeItem{},
 						})
-	
+
 						tid = tid - 1
-	
+
 						lev2Map[cnode.Name] = m.TsFacilityTreeItem{
-							SiteId: -cnode.Id,
-							IsPtag : true,
-							FacilityName : cnode.Name,
-							Children : tags,
-							Label : cnode.Name,
-							FacilityTreeOrder : forder,
-							Value: strconv.Itoa(tid),
+							SiteId:            -cnode.Id,
+							IsPtag:            true,
+							FacilityName:      cnode.Name,
+							Children:          tags,
+							Label:             cnode.Name,
+							FacilityTreeOrder: forder,
+							Value:             strconv.Itoa(tid),
 						}
 						forder = forder - 1
 						tid = tid - 1
@@ -147,19 +145,19 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 			} else {
 				if _, ok := lev2Map[cnode.Name]; !ok {
 					lev2Map[cnode.Name] = m.TsFacilityTreeItem{
-						SiteId: -cnode.Id,
-						IsPtag : true,
-						FacilityName : cnode.Name,
-						Children : []m.TsFacilityTreeItem{},
-						Label : cnode.Name,
-						FacilityTreeOrder : forder,
-						Value: strconv.Itoa(tid),
+						SiteId:            -cnode.Id,
+						IsPtag:            true,
+						FacilityName:      cnode.Name,
+						Children:          []m.TsFacilityTreeItem{},
+						Label:             cnode.Name,
+						FacilityTreeOrder: forder,
+						Value:             strconv.Itoa(tid),
 					}
 					forder = forder - 1
 					tid = tid - 1
 				}
 			}
-			
+
 		}
 	}
 
@@ -172,11 +170,11 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 	// level2 with level3 from influxDB to get the historical data
 	for _, ms := range cmd.Result {
 		msName := ms.Type + "_" + strconv.Itoa(ms.Id)
-		q := influx.NewQuery("SHOW FIELD KEYS ON thingspin from " + msName, "thingspin", "")
+		q := influx.NewQuery("SHOW FIELD KEYS ON thingspin from "+msName, "thingspin", "")
 		if response, err := cli.Query(q); err == nil && response.Error() == nil {
 			if len(response.Results) > 0 {
 				result := response.Results[0]
-				if  len(result.Series) > 0 {
+				if len(result.Series) > 0 {
 					serie := result.Series[0]
 					values := serie.Values
 					for _, v := range values {
@@ -191,31 +189,31 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 							}
 							// 히스토리 태그
 							if !hasCheck {
-								lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-									SiteId: -ms.Id,
-									IsPtag : true,
-									IsValid : false,
-									TagId: tid,
-									TagTableName : msName,
-									TagColumnName : v[0].(string),
-									TagColumnType : v[1].(string),
-									TagName : v[0].(string),
-									FacilityTreeOrder : len(lv2.Children) + 1,
-									Value: strconv.Itoa(tid),
-									Label : v[0].(string),
-									Children : []m.TsFacilityTreeItem{},
+								lv2.Children = append(lv2.Children, m.TsFacilityTreeItem{
+									SiteId:            -ms.Id,
+									IsPtag:            true,
+									IsValid:           false,
+									TagId:             tid,
+									TagTableName:      msName,
+									TagColumnName:     v[0].(string),
+									TagColumnType:     v[1].(string),
+									TagName:           v[0].(string),
+									FacilityTreeOrder: len(lv2.Children) + 1,
+									Value:             strconv.Itoa(tid),
+									Label:             v[0].(string),
+									Children:          []m.TsFacilityTreeItem{},
 								})
 								tid = tid - 1
-				
+
 							}
 							lev2Map[ms.Name] = lv2
-		
+
 						}
-					}	
+					}
 				}
-			}			
-		}else {
-			return Error(500, "Get ts connect query Error", err)
+			}
+		} else {
+			return Error(500, "can't find thingspin database in InfluxDB", err)
 		}
 	}
 
@@ -224,9 +222,9 @@ func getAllTsTag(c *gfm.ReqContext) Response {
 	}
 
 	sort.Slice(returnList, func(i, j int) bool {
-        return returnList[i].FacilityTreeOrder < returnList[j].FacilityTreeOrder
+		return returnList[i].FacilityTreeOrder < returnList[j].FacilityTreeOrder
 	})
-	
+
 	return JSON(200, returnList)
 }
 
@@ -245,7 +243,7 @@ func getTsPtag(c *gfm.ReqContext) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 	defer cli.Close()
-	
+
 	var tagList = []m.TsFacilityTreeItem{}
 	lev2Map := make(map[string]m.TsFacilityTreeItem)
 
@@ -263,63 +261,63 @@ func getTsPtag(c *gfm.ReqContext) Response {
 		if _, ok := lev2Map[conn.Result.Name]; ok {
 			// 이미 존재하는 것은 추가하지 않는다.
 			lv2 := lev2Map[conn.Result.Name]
-			
-			lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-				SiteId: connId,
-				IsPtag : true,
-				IsValid : true,
-				TagId: tid,
-				TagTableName : msname,
-				TagColumnName : ptagMap["name"].(string),
-				TagColumnType : ptagMap["type"].(string),
-				TagName : ptagMap["name"].(string),
-				FacilityTreeOrder : len(lv2.Children) + 1,
-				Value: strconv.Itoa(uid),
-				Label : ptagMap["name"].(string),
-				Children : []m.TsFacilityTreeItem{},
+
+			lv2.Children = append(lv2.Children, m.TsFacilityTreeItem{
+				SiteId:            connId,
+				IsPtag:            true,
+				IsValid:           true,
+				TagId:             tid,
+				TagTableName:      msname,
+				TagColumnName:     ptagMap["name"].(string),
+				TagColumnType:     ptagMap["type"].(string),
+				TagName:           ptagMap["name"].(string),
+				FacilityTreeOrder: len(lv2.Children) + 1,
+				Value:             strconv.Itoa(uid),
+				Label:             ptagMap["name"].(string),
+				Children:          []m.TsFacilityTreeItem{},
 			})
 			uid = uid + 1
 			tid = tid - 1
 			lev2Map[conn.Result.Name] = lv2
-			
+
 		} else {
 			tags := []m.TsFacilityTreeItem{}
-			tags = append(tags,  m.TsFacilityTreeItem {
-				SiteId: connId,
-				IsPtag : true,
-				IsValid : true,
-				TagId: tid,
-				TagTableName : msname,
-				TagColumnName : ptagMap["name"].(string),
-				TagColumnType : ptagMap["type"].(string),
-				TagName : ptagMap["name"].(string),
-				FacilityTreeOrder : 1,
-				Value: strconv.Itoa(uid),
-				Label : ptagMap["name"].(string),
-				Children : []m.TsFacilityTreeItem{},
+			tags = append(tags, m.TsFacilityTreeItem{
+				SiteId:            connId,
+				IsPtag:            true,
+				IsValid:           true,
+				TagId:             tid,
+				TagTableName:      msname,
+				TagColumnName:     ptagMap["name"].(string),
+				TagColumnType:     ptagMap["type"].(string),
+				TagName:           ptagMap["name"].(string),
+				FacilityTreeOrder: 1,
+				Value:             strconv.Itoa(uid),
+				Label:             ptagMap["name"].(string),
+				Children:          []m.TsFacilityTreeItem{},
 			})
 			uid = uid + 1
 			tid = tid - 1
 			lev2Map[conn.Result.Name] = m.TsFacilityTreeItem{
-				SiteId: connId,
-				IsPtag : true,
-				IsValid : true,
-				FacilityName : conn.Result.Name,
-				Children : tags,
-				Value: strconv.Itoa(uid),
-				Label : conn.Result.Name,
-				TagId: 0,
+				SiteId:       connId,
+				IsPtag:       true,
+				IsValid:      true,
+				FacilityName: conn.Result.Name,
+				Children:     tags,
+				Value:        strconv.Itoa(uid),
+				Label:        conn.Result.Name,
+				TagId:        0,
 			}
 			uid = uid + 1
 		}
 	}
 
 	msName := conn.Result.Type + "_" + strconv.Itoa(conn.Result.Id)
-	q := influx.NewQuery("SHOW FIELD KEYS ON thingspin from " + msName, "thingspin", "")
+	q := influx.NewQuery("SHOW FIELD KEYS ON thingspin from "+msName, "thingspin", "")
 	if response, err := cli.Query(q); err == nil && response.Error() == nil {
 		if len(response.Results) > 0 {
 			result := response.Results[0]
-			if  len(result.Series) > 0 {
+			if len(result.Series) > 0 {
 				serie := result.Series[0]
 				values := serie.Values
 				for _, v := range values {
@@ -334,29 +332,29 @@ func getTsPtag(c *gfm.ReqContext) Response {
 						}
 						// 히스토리 태그
 						if !hasCheck {
-							lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-								SiteId: connId,
-								IsPtag : true,
-								IsValid : false,
-								TagId: tid,
-								TagTableName : msName,
-								TagColumnName : v[0].(string),
-								TagColumnType : v[1].(string),
-								TagName : v[0].(string),
-								Value: strconv.Itoa(uid),
-								FacilityTreeOrder : len(lv2.Children) + 1,
-								Children : []m.TsFacilityTreeItem{},
+							lv2.Children = append(lv2.Children, m.TsFacilityTreeItem{
+								SiteId:            connId,
+								IsPtag:            true,
+								IsValid:           false,
+								TagId:             tid,
+								TagTableName:      msName,
+								TagColumnName:     v[0].(string),
+								TagColumnType:     v[1].(string),
+								TagName:           v[0].(string),
+								Value:             strconv.Itoa(uid),
+								FacilityTreeOrder: len(lv2.Children) + 1,
+								Children:          []m.TsFacilityTreeItem{},
 							})
 							uid = uid + 1
 							tid = tid - 1
 						}
 						lev2Map[conn.Result.Name] = lv2
-	
+
 					}
-				}	
+				}
 			}
-		}	
-	}		
+		}
+	}
 
 	for _, node := range lev2Map {
 		tagList = append(tagList, node)
@@ -375,7 +373,6 @@ func getAllTsConnectName(c *gfm.ReqContext) Response {
 	return JSON(200, q.Result)
 }
 
-
 // For tree
 func getAllTsConnectInfo(c *gfm.ReqContext) Response {
 	// Get all measurements from FMS_connect
@@ -383,7 +380,7 @@ func getAllTsConnectInfo(c *gfm.ReqContext) Response {
 	if err := bus.Dispatch(&cmd); err != nil {
 		return Error(500, "[thingspin] Tagdefine get command failed", err)
 	}
-	
+
 	err, result := getAllTsTagInfo(cmd.Result)
 	if err != nil {
 		return Error(500, "[thingspin] Tagdefine get command failed", err)
@@ -403,7 +400,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 		return err, nil
 	}
 	defer cli.Close()
-	
+
 	var tagList = []m.TsFacilityTreeItem{}
 
 	// measurements
@@ -436,7 +433,7 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 	if err := bus.Dispatch(&q); err != nil {
 		return err, nil
 	}
-	
+
 	forder := 0
 	//fmt.Println(q.Result)
 	for _, cnode := range q.Result {
@@ -451,85 +448,85 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 					if _, ok := lev2Map[cnode.Name]; ok {
 						// 이미 존재하는 것은 추가하지 않는다.
 						lv2 := lev2Map[cnode.Name]
-				
-						lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-							SiteId: cnode.Id,
-							IsPtag : true,
-							IsValid : true,
-							TagId: tid,
-							TagTableName : msname,
-							TagColumnName : ptagMap["name"].(string),
-							TagColumnType : ptagMap["type"].(string),
-							TagName : ptagMap["name"].(string),
-							FacilityTreeOrder : len(lv2.Children) + 1,
-							Value: strconv.Itoa(uid),
-							Label : ptagMap["name"].(string),
-							Children : []m.TsFacilityTreeItem{},
+
+						lv2.Children = append(lv2.Children, m.TsFacilityTreeItem{
+							SiteId:            cnode.Id,
+							IsPtag:            true,
+							IsValid:           true,
+							TagId:             tid,
+							TagTableName:      msname,
+							TagColumnName:     ptagMap["name"].(string),
+							TagColumnType:     ptagMap["type"].(string),
+							TagName:           ptagMap["name"].(string),
+							FacilityTreeOrder: len(lv2.Children) + 1,
+							Value:             strconv.Itoa(uid),
+							Label:             ptagMap["name"].(string),
+							Children:          []m.TsFacilityTreeItem{},
 						})
 						tid = tid - 1
 						uid = uid + 1
 						lev2Map[cnode.Name] = lv2
-						
+
 					} else {
 						forder = forder + 1
 						tags := []m.TsFacilityTreeItem{}
-						tags = append(tags,  m.TsFacilityTreeItem {
-							SiteId: cnode.Id,
-							IsPtag : true,
-							IsValid : true,
-							TagId: tid,
-							TagTableName : msname,
-							TagColumnName : ptagMap["name"].(string),
-							TagColumnType : ptagMap["type"].(string),
-							TagName : ptagMap["name"].(string),
-							FacilityTreeOrder : 1,
-							Value: strconv.Itoa(uid),
-							Label : ptagMap["name"].(string),
-							Children : []m.TsFacilityTreeItem{},
+						tags = append(tags, m.TsFacilityTreeItem{
+							SiteId:            cnode.Id,
+							IsPtag:            true,
+							IsValid:           true,
+							TagId:             tid,
+							TagTableName:      msname,
+							TagColumnName:     ptagMap["name"].(string),
+							TagColumnType:     ptagMap["type"].(string),
+							TagName:           ptagMap["name"].(string),
+							FacilityTreeOrder: 1,
+							Value:             strconv.Itoa(uid),
+							Label:             ptagMap["name"].(string),
+							Children:          []m.TsFacilityTreeItem{},
 						})
-	
+
 						uid = uid + 1
 						tid = tid - 1
-	
+
 						lev2Map[cnode.Name] = m.TsFacilityTreeItem{
-							SiteId: cnode.Id,
-							IsPtag : true,
-							FacilityName : cnode.Name,
-							Children : tags,
-							Label : cnode.Type,
-							FacilityTreeOrder : forder,
-							Value: strconv.Itoa(uid),
+							SiteId:            cnode.Id,
+							IsPtag:            true,
+							FacilityName:      cnode.Name,
+							Children:          tags,
+							Label:             cnode.Type,
+							FacilityTreeOrder: forder,
+							Value:             strconv.Itoa(uid),
 						}
 						uid = uid + 1
 					}
 				}
-			}else {
+			} else {
 				if _, ok := lev2Map[cnode.Name]; !ok {
 					lev2Map[cnode.Name] = m.TsFacilityTreeItem{
-						SiteId: cnode.Id,
-						IsPtag : true,
-						FacilityName : cnode.Name,
-						Children : []m.TsFacilityTreeItem{},
-						Label : cnode.Name,
-						FacilityTreeOrder : forder,
-						Value: strconv.Itoa(uid),
+						SiteId:            cnode.Id,
+						IsPtag:            true,
+						FacilityName:      cnode.Name,
+						Children:          []m.TsFacilityTreeItem{},
+						Label:             cnode.Name,
+						FacilityTreeOrder: forder,
+						Value:             strconv.Itoa(uid),
 					}
 					forder = forder - 1
 					uid = uid + 1
 				}
 			}
-			
+
 		}
 	}
 
 	// level2 with level3 from influxDB to get the historical data
 	for _, ms := range conInfo {
 		msName := ms.Type + "_" + strconv.Itoa(ms.Id)
-		q := influx.NewQuery("SHOW FIELD KEYS ON thingspin from " + msName, "thingspin", "")
+		q := influx.NewQuery("SHOW FIELD KEYS ON thingspin from "+msName, "thingspin", "")
 		if response, err := cli.Query(q); err == nil && response.Error() == nil {
 			if len(response.Results) > 0 {
 				result := response.Results[0]
-				if  len(result.Series) > 0 {
+				if len(result.Series) > 0 {
 					serie := result.Series[0]
 					values := serie.Values
 					for _, v := range values {
@@ -544,45 +541,43 @@ func getAllTsTagInfo(conInfo []*m.FmsConnectQueryResult) (error, *m.GetFmsTagDef
 							}
 							// 히스토리 태그
 							if !hasCheck {
-								lv2.Children = append(lv2.Children, m.TsFacilityTreeItem {
-									SiteId: ms.Id,
-									IsPtag : true,
-									IsValid : false,
-									TagId: tid,
-									TagTableName : msName,
-									TagColumnName : v[0].(string),
-									TagColumnType : v[1].(string),
-									TagName : v[0].(string),
-									FacilityTreeOrder : len(lv2.Children) + 1,
-									Value: strconv.Itoa(uid),
-									Label : v[0].(string),
-									Children : []m.TsFacilityTreeItem{},
+								lv2.Children = append(lv2.Children, m.TsFacilityTreeItem{
+									SiteId:            ms.Id,
+									IsPtag:            true,
+									IsValid:           false,
+									TagId:             tid,
+									TagTableName:      msName,
+									TagColumnName:     v[0].(string),
+									TagColumnType:     v[1].(string),
+									TagName:           v[0].(string),
+									FacilityTreeOrder: len(lv2.Children) + 1,
+									Value:             strconv.Itoa(uid),
+									Label:             v[0].(string),
+									Children:          []m.TsFacilityTreeItem{},
 								})
 								tid = tid - 1
 								uid = uid + 1
 							}
 							lev2Map[ms.Name] = lv2
-		
+
 						}
-					}	
+					}
 				}
-			}			
-		}else {
+			}
+		} else {
 			return err, nil
 		}
 	}
-
-	
 
 	for _, node := range lev2Map {
 		tagList = append(tagList, node)
 	}
 
 	sort.Slice(tagList, func(i, j int) bool {
-        return tagList[i].FacilityTreeOrder < tagList[j].FacilityTreeOrder
-    })
+		return tagList[i].FacilityTreeOrder < tagList[j].FacilityTreeOrder
+	})
 
 	return nil, &m.GetFmsTagDefineQuery{
-		Result : tagList,
+		Result: tagList,
 	}
 }
