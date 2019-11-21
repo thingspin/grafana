@@ -247,7 +247,7 @@ export class JupyterSrv {
     const res: DataFrame[] = [];
     for (const target in obj) {
       const values: any[] = obj[target];
-      const times = values.map((_: any, i: number) => now - i);
+      const times = values.map((_: any, i: number) => now - (i * 1000));
 
       res.push({
         name: target,
