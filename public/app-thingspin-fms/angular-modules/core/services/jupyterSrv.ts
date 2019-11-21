@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Kernel, ServerConnection } from '@jupyterlab/services';
 
 // Grafana libs
-import { DataFrame } from '@grafana/data';
+import { DataFrame, FieldType, ArrayVector, TimeSeriesValue } from '@grafana/data';
 import { coreModule, Emitter } from 'app/core/core';
 import { BackendSrv } from 'app/core/services/backend_srv';
 
@@ -78,7 +78,7 @@ export class JupyterSrv {
     const signals = [];
     const names = [];
     for (const { datapoints, target } of result.data) {
-      signals.push(datapoints.map(([ point ]: any[]) => point));
+      signals.push(datapoints.map(([point]: any[]) => point));
       names.push(target);
     }
 
@@ -241,9 +241,36 @@ export class JupyterSrv {
     return datas;
   };
 
-  onReceivedFrameData = (obj: any, result: DataFrame[]) => {
-    //const now = new Date().getTime(); // ms
-    console.log(obj, result);
+  onReceivedFrameData = (obj: any, results: DataFrame[]) => {
+    const now = new Date().getTime(); // ms
+
+    const res: DataFrame[] = [];
+    for (const target in obj) {
+      const values: any[] = obj[target];
+      const times = values.map((_: any, i: number) => now - i);
+
+      res.push({
+        name: target,
+        refId: 'A',
+        fields: [
+          {
+            name: target || 'Value',
+            type: FieldType.number,
+            config: {},
+            values: new ArrayVector<TimeSeriesValue>(values),
+          },
+          {
+            name: 'Time',
+            type: FieldType.time,
+            config: {},
+            values: new ArrayVector<number>(times),
+          },
+        ],
+        length: values.length,
+      });
+    }
+
+    return res;
   };
 }
 

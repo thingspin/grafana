@@ -65,7 +65,7 @@ export default class TsMetricsPanelCtrl extends MetricsPanelCtrl {
     try {
       if (this.panel.enableScript && this.panel.scripts) {
         const script = this.jupyterSrv.changeDataFrameScript(data, this.panel);
-        this.runAnalytricsScript(data, script);
+        this.runFrameAnalytricsScript(data, script);
         return;
       }
 
@@ -95,6 +95,33 @@ export default class TsMetricsPanelCtrl extends MetricsPanelCtrl {
           const res = await this.jupyterSrv.runJupyterScript(result, kernel.replace('_j', ''), script, this);
           if (Array.isArray(res) && res.length) {
             this.events.emit(PanelEvents.dataReceived, res);
+          }
+        } catch (e) {
+          appEvents.emit(AppEvents.alertError, e);
+        }
+        break;
+      default: break;
+    }
+  }
+
+  async runFrameAnalytricsScript(result: any, script: any) {
+    const { kernel }: { kernel: string } = this.panel;
+
+    switch (kernel) {
+      case 'ir':
+      case 'python3':
+        const res = await this.jupyterSrv.runNativeScript(result, kernel, script, this.events);
+        if (res.length) {
+          this.events.emit(CoreEvents.dataFramesReceived, res);
+        }
+        break;
+      case 'ir_j':
+      case 'python3_j':
+      case 'octave_j':
+        try {
+          const res = await this.jupyterSrv.runJupyterScript(result, kernel.replace('_j', ''), script, this);
+          if (Array.isArray(res) && res.length) {
+            this.events.emit(CoreEvents.dataFramesReceived, res);
           }
         } catch (e) {
           appEvents.emit(AppEvents.alertError, e);
