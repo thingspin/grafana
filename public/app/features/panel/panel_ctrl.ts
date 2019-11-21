@@ -55,7 +55,11 @@ export class PanelCtrl {
       this.pluginName = plugin.name;
     }
 
+    /* thingspin edit code ------
     $scope.$on(PanelEvents.componentDidMount.name, () => this.panelDidMount());
+    */
+    $scope.$on(PanelEvents.componentDidMount, () => this.panelDidMount());
+    /* thingspin edit code ------ */
   }
 
   panelDidMount() {
@@ -303,5 +307,5 @@ export class PanelCtrl {
   }
 
   // overriden from react
-  onPluginTypeChange = (plugin: PanelPluginMeta) => {};
+  onPluginTypeChange = (plugin: PanelPluginMeta) => { };
 }
