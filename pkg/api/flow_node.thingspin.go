@@ -6,7 +6,7 @@ import (
 	"github.com/grafana/grafana/pkg/bus"
 	gfm "github.com/grafana/grafana/pkg/models"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
-	"github.com/grafana/grafana/pkg/thingspin"
+	thingspin "github.com/grafana/grafana/pkg/thingspin/node"
 )
 
 func GetFmsDatastreams(c *gfm.ReqContext) Response {

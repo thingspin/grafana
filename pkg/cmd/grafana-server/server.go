@@ -43,10 +43,12 @@ import (
 	"golang.org/x/xerrors"
 
 	// thingspin add code -----
-	_ "github.com/grafana/grafana/pkg/services/thingspin"
-	_ "github.com/grafana/grafana/pkg/services/thingspinStream"
-	_ "github.com/grafana/grafana/pkg/thingspin/drone"
+	//_ "github.com/grafana/grafana/pkg/services/thingspin/node"
+	_ "github.com/grafana/grafana/pkg/thingspin/stream"
+
+	//_ "github.com/grafana/grafana/pkg/thingspin/drone"
 	_ "github.com/grafana/grafana/pkg/thingspin/micro"
+	_ "github.com/grafana/grafana/pkg/thingspin/node"
 )
 
 // NewServer returns a new instance of Server.
@@ -106,7 +108,7 @@ func (s *Server) Run() (err error) {
 			continue
 		}
 
-		s.log.Info("Initializing " + service.Name)
+		s.log.Info("Initializing service", "name", service.Name)
 
 		if err := service.Instance.Init(); err != nil {
 			return fmt.Errorf("Service init failed: %v", err)

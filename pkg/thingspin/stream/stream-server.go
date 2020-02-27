@@ -1,6 +1,8 @@
-package thingspinStream
+package stream
 
 import (
+	"context"
+
 	"github.com/grafana/grafana/pkg/api"
 	"github.com/grafana/grafana/pkg/infra/log"
 	"github.com/grafana/grafana/pkg/registry"
@@ -15,7 +17,6 @@ type ThingspinStreamService struct {
 }
 
 func init() {
-	busInit()
 
 	registry.RegisterService(&ThingspinStreamService{
 		isRunSimulator: false,
@@ -24,11 +25,18 @@ func init() {
 }
 
 func (stream *ThingspinStreamService) Init() error {
+	return nil
+}
+
+func (stream *ThingspinStreamService) Run(ctx context.Context) error {
 	streamService = stream
+
+	busInit()
 
 	if stream.isRunSimulator {
 		runSimulator()
 	}
 
+	<-ctx.Done()
 	return nil
 }

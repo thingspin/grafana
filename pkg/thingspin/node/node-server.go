@@ -1,13 +1,14 @@
-package thingspin
+package node
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/grafana/grafana/pkg/bus"
 	"github.com/grafana/grafana/pkg/infra/log"
 	m "github.com/grafana/grafana/pkg/models-thingspin"
 	"github.com/grafana/grafana/pkg/registry"
-	nr "github.com/grafana/grafana/pkg/thingspin"
+	//nr "github.com/grafana/grafana/pkg/thingspin/node"
 )
 
 // interfaces //
@@ -29,26 +30,54 @@ func init() {
 
 func (mgr *ThingspinNodeRedService) Init() (err error) {
 	// get Flows in node-red server
+
+	// flows, err := getNrTabFlows()
+	// if err != nil {
+	// 	mgr.log.Error("ThingSPIN Node ervice", "message", "Connect to NodeRED: Failed!")
+	// 	return
+	// }
+	// mgr.flowIds = flows
+
+	// // apply not created connection flow
+	// updatedConns, err := mgr.applyFlow(flows)
+	// if err != nil {
+	// 	return
+	// }
+
+	// // update connection table in thingspin(sqlite3) database
+	// for _, conn := range updatedConns {
+	// 	if err = bus.Dispatch(&conn); err != nil {
+	// 		return
+	// 	}
+	// }
+
+	return
+}
+
+func (s *ThingspinNodeRedService) Run(ctx context.Context) error {
+
 	flows, err := getNrTabFlows()
 	if err != nil {
-		return
+		s.log.Error("ThingSPIN Node ervice", "message", "Connect to NodeRED: Failed!")
+		return err
 	}
-	mgr.flowIds = flows
+	s.flowIds = flows
 
 	// apply not created connection flow
-	updatedConns, err := mgr.applyFlow(flows)
+	updatedConns, err := s.applyFlow(flows)
 	if err != nil {
-		return
+		return err
 	}
 
 	// update connection table in thingspin(sqlite3) database
 	for _, conn := range updatedConns {
 		if err = bus.Dispatch(&conn); err != nil {
-			return
+			return err
 		}
 	}
 
-	return
+	<-ctx.Done()
+	return nil
 }
 
 func (mgr *ThingspinNodeRedService) ExistFlow(conn m.TsConnectField) bool {
@@ -74,7 +103,7 @@ func (mgr *ThingspinNodeRedService) applyFlow(flows []string) (result []m.TsConn
 		if !mgr.ExistFlow(conn) {
 			// add flow in node-red server
 			mgr.log.Info("node-red", "apply-node", conn.Name)
-			resp, err := nr.AddFlowNode(conn.Type, &conn)
+			resp, err := AddFlowNode(conn.Type, &conn)
 			if err != nil {
 				break
 			}
@@ -107,7 +136,7 @@ func getConnects() (result []m.TsConnectField, err error) {
 
 func getNrTabFlows() (result []string, err error) {
 	// get Flows in node-red server
-	flows, err := nr.GetFlows()
+	flows, err := GetFlows()
 	if err != nil {
 		return
 	}

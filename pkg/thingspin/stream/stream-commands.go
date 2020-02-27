@@ -1,4 +1,4 @@
-package thingspinStream
+package stream
 
 import (
 	"time"

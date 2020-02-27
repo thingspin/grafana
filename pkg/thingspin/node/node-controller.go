@@ -1,4 +1,4 @@
-package thingspin
+package node
 
 import (
 	"bytes"

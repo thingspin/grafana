@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/grafana/grafana/pkg/thingspin"
 	"github.com/grafana/grafana/pkg/setting"
+	thingspin "github.com/grafana/grafana/pkg/thingspin/node"
 
 	"github.com/grafana/grafana/pkg/bus"
 	gfm "github.com/grafana/grafana/pkg/models"
@@ -107,7 +107,7 @@ func addTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 
-	q1 := m.AddTsConnectHistoryQuery {
+	q1 := m.AddTsConnectHistoryQuery{
 		ConnectId:   int(q.Result),
 		Event:       "연결 생성",
 		Description: "최초 연결 추가",
@@ -166,7 +166,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 	var q1 m.AddTsConnectHistoryQuery
 
 	if info.Params["RequestMsg"] != nil {
-		q1.ConnectId = connId 
+		q1.ConnectId = connId
 		q1.Event = fmt.Sprint(info.Params["RequestMsg"])
 		q1.Description = fmt.Sprintf("동작 상태 : %t ", info.Enable)
 	} else {
@@ -174,7 +174,7 @@ func updateTsConnect(c *gfm.ReqContext, req m.TsConnectReq) Response {
 		q1.Event = "연결 내역"
 		q1.Description = fmt.Sprintf("변경")
 	}
-	
+
 	if prevData.ConnectId == q1.ConnectId {
 		if prevData.Event == q1.Event {
 			prevData.ConnectId = 0
@@ -241,7 +241,7 @@ func activeTsConnect(c *gfm.ReqContext) Response {
 }
 
 func licenseChecker(addItem *m.TsConnectField) string {
-	q := m.CountActivationQuery {}
+	q := m.CountActivationQuery{}
 
 	if err := bus.Dispatch(&q); err != nil {
 		fmt.Printf("%v", err)
@@ -270,7 +270,7 @@ func licenseChecker(addItem *m.TsConnectField) string {
 	}
 
 	if licenseConnt == totalCount {
-		return "총 구동할 수 있는 연결을 다 이용하셨습니다.";
+		return "총 구동할 수 있는 연결을 다 이용하셨습니다."
 	} else {
 		if licenseNodeConnt < nodeCount {
 			return "총 추가할 수 있는 수집노드를 다 이용하셨습니다."
@@ -291,7 +291,7 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 	if req.Enable == true {
 		licenseMsg := licenseChecker(info)
 		if len(licenseMsg) > 0 {
-			return Error(500, licenseMsg, errors.New("") )
+			return Error(500, licenseMsg, errors.New(""))
 		}
 	}
 
@@ -326,7 +326,7 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 		return Error(500, "ThingSPIN Store Error", err)
 	}
 	if info.Enable == true {
-		q1 := m.AddTsConnectHistoryQuery {
+		q1 := m.AddTsConnectHistoryQuery{
 			ConnectId:   connId,
 			Event:       "연결 동작",
 			Description: fmt.Sprintf("시작"),
@@ -334,7 +334,7 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 		if err := bus.Dispatch(&q1); err != nil {
 			return Error(500, "ThingSPIN Store Error", err)
 		}
-	
+
 	} else {
 		if historyMap != nil {
 			prevHistory := historyMap[prevHistory.Id]
@@ -350,7 +350,7 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 			historyMap[prevHistory.Id] = prevHistory
 		}
 
-		q1 := m.AddTsConnectHistoryQuery {
+		q1 := m.AddTsConnectHistoryQuery{
 			ConnectId:   connId,
 			Event:       "연결 동작",
 			Description: fmt.Sprintf("정지"),
@@ -358,7 +358,7 @@ func enableTsConnect(c *gfm.ReqContext, req m.EnableTsConnectReq) Response {
 		if err := bus.Dispatch(&q1); err != nil {
 			return Error(500, "ThingSPIN Store Error", err)
 		}
-	
+
 	}
 
 	return JSON(200, info.Id)
@@ -405,7 +405,7 @@ func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
 	}
 
 	if info.Publish == true {
-		q1 := m.AddTsConnectHistoryQuery {
+		q1 := m.AddTsConnectHistoryQuery{
 			ConnectId:   connId,
 			Event:       "연결 발행",
 			Description: fmt.Sprintf("시작"),
@@ -414,7 +414,7 @@ func toggleMqttPublishTsConnect(c *gfm.ReqContext) Response {
 			return Error(500, "ThingSPIN Store Error", err)
 		}
 	} else {
-		q1 := m.AddTsConnectHistoryQuery {
+		q1 := m.AddTsConnectHistoryQuery{
 			ConnectId:   connId,
 			Event:       "연결 발행",
 			Description: fmt.Sprintf("정지"),
@@ -448,10 +448,10 @@ func deleteTsConnect(c *gfm.ReqContext) Response {
 		return Error(nodeResp.StatusCode, "ThingSPIN Connect Error", err)
 	}
 
-	q1 := m.DeleteTsConnectHistoryQuery {
-		ConnectId:      info.Id,
+	q1 := m.DeleteTsConnectHistoryQuery{
+		ConnectId: info.Id,
 	}
-	
+
 	bus.Dispatch(&q1)
 
 	// remove Connect Table Row
@@ -478,8 +478,8 @@ func getTsConnectType(c *gfm.ReqContext) Response {
 func getTsConnectHistory(c *gfm.ReqContext) Response {
 	connId := c.ParamsInt(":connId")
 
-	q1 := m.GetAllTsConnectHistoryQuery {
-		ConnectId:      connId,
+	q1 := m.GetAllTsConnectHistoryQuery{
+		ConnectId: connId,
 	}
 
 	if err := bus.Dispatch(&q1); err != nil {
@@ -489,9 +489,8 @@ func getTsConnectHistory(c *gfm.ReqContext) Response {
 	return JSON(200, q1.Result)
 }
 
-
 func getTsConnectTotalHistory(c *gfm.ReqContext) Response {
-	q1 := m.GetTotalTsConnectHistoryQuery {}
+	q1 := m.GetTotalTsConnectHistoryQuery{}
 
 	if err := bus.Dispatch(&q1); err != nil {
 		return Error(500, "ThingSPIN Store Error", err)
@@ -501,7 +500,7 @@ func getTsConnectTotalHistory(c *gfm.ReqContext) Response {
 }
 
 func postTsConnectHistory(c *gfm.ReqContext, req m.TsConnectHistoryReq) Response {
-	if  historyMap == nil {
+	if historyMap == nil {
 		historyMap = make(map[int]m.TsConnectHistoryReq)
 	}
 
@@ -511,7 +510,7 @@ func postTsConnectHistory(c *gfm.ReqContext, req m.TsConnectHistoryReq) Response
 
 	if len(req.Connect) > 0 {
 		if prevHistory.Connect != req.Connect {
-			q1 := m.AddTsConnectHistoryQuery {
+			q1 := m.AddTsConnectHistoryQuery{
 				ConnectId:   req.Id,
 				Event:       "서버 상태",
 				Description: fmt.Sprintf(req.Connect),
@@ -524,7 +523,7 @@ func postTsConnectHistory(c *gfm.ReqContext, req m.TsConnectHistoryReq) Response
 	}
 	if len(req.MQTT) > 0 {
 		if prevHistory.MQTT != req.MQTT {
-			q1 := m.AddTsConnectHistoryQuery {
+			q1 := m.AddTsConnectHistoryQuery{
 				ConnectId:   req.Id,
 				Event:       "발행 상태",
 				Description: fmt.Sprintf(req.MQTT),
@@ -537,7 +536,7 @@ func postTsConnectHistory(c *gfm.ReqContext, req m.TsConnectHistoryReq) Response
 	}
 	if len(req.Db) > 0 {
 		if prevHistory.Db != req.Db {
-			q1 := m.AddTsConnectHistoryQuery {
+			q1 := m.AddTsConnectHistoryQuery{
 				ConnectId:   req.Id,
 				Event:       "데이터 상태",
 				Description: fmt.Sprintf(req.Db),
@@ -552,4 +551,4 @@ func postTsConnectHistory(c *gfm.ReqContext, req m.TsConnectHistoryReq) Response
 	historyMap[req.Id] = prevHistory
 
 	return JSON(200, "OK")
-} 
+}
