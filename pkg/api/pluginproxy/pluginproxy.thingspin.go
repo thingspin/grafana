@@ -46,7 +46,7 @@ func NewWebsocketProxy(target *url.URL) *WebsocketProxy {
 
 	return &WebsocketProxy{
 		Backend: backend,
-		log:     log.New("thingspin.websocketProxy"),
+		log:     log.New("plugin.proxy.websocket"),
 	}
 }
 

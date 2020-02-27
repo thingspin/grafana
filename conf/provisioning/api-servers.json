@@ -7,7 +7,7 @@
     {
       "name": "API Example Node",
       "api": "api/hello",
-      "enable": true,
+      "enable": false,
       "url": "http://localhost:5555",
       "run": true,
       "shell": "node",
@@ -24,9 +24,9 @@
       "run": false
     },
     {
-      "name": "ThingSPIN Local MQTT Broker",
+      "name": "ThingSPIN Local MQTT Broker (SHOULD BE ENABELD)",
       "api": "thingspin-proxy/mqtt",
-      "enable": true,
+      "enable": false,
       "url": "ws://localhost:1884",
       "attachURL": true,
       "run": false
