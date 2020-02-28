@@ -8,10 +8,29 @@
       "text": "홈",
       "icon": "fa fa-fw fa-home",
       "url": "/",
-      "hideFromMenu": false,
+      "hideFromMenu": true,
       "placeBottom": false,
       "canDelete": false,
       "children": [
+      ]
+    },
+    {
+      "text": "대시보드",
+      "icon": "gicon gicon-dashboard",
+      "url": "/",
+      "hideFromMenu": false,
+      "placeBottom": false,
+      "children" : [
+        {
+          "text": "추가",
+          "icon": "gicon gicon-dashboard-new",
+          "url": "/dashboard/new"
+        },
+        {
+          "text": "관리",
+          "icon": "gicon gicon-manage",
+          "url": "/dashboards"
+        }
       ]
     },
     {
@@ -82,27 +101,7 @@
           "children": []
         }
       ]
-    },    
-    {
-      "text": "대시보드",
-      "icon": "gicon gicon-dashboard",
-      "url": "/",
-      "hideFromMenu": false,
-      "placeBottom": true,
-      "children" : [
-        {
-          "text": "추가",
-          "icon": "gicon gicon-dashboard-new",
-          "url": "/dashboard/new"
-        },
-        {
-          "text": "관리",
-          "icon": "gicon gicon-manage",
-          "url": "/dashboards"
-        }
-      ]
     },
-
     {
       "text": "Edge AI",
       "icon": "gicon gicon-shield",
