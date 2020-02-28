@@ -19,7 +19,7 @@
       "icon": "fa fa-sitemap",
       "url": "/thingspin/manage/data/connect",
       "hideFromMenu": false,
-      "placeBottom": false,
+      "placeBottom": true,
       "canDelete": false,
       "children": [      
         {
@@ -39,7 +39,7 @@
       ]
     },
     {
-      "text": "설비 모니터링",
+      "text": "모니터링",
       "icon": "fa fa-bar-chart",
       "url": "/thingspin/manage/monitoring",
       "canDelete": false,
@@ -50,7 +50,7 @@
       "icon": "fa fa-bell",
       "url": "/thingspin/alarm",
       "hideFromMenu": false,
-      "placeBottom": false,
+      "placeBottom": true,
       "canDelete": false,
       "children": [      
         {
@@ -109,6 +109,7 @@
       "url": "/plugins/thingspin-edge-ai-app/page/monitoring",
       "placeBottom": true,
       "canDelete": false,
+      "hideFromMenu": true,
       "children" : [
         {
           "text": "생성마법사",
@@ -146,13 +147,15 @@
           "text": "노트북 편집",
           "icon": "",
           "url": "/companions/jupyter",
-          "canDelete": false
+          "canDelete": false,
+          "hideFromMenu": true
         },
         {
           "text": "플로우 편집",
           "icon": "gicon gicon-alert-rules",
           "url": "/companions/node-red",
-          "canDelete": false
+          "canDelete": false,
+          "hideFromMenu": true
         }
       ]
     },
