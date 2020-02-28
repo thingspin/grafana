@@ -62,6 +62,7 @@
       "icon": "fa fa-bar-chart",
       "url": "/thingspin/manage/monitoring",
       "canDelete": false,
+      "placeBottom": true,
       "children": []
     },
     {
