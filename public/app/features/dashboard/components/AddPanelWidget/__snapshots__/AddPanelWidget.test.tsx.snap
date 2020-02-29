@@ -63,7 +63,7 @@ exports[`Render should render component 1`] = `
               className="add-panel-widget__icon"
             >
               <i
-                className="gicon gicon-visualization"
+                className="gicon gicon-advanced"
               />
             </div>
             <span>

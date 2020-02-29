@@ -21,7 +21,7 @@ export function TsTabItem({ tab, activeTab, onClick }: TsTabItemParams) {
 
   let icon = <i className={`gicon gicon-${tab.id}${activeTab === tab.id ? '-active' : ''}`} />;
   if (tab.id === 'analytics') {
-    icon = <i className={`gicon gicon-visualization${activeTab === tab.id ? '-active' : ''}`} />;
+    icon = <i className={`gicon gicon-advanced${activeTab === tab.id ? '-active' : ''}`} />;
   }
 
   return (
